@@ -1,14 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import "'@/global.css'";
-import { GluestackUIProvider } from "@/'components/ui'/gluestack-ui-provider";
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LotesScreen from './screens/LotesScreen'; // Import the Lotes screen
 
 export default function App() {
   return (
-    <GluestackUIProvider mode="light"><View style={styles.container}>
+    <GluestackUIProvider mode="light">
+      <View style={styles.container}>
         <Text>Open up App.tsx to start working on your app!</Text>
         <StatusBar style="auto" />
-      </View></GluestackUIProvider>
+      </View>
+    </GluestackUIProvider>
   );
 }
 

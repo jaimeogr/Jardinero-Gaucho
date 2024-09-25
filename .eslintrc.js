@@ -1,27 +1,56 @@
 module.exports = {
-    parser: "@typescript-eslint/parser", // Specifies the ESLint parser
-    parserOptions: {
-      ecmaVersion: 2020, // Allows parsing of modern ECMAScript features
-      sourceType: "module", // Allows the use of imports
-      ecmaFeatures: {
-        jsx: true // Enable JSX if you're using React
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'plugin:jsx-a11y/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:prettier/recommended',
+  ],
+  plugins: ['@typescript-eslint', 'import', 'jsx-a11y', 'react-hooks'],
+  rules: {
+    '@typescript-eslint/no-unused-vars': ['warn'],
+    'import/order': [
+      'warn',
+      {
+        groups: [['builtin', 'external', 'internal']],
+        pathGroups: [
+          {
+            pattern: '@/**',
+            group: 'internal',
+            position: 'after',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['builtin'],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
       },
-    },
-    extends: [
-      "eslint:recommended",
-      "plugin:react/recommended", // Use if you're working with React
-      "plugin:@typescript-eslint/recommended", // Uses the recommended rules from the @typescript-eslint/eslint-plugin
-      "plugin:prettier/recommended" // Enables eslint-plugin-prettier and displays Prettier errors as ESLint errors. Make sure this is always the last configuration in the extends array.
     ],
-    plugins: ["@typescript-eslint"], // Use TypeScript ESLint rules
-    rules: {
-      // Place any additional ESLint rules here
-      "@typescript-eslint/no-unused-vars": ["warn"], // Example: Warns for unused variables
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    'jsx-a11y/anchor-is-valid': [
+      'warn',
+      {
+        aspects: ['invalidHref', 'preferButton'],
+      },
+    ],
+  },
+  settings: {
+    react: {
+      version: 'detect',
     },
-    settings: {
-      react: {
-        version: "detect" // Automatically detect the React version if you're using React
-      }
-    }
-  };
-  
+  },
+};

@@ -47,6 +47,12 @@ module.exports = {
         aspects: ['invalidHref', 'preferButton'],
       },
     ],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
   settings: {
     'import/ignore': ['react-native'],

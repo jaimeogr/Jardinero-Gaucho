@@ -1,11 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-
-import "'@/global.css'";
+import './global.css';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
-
+import { GluestackUIProvider } from './components/ui/gluestack-ui-provider';
 import LotesScreen from './screens/LotesScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -19,7 +17,6 @@ export default function App() {
       </View>
     </GluestackUIProvider>
   );
-  
 }
 
 const styles = StyleSheet.create({

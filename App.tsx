@@ -19,6 +19,7 @@ export default function App() {
       </View>
     </GluestackUIProvider>
   );
+  
 }
 
 const styles = StyleSheet.create({

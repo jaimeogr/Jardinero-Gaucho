@@ -7,7 +7,7 @@
     "android": "DARK_MODE=media expo start --android",
     "ios": "DARK_MODE=media expo start --ios",
     "web": "DARK_MODE=media expo start --web",
-    "lint": "eslint 'src/**/*.{ts,tsx}'"
+    "lint": "eslint . --fix"
   },
   "dependencies": {
     "@eslint/compat": "^1.1.1",

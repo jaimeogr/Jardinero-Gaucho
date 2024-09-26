@@ -14,6 +14,7 @@ This configuration is required inside your .vscode/settings.json file:
 "typescript",
 "typescriptreact"
 ],
+"editor.defaultFormatter": "esbenp.prettier-vscode",
 "editor.formatOnSave": true,
 "prettier.requireConfig": true,
 "eslint.run": "onSave"

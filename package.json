@@ -11,8 +11,6 @@
     "emulator": "emulator -avd Medium_Phone_API_35"
   },
   "dependencies": {
-    "@eslint/compat": "^1.1.1",
-    "@eslint/eslintrc": "^3.1.0",
     "@gluestack-ui/nativewind-utils": "^1.0.24",
     "@gluestack-ui/overlay": "^0.1.15",
     "@gluestack-ui/toast": "^1.0.7",

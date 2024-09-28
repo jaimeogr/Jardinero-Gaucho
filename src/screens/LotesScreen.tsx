@@ -1,11 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
 
 const LotesScreen = () => {
+  const [visible, setVisible] = useState(false);
+
+  const toggleVisibility = () => {
+    setVisible(!visible);
+  };
+
   return (
+    // <View style={styles.container}>
+    //   <Text style={styles.title}>Lotes Screen</Text>
+    //   {/* Add your screen content here */}
+    // </View>
     <View style={styles.container}>
-      <Text style={styles.title}>Lotes Screen</Text>
-      {/* Add your screen content here */}
+      <Button mode="contained" onPress={toggleVisibility}>
+        {visible ? 'Hide Text' : 'Show Text'}
+      </Button>
+      {visible && <Text style={styles.title}>This is the toggled text!</Text>}
     </View>
   );
 };

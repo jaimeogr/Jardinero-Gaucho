@@ -10,10 +10,6 @@ const LotesScreen = () => {
   };
 
   return (
-    // <View style={styles.container}>
-    //   <Text style={styles.title}>Lotes Screen</Text>
-    //   {/* Add your screen content here */}
-    // </View>
     <View style={styles.container}>
       <Button mode="contained" onPress={toggleVisibility}>
         {visible ? 'Hide Text' : 'Show Text'}

@@ -17,8 +17,8 @@ const BottomTabNavigator = () => {
   const [routes] = useState([
     { key: 'lotes', title: 'Lotes', focusedIcon: 'home' },
     { key: 'plata', title: 'Plata', focusedIcon: 'currency-usd' },
-    { key: 'myteam', title: 'My Team', focusedIcon: 'account-group' },
-    { key: 'settings', title: 'Settings', focusedIcon: 'cog' },
+    { key: 'myteam', title: 'Mi Equipo', focusedIcon: 'account-group' },
+    { key: 'settings', title: 'Configuracion', focusedIcon: 'cog' },
   ]);
 
   // Define the scenes for each tab, linking them to their respective components

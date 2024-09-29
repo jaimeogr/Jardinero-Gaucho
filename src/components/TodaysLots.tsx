@@ -1,20 +1,28 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Card, Text, Button } from 'react-native-paper';
 
-const MyTeamScreen = () => {
+const TodaysLots = () => {
   return (
-    <View style={styles.container}>
-      <Text>My Team Screen</Text>
-    </View>
+    <Card style={styles.todaysLots}>
+      <Card.Title title="Card Title" subtitle="Card Subtitle" />
+      <Card.Content>
+        <Text variant="titleLarge">Lotes de hoy</Text>
+      </Card.Content>
+      <Card.Actions>
+        <Button>Cancel</Button>
+        <Button>Ok</Button>
+      </Card.Actions>
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  todaysLots: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
 });
 
-export default MyTeamScreen;
+export default TodaysLots;

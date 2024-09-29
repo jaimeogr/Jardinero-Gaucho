@@ -5,16 +5,18 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 
-import LotesScreen from './src/screens/LotesScreen';
+import BottomTabNavigator from './src/navigation/BottonTabNavigator';
+import HomeScreen from './src/screens/HomeScreen';
 
 export default function App() {
   return (
     <PaperProvider>
-      <View style={styles.container}>
+      {/* <View style={styles.container}>
         <Text>Open up App.tsx to start working on your app!Hola Vaquero</Text>
-        <LotesScreen />
+        <HomeScreen />
         <StatusBar style="auto" />
-      </View>
+      </View> */}
+      <BottomTabNavigator />
     </PaperProvider>
   );
 }

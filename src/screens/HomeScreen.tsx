@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
-const LotesScreen = () => {
+const HomeScreen = () => {
   const [visible, setVisible] = useState(false);
 
   const toggleVisibility = () => {
@@ -32,4 +32,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LotesScreen;
+export default HomeScreen;

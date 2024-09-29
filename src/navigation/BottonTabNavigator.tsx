@@ -1,40 +1,53 @@
 // src/navigation/BottomTabNavigator.js
-import React, { useState } from 'react';
-import { BottomNavigation } from 'react-native-paper';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react';
+import { IconButton } from 'react-native-paper';
 
-// Import your screen components
-import HomeScreen from '../screens/HomeScreen';
+// Import your screen components or stack navigators
+import HomeStackNavigator from './HomeStackNavigator';
 import MoneyManagementScreen from '../screens/MoneyManagementScreen';
 import MyTeamScreen from '../screens/MyTeamScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
-// Define the main BottomTabNavigator component
+const Tab = createBottomTabNavigator();
+
 const BottomTabNavigator = () => {
-  // State to manage the currently active tab
-  const [index, setIndex] = useState(0);
-
-  // Define the routes (tabs) for your BottomNavigation
-  const [routes] = useState([
-    { key: 'lotes', title: 'Lotes', focusedIcon: 'home' },
-    { key: 'plata', title: 'Plata', focusedIcon: 'currency-usd' },
-    { key: 'myteam', title: 'Mi Equipo', focusedIcon: 'account-group' },
-    { key: 'settings', title: 'Configuracion', focusedIcon: 'cog' },
-  ]);
-
-  // Define the scenes for each tab, linking them to their respective components
-  const renderScene = BottomNavigation.SceneMap({
-    lotes: HomeScreen,
-    plata: MoneyManagementScreen,
-    myteam: MyTeamScreen,
-    settings: SettingsScreen,
-  });
-
   return (
-    <BottomNavigation
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
-    />
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false, // Hide header if not needed
+        tabBarIcon: ({ color, size }) => {
+          let iconName: string = '';
+
+          if (route.name === 'Lotes') {
+            iconName = 'home';
+          } else if (route.name === 'Plata') {
+            iconName = 'currency-usd';
+          } else if (route.name === 'Mi Equipo') {
+            iconName = 'account-group';
+          } else if (route.name === 'Configuración') {
+            iconName = 'cog';
+          }
+
+          return (
+            <IconButton
+              icon={iconName}
+              color={color}
+              size={size}
+              style={{ margin: 0 }}
+            />
+          );
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: { paddingBottom: 5, height: 60 },
+      })}
+    >
+      <Tab.Screen name="Lotes" component={HomeStackNavigator} />
+      <Tab.Screen name="Plata" component={MoneyManagementScreen} />
+      <Tab.Screen name="Mi Equipo" component={MyTeamScreen} />
+      <Tab.Screen name="Configuración" component={SettingsScreen} />
+    </Tab.Navigator>
   );
 };
 

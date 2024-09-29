@@ -1,20 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+// src/screens/HomeScreen.js
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
-const HomeScreen = () => {
-  const [visible, setVisible] = useState(false);
-
-  const toggleVisibility = () => {
-    setVisible(!visible);
-  };
-
+const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Button mode="contained" onPress={toggleVisibility}>
-        {visible ? 'Hide Text' : 'Show Text'}
+      <Button
+        mode="contained"
+        onPress={() => navigation.navigate('LotManagement')}
+      >
+        Go to Lot Management
       </Button>
-      {visible && <Text style={styles.title}>This is the toggled text!</Text>}
     </View>
   );
 };
@@ -24,12 +21,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
   },
 });
-
 export default HomeScreen;

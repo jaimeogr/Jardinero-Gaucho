@@ -8,7 +8,7 @@ import TodaysLots from '../components/TodaysLots';
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <TodaysLots />
+      <TodaysLots style={{ flex: 1 }} />
       <View style={styles.twoSurfaces}>
         <ClickableSurface
           title="Administrar Lotes"
@@ -28,7 +28,6 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     margin: 16,
   },
   button: {

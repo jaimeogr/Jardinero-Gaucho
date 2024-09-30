@@ -3,19 +3,25 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
+import ClickableSurface from '../components/ClickableSurface';
 import TodaysLots from '../components/TodaysLots';
 
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TodaysLots />
-      <Button
-        style={styles.button}
-        mode="contained"
-        onPress={() => navigation.navigate('LotManagement')}
-      >
-        Go to Lot Management
-      </Button>
+      <View style={styles.twoSurfaces}>
+        <ClickableSurface
+          title="Administrar Lotes"
+          iconName="home-group"
+          onPress={() => navigation.navigate('LotManagement')}
+        />
+        <ClickableSurface
+          title="Nuevo Lote"
+          iconName="home-plus"
+          onPress={() => navigation.navigate('LotManagement')}
+        />
+      </View>
     </View>
   );
 };
@@ -28,6 +34,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 16,
+  },
+  twoSurfaces: {
+    flexDirection: 'row',
   },
 });
 export default HomeScreen;

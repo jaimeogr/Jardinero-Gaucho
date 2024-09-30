@@ -1,13 +1,15 @@
 // src/navigation/BottomTabNavigator.js
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { IconButton, TouchableRipple } from 'react-native-paper';
+import { TouchableRipple } from 'react-native-paper';
+import { MaterialCommunityIcons } from 'react-native-vector-icons';
 
 // Import your screen components or stack navigators
 import HomeStackNavigator from './HomeStackNavigator';
 import MoneyManagementScreen from '../screens/MoneyManagementScreen';
 import MyTeamScreen from '../screens/MyTeamScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import { theme } from '../styles/styles';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,14 +31,11 @@ const BottomTabNavigator = () => {
             iconName = 'cog';
           }
 
-          const iconColor = focused ? '#347928' : 'gray';
-
           return (
-            <IconButton
-              icon={iconName}
-              color={iconColor}
+            <MaterialCommunityIcons
+              name={iconName}
+              color={focused ? theme.colors.accent : 'gray'} // Use focused prop to set color explicitly
               size={size}
-              style={{ margin: 0 }}
             />
           );
         },
@@ -44,7 +43,7 @@ const BottomTabNavigator = () => {
           fontWeight: 'bold', // Make the font bold
           fontSize: 12, // Adjust the font size if needed
         },
-        tabBarActiveTintColor: '#347928',
+        tabBarActiveTintColor: theme.colors.accent,
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
           paddingBottom: 5,

@@ -1,7 +1,7 @@
 // src/navigation/BottomTabNavigator.js
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { IconButton } from 'react-native-paper';
+import { IconButton, TouchableRipple } from 'react-native-paper';
 
 // Import your screen components or stack navigators
 import HomeStackNavigator from './HomeStackNavigator';
@@ -16,8 +16,8 @@ const BottomTabNavigator = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false, // Hide header if not needed
-        tabBarIcon: ({ color, size }) => {
-          let iconName: string = '';
+        tabBarIcon: ({ focused, size }) => {
+          let iconName = '';
 
           if (route.name === 'Lotes') {
             iconName = 'home';
@@ -29,18 +29,36 @@ const BottomTabNavigator = () => {
             iconName = 'cog';
           }
 
+          const iconColor = focused ? '#347928' : 'gray';
+
           return (
             <IconButton
               icon={iconName}
-              color={color}
+              color={iconColor}
               size={size}
               style={{ margin: 0 }}
             />
           );
         },
-        tabBarActiveTintColor: 'tomato',
+        tabBarLabelStyle: {
+          fontWeight: 'bold', // Make the font bold
+          fontSize: 12, // Adjust the font size if needed
+        },
+        tabBarActiveTintColor: '#347928',
         tabBarInactiveTintColor: 'gray',
-        tabBarStyle: { paddingBottom: 5, height: 60 },
+        tabBarStyle: {
+          paddingBottom: 5,
+          height: 60,
+        },
+        tabBarButton: (props) => (
+          <TouchableRipple
+            {...props}
+            rippleColor="rgba(0, 0, 0, .32)" // Customize the ripple effect color
+            borderless={true}
+          />
+        ),
+        tabBarPressColor: 'rgba(0, 0, 0, 0.2)', // Change ripple effect color (Android)
+        tabBarPressOpacity: 0.5, // Change ripple effect opacity (iOS)
       })}
     >
       <Tab.Screen name="Lotes" component={HomeStackNavigator} />

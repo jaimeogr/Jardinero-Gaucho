@@ -5,6 +5,7 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
+    "clean-android": "expo start --android -c",
     "ios": "DARK_MODE=media expo start --ios",
     "web": "DARK_MODE=media expo start --web",
     "lint": "eslint . --fix",

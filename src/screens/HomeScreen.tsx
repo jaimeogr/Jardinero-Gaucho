@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    margin: 16,
   },
   button: {
     marginTop: 16,

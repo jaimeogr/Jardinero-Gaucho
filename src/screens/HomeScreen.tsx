@@ -1,7 +1,6 @@
 // src/screens/HomeScreen.js
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Button } from 'react-native-paper';
 
 import ClickableSurface from '../components/ClickableSurface';
 import TodaysLots from '../components/TodaysLots';
@@ -37,6 +36,9 @@ const styles = StyleSheet.create({
   },
   twoSurfaces: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 16, // Adds space between each surface (requires React Native 0.70 or above)
+    paddingVertical: 8,
   },
 });
 export default HomeScreen;

@@ -19,3 +19,5 @@ This configuration is required inside your .vscode/settings.json file:
 "prettier.requireConfig": true,
 "eslint.run": "onSave"
 }
+
+Its probably better to code in Ubuntu to have access to Flipper and debug and analyze the components tree more easily and with better integration.

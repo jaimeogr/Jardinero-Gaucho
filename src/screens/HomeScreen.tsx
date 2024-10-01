@@ -18,6 +18,11 @@ const HomeScreen = ({ navigation }) => {
     >
       <Surface style={styles.surfaceTopRoundButtons}>
         <ClickableRoundButton
+          title="Ingresar Cobro"
+          iconName="cash-plus"
+          onPress={() => navigation.navigate('LotManagement')}
+        />
+        <ClickableRoundButton
           title="Administrar Lotes"
           iconName="home-group"
           onPress={() => navigation.navigate('LotManagement')}

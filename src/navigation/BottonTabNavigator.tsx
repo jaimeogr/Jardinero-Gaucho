@@ -22,7 +22,7 @@ const BottomTabNavigator = () => {
           let iconName = '';
 
           if (route.name === 'Lotes') {
-            iconName = 'home';
+            iconName = 'home-outline';
           } else if (route.name === 'Plata') {
             iconName = 'currency-usd';
           } else if (route.name === 'Mi Equipo') {

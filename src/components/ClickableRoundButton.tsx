@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Text, IconButton } from 'react-native-paper';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { IconButton } from 'react-native-paper';
 
 import { theme } from '../styles/styles';
 
 const ClickableRoundButton = ({ title, iconName, onPress }) => {
+  const titleContent = title.split(' ').join('\n');
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -13,7 +15,8 @@ const ClickableRoundButton = ({ title, iconName, onPress }) => {
     >
       <View style={styles.roundButton}>
         <IconButton icon={iconName} size={32} style={styles.icon} />
-        <Text style={styles.text}>{title}</Text>
+
+        <Text style={styles.text}>{titleContent}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -34,7 +37,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    fontWeight: 'normal',
     textAlign: 'center',
   },
 });

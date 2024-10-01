@@ -3,14 +3,15 @@ import { View, StyleSheet } from 'react-native';
 import { Text, Surface } from 'react-native-paper';
 
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
+import ScrollableContent from './ScrollableContent';
 
 const TodaysLots = () => {
   return (
     <Surface style={styles.surface}>
       <Text style={styles.title}>Lotes de hoy</Text>
 
-      <View style={styles.cardContent}>
-        <Text>Lotes de hoy contenido</Text>
+      <View style={styles.content}>
+        <ScrollableContent />
         <BottomElementsForTodaysLots />
       </View>
     </Surface>
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center the content vertically
     marginBottom: 12,
   },
-  cardContent: {
+  content: {
     flex: 1,
     width: '100%',
     justifyContent: 'space-between',
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     alignSelf: 'flex-start',
     paddingHorizontal: 12,
-    paddingTop: 8,
+    paddingTop: 12,
   },
 });
 export default TodaysLots;

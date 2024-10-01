@@ -4,6 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient'; // Import from expo-linea
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
+import { theme } from '../styles/styles';
+
 const ScrollableContent = () => {
   return (
     <View style={styles.container}>
@@ -13,7 +15,7 @@ const ScrollableContent = () => {
           <Text>Scrollable Item 1</Text>
           <MaterialCommunityIcons
             name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
+            color={theme.colors.accent} // Use focused prop to set color explicitly
             size={28}
           />
         </View>

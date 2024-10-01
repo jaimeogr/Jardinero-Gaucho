@@ -20,12 +20,12 @@ const styles = StyleSheet.create({
     paddingTop: 4,
     paddingBottom: 12,
     borderRadius: 16, // Rounded corners for a modern look
-    backgroundColor: theme.colors.background2, // Background color for the surface
+    backgroundColor: 'white', // Background color for the surface
     flexDirection: 'column', // Layout with icon and text side by side
     alignItems: 'center', // Center the content vertically
   },
   icon: {
-    backgroundColor: theme.colors.tertiary,
+    backgroundColor: theme.colors.background2,
   },
   text: {
     fontSize: 16,

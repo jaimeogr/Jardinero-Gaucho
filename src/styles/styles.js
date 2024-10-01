@@ -1,13 +1,13 @@
 // styles.js
 export const theme = {
   colors: {
-    primary: 'green',
+    primary: '#155E63',
     secondary: '#059212',
-    tertiary: '#EAE7E7',
+    tertiary: 'green',
     additional: '#5BB318',
     accent: '#347928',
     gray: '#515661',
     background: '#155E63',
-    background2: 'white',
+    background2: '#EAE7E7',
   },
 };

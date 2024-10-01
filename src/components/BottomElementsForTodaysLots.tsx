@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   allIndicators: {
-    backgroundColor: theme.colors.tertiary,
+    backgroundColor: theme.colors.background2,
     flexDirection: 'row', // Align indicators horizontally
     justifyContent: 'space-between', // Evenly distribute space
     paddingBottom: 14, // Add some spacing above the indicators

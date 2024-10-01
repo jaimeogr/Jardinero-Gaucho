@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Surface, Text, IconButton } from 'react-native-paper';
 
+import { theme } from '../styles/styles';
+
 const ClickableSurface = ({ title, iconName, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={{ flex: 1 }}>
@@ -19,7 +21,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     elevation: 4, // Elevation to create a shadow effect
     borderRadius: 16, // Rounded corners for a modern look
-    backgroundColor: 'white', // Background color for the surface
+    backgroundColor: theme.colors.background2, // Background color for the surface
     flexDirection: 'column', // Layout with icon and text side by side
     alignItems: 'center', // Center the content vertically
   },

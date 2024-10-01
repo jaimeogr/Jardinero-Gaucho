@@ -3,10 +3,11 @@ export const theme = {
   colors: {
     primary: 'green',
     secondary: '#059212',
-    tertiary: '#C6EDC3',
+    tertiary: '#EAE7E7',
     additional: '#5BB318',
     accent: '#347928',
-    inactive: '#515661',
-    background: '#006769',
+    gray: '#515661',
+    background: '#155E63',
+    background2: 'white',
   },
 };

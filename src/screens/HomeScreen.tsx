@@ -9,7 +9,6 @@ import { theme } from '../styles/styles';
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <TodaysLots style={{ flex: 1 }} />
       <View style={styles.twoSurfaces}>
         <ClickableSurface
           title="Administrar Lotes"
@@ -22,6 +21,7 @@ const HomeScreen = ({ navigation }) => {
           onPress={() => navigation.navigate('LotManagement')}
         />
       </View>
+      <TodaysLots style={{ flex: 1 }} />
     </View>
   );
 };
@@ -29,7 +29,6 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // margin: 16,
     padding: 16,
     backgroundColor: theme.colors.background,
   },

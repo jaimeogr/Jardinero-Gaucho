@@ -37,3 +37,6 @@ yarn-error.*
 
 # VSCode
 .vscode/
+
+#weird Shit probably from reactotron or react dev tools, information about the active user
+%ProgramData%/

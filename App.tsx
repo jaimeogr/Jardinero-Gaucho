@@ -5,6 +5,15 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import BottomTabNavigator from './src/navigation/BottonTabNavigator';
 
+if (__DEV__) {
+  console.log('The app is running in development mode');
+  import('./config/ReactotronConfig').then(() =>
+    console.log('Reactotron Configured'),
+  );
+} else {
+  console.log('The app is running in production mode');
+}
+
 export default function App() {
   return (
     <PaperProvider>

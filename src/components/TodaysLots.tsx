@@ -1,57 +1,69 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Divider, Card, Text, Button } from 'react-native-paper';
+import { Divider, Card, Text, Button, Surface } from 'react-native-paper';
 
 const TodaysLots = () => {
   return (
-    <Card style={styles.todaysLots}>
-      <Card.Title
-        title="Lotes de hoy"
-        titleStyle={styles.cardTitle}
-        style={styles.cardTitleContainer}
-      />
-      <Card.Content>
+    <Surface style={styles.surface}>
+      <Text style={styles.title}>Lotes de hoy</Text>
+
+      <View style={styles.cardContent}>
         <Text>Lotes de hoy contenido</Text>
-      </Card.Content>
-      <View style={styles.bottomElements}>
-        <Card.Actions style={styles.bottomElements}>
+        <View style={styles.bottomElements}>
           <Button>Administrar los Lotes de Hoy</Button>
-        </Card.Actions>
-        <Divider bold={true} horizontalInset={true} />
-        <View style={styles.allIndicators}>
-          <View style={styles.indicator}>
-            <Text style={styles.indicatorTitle}>Lotes Faltantes</Text>
-            <Text style={styles.indicatorNumber}>3</Text>
-          </View>
-          <View style={styles.indicator}>
-            <Text style={styles.indicatorTitle}>Lotes Completados</Text>
-            <Text style={styles.indicatorNumber}>5</Text>
+
+          <Divider bold={true} />
+          <Divider
+            style={{ width: '100%', backgroundColor: 'lightgray' }}
+            bold={true}
+          />
+
+          <View style={styles.allIndicators}>
+            <View style={styles.indicator}>
+              <Text style={styles.indicatorTitle}>Lotes Faltantes</Text>
+              <Text style={styles.indicatorNumber}>3</Text>
+            </View>
+            <View style={styles.indicator}>
+              <Text style={styles.indicatorTitle}>Lotes Completados</Text>
+              <Text style={styles.indicatorNumber}>5</Text>
+            </View>
           </View>
         </View>
       </View>
-    </Card>
+    </Surface>
   );
 };
 
 const styles = StyleSheet.create({
+  surface: {
+    flex: 1,
+    elevation: 4, // Elevation to create a shadow effect
+    borderRadius: 16, // Rounded corners for a modern look
+    backgroundColor: 'white', // Background color for the surface
+    flexDirection: 'column', // Layout with icon and text side by side
+    alignItems: 'center', // Center the content vertically
+    marginBottom: 12,
+  },
+  cardContent: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'space-between',
+  },
   todaysLots: {
     flex: 1,
     marginBottom: 16,
     padding: 0,
   },
-  cardTitleContainer: {
-    alignItems: 'flex-start',
-    paddingHorizontal: 8,
+  title: {
+    fontSize: 24,
+    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
     paddingTop: 8,
   },
-  cardTitle: {
-    fontSize: 24,
-  },
   bottomElements: {
-    padding: 16, // Add some padding for the bottom elements
-  },
-  cardActions: {
-    justifyContent: 'center', // Center the button within its container
+    alignItems: 'center',
+    padding: 16,
+    width: '100%',
   },
   centerButton: {
     alignSelf: 'center', // Center the button

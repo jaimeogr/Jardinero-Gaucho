@@ -35,7 +35,7 @@ const BottomElementsForTodaysLots = () => {
 };
 
 const styles = StyleSheet.create({
-  button: { marginBottom: 12 },
+  button: { marginVertical: 16 },
   bottomElements: {
     alignItems: 'center',
     width: '100%',

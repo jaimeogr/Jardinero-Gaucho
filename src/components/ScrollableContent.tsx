@@ -5,114 +5,110 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
+import ScrollableItemForTodaysLots from './ScrollableItemForTodaysLots';
 import { theme } from '../styles/styles';
 
 const ScrollableContent = () => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Add your scrollable content here */}
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 1</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color={theme.colors.secondary} // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
+        <ScrollableItemForTodaysLots
+          number="505"
+          area="2"
+          neighbourhood="El Canton asd asd asdas asdasdasd"
+          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+        />
+
         <Divider
           style={{ width: '100%', backgroundColor: 'lightgray' }}
           bold={true}
         />
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 2</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 3</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 4</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 5</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 6</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 7</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 8</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 9</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 10</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 11</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        <View style={styles.scrollItem}>
-          <Text>Scrollable Item 12</Text>
-          <MaterialCommunityIcons
-            name="check-circle-outline"
-            color="gray" // Use focused prop to set color explicitly
-            size={28}
-          />
-        </View>
-        {/* You can add more items as needed */}
+        <ScrollableItemForTodaysLots
+          number="505"
+          area="2"
+          neighbourhood="El Canton asd asd asdas asdasdasd"
+          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+        />
+        <Divider
+          style={{ width: '100%', backgroundColor: 'lightgray' }}
+          bold={true}
+        />
+        <ScrollableItemForTodaysLots
+          number="505"
+          area="2"
+          neighbourhood="El Canton asd asd asdas asdasdasd"
+          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+        />
+        <Divider
+          style={{ width: '100%', backgroundColor: 'lightgray' }}
+          bold={true}
+        />
+        <ScrollableItemForTodaysLots
+          number="505"
+          area="2"
+          neighbourhood="El Canton asd asd asdas asdasdasd"
+          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+        />
+        <Divider
+          style={{ width: '100%', backgroundColor: 'lightgray' }}
+          bold={true}
+        />
+        <ScrollableItemForTodaysLots
+          number="505"
+          area="2"
+          neighbourhood="El Canton asd asd asdas asdasdasd"
+          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+        />
+        <Divider
+          style={{ width: '100%', backgroundColor: 'lightgray' }}
+          bold={true}
+        />
+        <ScrollableItemForTodaysLots
+          number="505"
+          area="2"
+          neighbourhood="El Canton asd asd asdas asdasdasd"
+          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+        />
+        <Divider
+          style={{ width: '100%', backgroundColor: 'lightgray' }}
+          bold={true}
+        />
+        <ScrollableItemForTodaysLots
+          number="505"
+          area="2"
+          neighbourhood="El Canton asd asd asdas asdasdasd"
+          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+        />
+        <Divider
+          style={{ width: '100%', backgroundColor: 'lightgray' }}
+          bold={true}
+        />
+        <ScrollableItemForTodaysLots
+          number="505"
+          area="2"
+          neighbourhood="El Canton asd asd asdas asdasdasd"
+          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+        />
+        <Divider
+          style={{ width: '100%', backgroundColor: 'lightgray' }}
+          bold={true}
+        />
+        <ScrollableItemForTodaysLots
+          number="505"
+          area="2"
+          neighbourhood="El Canton asd asd asdas asdasdasd"
+          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+        />
+        <Divider
+          style={{ width: '100%', backgroundColor: 'lightgray' }}
+          bold={true}
+        />
+        <ScrollableItemForTodaysLots
+          number="505"
+          area="2"
+          neighbourhood="El Canton asd asd asdas asdasdasd"
+          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+        />
       </ScrollView>
 
       {/* Fade effect at the bottom */}

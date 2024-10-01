@@ -1,8 +1,10 @@
 // styles.js
 export const theme = {
   colors: {
-    primary: '#6200ea', // Primary color example
-    accent: '#347928', // Your accent color
-    inactive: 'gray', // Inactive tab color
+    primary: '#6200ea',
+    secondary: 'green',
+    tertiary: '#C6EDC3',
+    accent: '#347928',
+    inactive: 'gray',
   },
 };

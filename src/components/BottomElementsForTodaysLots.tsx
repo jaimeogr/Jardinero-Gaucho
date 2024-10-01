@@ -1,17 +1,24 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Divider, Text, Button } from 'react-native-paper';
+import { Text, Button } from 'react-native-paper';
+
+import { theme } from '../styles/styles';
 
 const BottomElementsForTodaysLots = () => {
   return (
     <View style={styles.bottomElements}>
-      <Button>Administrar los Lotes de Hoy</Button>
-
-      <Divider bold={true} />
-      <Divider
-        style={{ width: '100%', backgroundColor: 'lightgray' }}
-        bold={true}
-      />
+      <Button
+        style={styles.button}
+        mode="outlined"
+        theme={{
+          colors: {
+            primary: theme.colors.secondary,
+            outline: theme.colors.secondary,
+          },
+        }}
+      >
+        Administrar los Lotes de Hoy
+      </Button>
 
       <View style={styles.allIndicators}>
         <View style={styles.indicator}>
@@ -28,28 +35,30 @@ const BottomElementsForTodaysLots = () => {
 };
 
 const styles = StyleSheet.create({
+  button: { marginBottom: 12 },
   bottomElements: {
     alignItems: 'center',
-    padding: 16,
     width: '100%',
   },
-  centerButton: {
-    alignSelf: 'center', // Center the button
-  },
   allIndicators: {
+    backgroundColor: theme.colors.tertiary,
     flexDirection: 'row', // Align indicators horizontally
     justifyContent: 'space-between', // Evenly distribute space
-    marginTop: 8, // Add some spacing above the indicators
+    paddingBottom: 14, // Add some spacing above the indicators
+    paddingTop: 8,
+    borderRadius: 14,
   },
   indicator: {
     flex: 1, // Make each indicator take equal space
     alignItems: 'center', // Center the text within the indicator
+    justifyContent: 'space-evenly',
   },
   indicatorTitle: {
+    marginBottom: 10,
     fontSize: 16,
   },
   indicatorNumber: {
-    fontSize: 16,
+    fontSize: 18,
   },
 });
 

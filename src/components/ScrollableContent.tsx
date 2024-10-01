@@ -3,6 +3,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient'; // Import from expo-linear-gradient
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Divider } from 'react-native-paper';
 
 import { theme } from '../styles/styles';
 
@@ -15,10 +16,14 @@ const ScrollableContent = () => {
           <Text>Scrollable Item 1</Text>
           <MaterialCommunityIcons
             name="check-circle-outline"
-            color={theme.colors.accent} // Use focused prop to set color explicitly
+            color={theme.colors.secondary} // Use focused prop to set color explicitly
             size={28}
           />
         </View>
+        <Divider
+          style={{ width: '100%', backgroundColor: 'lightgray' }}
+          bold={true}
+        />
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 2</Text>
           <MaterialCommunityIcons

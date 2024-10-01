@@ -22,18 +22,14 @@ const ClickableRoundButton = ({ title, iconName, onPress }) => {
 const styles = StyleSheet.create({
   touchable: {
     flex: 1, // Allows buttons to take equal space within parent container
-    maxWidth: 110, // Set a max width to prevent the button from being too wide
   },
   roundButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-    borderRadius: 16,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
   icon: {
-    marginBottom: 4,
+    marginBottom: 5,
     backgroundColor: theme.colors.background2,
   },
   text: {

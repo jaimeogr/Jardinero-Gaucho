@@ -1,35 +1,36 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Surface, Text, IconButton } from 'react-native-paper';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Text, IconButton } from 'react-native-paper';
 
 import { theme } from '../styles/styles';
 
-const ClickableSurface = ({ title, iconName, onPress }) => {
+const ClickableRoundButton = ({ title, iconName, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={{ flex: 1 }}>
-      <Surface style={styles.surface}>
-        <IconButton icon={iconName} size={28} style={styles.icon} />
+      <View style={styles.roundButton}>
+        <IconButton icon={iconName} size={32} style={styles.icon} />
         <Text style={styles.text}>{title}</Text>
-      </Surface>
+      </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  surface: {
+  roundButton: {
     paddingTop: 4,
     paddingBottom: 12,
-    elevation: 4, // Elevation to create a shadow effect
     borderRadius: 16, // Rounded corners for a modern look
     backgroundColor: theme.colors.background2, // Background color for the surface
     flexDirection: 'column', // Layout with icon and text side by side
     alignItems: 'center', // Center the content vertically
   },
-  icon: {},
+  icon: {
+    backgroundColor: theme.colors.tertiary,
+  },
   text: {
     fontSize: 16,
     fontWeight: 'normal',
   },
 });
 
-export default ClickableSurface;
+export default ClickableRoundButton;

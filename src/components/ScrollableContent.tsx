@@ -1,4 +1,5 @@
 // ScrollableContent.tsx
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient'; // Import from expo-linear-gradient
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
@@ -10,39 +11,99 @@ const ScrollableContent = () => {
         {/* Add your scrollable content here */}
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 1</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 2</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 3</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 4</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 5</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 6</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 7</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 8</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 9</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 10</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 11</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         <View style={styles.scrollItem}>
           <Text>Scrollable Item 12</Text>
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            color="gray" // Use focused prop to set color explicitly
+            size={28}
+          />
         </View>
         {/* You can add more items as needed */}
       </ScrollView>
@@ -65,7 +126,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24, // Padding for the scrollable area
   },
   scrollItem: {
-    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 8,
     marginVertical: 7,
     backgroundColor: '#f0f0f0',
     borderRadius: 12,

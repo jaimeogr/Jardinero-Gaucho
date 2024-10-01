@@ -1,8 +1,8 @@
 // src/navigation/BottomTabNavigator.js
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { TouchableRipple } from 'react-native-paper';
-import { MaterialCommunityIcons } from 'react-native-vector-icons';
 
 // Import your screen components or stack navigators
 import HomeStackNavigator from './HomeStackNavigator';

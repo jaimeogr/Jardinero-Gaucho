@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text, Button } from 'react-native-paper';
+import { Text, Button, Divider } from 'react-native-paper';
 
 import { theme } from '../styles/styles';
 
@@ -25,6 +25,7 @@ const BottomElementsForTodaysLots = () => {
           <Text style={styles.indicatorTitle}>Lotes Faltantes</Text>
           <Text style={styles.indicatorNumber}>3</Text>
         </View>
+        <Divider style={styles.verticalDivider} />
         <View style={styles.indicator}>
           <Text style={styles.indicatorTitle}>Lotes Completados</Text>
           <Text style={styles.indicatorNumber}>5</Text>
@@ -54,11 +55,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   indicatorTitle: {
-    marginBottom: 10,
+    marginVertical: 6,
     fontSize: 16,
   },
   indicatorNumber: {
-    fontSize: 18,
+    fontSize: 22,
+    fontWeight: 'medium',
+  },
+  verticalDivider: {
+    height: '100%', // Make the divider fill the container's height
+    width: 1, // Set the width to make it a thin line
+    backgroundColor: '#D1D1D1', // You can use any color you want for the divider
+    alignSelf: 'center', // Align the divider in the center of the container
   },
 });
 

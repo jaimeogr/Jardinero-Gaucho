@@ -47,19 +47,17 @@ const styles = StyleSheet.create({
   },
   allHomeElements: {
     flex: 1,
-    marginHorizontal: 4,
-  },
-  button: {
-    marginTop: 16,
+    marginHorizontal: 2,
   },
   surfaceTopRoundButtons: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 16, // Adds space between each surface (requires React Native 0.70 or above)
-    elevation: 4, // Elevation to create a shadow effect
-    borderRadius: 16, // Rounded corners for a modern look
-    backgroundColor: 'white', // Background color for the surface
-    alignItems: 'center', // Center the content vertically
+    justifyContent: 'space-around', // Distribute buttons evenly
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    elevation: 4,
+    borderRadius: 16,
+    backgroundColor: 'white',
     marginBottom: 12,
   },
 });

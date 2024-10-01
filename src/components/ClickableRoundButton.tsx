@@ -6,7 +6,11 @@ import { theme } from '../styles/styles';
 
 const ClickableRoundButton = ({ title, iconName, onPress }) => {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={{ flex: 1 }}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.7}
+      style={styles.touchable}
+    >
       <View style={styles.roundButton}>
         <IconButton icon={iconName} size={32} style={styles.icon} />
         <Text style={styles.text}>{title}</Text>
@@ -16,20 +20,26 @@ const ClickableRoundButton = ({ title, iconName, onPress }) => {
 };
 
 const styles = StyleSheet.create({
+  touchable: {
+    flex: 1, // Allows buttons to take equal space within parent container
+    maxWidth: 110, // Set a max width to prevent the button from being too wide
+  },
   roundButton: {
-    paddingTop: 4,
-    paddingBottom: 12,
-    borderRadius: 16, // Rounded corners for a modern look
-    backgroundColor: 'white', // Background color for the surface
-    flexDirection: 'column', // Layout with icon and text side by side
-    alignItems: 'center', // Center the content vertically
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    borderRadius: 16,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   icon: {
+    marginBottom: 4,
     backgroundColor: theme.colors.background2,
   },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'normal',
+    textAlign: 'center',
   },
 });
 

@@ -6,6 +6,7 @@ export const theme = {
     tertiary: '#C6EDC3',
     additional: '#5BB318',
     accent: '#347928',
-    inactive: 'gray',
+    inactive: '#515661',
+    background: '#006769',
   },
 };

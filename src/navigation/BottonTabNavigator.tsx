@@ -34,7 +34,7 @@ const BottomTabNavigator = () => {
           return (
             <MaterialCommunityIcons
               name={iconName}
-              color={focused ? theme.colors.accent : 'gray'} // Use focused prop to set color explicitly
+              color={focused ? theme.colors.accent : theme.colors.inactive} // Use focused prop to set color explicitly
               size={size}
             />
           );
@@ -44,7 +44,7 @@ const BottomTabNavigator = () => {
           fontSize: 12, // Adjust the font size if needed
         },
         tabBarActiveTintColor: theme.colors.accent,
-        tabBarInactiveTintColor: 'gray',
+        tabBarInactiveTintColor: theme.colors.inactive,
         tabBarStyle: {
           paddingBottom: 5,
           height: 60,

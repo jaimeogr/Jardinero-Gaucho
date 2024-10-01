@@ -32,7 +32,7 @@ const ScrollableItemForTodaysLots: React.FC<ScrollableItemProps> = ({
       </View>
       <MaterialCommunityIcons
         name="check-circle-outline"
-        color={theme.colors.secondary}
+        color={theme.colors.primary}
         size={32}
       />
     </View>

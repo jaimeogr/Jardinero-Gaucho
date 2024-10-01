@@ -12,8 +12,8 @@ const BottomElementsForTodaysLots = () => {
         mode="outlined"
         theme={{
           colors: {
-            primary: theme.colors.secondary,
-            outline: theme.colors.secondary,
+            primary: theme.colors.primary,
+            outline: theme.colors.primary,
           },
         }}
       >

@@ -4,6 +4,7 @@ import { View, StyleSheet } from 'react-native';
 
 import ClickableSurface from '../components/ClickableSurface';
 import TodaysLots from '../components/TodaysLots';
+import { theme } from '../styles/styles';
 
 const HomeScreen = ({ navigation }) => {
   return (
@@ -28,7 +29,9 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 16,
+    // margin: 16,
+    padding: 16,
+    backgroundColor: theme.colors.background,
   },
   button: {
     marginTop: 16,

@@ -1,7 +1,7 @@
 // ScrollableItemForTodaysLots.tsx
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { theme } from '../styles/styles';
 
@@ -21,6 +21,8 @@ const ScrollableItemForTodaysLots: React.FC<ScrollableItemProps> = ({
   completed,
   extraNotes,
 }) => {
+  const [compl, setCompl] = useState(completed);
+
   return (
     <View style={styles.scrollItem}>
       <View style={styles.itemInfo}>
@@ -31,11 +33,13 @@ const ScrollableItemForTodaysLots: React.FC<ScrollableItemProps> = ({
           <Text style={styles.extraNotes}>{extraNotes}</Text>
         ) : null}
       </View>
-      <MaterialCommunityIcons
-        name={completed ? 'check-circle' : 'check-circle-outline'}
-        color={completed ? theme.colors.green : theme.colors.gray}
-        size={32}
-      />
+      <TouchableOpacity onPress={() => setCompl(!compl)}>
+        <MaterialCommunityIcons
+          name={compl ? 'check-circle' : 'check-circle-outline'}
+          color={compl ? theme.colors.green : theme.colors.gray}
+          size={32}
+        />
+      </TouchableOpacity>
     </View>
   );
 };

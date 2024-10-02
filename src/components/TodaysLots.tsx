@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Surface } from 'react-native-paper';
 
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
 import ScrollableContent from './ScrollableContent';
+import DataService from '../services/DataService';
+import { LotInterface } from '../types/types';
 
 const TodaysLots = () => {
+  const [lots, setLots] = useState<LotInterface[]>([]);
+
+  useEffect(() => {
+    const fetchedLots = DataService.getLotsForToday();
+    setLots(fetchedLots);
+  }, []); // Empty dependency array ensures it runs once when the component mounts
+
   return (
     <Surface style={styles.surface}>
       <Text style={styles.title}>Lotes de hoy</Text>
 
       <View style={styles.content}>
-        <ScrollableContent />
+        <ScrollableContent lots={lots} />
         <BottomElementsForTodaysLots />
       </View>
     </Surface>

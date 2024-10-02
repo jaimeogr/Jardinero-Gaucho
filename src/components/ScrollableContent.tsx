@@ -5,99 +5,28 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import ScrollableItemForTodaysLots from './ScrollableItemForTodaysLots';
+import { LotInterface } from '../types/types';
 
-const ScrollableContent = () => {
+interface ScrollableContentProps {
+  lots: LotInterface[]; // lots is an array of LotInterface
+}
+
+const ScrollableContent = ({ lots }: ScrollableContentProps) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <ScrollableItemForTodaysLots
-          number="505"
-          zone="2"
-          neighbourhood="El Canton asd asd asdas asdasdasd"
-          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
-          completed={false}
-        />
-
-        <Divider style={styles.divider} bold={true} />
-        <ScrollableItemForTodaysLots
-          number="505"
-          zone="2"
-          neighbourhood="El Canton asd asd asdas asdasdasd"
-          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
-          completed={false}
-        />
-        <Divider style={styles.divider} bold={true} />
-
-        <ScrollableItemForTodaysLots
-          number="505"
-          zone="2"
-          neighbourhood="El Canton asd asd asdas asdasdasd"
-          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
-          completed={false}
-        />
-        <Divider style={styles.divider} bold={true} />
-
-        <ScrollableItemForTodaysLots
-          number="505"
-          zone="2"
-          neighbourhood="El Canton asd asd asdas asdasdasd"
-          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
-          completed={false}
-        />
-        <Divider style={styles.divider} bold={true} />
-
-        <ScrollableItemForTodaysLots
-          number="505"
-          zone="2"
-          neighbourhood="El Canton asd asd asdas asdasdasd"
-          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
-          completed={false}
-        />
-        <Divider style={styles.divider} bold={true} />
-
-        <ScrollableItemForTodaysLots
-          number="505"
-          zone="2"
-          neighbourhood="El Canton asd asd asdas asdasdasd"
-          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
-          completed={false}
-        />
-        <Divider style={styles.divider} bold={true} />
-
-        <ScrollableItemForTodaysLots
-          number="505"
-          zone="2"
-          neighbourhood="El Canton asd asd asdas asdasdasd"
-          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
-          completed={false}
-        />
-        <Divider style={styles.divider} bold={true} />
-
-        <ScrollableItemForTodaysLots
-          number="505"
-          zone="2"
-          neighbourhood="El Canton asd asd asdas asdasdasd"
-          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
-          completed={false}
-        />
-        <Divider style={styles.divider} bold={true} />
-
-        <ScrollableItemForTodaysLots
-          number="505"
-          zone="2"
-          neighbourhood="El Canton asd asd asdas asdasdasd"
-          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
-          completed={false}
-        />
-        <Divider style={styles.divider} bold={true} />
-
-        <ScrollableItemForTodaysLots
-          number="505"
-          zone="2"
-          neighbourhood="El Canton asd asd asdas asdasdasd"
-          extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
-          completed={false}
-        />
+        {lots.map((lot, index) => (
+          <React.Fragment key={index}>
+            <ScrollableItemForTodaysLots
+              number={lot.number}
+              zone={lot.zone}
+              neighbourhood={lot.neighbourhood}
+              extraNotes={lot.extraNotes}
+              completed={lot.completed}
+            />
+            <Divider style={styles.divider} bold={true} />
+          </React.Fragment>
+        ))}
       </ScrollView>
 
       {/* Fade effect at the bottom */}

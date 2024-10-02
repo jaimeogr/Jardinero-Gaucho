@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   surface: {
     flex: 1,
     elevation: 4, // Elevation to create a shadow effect
-    borderRadius: 16, // Rounded corners for a modern look
+    borderRadius: 12, // Rounded corners for a modern look
     backgroundColor: 'white', // Background color for the surface
     flexDirection: 'column', // Layout with icon and text side by side
     alignItems: 'center', // Center the content vertically

@@ -16,7 +16,7 @@ const HomeScreen = ({ navigation }) => {
       start={{ x: 0.5, y: 0.4 }} // Start the gradient from the top center
       end={{ x: 0.5, y: 0.6 }} // End the gradient at the bottom center
     >
-      <View style={styles.allHomeElements}>
+      <View style={styles.homeElements}>
         <Surface style={styles.surfaceTopRoundButtons}>
           <ClickableRoundButton
             title="Registrar Cobro"
@@ -34,7 +34,7 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('LotManagement')}
           />
         </Surface>
-        <TodaysLots style={{ flex: 1 }} />
+        <TodaysLots />
       </View>
     </LinearGradient>
   );
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  allHomeElements: {
+  homeElements: {
     flex: 1,
     marginHorizontal: 2,
   },
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 8,
     elevation: 4,
-    borderRadius: 16,
+    borderRadius: 12,
     backgroundColor: 'white',
     marginBottom: 12,
   },

@@ -14,7 +14,7 @@ const ClickableRoundButton = ({ title, iconName, onPress }) => {
       style={styles.touchable}
     >
       <View style={styles.roundButton}>
-        <IconButton icon={iconName} size={32} style={styles.icon} />
+        <IconButton icon={iconName} size={34} style={styles.icon} />
 
         <Text style={styles.text}>{titleContent}</Text>
       </View>

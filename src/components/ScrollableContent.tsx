@@ -108,25 +108,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgray',
   },
   scrollContent: {
-    paddingVertical: 10, // Padding for the scrollable area
     paddingHorizontal: 24, // Padding for the scrollable area
   },
-  scrollItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginVertical: 7,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 12,
-  },
+
   fadeEffect: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
-    height: 40, // Adjust the height of the fade effect
+    height: 20, // Adjust the height of the fade effect
   },
 });
 

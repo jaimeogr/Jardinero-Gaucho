@@ -1,12 +1,10 @@
 // ScrollableContent.tsx
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient'; // Import from expo-linear-gradient
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import ScrollableItemForTodaysLots from './ScrollableItemForTodaysLots';
-import { theme } from '../styles/styles';
 
 const ScrollableContent = () => {
   return (
@@ -19,90 +17,71 @@ const ScrollableContent = () => {
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
         />
 
-        <Divider
-          style={{ width: '100%', backgroundColor: 'lightgray' }}
-          bold={true}
-        />
+        <Divider style={styles.divider} bold={true} />
         <ScrollableItemForTodaysLots
           number="505"
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
         />
-        <Divider
-          style={{ width: '100%', backgroundColor: 'lightgray' }}
-          bold={true}
-        />
+        <Divider style={styles.divider} bold={true} />
+
         <ScrollableItemForTodaysLots
           number="505"
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
         />
-        <Divider
-          style={{ width: '100%', backgroundColor: 'lightgray' }}
-          bold={true}
-        />
+        <Divider style={styles.divider} bold={true} />
+
         <ScrollableItemForTodaysLots
           number="505"
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
         />
-        <Divider
-          style={{ width: '100%', backgroundColor: 'lightgray' }}
-          bold={true}
-        />
+        <Divider style={styles.divider} bold={true} />
+
         <ScrollableItemForTodaysLots
           number="505"
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
         />
-        <Divider
-          style={{ width: '100%', backgroundColor: 'lightgray' }}
-          bold={true}
-        />
+        <Divider style={styles.divider} bold={true} />
+
         <ScrollableItemForTodaysLots
           number="505"
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
         />
-        <Divider
-          style={{ width: '100%', backgroundColor: 'lightgray' }}
-          bold={true}
-        />
+        <Divider style={styles.divider} bold={true} />
+
         <ScrollableItemForTodaysLots
           number="505"
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
         />
-        <Divider
-          style={{ width: '100%', backgroundColor: 'lightgray' }}
-          bold={true}
-        />
+        <Divider style={styles.divider} bold={true} />
+
         <ScrollableItemForTodaysLots
           number="505"
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
         />
-        <Divider
-          style={{ width: '100%', backgroundColor: 'lightgray' }}
-          bold={true}
-        />
+        <Divider style={styles.divider} bold={true} />
+
         <ScrollableItemForTodaysLots
           number="505"
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
         />
-        <Divider
-          style={{ width: '100%', backgroundColor: 'lightgray' }}
-          bold={true}
-        />
+        <Divider style={styles.divider} bold={true} />
+
         <ScrollableItemForTodaysLots
           number="505"
           area="2"
@@ -123,6 +102,10 @@ const ScrollableContent = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  divider: {
+    width: '100%',
+    backgroundColor: 'lightgray',
   },
   scrollContent: {
     paddingVertical: 10, // Padding for the scrollable area

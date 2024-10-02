@@ -21,7 +21,6 @@ const ScrollableItemForTodaysLots: React.FC<ScrollableItemProps> = ({
 }) => {
   return (
     <View style={styles.scrollItem}>
-      {/* Display the props in a formatted way */}
       <View style={styles.itemInfo}>
         <Text style={styles.itemText}>
           Número: {number} - Área: {area} - Barrio: {neighbourhood}

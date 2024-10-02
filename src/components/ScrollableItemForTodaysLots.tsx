@@ -9,7 +9,7 @@ import { theme } from '../styles/styles';
 // Define the type or interface for the props
 interface ScrollableItemProps {
   number: string; // Lot number
-  area: string; // Area of the lot
+  zone: string; // Area of the lot
   neighbourhood: string; // Neighbourhood of the lot
   completed: boolean;
   extraNotes?: string; // Optional extra notes about the lot
@@ -17,7 +17,7 @@ interface ScrollableItemProps {
 
 const ScrollableItemForTodaysLots: React.FC<ScrollableItemProps> = ({
   number,
-  area,
+  zone,
   neighbourhood,
   completed,
   extraNotes,
@@ -29,7 +29,7 @@ const ScrollableItemForTodaysLots: React.FC<ScrollableItemProps> = ({
       <View style={styles.scrollItem}>
         <View style={styles.itemInfo}>
           <Text style={styles.itemText}>
-            Número: {number} - Área: {area} - Barrio: {neighbourhood}
+            Número: {number} - Zona: {zone} - Barrio: {neighbourhood}
           </Text>
           {extraNotes ? (
             <Text style={styles.extraNotes}>{extraNotes}</Text>

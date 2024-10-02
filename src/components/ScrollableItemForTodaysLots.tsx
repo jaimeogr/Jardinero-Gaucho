@@ -5,17 +5,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
 import { theme } from '../styles/styles';
+import { LotInterface } from '../types/types';
 
-// Define the type or interface for the props
-interface ScrollableItemProps {
-  number: string; // Lot number
-  zone: string; // Area of the lot
-  neighbourhood: string; // Neighbourhood of the lot
-  completed: boolean;
-  extraNotes?: string; // Optional extra notes about the lot
-}
-
-const ScrollableItemForTodaysLots: React.FC<ScrollableItemProps> = ({
+const ScrollableItemForTodaysLots: React.FC<LotInterface> = ({
   number,
   zone,
   neighbourhood,

@@ -1,7 +1,7 @@
 // DataService.ts
-import { ScrollableItemProps } from '../types/types';
+import { LotInterface } from '../types/types';
 
-const lotsForToday: ScrollableItemProps[] = [
+const lotsForToday: LotInterface[] = [
   {
     number: '200',
     zone: '2',
@@ -108,7 +108,7 @@ const lotsForToday: ScrollableItemProps[] = [
 ];
 
 export default {
-  getLotsForToday: (): ScrollableItemProps[] => {
+  getLotsForToday: (): LotInterface[] => {
     return lotsForToday;
   },
 };

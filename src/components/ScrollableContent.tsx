@@ -5,13 +5,9 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import ScrollableItemForTodaysLots from './ScrollableItemForTodaysLots';
-import { LotInterface } from '../types/types';
+import { GroupOfLotsInterface } from '../types/types';
 
-interface ScrollableContentProps {
-  lots: LotInterface[]; // lots is an array of LotInterface
-}
-
-const ScrollableContent = ({ lots }: ScrollableContentProps) => {
+const ScrollableContent = ({ lots }: GroupOfLotsInterface) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>

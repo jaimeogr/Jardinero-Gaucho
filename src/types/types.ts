@@ -8,6 +8,10 @@ export interface LotInterface {
   extraNotes?: string; // Optional extra notes about the lot
 }
 
+export interface GroupOfLotsInterface {
+  lots: LotInterface[]; // lots is an array of LotInterface
+}
+
 // You can define additional interfaces for other data types in your app
 export interface UserInterface {
   id: number;

@@ -13,7 +13,7 @@ const HomeScreen = ({ navigation }) => {
     <LinearGradient
       colors={[theme.colors.background, theme.colors.background2]} // Define the gradient colors
       style={styles.gradient} // Apply the gradient to the entire container
-      start={{ x: 0.5, y: 0.4 }} // Start the gradient from the top center
+      start={{ x: 0.5, y: 0.2 }} // Start the gradient from the top center
       end={{ x: 0.5, y: 0.6 }} // End the gradient at the bottom center
     >
       <View style={styles.homeElements}>

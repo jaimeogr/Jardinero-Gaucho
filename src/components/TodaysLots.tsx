@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     alignSelf: 'flex-start',
-    paddingHorizontal: 12,
     paddingTop: 12,
+    marginLeft: 24,
   },
 });
 export default TodaysLots;

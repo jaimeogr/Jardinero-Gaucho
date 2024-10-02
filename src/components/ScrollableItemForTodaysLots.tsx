@@ -2,6 +2,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { TouchableRipple } from 'react-native-paper';
 
 import { theme } from '../styles/styles';
 
@@ -24,23 +25,25 @@ const ScrollableItemForTodaysLots: React.FC<ScrollableItemProps> = ({
   const [compl, setCompl] = useState(completed);
 
   return (
-    <View style={styles.scrollItem}>
-      <View style={styles.itemInfo}>
-        <Text style={styles.itemText}>
-          Número: {number} - Área: {area} - Barrio: {neighbourhood}
-        </Text>
-        {extraNotes ? (
-          <Text style={styles.extraNotes}>{extraNotes}</Text>
-        ) : null}
+    <TouchableRipple onPress={() => null} rippleColor={theme.colors.ripple}>
+      <View style={styles.scrollItem}>
+        <View style={styles.itemInfo}>
+          <Text style={styles.itemText}>
+            Número: {number} - Área: {area} - Barrio: {neighbourhood}
+          </Text>
+          {extraNotes ? (
+            <Text style={styles.extraNotes}>{extraNotes}</Text>
+          ) : null}
+        </View>
+        <TouchableOpacity onPress={() => setCompl(!compl)}>
+          <MaterialCommunityIcons
+            name={compl ? 'check-circle' : 'check-circle-outline'}
+            color={compl ? theme.colors.green : theme.colors.gray}
+            size={32}
+          />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => setCompl(!compl)}>
-        <MaterialCommunityIcons
-          name={compl ? 'check-circle' : 'check-circle-outline'}
-          color={compl ? theme.colors.green : theme.colors.gray}
-          size={32}
-        />
-      </TouchableOpacity>
-    </View>
+    </TouchableRipple>
   );
 };
 

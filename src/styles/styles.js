@@ -11,5 +11,6 @@ export const theme = {
     background: '#155E63', // 155E63 36AE7C
     background2: '#EAE7E7',
     background3: '#F5EFE3', // 6BCB77 C1F8CF
+    ripple: '#EAE7E7',
   },
 };

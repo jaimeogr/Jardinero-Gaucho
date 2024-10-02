@@ -15,6 +15,7 @@ const ScrollableContent = () => {
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+          completed={false}
         />
 
         <Divider style={styles.divider} bold={true} />
@@ -23,6 +24,7 @@ const ScrollableContent = () => {
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+          completed={false}
         />
         <Divider style={styles.divider} bold={true} />
 
@@ -31,6 +33,7 @@ const ScrollableContent = () => {
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+          completed={false}
         />
         <Divider style={styles.divider} bold={true} />
 
@@ -39,6 +42,7 @@ const ScrollableContent = () => {
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+          completed={false}
         />
         <Divider style={styles.divider} bold={true} />
 
@@ -47,6 +51,7 @@ const ScrollableContent = () => {
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+          completed={false}
         />
         <Divider style={styles.divider} bold={true} />
 
@@ -55,6 +60,7 @@ const ScrollableContent = () => {
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+          completed={false}
         />
         <Divider style={styles.divider} bold={true} />
 
@@ -63,6 +69,7 @@ const ScrollableContent = () => {
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+          completed={false}
         />
         <Divider style={styles.divider} bold={true} />
 
@@ -71,6 +78,7 @@ const ScrollableContent = () => {
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+          completed={false}
         />
         <Divider style={styles.divider} bold={true} />
 
@@ -79,6 +87,7 @@ const ScrollableContent = () => {
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+          completed={false}
         />
         <Divider style={styles.divider} bold={true} />
 
@@ -87,6 +96,7 @@ const ScrollableContent = () => {
           area="2"
           neighbourhood="El Canton asd asd asdas asdasdasd"
           extraNotes="El Gingko Biloba necesita poda asd das ds sd asd asd sa das ds ds das"
+          completed={false}
         />
       </ScrollView>
 

@@ -10,6 +10,7 @@ interface ScrollableItemProps {
   number: string; // Lot number
   area: string; // Area of the lot
   neighbourhood: string; // Neighbourhood of the lot
+  completed: boolean;
   extraNotes?: string; // Optional extra notes about the lot
 }
 
@@ -17,6 +18,7 @@ const ScrollableItemForTodaysLots: React.FC<ScrollableItemProps> = ({
   number,
   area,
   neighbourhood,
+  completed,
   extraNotes,
 }) => {
   return (
@@ -30,8 +32,8 @@ const ScrollableItemForTodaysLots: React.FC<ScrollableItemProps> = ({
         ) : null}
       </View>
       <MaterialCommunityIcons
-        name="check-circle-outline"
-        color={theme.colors.tertiary}
+        name={completed ? 'check-circle' : 'check-circle-outline'}
+        color={completed ? theme.colors.green : theme.colors.gray}
         size={32}
       />
     </View>

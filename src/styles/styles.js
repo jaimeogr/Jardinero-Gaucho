@@ -4,6 +4,7 @@ export const theme = {
     primary: '#155E63', //155E63
     secondary: '#059212',
     tertiary: 'green',
+    green: 'green',
     additional: '#5BB318',
     accent: '#00AF91', // 347928
     gray: '#515661',

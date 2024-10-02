@@ -24,7 +24,7 @@ const ClickableRoundButton = ({ title, iconName, onPress }) => {
 
 const styles = StyleSheet.create({
   touchable: {
-    flex: 1, // Allows buttons to take equal space within parent container
+    // flex: 0, // Allows buttons to take equal space within parent container
   },
   roundButton: {
     backgroundColor: 'white',

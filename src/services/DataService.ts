@@ -1,7 +1,8 @@
 // DataService.ts
 import { LotInterface } from '../types/types';
+import { lotNeedsMowing } from '../utils/DateAnalyser';
 
-const lotsForToday: LotInterface[] = [
+const allLots: LotInterface[] = [
   {
     number: '200',
     zone: '2',
@@ -119,8 +120,58 @@ const lotsForToday: LotInterface[] = [
   },
 ];
 
+const getZonesOptions = () => {
+  const result: {
+    neighbourhood: string;
+    needMowing: number;
+    doesntNeedMowing: number;
+  }[] = [];
+
+  // Group lots by neighbourhood
+  const lotsByNeighbourhood: Record<string, LotInterface[]> = allLots.reduce(
+    (acc, lot) => {
+      if (!acc[lot.neighbourhood]) {
+        acc[lot.neighbourhood] = [];
+      }
+      acc[lot.neighbourhood].push(lot);
+      return acc;
+    },
+    {} as Record<string, LotInterface[]>,
+  );
+
+  // Iterate over each neighbourhood and calculate needMowing and doesntNeedMowing
+  for (const neighbourhood in lotsByNeighbourhood) {
+    const lots = lotsByNeighbourhood[neighbourhood];
+    let needMowing = 0;
+    let doesntNeedMowing = 0;
+
+    lots.forEach((lot) => {
+      if (lotNeedsMowing(lot.lastMowingDate)) {
+        needMowing++;
+      } else {
+        doesntNeedMowing++;
+      }
+    });
+
+    result.push({
+      neighbourhood,
+      needMowing,
+      doesntNeedMowing,
+    });
+  }
+
+  return result;
+};
+
 export default {
   getLotsForToday: (): LotInterface[] => {
-    return lotsForToday;
+    return allLots;
+  },
+
+  // Directly export the function without wrapping
+  getZonesOptions,
+
+  getAllLots: () => {
+    return allLots;
   },
 };

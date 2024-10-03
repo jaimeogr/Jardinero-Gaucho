@@ -14,7 +14,7 @@ const allLots: LotInterface[] = [
     number: '201',
     zone: '2',
     neighbourhood: 'El Canton',
-    lastMowingDate: new Date('2024-09-23'),
+    lastMowingDate: new Date('2024-10-03'),
   },
   {
     number: '202',
@@ -26,19 +26,85 @@ const allLots: LotInterface[] = [
     number: '202',
     zone: '2',
     neighbourhood: 'El Canton',
-    lastMowingDate: new Date('2024-09-28'), //saturday hardoced for extreme testing
+    lastMowingDate: new Date('2024-10-02'),
   },
   {
     number: '202',
     zone: '2',
     neighbourhood: 'El Canton',
-    lastMowingDate: new Date('2024-09-29'), //sunday hardoced for extreme testing
+    lastMowingDate: new Date('2024-09-29'),
+  },
+  {
+    number: '101',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-09-29'),
+  },
+  {
+    number: '102',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-09-30'),
+  },
+  {
+    number: '103',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-09-30'),
+  },
+  {
+    number: '104',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-10-01'),
+  },
+  {
+    number: '105',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-10-02'),
+  },
+  {
+    number: '106',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-10-03'),
+  },
+  {
+    number: '107',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-10-03'),
+  },
+  {
+    number: '108',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-10-01'),
+  },
+  {
+    number: '109',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-10-04'),
+  },
+  {
+    number: '110',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-10-04'),
+  },
+  {
+    number: '111',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-10-04'),
   },
   {
     number: '506',
     zone: '3',
     neighbourhood: 'La Laguna',
-    lastMowingDate: new Date('2024-10-01'),
+    lastMowingDate: new Date('2024-09-25'),
   },
   {
     number: '507',

@@ -7,6 +7,8 @@ export const theme = {
     green: 'green',
     additional: '#5BB318',
     accent: '#00AF91', // 347928
+    accent2: '#4D96FF',
+    accent3: '#A0E418',
     gray: '#515661',
     background: '#155E63', // 155E63 36AE7C
     background2: '#EAE7E7',

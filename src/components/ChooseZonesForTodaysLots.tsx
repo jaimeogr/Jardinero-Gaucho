@@ -12,11 +12,7 @@ const ChooseZonesForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {lots.map((lot, index) => (
           <React.Fragment key={index}>
-            <Chip
-              style={styles.chip}
-              mode="outlined"
-              onPress={() => console.log('Pressed')}
-            >
+            <Chip style={styles.chip} mode="outlined" onPress={() => null}>
               {lot.neighbourhood}
             </Chip>
           </React.Fragment>

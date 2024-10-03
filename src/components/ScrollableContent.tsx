@@ -18,7 +18,7 @@ const ScrollableContent = ({ lots }: GroupOfLotsInterface) => {
               zone={lot.zone}
               neighbourhood={lot.neighbourhood}
               extraNotes={lot.extraNotes}
-              completed={lot.completed}
+              lastMowingDate={lot.lastMowingDate}
             />
             <Divider style={styles.divider} bold={true} />
           </React.Fragment>

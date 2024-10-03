@@ -4,7 +4,7 @@ export interface LotInterface {
   number: string; // Lot number
   zone: string; // Area of the lot
   neighbourhood: string; // Neighbourhood of the lot
-  completed: boolean;
+  lastMowingDate: Date;
   extraNotes?: string; // Optional extra notes about the lot
 }
 

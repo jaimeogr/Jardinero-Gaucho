@@ -11,7 +11,7 @@ const ScrollableItemForTodaysLots: React.FC<LotInterface> = ({
   number,
   zone,
   neighbourhood,
-  completed,
+  lastMowingDate: completed,
   extraNotes,
 }) => {
   const [compl, setCompl] = useState(completed);

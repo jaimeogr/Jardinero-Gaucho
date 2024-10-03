@@ -17,7 +17,7 @@ const ChooseZonesForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
               mode="outlined"
               onPress={() => console.log('Pressed')}
             >
-              Example Chip
+              {lot.neighbourhood}
             </Chip>
           </React.Fragment>
         ))}
@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     borderWidth: 3,
     marginVertical: 8,
-    fontcolor: 'purple',
   },
   fadeEffect: {
     position: 'absolute',

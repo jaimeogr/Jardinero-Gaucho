@@ -12,16 +12,22 @@ import { List, IconButton } from 'react-native-paper';
 import DataService from '../services/DataService';
 import { theme } from '../styles/styles';
 
-const CustomAccordion = ({ title, children }) => {
+const CustomAccordion = ({
+  title,
+  children,
+  styleAccordionContainer,
+  styleAccordionHeader,
+  styleAccordionTitle,
+}) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <View style={styles.accordionContainer}>
+    <View style={styleAccordionContainer}>
       <TouchableOpacity
         onPress={() => setExpanded(!expanded)}
-        style={styles.accordionHeader}
+        style={styleAccordionHeader}
       >
-        <Text style={styles.accordionTitle}>{title}</Text>
+        <Text style={styleAccordionTitle}>{title}</Text>
         <IconButton icon={expanded ? 'chevron-up' : 'chevron-down'} size={20} />
       </TouchableOpacity>
       {expanded && <View style={styles.accordionContent}>{children}</View>}
@@ -38,11 +44,17 @@ const ChooseZonesForTodaysLots = () => {
         <CustomAccordion
           key={neighbourhoodIndex}
           title={`${neighbourhood.neighbourhood}`}
+          styleAccordionContainer={styles.accordionContainerForNeighbourhood}
+          styleAccordionHeader={styles.accordionHeaderForNeighbourhood}
+          styleAccordionTitle={styles.accordionTitleForNeighbourhood}
         >
           {neighbourhood.zones.map((zone, zoneIndex) => (
             <CustomAccordion
               key={zoneIndex}
               title={`Zone ${zone.zone} - ${zone.needMowing} lots need mowing`}
+              styleAccordionContainer={styles.accordionContainerForZone}
+              styleAccordionHeader={styles.accordionHeaderForZone}
+              styleAccordionTitle={styles.accordionTitleForZone}
             >
               {zone.lots.map((lot, lotIndex) => (
                 <List.Item
@@ -85,20 +97,37 @@ const styles = StyleSheet.create({
     height: 20, // Adjust the height of the fade effect
     marginRight: 4, // Padding to match the scrollable area
   },
-  accordionContainer: {
+  accordionContainerForNeighbourhood: {
     marginBottom: 18,
     borderRadius: 10,
     borderColor: 'purple',
     borderWidth: 3,
     backgroundColor: '#EEEEEE',
   },
-  accordionHeader: {
+  accordionHeaderForNeighbourhood: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingLeft: 14,
   },
-  accordionTitle: {
+  accordionTitleForNeighbourhood: {
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  accordionContainerForZone: {
+    marginBottom: 18,
+    borderRadius: 10,
+    borderColor: theme.colors.accent2,
+    borderWidth: 3,
+    backgroundColor: '#EEEEEE',
+  },
+  accordionHeaderForZone: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: 14,
+  },
+  accordionTitleForZone: {
     fontSize: 17,
     fontWeight: 'bold',
   },

@@ -10,6 +10,7 @@ import {
 import { List, IconButton } from 'react-native-paper';
 
 import DataService from '../services/DataService';
+import { theme } from '../styles/styles';
 
 const CustomAccordion = ({ title, children }) => {
   const [expanded, setExpanded] = useState(false);
@@ -36,7 +37,7 @@ const ChooseZonesForTodaysLots = () => {
       {zonesOptions.map((neighbourhood, neighbourhoodIndex) => (
         <CustomAccordion
           key={neighbourhoodIndex}
-          title={`${neighbourhood.neighbourhood} (${neighbourhood.needMowing} lots need mowing)`}
+          title={`${neighbourhood.neighbourhood}`}
         >
           {neighbourhood.zones.map((zone, zoneIndex) => (
             <CustomAccordion
@@ -85,20 +86,20 @@ const styles = StyleSheet.create({
     marginRight: 4, // Padding to match the scrollable area
   },
   accordionContainer: {
-    marginBottom: 10,
+    marginBottom: 18,
     borderRadius: 10,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    backgroundColor: '#f8f8f8',
+    borderColor: 'purple',
+    borderWidth: 3,
+    backgroundColor: '#EEEEEE',
   },
   accordionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    paddingLeft: 14,
   },
   accordionTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 'bold',
   },
   accordionContent: {

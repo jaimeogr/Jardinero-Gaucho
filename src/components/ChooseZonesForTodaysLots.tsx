@@ -4,27 +4,19 @@ import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Chip } from 'react-native-paper';
 
+import DataService from '../services/DataService';
 import { GroupOfLotsInterface } from '../types/types';
-import { lotNeedsMowing } from '../utils/DateAnalyser';
 
 const ChooseZonesForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
-  // Example usage:
-  const exampleDate = new Date('2024-10-04'); // Set the date you want to check
-  const needsMowing = lotNeedsMowing(exampleDate);
-
-  console.log('needsMowing:' + needsMowing); // Outputs true or false based on the comparison
+  const zonesOptions = DataService.getZonesOptions();
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {lots.map((lot, index) => (
+        {zonesOptions.map((zone, index) => (
           <React.Fragment key={index}>
             <Chip style={styles.chip} mode="outlined" onPress={() => null}>
-              {lot.number}
-              {lot.lastMowingDate.toDateString()} -{' '}
-              {lotNeedsMowing(lot.lastMowingDate)
-                ? 'necesita corte'
-                : 'No necesita'}
+              {zone.neighbourhood} - {zone.needMowing} lots
             </Chip>
           </React.Fragment>
         ))}

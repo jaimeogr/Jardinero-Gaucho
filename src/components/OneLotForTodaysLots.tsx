@@ -7,7 +7,7 @@ import { TouchableRipple } from 'react-native-paper';
 import { theme } from '../styles/styles';
 import { LotInterface } from '../types/types';
 
-const ScrollableItemForTodaysLots: React.FC<LotInterface> = ({
+const OneLotForTodaysLots: React.FC<LotInterface> = ({
   number,
   zone,
   neighbourhood,
@@ -63,4 +63,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScrollableItemForTodaysLots;
+export default OneLotForTodaysLots;

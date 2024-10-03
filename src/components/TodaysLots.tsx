@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Surface } from 'react-native-paper';
 
+import AllLotsForTodaysLots from './AllLotsForTodaysLots';
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
 import ChooseZonesForTodaysLots from './ChooseZonesForTodaysLots';
-import LotsForTodaysLots from './ScrollableContent';
 import DataService from '../services/DataService';
 import { LotInterface } from '../types/types';
 
@@ -24,7 +24,7 @@ const TodaysLots = () => {
         {true ? (
           <ChooseZonesForTodaysLots lots={lots} />
         ) : (
-          <LotsForTodaysLots lots={lots} />
+          <AllLotsForTodaysLots lots={lots} />
         )}
         <BottomElementsForTodaysLots />
       </View>

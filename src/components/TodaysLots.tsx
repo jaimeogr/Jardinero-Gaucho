@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     paddingTop: 12,
     marginLeft: 24,
+    marginBottom: 12,
   },
 });
 export default TodaysLots;

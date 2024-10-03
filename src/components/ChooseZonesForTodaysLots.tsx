@@ -1,24 +1,45 @@
-// ScrollableContent.tsx
 import { LinearGradient } from 'expo-linear-gradient'; // Import from expo-linear-gradient
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { Chip } from 'react-native-paper';
+import { List } from 'react-native-paper';
 
 import DataService from '../services/DataService';
 import { GroupOfLotsInterface } from '../types/types';
 
-const ChooseZonesForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
+const ChooseZonesForTodaysLots = () => {
   const zonesOptions = DataService.getZonesOptions();
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {zonesOptions.map((zone, index) => (
-          <React.Fragment key={index}>
-            <Chip style={styles.chip} mode="outlined" onPress={() => null}>
-              {zone.neighbourhood} - {zone.needMowing} lots
-            </Chip>
-          </React.Fragment>
+        {zonesOptions.map((neighbourhood, neighbourhoodIndex) => (
+          <List.Section
+            key={neighbourhoodIndex}
+            title={`${neighbourhood.neighbourhood} (${neighbourhood.needMowing} need mowing)`}
+          >
+            {neighbourhood.zones.map((zone, zoneIndex) => (
+              <List.Accordion
+                key={zoneIndex}
+                title={`Zone ${zone.zone} - ${zone.needMowing} lots need mowing`}
+                left={(props) => <List.Icon {...props} icon="map" />}
+              >
+                {zone.lots.map((lot, lotIndex) => (
+                  <List.Item
+                    key={lotIndex}
+                    title={`Lot ${lot.number}`}
+                    description={`Last mowed: ${lot.lastMowingDate.toDateString()}`}
+                    left={(props) => (
+                      <List.Icon
+                        {...props}
+                        icon={lot.needMowing ? 'alert' : 'check'}
+                        color={lot.needMowing ? 'red' : 'green'}
+                      />
+                    )}
+                  />
+                ))}
+              </List.Accordion>
+            ))}
+          </List.Section>
         ))}
       </ScrollView>
 
@@ -37,12 +58,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 24, // Padding for the scrollable area
-  },
-  chip: {
-    borderColor: 'purple',
-    borderRadius: 32,
-    borderWidth: 3,
-    marginVertical: 8,
   },
   fadeEffect: {
     position: 'absolute',

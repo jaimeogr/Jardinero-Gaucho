@@ -22,7 +22,7 @@ const TodaysLots = () => {
 
       <View style={styles.content}>
         {true ? (
-          <ChooseZonesForTodaysLots lots={lots} />
+          <ChooseZonesForTodaysLots />
         ) : (
           <AllLotsForTodaysLots lots={lots} />
         )}

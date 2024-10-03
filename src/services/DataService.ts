@@ -123,40 +123,84 @@ const allLots: LotInterface[] = [
 const getZonesOptions = () => {
   const result: {
     neighbourhood: string;
+    zones: {
+      zone: string;
+      needMowing: number;
+      doesntNeedMowing: number;
+      lots: {
+        number: string;
+        needMowing: boolean;
+        lastMowingDate: Date;
+      }[];
+    }[];
     needMowing: number;
     doesntNeedMowing: number;
   }[] = [];
 
-  // Group lots by neighbourhood
-  const lotsByNeighbourhood: Record<string, LotInterface[]> = allLots.reduce(
+  // Group lots by neighbourhood, and then by zone within each neighbourhood
+  const lotsByNeighbourhoodAndZone = allLots.reduce(
     (acc, lot) => {
-      if (!acc[lot.neighbourhood]) {
-        acc[lot.neighbourhood] = [];
+      const { neighbourhood, zone } = lot;
+
+      if (!acc[neighbourhood]) {
+        acc[neighbourhood] = {};
       }
-      acc[lot.neighbourhood].push(lot);
+
+      if (!acc[neighbourhood][zone]) {
+        acc[neighbourhood][zone] = [];
+      }
+
+      acc[neighbourhood][zone].push(lot);
       return acc;
     },
-    {} as Record<string, LotInterface[]>,
+    {} as Record<string, Record<string, LotInterface[]>>,
   );
 
-  // Iterate over each neighbourhood and calculate needMowing and doesntNeedMowing
-  for (const neighbourhood in lotsByNeighbourhood) {
-    const lots = lotsByNeighbourhood[neighbourhood];
-    let needMowing = 0;
-    let doesntNeedMowing = 0;
+  // Iterate over each neighbourhood
+  for (const neighbourhood in lotsByNeighbourhoodAndZone) {
+    let neighbourhoodNeedMowing = 0;
+    let neighbourhoodDoesntNeedMowing = 0;
 
-    lots.forEach((lot) => {
-      if (lotNeedsMowing(lot.lastMowingDate)) {
-        needMowing++;
-      } else {
-        doesntNeedMowing++;
-      }
-    });
+    // Iterate over each zone for each neighbourhood.
+    const zones = Object.keys(lotsByNeighbourhoodAndZone[neighbourhood]).map(
+      (zone) => {
+        const lotsInZone = lotsByNeighbourhoodAndZone[neighbourhood][zone];
+        let zoneNeedMowing = 0;
+        let zoneDoesntNeedMowing = 0;
+
+        const lots = lotsInZone.map((lot) => {
+          const needsMowing = lotNeedsMowing(lot.lastMowingDate);
+
+          if (needsMowing) {
+            zoneNeedMowing++;
+          } else {
+            zoneDoesntNeedMowing++;
+          }
+
+          return {
+            number: lot.number,
+            needMowing: needsMowing,
+            lastMowingDate: lot.lastMowingDate,
+          };
+        });
+
+        neighbourhoodNeedMowing += zoneNeedMowing;
+        neighbourhoodDoesntNeedMowing += zoneDoesntNeedMowing;
+
+        return {
+          zone,
+          needMowing: zoneNeedMowing,
+          doesntNeedMowing: zoneDoesntNeedMowing,
+          lots,
+        };
+      },
+    );
 
     result.push({
       neighbourhood,
-      needMowing,
-      doesntNeedMowing,
+      zones,
+      needMowing: neighbourhoodNeedMowing,
+      doesntNeedMowing: neighbourhoodDoesntNeedMowing,
     });
   }
 
@@ -168,7 +212,6 @@ export default {
     return allLots;
   },
 
-  // Directly export the function without wrapping
   getZonesOptions,
 
   getAllLots: () => {

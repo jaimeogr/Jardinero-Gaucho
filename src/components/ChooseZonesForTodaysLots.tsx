@@ -1,54 +1,71 @@
 import { LinearGradient } from 'expo-linear-gradient'; // Import from expo-linear-gradient
-import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { List } from 'react-native-paper';
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
+import { List, IconButton } from 'react-native-paper';
 
 import DataService from '../services/DataService';
-import { GroupOfLotsInterface } from '../types/types';
+
+const CustomAccordion = ({ title, children }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <View style={styles.accordionContainer}>
+      <TouchableOpacity
+        onPress={() => setExpanded(!expanded)}
+        style={styles.accordionHeader}
+      >
+        <Text style={styles.accordionTitle}>{title}</Text>
+        <IconButton icon={expanded ? 'chevron-up' : 'chevron-down'} size={20} />
+      </TouchableOpacity>
+      {expanded && <View style={styles.accordionContent}>{children}</View>}
+    </View>
+  );
+};
 
 const ChooseZonesForTodaysLots = () => {
   const zonesOptions = DataService.getZonesOptions();
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {zonesOptions.map((neighbourhood, neighbourhoodIndex) => (
-          <List.Section
-            key={neighbourhoodIndex}
-            title={`${neighbourhood.neighbourhood} (${neighbourhood.needMowing} need mowing)`}
-          >
-            {neighbourhood.zones.map((zone, zoneIndex) => (
-              <List.Accordion
-                key={zoneIndex}
-                title={`Zone ${zone.zone} - ${zone.needMowing} lots need mowing`}
-                left={(props) => <List.Icon {...props} icon="map" />}
-              >
-                {zone.lots.map((lot, lotIndex) => (
-                  <List.Item
-                    key={lotIndex}
-                    title={`Lot ${lot.number}`}
-                    description={`Last mowed: ${lot.lastMowingDate.toDateString()}`}
-                    left={(props) => (
-                      <List.Icon
-                        {...props}
-                        icon={lot.needMowing ? 'alert' : 'check'}
-                        color={lot.needMowing ? 'red' : 'green'}
-                      />
-                    )}
-                  />
-                ))}
-              </List.Accordion>
-            ))}
-          </List.Section>
-        ))}
-      </ScrollView>
-
-      {/* Fade effect at the bottom */}
+    <ScrollView contentContainerStyle={styles.scrollContent}>
+      {zonesOptions.map((neighbourhood, neighbourhoodIndex) => (
+        <CustomAccordion
+          key={neighbourhoodIndex}
+          title={`${neighbourhood.neighbourhood} (${neighbourhood.needMowing} lots need mowing)`}
+        >
+          {neighbourhood.zones.map((zone, zoneIndex) => (
+            <CustomAccordion
+              key={zoneIndex}
+              title={`Zone ${zone.zone} - ${zone.needMowing} lots need mowing`}
+            >
+              {zone.lots.map((lot, lotIndex) => (
+                <List.Item
+                  key={lotIndex}
+                  title={`Lot ${lot.number}`}
+                  description={`Last mowed: ${lot.lastMowingDate.toDateString()}`}
+                  left={(props) => (
+                    <List.Icon
+                      {...props}
+                      icon={lot.needMowing ? 'alert' : 'check'}
+                      color={lot.needMowing ? 'red' : 'green'}
+                    />
+                  )}
+                />
+              ))}
+            </CustomAccordion>
+          ))}
+        </CustomAccordion>
+      ))}
       <LinearGradient
         colors={['transparent', 'rgba(255, 255, 255, 0.8)']} // Adjust colors for the fade effect
         style={styles.fadeEffect}
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -66,6 +83,26 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: 20, // Adjust the height of the fade effect
     marginRight: 4, // Padding to match the scrollable area
+  },
+  accordionContainer: {
+    marginBottom: 10,
+    borderRadius: 10,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    backgroundColor: '#f8f8f8',
+  },
+  accordionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+  },
+  accordionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  accordionContent: {
+    padding: 10,
   },
 });
 

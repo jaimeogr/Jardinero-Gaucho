@@ -1,4 +1,4 @@
-export function isDateWithinThisWeek(dateToCheck: Date): boolean {
+export function lotNeedsMowing(dateToCheck: Date): boolean {
   const today = new Date();
 
   // Get the current day of the week (0 = Sunday, 1 = Monday, etc.)
@@ -16,11 +16,5 @@ export function isDateWithinThisWeek(dateToCheck: Date): boolean {
   sunday.setDate(monday.getDate() + 6); // Sunday is 6 days after Monday
 
   // Compare if dateToCheck is within the current week's Monday-Sunday range
-  return dateToCheck >= monday && dateToCheck <= sunday;
+  return !(dateToCheck >= monday && dateToCheck <= sunday);
 }
-
-// Example usage:
-const exampleDate = new Date('2024-10-04'); // Set the date you want to check
-const isWithinWeek = isDateWithinThisWeek(exampleDate);
-
-console.log(isWithinWeek); // Outputs true or false based on the comparison

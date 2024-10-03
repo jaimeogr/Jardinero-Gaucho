@@ -4,7 +4,7 @@ import { Text, Surface } from 'react-native-paper';
 
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
 import ChooseZonesForTodaysLots from './ChooseZonesForTodaysLots';
-import ScrollableContent from './ScrollableContent';
+import LotsForTodaysLots from './ScrollableContent';
 import DataService from '../services/DataService';
 import { LotInterface } from '../types/types';
 
@@ -24,7 +24,7 @@ const TodaysLots = () => {
         {true ? (
           <ChooseZonesForTodaysLots lots={lots} />
         ) : (
-          <ScrollableContent lots={lots} />
+          <LotsForTodaysLots lots={lots} />
         )}
         <BottomElementsForTodaysLots />
       </View>

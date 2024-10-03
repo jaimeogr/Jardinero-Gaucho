@@ -7,7 +7,7 @@ import { Divider } from 'react-native-paper';
 import ScrollableItemForTodaysLots from './ScrollableItemForTodaysLots';
 import { GroupOfLotsInterface } from '../types/types';
 
-const ScrollableContent = ({ lots }: GroupOfLotsInterface) => {
+const LotsForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScrollableContent;
+export default LotsForTodaysLots;

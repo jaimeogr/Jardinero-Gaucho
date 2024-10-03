@@ -5,15 +5,26 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Chip } from 'react-native-paper';
 
 import { GroupOfLotsInterface } from '../types/types';
+import { lotNeedsMowing } from '../utils/DateAnalyser';
 
 const ChooseZonesForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
+  // Example usage:
+  const exampleDate = new Date('2024-10-04'); // Set the date you want to check
+  const needsMowing = lotNeedsMowing(exampleDate);
+
+  console.log('needsMowing:' + needsMowing); // Outputs true or false based on the comparison
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {lots.map((lot, index) => (
           <React.Fragment key={index}>
             <Chip style={styles.chip} mode="outlined" onPress={() => null}>
-              {lot.neighbourhood}
+              {lot.number}
+              {lot.lastMowingDate.toDateString()} -{' '}
+              {lotNeedsMowing(lot.lastMowingDate)
+                ? 'necesita corte'
+                : 'No necesita'}
             </Chip>
           </React.Fragment>
         ))}

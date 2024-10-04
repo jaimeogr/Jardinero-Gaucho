@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: 'purple',
     borderWidth: 3,
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#FFE1FF',
   },
   accordionHeaderForNeighbourhood: {
     flexDirection: 'row',
@@ -117,9 +117,9 @@ const styles = StyleSheet.create({
   accordionContainerForZone: {
     marginBottom: 18,
     borderRadius: 10,
-    borderColor: theme.colors.accent2,
+    borderColor: '#347928',
     borderWidth: 3,
-    backgroundColor: '#EEEEEE',
+    backgroundColor: '#E7FBE6',
   },
   accordionHeaderForZone: {
     flexDirection: 'row',

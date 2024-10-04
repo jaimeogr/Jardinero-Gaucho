@@ -39,46 +39,48 @@ const ChooseZonesForTodaysLots = () => {
   const zonesOptions = DataService.getZonesOptions();
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContent}>
-      {zonesOptions.map((neighbourhood, neighbourhoodIndex) => (
-        <CustomAccordion
-          key={neighbourhoodIndex}
-          title={`${neighbourhood.neighbourhood}`}
-          styleAccordionContainer={styles.accordionContainerForNeighbourhood}
-          styleAccordionHeader={styles.accordionHeaderForNeighbourhood}
-          styleAccordionTitle={styles.accordionTitleForNeighbourhood}
-        >
-          {neighbourhood.zones.map((zone, zoneIndex) => (
-            <CustomAccordion
-              key={zoneIndex}
-              title={`Zone ${zone.zone} - ${zone.needMowing} lots need mowing`}
-              styleAccordionContainer={styles.accordionContainerForZone}
-              styleAccordionHeader={styles.accordionHeaderForZone}
-              styleAccordionTitle={styles.accordionTitleForZone}
-            >
-              {zone.lots.map((lot, lotIndex) => (
-                <List.Item
-                  key={lotIndex}
-                  title={`Lot ${lot.number}`}
-                  description={`Last mowed: ${lot.lastMowingDate.toDateString()}`}
-                  left={(props) => (
-                    <List.Icon
-                      {...props}
-                      icon={lot.needMowing ? 'alert' : 'check'}
-                      color={lot.needMowing ? 'red' : 'green'}
-                    />
-                  )}
-                />
-              ))}
-            </CustomAccordion>
-          ))}
-        </CustomAccordion>
-      ))}
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {zonesOptions.map((neighbourhood, neighbourhoodIndex) => (
+          <CustomAccordion
+            key={neighbourhoodIndex}
+            title={`${neighbourhood.neighbourhood}`}
+            styleAccordionContainer={styles.accordionContainerForNeighbourhood}
+            styleAccordionHeader={styles.accordionHeaderForNeighbourhood}
+            styleAccordionTitle={styles.accordionTitleForNeighbourhood}
+          >
+            {neighbourhood.zones.map((zone, zoneIndex) => (
+              <CustomAccordion
+                key={zoneIndex}
+                title={`Zone ${zone.zone} - ${zone.needMowing} lots need mowing`}
+                styleAccordionContainer={styles.accordionContainerForZone}
+                styleAccordionHeader={styles.accordionHeaderForZone}
+                styleAccordionTitle={styles.accordionTitleForZone}
+              >
+                {zone.lots.map((lot, lotIndex) => (
+                  <List.Item
+                    key={lotIndex}
+                    title={`Lot ${lot.number}`}
+                    description={`Last mowed: ${lot.lastMowingDate.toDateString()}`}
+                    left={(props) => (
+                      <List.Icon
+                        {...props}
+                        icon={lot.needMowing ? 'alert' : 'check'}
+                        color={lot.needMowing ? 'red' : 'green'}
+                      />
+                    )}
+                  />
+                ))}
+              </CustomAccordion>
+            ))}
+          </CustomAccordion>
+        ))}
+      </ScrollView>
       <LinearGradient
         colors={['transparent', 'rgba(255, 255, 255, 0.8)']} // Adjust colors for the fade effect
         style={styles.fadeEffect}
       />
-    </ScrollView>
+    </View>
   );
 };
 

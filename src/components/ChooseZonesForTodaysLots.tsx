@@ -31,13 +31,15 @@ const CustomAccordion = ({
         <Text style={styleAccordionTitle}>{title}</Text>
         <View style={styles.accordionHeaderRightSide}>
           {thisWeeksNormalLotsToMow ? (
-            <View>
+            <View style={styles.accordionHeaderIndicatorNormal}>
               <Text>{thisWeeksNormalLotsToMow}</Text>
             </View>
           ) : null}
           {thisWeeksCriticalLotsToMow ? (
-            <View>
-              <Text>{thisWeeksCriticalLotsToMow}</Text>
+            <View style={styles.accordionHeaderIndicatorCritical}>
+              <Text style={styles.accordionHeaderIndicatorText}>
+                {thisWeeksCriticalLotsToMow}
+              </Text>
             </View>
           ) : null}
           <IconButton
@@ -159,6 +161,16 @@ const styles = StyleSheet.create({
   accordionHeaderRightSide: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  accordionHeaderIndicatorNormal: {},
+  accordionHeaderIndicatorCritical: {
+    marginLeft: 16,
+    backgroundColor: 'orange',
+    borderRadius: 16,
+    padding: 7,
+  },
+  accordionHeaderIndicatorText: {
+    fontWeight: 'bold',
   },
 });
 

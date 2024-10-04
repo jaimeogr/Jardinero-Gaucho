@@ -10,7 +10,6 @@ import {
 import { List, IconButton } from 'react-native-paper';
 
 import DataService from '../services/DataService';
-import { theme } from '../styles/styles';
 
 const CustomAccordion = ({
   title,
@@ -18,6 +17,8 @@ const CustomAccordion = ({
   styleAccordionContainer,
   styleAccordionHeader,
   styleAccordionTitle,
+  thisWeeksNormalLotsToMow,
+  thisWeeksCriticalLotsToMow,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -28,7 +29,22 @@ const CustomAccordion = ({
         style={styleAccordionHeader}
       >
         <Text style={styleAccordionTitle}>{title}</Text>
-        <IconButton icon={expanded ? 'chevron-up' : 'chevron-down'} size={20} />
+        <View style={styles.accordionHeaderRightSide}>
+          {thisWeeksNormalLotsToMow ? (
+            <View>
+              <Text>{thisWeeksNormalLotsToMow}</Text>
+            </View>
+          ) : null}
+          {thisWeeksCriticalLotsToMow ? (
+            <View>
+              <Text>{thisWeeksCriticalLotsToMow}</Text>
+            </View>
+          ) : null}
+          <IconButton
+            icon={expanded ? 'chevron-up' : 'chevron-down'}
+            size={20}
+          />
+        </View>
       </TouchableOpacity>
       {expanded && <View style={styles.accordionContent}>{children}</View>}
     </View>
@@ -48,14 +64,18 @@ const ChooseZonesForTodaysLots = () => {
             styleAccordionContainer={styles.accordionContainerForNeighbourhood}
             styleAccordionHeader={styles.accordionHeaderForNeighbourhood}
             styleAccordionTitle={styles.accordionTitleForNeighbourhood}
+            thisWeeksNormalLotsToMow={neighbourhood.needMowing}
+            thisWeeksCriticalLotsToMow={neighbourhood.needMowing}
           >
             {neighbourhood.zones.map((zone, zoneIndex) => (
               <CustomAccordion
                 key={zoneIndex}
-                title={`Zone ${zone.zone} - ${zone.needMowing} lots need mowing`}
+                title={`Zona ${zone.zone}`}
                 styleAccordionContainer={styles.accordionContainerForZone}
                 styleAccordionHeader={styles.accordionHeaderForZone}
                 styleAccordionTitle={styles.accordionTitleForZone}
+                thisWeeksNormalLotsToMow={zone.needMowing}
+                thisWeeksCriticalLotsToMow={zone.needMowing}
               >
                 {zone.lots.map((lot, lotIndex) => (
                   <List.Item
@@ -135,6 +155,10 @@ const styles = StyleSheet.create({
   },
   accordionContent: {
     padding: 10,
+  },
+  accordionHeaderRightSide: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
+import { theme } from '../../styles/styles';
+
 const CustomAccordion = ({
   title,
   children,
@@ -22,8 +24,8 @@ const CustomAccordion = ({
       >
         <MaterialCommunityIcons
           name={true ? 'circle-slice-8' : 'circle-outline'}
-          color="gray"
-          size={32}
+          color={theme.colors.primary}
+          size={28}
         />
         <Text style={styleAccordionTitle}>{title}</Text>
         <View style={styles.accordionHeaderRightSide}>

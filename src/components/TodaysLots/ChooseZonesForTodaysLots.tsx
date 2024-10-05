@@ -11,6 +11,7 @@ import { List } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import DataService from '../../services/DataService';
+import { theme } from '../../styles/styles';
 
 const ChooseZonesForTodaysLots = () => {
   const zonesOptions = DataService.getZonesOptions();
@@ -44,6 +45,13 @@ const ChooseZonesForTodaysLots = () => {
                     title={`Lote ${lot.number}`}
                     description={`Ultima pasada: ${lot.lastMowingDate.toDateString()}`}
                     left={(props) => (
+                      <List.Icon
+                        {...props}
+                        icon={false ? 'circle-slice-8' : 'circle-outline'}
+                        color={theme.colors.primary}
+                      />
+                    )}
+                    right={(props) => (
                       <List.Icon
                         {...props}
                         icon={lot.needMowing ? 'alert' : 'check'}

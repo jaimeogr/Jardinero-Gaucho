@@ -22,12 +22,16 @@ const CustomAccordion = ({
         onPress={() => setExpanded(!expanded)}
         style={styleAccordionHeader}
       >
-        <MaterialCommunityIcons
-          name={true ? 'circle-slice-8' : 'circle-outline'}
-          color={theme.colors.primary}
-          size={28}
-        />
-        <Text style={styleAccordionTitle}>{title}</Text>
+        <View style={styles.accordionHeaderLeftSide}>
+          <MaterialCommunityIcons
+            name={true ? 'circle-slice-8' : 'circle-outline'}
+            color={theme.colors.primary}
+            size={28}
+            onPress={() => console.log('Pressed')}
+          />
+          <Text style={styleAccordionTitle}>{title}</Text>
+        </View>
+
         <View style={styles.accordionHeaderRightSide}>
           {thisWeeksNormalLotsToMow ? (
             <View style={styles.accordionHeaderIndicatorNormal}>
@@ -103,6 +107,11 @@ const styles = StyleSheet.create({
   },
   accordionContent: {
     padding: 10,
+  },
+  accordionHeaderLeftSide: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
   },
   accordionHeaderRightSide: {
     flexDirection: 'row',

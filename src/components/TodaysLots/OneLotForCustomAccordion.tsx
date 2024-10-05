@@ -1,39 +1,48 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Divider } from 'react-native-paper';
 
 import { theme } from '../../styles/styles';
 
 const OneLotForCustomAccordion = ({ title, description, lot }) => {
   return (
-    <TouchableOpacity style={styles.container}>
-      {/* Left Icon */}
-      <TouchableOpacity
-        onPress={() => console.log('Icon pressed')}
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
-      >
-        <MaterialCommunityIcons
-          name={true ? 'circle-slice-8' : 'circle-outline'}
-          color={theme.colors.primary}
-          size={28}
-        />
-      </TouchableOpacity>
+    <View style={styles.containerWithDivider}>
+      <TouchableOpacity style={styles.container}>
+        {/* Left Icon */}
+        <TouchableOpacity
+          onPress={() => console.log('Icon pressed')}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
+        >
+          <MaterialCommunityIcons
+            name={true ? 'circle-slice-8' : 'circle-outline'}
+            color={theme.colors.primary}
+            size={28}
+          />
+        </TouchableOpacity>
 
-      {/* Title and Description */}
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.description}>{description}</Text>
-      </View>
+        {/* Title and Description */}
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.description}>{description}</Text>
+        </View>
 
-      {/* Right Icon */}
-      <TouchableOpacity style={styles.rightIconContainer}>
-        <MaterialCommunityIcons name="clock-outline" size={28} color="orange" />
+        {/* Right Icon */}
+        <TouchableOpacity style={styles.rightIconContainer}>
+          <MaterialCommunityIcons
+            name="clock-outline"
+            size={28}
+            color="orange"
+          />
+        </TouchableOpacity>
       </TouchableOpacity>
-    </TouchableOpacity>
+      <Divider style={styles.divider} bold={true} />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  containerWithDivider: {},
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -58,6 +67,13 @@ const styles = StyleSheet.create({
   },
   rightIconContainer: {
     paddingHorizontal: 10,
+  },
+  divider: {
+    width: '95%',
+    backgroundColor: 'lightgray',
+    // marginRight: 10,
+    // marginLeft: 12,
+    alignSelf: 'center',
   },
 });
 

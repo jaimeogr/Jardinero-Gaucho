@@ -1,14 +1,7 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
-import { List, IconButton } from 'react-native-paper';
-
-import DataService from '../../services/DataService';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { IconButton } from 'react-native-paper';
 
 const CustomAccordion = ({
   title,
@@ -27,6 +20,11 @@ const CustomAccordion = ({
         onPress={() => setExpanded(!expanded)}
         style={styleAccordionHeader}
       >
+        <MaterialCommunityIcons
+          name={true ? 'circle-slice-8' : 'circle-outline'}
+          color="gray"
+          size={32}
+        />
         <Text style={styleAccordionTitle}>{title}</Text>
         <View style={styles.accordionHeaderRightSide}>
           {thisWeeksNormalLotsToMow ? (

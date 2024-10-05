@@ -1,9 +1,9 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { List } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
+import OneLotForCustomAccordion from './OneLotForCustomAccordion';
 import DataService from '../../services/DataService';
 import { theme } from '../../styles/styles';
 
@@ -30,25 +30,11 @@ const ChooseZonesForTodaysLots = () => {
                 thisWeeksCriticalLotsToMow={zone.needMowing}
               >
                 {zone.lots.map((lot, lotIndex) => (
-                  <List.Item
+                  <OneLotForCustomAccordion
                     key={lotIndex}
-                    titleStyle={{ fontWeight: 'bold' }}
                     title={`Lote ${lot.number}`}
                     description={`Ultima pasada: ${lot.lastMowingDate.toDateString()}`}
-                    left={(props) => (
-                      <List.Icon
-                        {...props}
-                        icon={false ? 'circle-slice-8' : 'circle-outline'}
-                        color={theme.colors.primary}
-                      />
-                    )}
-                    right={(props) => (
-                      <List.Icon
-                        {...props}
-                        icon={lot.needMowing ? 'alert' : 'check'}
-                        color={lot.needMowing ? 'red' : 'green'}
-                      />
-                    )}
+                    lot={lot}
                   />
                 ))}
               </CustomAccordion>

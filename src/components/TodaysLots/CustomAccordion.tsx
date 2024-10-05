@@ -29,7 +29,6 @@ const CustomAccordion = ({
         <View style={styles.accordionHeaderLeftSide}>
           <TouchableOpacity
             onPress={() => console.log('Icon pressed')}
-            style={styles.iconTouchableArea}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
           >
             <MaterialCommunityIcons

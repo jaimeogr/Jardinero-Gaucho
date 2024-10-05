@@ -4,7 +4,7 @@ import { Text, Button, Divider } from 'react-native-paper';
 
 import { theme } from '../../styles/styles';
 
-const BottomElementsForTodaysLots = () => {
+const BottomElementsForTodaysLots = ({ onPress }) => {
   return (
     <View style={styles.bottomElements}>
       <Button
@@ -16,6 +16,7 @@ const BottomElementsForTodaysLots = () => {
             outline: theme.colors.primary,
           },
         }}
+        onPress={() => onPress((prevState) => !prevState)}
       >
         Administrar los Lotes de Hoy
       </Button>

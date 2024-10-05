@@ -10,6 +10,7 @@ import ChooseLotsForTodaysLots from '../ChooseLotsForTodayLots/ChooseLotsForToda
 
 const TodaysLots = () => {
   const [lots, setLots] = useState<LotInterface[]>([]);
+  const [selectingLots, setSelectingLots] = useState(true);
 
   useEffect(() => {
     const fetchedLots = DataService.getLotsForToday();
@@ -21,12 +22,12 @@ const TodaysLots = () => {
       <Text style={styles.title}>Lotes de hoy</Text>
 
       <View style={styles.content}>
-        {true ? (
+        {selectingLots ? (
           <ChooseLotsForTodaysLots />
         ) : (
           <AllLotsForTodaysLots lots={lots} />
         )}
-        <BottomElementsForTodaysLots />
+        <BottomElementsForTodaysLots onPress={setSelectingLots} />
       </View>
     </Surface>
   );

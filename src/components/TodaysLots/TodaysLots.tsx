@@ -5,8 +5,8 @@ import { Text, Surface } from 'react-native-paper';
 import AllLotsForTodaysLots from './AllLotsForTodaysLots';
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
 import ChooseZonesForTodaysLots from './ChooseZonesForTodaysLots';
-import DataService from '../services/DataService';
-import { LotInterface } from '../types/types';
+import DataService from '../../services/DataService';
+import { LotInterface } from '../../types/types';
 
 const TodaysLots = () => {
   const [lots, setLots] = useState<LotInterface[]>([]);

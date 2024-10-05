@@ -5,7 +5,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import OneLotForTodaysLots from './OneLotForTodaysLots';
-import { GroupOfLotsInterface } from '../types/types';
+import { GroupOfLotsInterface } from '../../types/types';
 
 const AllLotsForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
   return (

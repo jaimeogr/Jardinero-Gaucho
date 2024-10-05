@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
-import { theme } from '../styles/styles';
-import { LotInterface } from '../types/types';
+import { theme } from '../../styles/styles';
+import { LotInterface } from '../../types/types';
 
 const OneLotForTodaysLots: React.FC<LotInterface> = ({
   number,

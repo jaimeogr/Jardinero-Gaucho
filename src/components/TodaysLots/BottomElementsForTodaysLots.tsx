@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Button, Divider } from 'react-native-paper';
 
-import { theme } from '../styles/styles';
+import { theme } from '../../styles/styles';
 
 const BottomElementsForTodaysLots = () => {
   return (

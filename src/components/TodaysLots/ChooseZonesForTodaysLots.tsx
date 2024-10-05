@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { List, IconButton } from 'react-native-paper';
 
-import DataService from '../services/DataService';
+import DataService from '../../services/DataService';
 
 const CustomAccordion = ({
   title,

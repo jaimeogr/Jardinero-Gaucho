@@ -7,51 +7,10 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import { List, IconButton } from 'react-native-paper';
+import { List } from 'react-native-paper';
 
+import CustomAccordion from './CustomAccordion';
 import DataService from '../../services/DataService';
-
-const CustomAccordion = ({
-  title,
-  children,
-  styleAccordionContainer,
-  styleAccordionHeader,
-  styleAccordionTitle,
-  thisWeeksNormalLotsToMow,
-  thisWeeksCriticalLotsToMow,
-}) => {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <View style={styleAccordionContainer}>
-      <TouchableOpacity
-        onPress={() => setExpanded(!expanded)}
-        style={styleAccordionHeader}
-      >
-        <Text style={styleAccordionTitle}>{title}</Text>
-        <View style={styles.accordionHeaderRightSide}>
-          {thisWeeksNormalLotsToMow ? (
-            <View style={styles.accordionHeaderIndicatorNormal}>
-              <Text>{thisWeeksNormalLotsToMow}</Text>
-            </View>
-          ) : null}
-          {thisWeeksCriticalLotsToMow ? (
-            <View style={styles.accordionHeaderIndicatorCritical}>
-              <Text style={styles.accordionHeaderIndicatorText}>
-                {thisWeeksCriticalLotsToMow}
-              </Text>
-            </View>
-          ) : null}
-          <IconButton
-            icon={expanded ? 'chevron-up' : 'chevron-down'}
-            size={20}
-          />
-        </View>
-      </TouchableOpacity>
-      {expanded && <View style={styles.accordionContent}>{children}</View>}
-    </View>
-  );
-};
 
 const ChooseZonesForTodaysLots = () => {
   const zonesOptions = DataService.getZonesOptions();

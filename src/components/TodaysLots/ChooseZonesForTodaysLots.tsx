@@ -1,12 +1,6 @@
-import { LinearGradient } from 'expo-linear-gradient'; // Import from expo-linear-gradient
-import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { List } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
@@ -22,10 +16,8 @@ const ChooseZonesForTodaysLots = () => {
         {zonesOptions.map((neighbourhood, neighbourhoodIndex) => (
           <CustomAccordion
             key={neighbourhoodIndex}
-            title={`${neighbourhood.neighbourhood}`}
-            styleAccordionContainer={styles.accordionContainerForNeighbourhood}
-            styleAccordionHeader={styles.accordionHeaderForNeighbourhood}
-            styleAccordionTitle={styles.accordionTitleForNeighbourhood}
+            title={neighbourhood.neighbourhood}
+            level={0} // Neighbourhood level
             thisWeeksNormalLotsToMow={neighbourhood.needMowing}
             thisWeeksCriticalLotsToMow={neighbourhood.needMowing}
           >
@@ -33,9 +25,7 @@ const ChooseZonesForTodaysLots = () => {
               <CustomAccordion
                 key={zoneIndex}
                 title={`Zona ${zone.zone}`}
-                styleAccordionContainer={styles.accordionContainerForZone}
-                styleAccordionHeader={styles.accordionHeaderForZone}
-                styleAccordionTitle={styles.accordionTitleForZone}
+                level={1} // Zone level
                 thisWeeksNormalLotsToMow={zone.needMowing}
                 thisWeeksCriticalLotsToMow={zone.needMowing}
               >
@@ -66,7 +56,7 @@ const ChooseZonesForTodaysLots = () => {
         ))}
       </ScrollView>
       <LinearGradient
-        colors={['transparent', 'rgba(255, 255, 255, 0.8)']} // Adjust colors for the fade effect
+        colors={['transparent', 'rgba(255, 255, 255, 0.8)']}
         style={styles.fadeEffect}
       />
     </View>
@@ -78,67 +68,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 24, // Padding for the scrollable area
+    paddingHorizontal: 24,
   },
   fadeEffect: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
-    height: 20, // Adjust the height of the fade effect
-    marginRight: 4, // Padding to match the scrollable area
-  },
-  accordionContainerForNeighbourhood: {
-    marginBottom: 18,
-    borderRadius: 10,
-    borderColor: 'purple',
-    borderWidth: 3,
-    backgroundColor: '#FFE1FF',
-  },
-  accordionHeaderForNeighbourhood: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: 6,
-    flex: 1,
-  },
-  accordionTitleForNeighbourhood: {
-    fontSize: 17,
-    fontWeight: 'bold',
-  },
-  accordionContainerForZone: {
-    marginBottom: 18,
-    borderRadius: 10,
-    borderColor: '#347928',
-    borderWidth: 3,
-    backgroundColor: '#E7FBE6',
-  },
-  accordionHeaderForZone: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: 14,
-  },
-  accordionTitleForZone: {
-    fontSize: 17,
-    fontWeight: 'bold',
-  },
-  accordionContent: {
-    padding: 10,
-  },
-  accordionHeaderRightSide: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  accordionHeaderIndicatorNormal: {},
-  accordionHeaderIndicatorCritical: {
-    marginLeft: 16,
-    backgroundColor: 'orange',
-    borderRadius: 16,
-    padding: 7,
-  },
-  accordionHeaderIndicatorText: {
-    fontWeight: 'bold',
+    height: 20,
+    marginRight: 4,
   },
 });
 

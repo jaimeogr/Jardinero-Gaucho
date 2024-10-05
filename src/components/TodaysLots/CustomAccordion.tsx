@@ -8,19 +8,23 @@ import { theme } from '../../styles/styles';
 const CustomAccordion = ({
   title,
   children,
-  styleAccordionContainer,
-  styleAccordionHeader,
-  styleAccordionTitle,
+  level, // Pass the level of accordion (neighbourhood or zone)
   thisWeeksNormalLotsToMow,
   thisWeeksCriticalLotsToMow,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <View style={styleAccordionContainer}>
+    <View
+      style={
+        level === 0
+          ? styles.accordionContainerForNeighbourhood
+          : styles.accordionContainerForZone
+      }
+    >
       <TouchableOpacity
         onPress={() => setExpanded(!expanded)}
-        style={styleAccordionHeader}
+        style={styles.accordionHeader}
       >
         <View style={styles.accordionHeaderLeftSide}>
           <MaterialCommunityIcons
@@ -29,7 +33,7 @@ const CustomAccordion = ({
             size={28}
             onPress={() => console.log('Pressed')}
           />
-          <Text style={styleAccordionTitle}>{title}</Text>
+          <Text style={styles.accordionTitle}>{title}</Text>
         </View>
 
         <View style={styles.accordionHeaderRightSide}>
@@ -51,26 +55,13 @@ const CustomAccordion = ({
           />
         </View>
       </TouchableOpacity>
+
       {expanded && <View style={styles.accordionContent}>{children}</View>}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 24, // Padding for the scrollable area
-  },
-  fadeEffect: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: 20, // Adjust the height of the fade effect
-    marginRight: 4, // Padding to match the scrollable area
-  },
   accordionContainerForNeighbourhood: {
     marginBottom: 18,
     borderRadius: 10,
@@ -78,40 +69,29 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     backgroundColor: '#FFE1FF',
   },
-  accordionHeaderForNeighbourhood: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: 14,
-  },
-  accordionTitleForNeighbourhood: {
-    fontSize: 17,
-    fontWeight: 'bold',
-  },
   accordionContainerForZone: {
     marginBottom: 18,
     borderRadius: 10,
     borderColor: '#347928',
     borderWidth: 3,
     backgroundColor: '#E7FBE6',
+    paddingLeft: 6,
   },
-  accordionHeaderForZone: {
+  accordionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: 14,
-  },
-  accordionTitleForZone: {
-    fontSize: 17,
-    fontWeight: 'bold',
-  },
-  accordionContent: {
-    padding: 10,
+    paddingLeft: 6,
   },
   accordionHeaderLeftSide: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+  },
+  accordionTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginLeft: 10,
   },
   accordionHeaderRightSide: {
     flexDirection: 'row',
@@ -126,6 +106,9 @@ const styles = StyleSheet.create({
   },
   accordionHeaderIndicatorText: {
     fontWeight: 'bold',
+  },
+  accordionContent: {
+    padding: 10,
   },
 });
 

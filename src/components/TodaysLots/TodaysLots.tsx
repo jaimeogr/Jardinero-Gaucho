@@ -4,9 +4,9 @@ import { Text, Surface } from 'react-native-paper';
 
 import AllLotsForTodaysLots from './AllLotsForTodaysLots';
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
-import ChooseZonesForTodaysLots from './ChooseZonesForTodaysLots';
 import DataService from '../../services/DataService';
 import { LotInterface } from '../../types/types';
+import ChooseLotsForTodaysLots from '../ChooseLotsForTodayLots/ChooseLotsForTodaysLots';
 
 const TodaysLots = () => {
   const [lots, setLots] = useState<LotInterface[]>([]);
@@ -22,7 +22,7 @@ const TodaysLots = () => {
 
       <View style={styles.content}>
         {true ? (
-          <ChooseZonesForTodaysLots />
+          <ChooseLotsForTodaysLots />
         ) : (
           <AllLotsForTodaysLots lots={lots} />
         )}

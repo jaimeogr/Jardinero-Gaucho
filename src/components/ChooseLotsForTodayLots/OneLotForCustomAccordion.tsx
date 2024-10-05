@@ -71,8 +71,6 @@ const styles = StyleSheet.create({
   divider: {
     width: '95%',
     backgroundColor: 'lightgray',
-    // marginRight: 10,
-    // marginLeft: 12,
     alignSelf: 'center',
   },
 });

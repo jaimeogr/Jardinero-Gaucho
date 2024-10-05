@@ -4,6 +4,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Surface } from 'react-native-paper';
 
+import ChooseLotsForTodaysLots from '../ChooseLotsForTodayLots/ChooseLotsForTodaysLots';
 import ClickableRoundButton from '../components/ClickableRoundButton';
 import TodaysLots from '../components/TodaysLots/TodaysLots';
 import { theme } from '../styles/styles';

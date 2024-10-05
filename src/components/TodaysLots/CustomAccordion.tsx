@@ -27,12 +27,17 @@ const CustomAccordion = ({
         style={styles.accordionHeader}
       >
         <View style={styles.accordionHeaderLeftSide}>
-          <MaterialCommunityIcons
-            name={true ? 'circle-slice-8' : 'circle-outline'}
-            color={theme.colors.primary}
-            size={28}
-            onPress={() => console.log('Pressed')}
-          />
+          <TouchableOpacity
+            onPress={() => console.log('Icon pressed')}
+            style={styles.iconTouchableArea}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
+          >
+            <MaterialCommunityIcons
+              name={true ? 'circle-slice-8' : 'circle-outline'}
+              color={theme.colors.primary}
+              size={28}
+            />
+          </TouchableOpacity>
           <Text style={styles.accordionTitle}>{title}</Text>
         </View>
 

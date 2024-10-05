@@ -32,6 +32,7 @@ const ChooseZonesForTodaysLots = () => {
                 {zone.lots.map((lot, lotIndex) => (
                   <List.Item
                     key={lotIndex}
+                    titleStyle={{ fontWeight: 'bold' }}
                     title={`Lote ${lot.number}`}
                     description={`Ultima pasada: ${lot.lastMowingDate.toDateString()}`}
                     left={(props) => (

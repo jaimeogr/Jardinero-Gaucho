@@ -1,6 +1,7 @@
 // types.ts or interfaces.ts
 
 export interface LotInterface {
+  id: number; // Optional id for the lot
   number: string; // Lot number
   zone: string; // Area of the lot
   neighbourhood: string; // Neighbourhood of the lot

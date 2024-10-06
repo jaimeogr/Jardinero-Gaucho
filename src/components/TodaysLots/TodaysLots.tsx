@@ -19,18 +19,19 @@ const TodaysLots = () => {
 
   return (
     <Surface style={styles.surface}>
-      <Text style={styles.title}>Lotes de hoy</Text>
+      {selectingLots ? (
+        <View style={styles.content}>
+          <Text style={styles.title}>Seleccioná los lotes para hoy</Text>
 
-      <View style={styles.content}>
-        {selectingLots ? (
           <ChooseLotsForTodaysLots />
-        ) : (
-          <View>
-            <AllLotsForTodaysLots lots={lots} />
-            <BottomElementsForTodaysLots onPress={setSelectingLots} />
-          </View>
-        )}
-      </View>
+        </View>
+      ) : (
+        <View style={styles.content}>
+          <Text style={styles.title}>Lotes de hoy</Text>
+          <AllLotsForTodaysLots lots={lots} />
+          <BottomElementsForTodaysLots onPress={setSelectingLots} />
+        </View>
+      )}
     </Surface>
   );
 };

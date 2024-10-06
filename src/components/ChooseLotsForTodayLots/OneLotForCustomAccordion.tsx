@@ -1,21 +1,23 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Divider } from 'react-native-paper';
 
 import { theme } from '../../styles/styles';
 
 const OneLotForCustomAccordion = ({ title, description, lot }) => {
+  const [isSelected, setSelected] = useState(false);
+
   return (
-    <View style={styles.containerWithDivider}>
+    <View>
       <TouchableOpacity style={styles.container}>
         {/* Left Icon */}
         <TouchableOpacity
-          onPress={() => console.log('Icon pressed')}
+          onPress={() => setSelected(!isSelected)}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
         >
           <MaterialCommunityIcons
-            name={true ? 'circle-slice-8' : 'circle-outline'}
+            name={isSelected ? 'circle-slice-8' : 'circle-outline'}
             color={theme.colors.primary}
             size={28}
           />
@@ -27,7 +29,7 @@ const OneLotForCustomAccordion = ({ title, description, lot }) => {
           <Text style={styles.description}>{description}</Text>
         </View>
 
-        {/* Right Icon */}
+        {/* Right Side */}
         <TouchableOpacity style={styles.rightIconContainer}>
           <MaterialCommunityIcons
             name="clock-outline"
@@ -42,7 +44,6 @@ const OneLotForCustomAccordion = ({ title, description, lot }) => {
 };
 
 const styles = StyleSheet.create({
-  containerWithDivider: {},
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -67,6 +68,11 @@ const styles = StyleSheet.create({
   },
   rightIconContainer: {
     paddingHorizontal: 10,
+  },
+  lotIsSelected: {
+    backgroundColor: '#e0f7fa', // Light blue for selected items across all levels
+    // borderColor: '#00796b', // Optional border for emphasis
+    borderWidth: 1,
   },
   divider: {
     width: '95%',

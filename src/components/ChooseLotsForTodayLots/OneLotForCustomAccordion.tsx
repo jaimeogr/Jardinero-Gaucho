@@ -44,7 +44,7 @@ const OneLotForCustomAccordion = ({ title, description, lot }) => {
           />
         </TouchableOpacity>
       </TouchableOpacity>
-      <Divider style={styles.divider} bold={true} />
+      {isSelected ? null : <Divider style={styles.divider} bold={true} />}
     </View>
   );
 };

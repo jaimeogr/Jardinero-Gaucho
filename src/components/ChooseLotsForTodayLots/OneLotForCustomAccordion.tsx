@@ -10,7 +10,13 @@ const OneLotForCustomAccordion = ({ title, description, lot }) => {
 
   return (
     <View>
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity
+        style={
+          isSelected
+            ? [styles.container, styles.lotIsSelected]
+            : styles.container
+        }
+      >
         {/* Left Icon */}
         <TouchableOpacity
           onPress={() => setSelected(!isSelected)}
@@ -71,8 +77,9 @@ const styles = StyleSheet.create({
   },
   lotIsSelected: {
     backgroundColor: '#e0f7fa', // Light blue for selected items across all levels
-    // borderColor: '#00796b', // Optional border for emphasis
+    borderColor: '#00796b', // Optional border for emphasis
     borderWidth: 1,
+    borderRadius: 10,
   },
   divider: {
     width: '95%',

@@ -9,7 +9,7 @@
     "ios": "DARK_MODE=media expo start --ios",
     "web": "DARK_MODE=media expo start --web",
     "lint": "eslint . --fix",
-    "emulator": "emulator -avd Copy_of_Backup_of_Medium Phone API 35 (With Expo Installed)"
+    "emulator": "emulator -avd Backup_of_Medium_Phone_API_35_(With_Expo_Installed)"
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.6.1",

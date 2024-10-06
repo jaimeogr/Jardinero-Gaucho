@@ -21,13 +21,13 @@ const TodaysLots = () => {
     <Surface style={styles.surface}>
       {selectingLots ? (
         <View style={styles.content}>
-          <Text style={styles.title}>Seleccioná los lotes para hoy</Text>
+          <Text style={styles.title}>Seleccioná los lotes de hoy</Text>
 
           <ChooseLotsForTodaysLots />
         </View>
       ) : (
         <View style={styles.content}>
-          <Text style={styles.title}>Lotes de hoy</Text>
+          <Text style={styles.title}>Mis lotes de hoy</Text>
           <AllLotsForTodaysLots lots={lots} />
           <BottomElementsForTodaysLots onPress={setSelectingLots} />
         </View>

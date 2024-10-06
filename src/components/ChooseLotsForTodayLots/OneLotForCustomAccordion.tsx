@@ -44,6 +44,7 @@ const OneLotForCustomAccordion = ({ title, description, lot, isLastItem }) => {
           />
         </TouchableOpacity>
       </TouchableOpacity>
+      {/* divider at the bottom of the item renders when the item is not selected and when its not the last item in the iteration. */}
       {isSelected || isLastItem ? null : (
         <Divider style={styles.divider} bold={true} />
       )}

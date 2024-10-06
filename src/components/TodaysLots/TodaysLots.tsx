@@ -25,9 +25,11 @@ const TodaysLots = () => {
         {selectingLots ? (
           <ChooseLotsForTodaysLots />
         ) : (
-          <AllLotsForTodaysLots lots={lots} />
+          <View>
+            <AllLotsForTodaysLots lots={lots} />
+            <BottomElementsForTodaysLots onPress={setSelectingLots} />
+          </View>
         )}
-        <BottomElementsForTodaysLots onPress={setSelectingLots} />
       </View>
     </Surface>
   );
@@ -41,6 +43,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', // Background color for the surface
     flexDirection: 'column', // Layout with icon and text side by side
     alignItems: 'center', // Center the content vertically
+    overflow: 'hidden',
   },
   content: {
     flex: 1,

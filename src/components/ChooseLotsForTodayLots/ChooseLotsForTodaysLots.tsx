@@ -4,7 +4,7 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import DataService from '../../services/DataService';
+import DataService from '../../services/LotService';
 
 const ChooseZonesForTodaysLots = () => {
   const zonesOptions = DataService.getZonesOptions();

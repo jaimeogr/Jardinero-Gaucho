@@ -7,6 +7,7 @@ export interface LotInterface {
   neighbourhood: string; // Neighbourhood of the lot
   lastMowingDate: Date;
   extraNotes?: string; // Optional extra notes about the lot
+  assignedTo?: number[]; // Optional users assigned to the lot
 }
 
 export interface GroupOfLotsInterface {
@@ -16,6 +17,11 @@ export interface GroupOfLotsInterface {
 // You can define additional interfaces for other data types in your app
 export interface UserInterface {
   id: number;
-  username: string;
+  firstName: string;
+  lastName: string;
   email: string;
+}
+
+export interface GroupOfUsersInterface {
+  users: UserInterface[];
 }

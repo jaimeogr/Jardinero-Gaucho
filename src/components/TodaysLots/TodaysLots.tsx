@@ -4,7 +4,7 @@ import { Text, Surface } from 'react-native-paper';
 
 import AllLotsForTodaysLots from './AllLotsForTodaysLots';
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
-import DataService from '../../services/DataService';
+import LotService from '../../services/LotService';
 import { LotInterface } from '../../types/types';
 import ChooseLotsForTodaysLots from '../ChooseLotsForTodayLots/ChooseLotsForTodaysLots';
 
@@ -13,7 +13,7 @@ const TodaysLots = () => {
   const [selectingLots, setSelectingLots] = useState(true);
 
   useEffect(() => {
-    const fetchedLots = DataService.getLotsForToday();
+    const fetchedLots = LotService.getLotsForToday();
     setLots(fetchedLots);
   }, []); // Empty dependency array ensures it runs once when the component mounts
 

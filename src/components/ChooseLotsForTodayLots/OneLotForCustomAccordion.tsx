@@ -5,7 +5,7 @@ import { Divider } from 'react-native-paper';
 
 import { theme } from '../../styles/styles';
 
-const OneLotForCustomAccordion = ({ title, description, lot }) => {
+const OneLotForCustomAccordion = ({ title, description, lot, isLastItem }) => {
   const [isSelected, setSelected] = useState(false);
 
   return (
@@ -44,7 +44,9 @@ const OneLotForCustomAccordion = ({ title, description, lot }) => {
           />
         </TouchableOpacity>
       </TouchableOpacity>
-      {isSelected ? null : <Divider style={styles.divider} bold={true} />}
+      {isSelected || isLastItem ? null : (
+        <Divider style={styles.divider} bold={true} />
+      )}
     </View>
   );
 };

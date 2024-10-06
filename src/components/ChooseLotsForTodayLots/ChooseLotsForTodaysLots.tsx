@@ -34,6 +34,7 @@ const ChooseZonesForTodaysLots = () => {
                     title={`Lote ${lot.number}`}
                     description={`Ultima pasada: ${lot.lastMowingDate.toDateString()}`}
                     lot={lot}
+                    isLastItem={lotIndex === zone.lots.length - 1}
                   />
                 ))}
               </CustomAccordion>

@@ -303,6 +303,14 @@ const getZonesOptions = () => {
   return result;
 };
 
+const setSelected = (id) => {
+  allLots.forEach((lot) => {
+    if (lot.id === id) {
+      lot.isSelected = !lot.isSelected;
+    }
+  });
+};
+
 export default {
   getLotsForToday: (): LotInterface[] => {
     return allLots;
@@ -313,4 +321,6 @@ export default {
   getAllLots: () => {
     return allLots;
   },
+
+  setSelected,
 };

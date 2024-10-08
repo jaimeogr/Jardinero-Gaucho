@@ -1,8 +1,9 @@
 // DataService.ts
+import lotStore from '../stores/LotStore';
 import { LotInterface } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 
-const allLots: LotInterface[] = [
+const hardCodedLots: LotInterface[] = [
   {
     id: 1,
     number: '200',
@@ -10,6 +11,7 @@ const allLots: LotInterface[] = [
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-02'),
     extraNotes: 'The Gingko Biloba needs pruning',
+    isSelected: false,
   },
   {
     id: 2,
@@ -17,6 +19,7 @@ const allLots: LotInterface[] = [
     zone: '2',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-03'),
+    isSelected: false,
   },
   {
     id: 3,
@@ -24,6 +27,7 @@ const allLots: LotInterface[] = [
     zone: '2',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-09-27'),
+    isSelected: false,
   },
   {
     id: 4,
@@ -31,6 +35,7 @@ const allLots: LotInterface[] = [
     zone: '2',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-02'),
+    isSelected: false,
   },
   {
     id: 5,
@@ -38,6 +43,7 @@ const allLots: LotInterface[] = [
     zone: '2',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-09-29'),
+    isSelected: false,
   },
   {
     id: 6,
@@ -45,6 +51,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-09-29'),
+    isSelected: false,
   },
   {
     id: 7,
@@ -52,6 +59,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-09-30'),
+    isSelected: false,
   },
   {
     id: 8,
@@ -59,6 +67,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-09-30'),
+    isSelected: false,
   },
   {
     id: 9,
@@ -66,6 +75,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-01'),
+    isSelected: false,
   },
   {
     id: 10,
@@ -73,6 +83,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-02'),
+    isSelected: false,
   },
   {
     id: 10,
@@ -80,6 +91,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-03'),
+    isSelected: false,
   },
   {
     id: 11,
@@ -87,6 +99,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-03'),
+    isSelected: false,
   },
   {
     id: 12,
@@ -94,6 +107,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-01'),
+    isSelected: false,
   },
   {
     id: 13,
@@ -101,6 +115,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-04'),
+    isSelected: false,
   },
   {
     id: 14,
@@ -108,6 +123,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-04'),
+    isSelected: false,
   },
   {
     id: 15,
@@ -115,6 +131,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-04'),
+    isSelected: false,
   },
   {
     id: 16,
@@ -122,6 +139,7 @@ const allLots: LotInterface[] = [
     zone: '3',
     neighbourhood: 'La Laguna',
     lastMowingDate: new Date('2024-09-25'),
+    isSelected: false,
   },
   {
     id: 17,
@@ -129,6 +147,7 @@ const allLots: LotInterface[] = [
     zone: '3',
     neighbourhood: 'La Laguna',
     lastMowingDate: new Date('2024-10-02'),
+    isSelected: false,
   },
   {
     id: 18,
@@ -136,6 +155,7 @@ const allLots: LotInterface[] = [
     zone: '3',
     neighbourhood: 'La Laguna',
     lastMowingDate: new Date('2024-10-03'),
+    isSelected: false,
   },
   {
     id: 19,
@@ -143,6 +163,7 @@ const allLots: LotInterface[] = [
     zone: '3',
     neighbourhood: 'La Laguna',
     lastMowingDate: new Date('2024-09-30'),
+    isSelected: false,
   },
   {
     id: 20,
@@ -150,6 +171,7 @@ const allLots: LotInterface[] = [
     zone: '3',
     neighbourhood: 'La Laguna',
     lastMowingDate: new Date('2024-09-23'),
+    isSelected: false,
   },
   {
     id: 21,
@@ -157,6 +179,7 @@ const allLots: LotInterface[] = [
     zone: '3',
     neighbourhood: 'La Laguna',
     lastMowingDate: new Date('2024-09-24'),
+    isSelected: false,
   },
   {
     id: 22,
@@ -164,6 +187,7 @@ const allLots: LotInterface[] = [
     zone: '3',
     neighbourhood: 'La Laguna',
     lastMowingDate: new Date('2024-09-25'),
+    isSelected: false,
   },
   {
     id: 23,
@@ -171,6 +195,7 @@ const allLots: LotInterface[] = [
     zone: '7',
     neighbourhood: 'El Tero',
     lastMowingDate: new Date('2024-10-01'),
+    isSelected: false,
   },
   {
     id: 24,
@@ -178,6 +203,7 @@ const allLots: LotInterface[] = [
     zone: '7',
     neighbourhood: 'El Tero',
     lastMowingDate: new Date('2024-10-01'),
+    isSelected: false,
   },
   {
     id: 25,
@@ -185,6 +211,7 @@ const allLots: LotInterface[] = [
     zone: '7',
     neighbourhood: 'El Tero',
     lastMowingDate: new Date('2024-10-02'),
+    isSelected: false,
   },
   {
     id: 26,
@@ -192,6 +219,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Naudir',
     lastMowingDate: new Date('2024-10-03'),
+    isSelected: false,
   },
   {
     id: 27,
@@ -199,6 +227,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Naudir',
     lastMowingDate: new Date('2024-10-02'),
+    isSelected: false,
   },
   {
     id: 28,
@@ -206,6 +235,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Naudir',
     lastMowingDate: new Date('2024-10-02'),
+    isSelected: false,
   },
   {
     id: 29,
@@ -213,6 +243,7 @@ const allLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Naudir',
     lastMowingDate: new Date('2024-10-03'),
+    isSelected: false,
   },
 ];
 
@@ -234,7 +265,7 @@ const getZonesOptions = () => {
   }[] = [];
 
   // Group lots by neighbourhood, and then by zone within each neighbourhood
-  const lotsByNeighbourhoodAndZone = allLots.reduce(
+  const lotsByNeighbourhoodAndZone = lotStore.lots.reduce(
     (acc, lot) => {
       const { neighbourhood, zone } = lot;
 
@@ -303,24 +334,24 @@ const getZonesOptions = () => {
   return result;
 };
 
-const setSelected = (id) => {
-  allLots.forEach((lot) => {
-    if (lot.id === id) {
-      lot.isSelected = !lot.isSelected;
-    }
-  });
+const setSelected = (id: number) => {
+  lotStore.toggleLotSelection(id);
 };
 
 export default {
-  getLotsForToday: (): LotInterface[] => {
-    return allLots;
+  getAllLots: () => {
+    return lotStore.lots;
+  },
+
+  getFirstLoadOfLots: () => {
+    return hardCodedLots;
+  },
+
+  setLots: (lots: LotInterface[]) => {
+    lotStore.setLots(lots);
   },
 
   getZonesOptions,
-
-  getAllLots: () => {
-    return allLots;
-  },
 
   setSelected,
 };

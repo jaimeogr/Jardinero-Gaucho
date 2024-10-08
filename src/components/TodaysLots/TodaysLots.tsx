@@ -13,7 +13,7 @@ const TodaysLots = () => {
   const [selectingLots, setSelectingLots] = useState(true);
 
   useEffect(() => {
-    const fetchedLots = LotService.getLotsForToday();
+    const fetchedLots = LotService.getAllLots();
     setLots(fetchedLots);
   }, []); // Empty dependency array ensures it runs once when the component mounts
 

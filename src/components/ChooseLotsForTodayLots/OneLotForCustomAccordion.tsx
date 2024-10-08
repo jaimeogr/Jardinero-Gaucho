@@ -1,56 +1,65 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Divider } from 'react-native-paper';
 
+import LotService from '../../services/LotService';
 import { theme } from '../../styles/styles';
+import { LotInterface } from '../../types/types';
 
-const OneLotForCustomAccordion = ({ title, description, lot, isLastItem }) => {
-  const [isSelected, setSelected] = useState(false);
+interface OneLotForCustomAccordionProps {
+  title: string;
+  description: string;
+  lot: LotInterface; // Use LotInterface to type the lot prop
+  isLastItem: boolean;
+}
 
-  return (
-    <View>
-      <TouchableOpacity
-        style={
-          isSelected
-            ? [styles.container, styles.lotIsSelected]
-            : styles.container
-        }
-      >
-        {/* Left Icon */}
+const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> =
+  observer(({ title, description, lot, isLastItem }) => {
+    return (
+      <View>
         <TouchableOpacity
-          onPress={() => setSelected(!isSelected)}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
+          style={
+            lot.isSelected
+              ? [styles.container, styles.lotIsSelected]
+              : styles.container
+          }
         >
-          <MaterialCommunityIcons
-            name={isSelected ? 'circle-slice-8' : 'circle-outline'}
-            color={theme.colors.primary}
-            size={28}
-          />
-        </TouchableOpacity>
+          {/* Left Icon */}
+          <TouchableOpacity
+            onPress={() => LotService.setSelected(lot.id)}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
+          >
+            <MaterialCommunityIcons
+              name={lot.isSelected ? 'circle-slice-8' : 'circle-outline'}
+              color={theme.colors.primary}
+              size={28}
+            />
+          </TouchableOpacity>
 
-        {/* Title and Description */}
-        <View style={styles.textContainer}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.description}>{description}</Text>
-        </View>
+          {/* Title and Description */}
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.description}>{description}</Text>
+          </View>
 
-        {/* Right Side */}
-        <TouchableOpacity style={styles.rightIconContainer}>
-          <MaterialCommunityIcons
-            name="clock-outline"
-            size={28}
-            color="orange"
-          />
+          {/* Right Side */}
+          <TouchableOpacity style={styles.rightIconContainer}>
+            <MaterialCommunityIcons
+              name="clock-outline"
+              size={28}
+              color="orange"
+            />
+          </TouchableOpacity>
         </TouchableOpacity>
-      </TouchableOpacity>
-      {/* divider at the bottom of the item renders when the item is not selected and when its not the last item in the iteration. */}
-      {isSelected || isLastItem ? null : (
-        <Divider style={styles.divider} bold={true} />
-      )}
-    </View>
-  );
-};
+        {/* divider at the bottom of the item renders when the item is not selected and when its not the last item in the iteration. */}
+        {lot.isSelected || isLastItem ? null : (
+          <Divider style={styles.divider} bold={true} />
+        )}
+      </View>
+    );
+  });
 
 const styles = StyleSheet.create({
   container: {

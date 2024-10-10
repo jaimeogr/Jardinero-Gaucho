@@ -10,7 +10,7 @@ const hardCodedLots: LotInterface[] = [
     zone: '2',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-02'),
-    extraNotes: 'The Gingko Biloba needs pruning',
+    // extraNotes: 'The Gingko Biloba needs pruning',
     isSelected: false,
   },
   {

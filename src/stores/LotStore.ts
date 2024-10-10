@@ -1,5 +1,6 @@
 import { makeAutoObservable, observable } from 'mobx';
 
+import { LotClass } from './LotClass';
 import { LotInterface } from '../types/types';
 
 class LotStore {
@@ -13,8 +14,8 @@ class LotStore {
     this.setLots(lots);
   }
 
-  setLots(lots: LotInterface[]) {
-    this.lots = observable.array(lots.map((lot) => observable.object(lot)));
+  setLots(lotsData: LotClass[]) {
+    this.lots = lotsData.map((data) => new LotClass(data)); // Creates Lot instances for each item
   }
 
   toggleLotSelection(id: number) {

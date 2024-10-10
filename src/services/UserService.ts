@@ -1,3 +1,5 @@
+// UserService.ts
+import useUserStore from '../stores/useUserStore';
 import { UserInterface } from '../types/types';
 
 const myTeam: UserInterface[] = [
@@ -20,9 +22,10 @@ const myTeam: UserInterface[] = [
     email: 'dibumartinez@gmail.com',
   },
 ];
+const initializeUsers = () => {
+  useUserStore.getState().initializeUsers(myTeam);
+};
 
 export default {
-  getMyTeam: (): UserInterface[] => {
-    return myTeam;
-  },
+  initializeUsers,
 };

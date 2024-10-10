@@ -1,29 +1,14 @@
 // src/screens/HomeScreen.js
 import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient from expo-linear-gradient
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { Surface } from 'react-native-paper';
 
 import ClickableRoundButton from '../components/ClickableRoundButton';
 import TodaysLots from '../components/TodaysLots/TodaysLots';
-import { initializeStores } from '../stores/AllStores';
 import { theme } from '../styles/styles';
 
 const HomeScreen = ({ navigation }) => {
-  // this will initialize the global state in the mobx stores
-  const [isInitialized, setIsInitialized] = useState(false);
-  useEffect(() => {
-    const init = async () => {
-      await initializeStores();
-      setIsInitialized(true);
-    };
-    init();
-  }, []);
-
-  if (!isInitialized) {
-    return <Text>Loading...</Text>; // You can show a splash screen or loading indicator here
-  }
-
   return (
     <LinearGradient
       colors={[theme.colors.background, theme.colors.background2]} // Define the gradient colors

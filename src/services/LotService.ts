@@ -1,5 +1,6 @@
-// DataService.ts
-import lotStore from '../stores/LotStore';
+import React from 'react';
+
+import useLotStore from '../stores/useLotStore';
 import { LotInterface } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 
@@ -247,111 +248,110 @@ const hardCodedLots: LotInterface[] = [
   },
 ];
 
-const getZonesOptions = () => {
-  const result: {
-    neighbourhood: string;
-    zones: {
-      zone: string;
+// Custom hook to get zones options using Zustand's state and React's useMemo
+export const useZonesOptions = () => {
+  // Access the lots from the Zustand store
+  const lots = useLotStore((state) => state.lots);
+
+  // useMemo will recompute the zones options only when 'lots' changes
+  return React.useMemo(() => {
+    const result: {
+      neighbourhood: string;
+      zones: {
+        zone: string;
+        needMowing: number;
+        doesntNeedMowing: number;
+        lots: {
+          number: string;
+          needMowing: boolean;
+          lastMowingDate: Date;
+        }[];
+      }[];
       needMowing: number;
       doesntNeedMowing: number;
-      lots: {
-        number: string;
-        needMowing: boolean;
-        lastMowingDate: Date;
-      }[];
-    }[];
-    needMowing: number;
-    doesntNeedMowing: number;
-  }[] = [];
+    }[] = [];
 
-  // Group lots by neighbourhood, and then by zone within each neighbourhood
-  const lotsByNeighbourhoodAndZone = lotStore.lots.reduce(
-    (acc, lot) => {
-      const { neighbourhood, zone } = lot;
+    // Group lots by neighbourhood and then by zone within each neighbourhood
+    const lotsByNeighbourhoodAndZone = lots.reduce(
+      (acc, lot) => {
+        const { neighbourhood, zone } = lot;
 
-      if (!acc[neighbourhood]) {
-        acc[neighbourhood] = {};
-      }
+        if (!acc[neighbourhood]) {
+          acc[neighbourhood] = {};
+        }
 
-      if (!acc[neighbourhood][zone]) {
-        acc[neighbourhood][zone] = [];
-      }
+        if (!acc[neighbourhood][zone]) {
+          acc[neighbourhood][zone] = [];
+        }
 
-      acc[neighbourhood][zone].push(lot);
-      return acc;
-    },
-    {} as Record<string, Record<string, LotInterface[]>>,
-  );
-
-  // Iterate over each neighbourhood
-  for (const neighbourhood in lotsByNeighbourhoodAndZone) {
-    let neighbourhoodNeedMowing = 0;
-    let neighbourhoodDoesntNeedMowing = 0;
-
-    // Iterate over each zone for each neighbourhood.
-    const zones = Object.keys(lotsByNeighbourhoodAndZone[neighbourhood]).map(
-      (zone) => {
-        const lotsInZone = lotsByNeighbourhoodAndZone[neighbourhood][zone];
-        let zoneNeedMowing = 0;
-        let zoneDoesntNeedMowing = 0;
-
-        const lots = lotsInZone.map((lot) => {
-          const needsMowing = lotNeedsMowing(lot.lastMowingDate);
-
-          if (needsMowing) {
-            zoneNeedMowing++;
-          } else {
-            zoneDoesntNeedMowing++;
-          }
-
-          return {
-            number: lot.number,
-            needMowing: needsMowing,
-            lastMowingDate: lot.lastMowingDate,
-          };
-        });
-
-        neighbourhoodNeedMowing += zoneNeedMowing;
-        neighbourhoodDoesntNeedMowing += zoneDoesntNeedMowing;
-
-        return {
-          zone,
-          needMowing: zoneNeedMowing,
-          doesntNeedMowing: zoneDoesntNeedMowing,
-          lots,
-        };
+        acc[neighbourhood][zone].push(lot);
+        return acc;
       },
+      {} as Record<string, Record<string, LotInterface[]>>,
     );
 
-    result.push({
-      neighbourhood,
-      zones,
-      needMowing: neighbourhoodNeedMowing,
-      doesntNeedMowing: neighbourhoodDoesntNeedMowing,
-    });
-  }
+    // Iterate over each neighbourhood
+    for (const neighbourhood in lotsByNeighbourhoodAndZone) {
+      let neighbourhoodNeedMowing = 0;
+      let neighbourhoodDoesntNeedMowing = 0;
 
-  return result;
+      // Iterate over each zone within the neighbourhood
+      const zones = Object.keys(lotsByNeighbourhoodAndZone[neighbourhood]).map(
+        (zone) => {
+          const lotsInZone = lotsByNeighbourhoodAndZone[neighbourhood][zone];
+          let zoneNeedMowing = 0;
+          let zoneDoesntNeedMowing = 0;
+
+          const lots = lotsInZone.map((lot) => {
+            const needsMowing = lotNeedsMowing(lot.lastMowingDate);
+
+            if (needsMowing) {
+              zoneNeedMowing++;
+            } else {
+              zoneDoesntNeedMowing++;
+            }
+
+            return {
+              number: lot.number,
+              needMowing: needsMowing,
+              lastMowingDate: lot.lastMowingDate,
+            };
+          });
+
+          neighbourhoodNeedMowing += zoneNeedMowing;
+          neighbourhoodDoesntNeedMowing += zoneDoesntNeedMowing;
+
+          return {
+            zone,
+            needMowing: zoneNeedMowing,
+            doesntNeedMowing: zoneDoesntNeedMowing,
+            lots,
+          };
+        },
+      );
+
+      result.push({
+        neighbourhood,
+        zones,
+        needMowing: neighbourhoodNeedMowing,
+        doesntNeedMowing: neighbourhoodDoesntNeedMowing,
+      });
+    }
+
+    return result;
+  }, [lots]); // Dependencies array: this ensures that the computation runs only when 'lots' changes
+};
+
+const initializeLots = () => {
+  useLotStore.getState().initializeLots(hardCodedLots);
 };
 
 const setSelected = (id: number) => {
-  lotStore.toggleLotSelection(id);
+  useLotStore.getState().toggleLotSelection(id);
 };
 
 export default {
-  getAllLots: () => {
-    return lotStore.lots;
-  },
-
-  getFirstLoadOfLots: () => {
-    return hardCodedLots;
-  },
-
-  setLots: (lots: LotInterface[]) => {
-    lotStore.setLots(lots);
-  },
-
-  getZonesOptions,
-
+  initializeLots,
   setSelected,
+  useZonesOptions,
 };

@@ -8,7 +8,7 @@ import LotService from '../../services/LotService';
 import ChooseLotsForTodaysLots from '../ChooseLotsForTodayLots/ChooseLotsForTodaysLots';
 
 const TodaysLots = () => {
-  const [selectingLots, setSelectingLots] = useState(false);
+  const [selectingLots, setSelectingLots] = useState(true);
 
   useEffect(() => {
     LotService.initializeLots();
@@ -25,7 +25,7 @@ const TodaysLots = () => {
       ) : (
         <View style={styles.content}>
           <Text style={styles.title}>Mis lotes de hoy</Text>
-          <AllLotsForTodaysLots lots={lots} />
+          {/* <AllLotsForTodaysLots lots={lots} /> */}
           <BottomElementsForTodaysLots onPress={setSelectingLots} />
         </View>
       )}

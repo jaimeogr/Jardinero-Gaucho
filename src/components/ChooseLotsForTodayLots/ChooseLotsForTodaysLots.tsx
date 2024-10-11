@@ -33,7 +33,7 @@ const ChooseZonesForTodaysLots = () => {
                     key={lotIndex}
                     title={`Lote ${lot.number}`}
                     description={`Ultima pasada: ${lot.lastMowingDate.toDateString()}`}
-                    lot={lot}
+                    lotId={lot.id}
                     isLastItem={lotIndex === zone.lots.length - 1}
                   />
                 ))}

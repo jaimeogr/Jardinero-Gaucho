@@ -312,9 +312,8 @@ export const useZonesOptions = () => {
             }
 
             return {
-              number: lot.number,
+              ...lot,
               needMowing: needsMowing,
-              lastMowingDate: lot.lastMowingDate,
             };
           });
 

@@ -4,10 +4,10 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import DataService from '../../services/LotService';
+import { useZonesOptions } from '../../services/LotService';
 
 const ChooseZonesForTodaysLots = () => {
-  const zonesOptions = DataService.getZonesOptions();
+  const zonesOptions = useZonesOptions();
 
   return (
     <View style={styles.container}>
@@ -33,7 +33,7 @@ const ChooseZonesForTodaysLots = () => {
                     key={lotIndex}
                     title={`Lote ${lot.number}`}
                     description={`Ultima pasada: ${lot.lastMowingDate.toDateString()}`}
-                    lot={lot}
+                    lotId={lot.id}
                     isLastItem={lotIndex === zone.lots.length - 1}
                   />
                 ))}

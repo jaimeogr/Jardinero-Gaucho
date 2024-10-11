@@ -6,9 +6,9 @@ export interface LotInterface {
   zone: string; // Area of the lot
   neighbourhood: string; // Neighbourhood of the lot
   lastMowingDate: Date;
+  isSelected: boolean;
   extraNotes?: string; // Optional extra notes about the lot
   assignedTo?: number[]; // Optional users assigned to the lot
-  isSelected?: boolean; // Optional flag to indicate if the lot is selected
 }
 
 export interface GroupOfLotsInterface {

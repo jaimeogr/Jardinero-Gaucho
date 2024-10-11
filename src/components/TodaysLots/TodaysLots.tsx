@@ -5,17 +5,14 @@ import { Text, Surface } from 'react-native-paper';
 import AllLotsForTodaysLots from './AllLotsForTodaysLots';
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
 import LotService from '../../services/LotService';
-import { LotInterface } from '../../types/types';
 import ChooseLotsForTodaysLots from '../ChooseLotsForTodayLots/ChooseLotsForTodaysLots';
 
 const TodaysLots = () => {
-  const [lots, setLots] = useState<LotInterface[]>([]);
   const [selectingLots, setSelectingLots] = useState(true);
 
   useEffect(() => {
-    const fetchedLots = LotService.getLotsForToday();
-    setLots(fetchedLots);
-  }, []); // Empty dependency array ensures it runs once when the component mounts
+    LotService.initializeLots();
+  }, []);
 
   return (
     <Surface style={styles.surface}>
@@ -28,7 +25,7 @@ const TodaysLots = () => {
       ) : (
         <View style={styles.content}>
           <Text style={styles.title}>Mis lotes de hoy</Text>
-          <AllLotsForTodaysLots lots={lots} />
+          {/* <AllLotsForTodaysLots lots={lots} /> */}
           <BottomElementsForTodaysLots onPress={setSelectingLots} />
         </View>
       )}

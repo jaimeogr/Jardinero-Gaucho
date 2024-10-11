@@ -6,6 +6,14 @@ import { lotNeedsMowing } from '../utils/DateAnalyser';
 
 const hardCodedLots: LotInterface[] = [
   {
+    id: 0,
+    number: '106',
+    zone: '1',
+    neighbourhood: 'El Canton',
+    lastMowingDate: new Date('2024-10-03'),
+    isSelected: false,
+  },
+  {
     id: 1,
     number: '200',
     zone: '2',
@@ -84,14 +92,6 @@ const hardCodedLots: LotInterface[] = [
     zone: '1',
     neighbourhood: 'El Canton',
     lastMowingDate: new Date('2024-10-02'),
-    isSelected: false,
-  },
-  {
-    id: 10,
-    number: '106',
-    zone: '1',
-    neighbourhood: 'El Canton',
-    lastMowingDate: new Date('2024-10-03'),
     isSelected: false,
   },
   {

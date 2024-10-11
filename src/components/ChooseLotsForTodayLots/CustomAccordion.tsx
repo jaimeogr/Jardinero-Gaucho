@@ -5,10 +5,18 @@ import { IconButton } from 'react-native-paper';
 
 import { theme } from '../../styles/styles';
 
-const CustomAccordion = ({
+type CustomAccordionProps = {
+  title: string;
+  children: React.ReactNode;
+  level: number; // Pass the level of accordion (neighbourhood or zone)
+  thisWeeksNormalLotsToMow?: number;
+  thisWeeksCriticalLotsToMow?: number;
+};
+
+const CustomAccordion: React.FC<CustomAccordionProps> = ({
   title,
   children,
-  level, // Pass the level of accordion (neighbourhood or zone)
+  level,
   thisWeeksNormalLotsToMow,
   thisWeeksCriticalLotsToMow,
 }) => {

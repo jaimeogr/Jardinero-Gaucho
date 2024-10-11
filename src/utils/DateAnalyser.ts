@@ -1,20 +1,57 @@
-export function lotNeedsMowing(dateToCheck: Date): boolean {
+export function lotNeedsMowing(dateToCheck: Date): number {
+  // Normalize dateToCheck to remove time components
+  const date = new Date(dateToCheck);
+  date.setHours(0, 0, 0, 0);
+
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  // Get the current day of the week (0 = Sunday, 1 = Monday, etc.)
-  const dayOfWeek = today.getDay();
+  // Get the start and end of the current week
+  const { start: currentWeekStart, end: currentWeekEnd } = getWeekRange(
+    today,
+    0,
+  );
 
-  // Calculate the difference between today and Monday (1)
-  const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+  // Get the start and end of the previous week
+  const { start: previousWeekStart, end: previousWeekEnd } = getWeekRange(
+    today,
+    -1,
+  );
 
-  // Get the date of the most recent Monday
-  const monday = new Date(today);
-  monday.setDate(today.getDate() + diffToMonday);
+  if (date >= currentWeekStart && date <= currentWeekEnd) {
+    // Date is in the current week
+    return 0;
+  } else if (date >= previousWeekStart && date <= previousWeekEnd) {
+    // Date is in the previous week
+    return 1;
+  } else {
+    // Date is older than the previous week
+    return 2;
+  }
+}
 
-  // Get the date of the upcoming Sunday
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6); // Sunday is 6 days after Monday
+// Helper function to get the start and end dates of a week
+function getWeekRange(
+  referenceDate: Date,
+  weekOffset: number = 0,
+): { start: Date; end: Date } {
+  // Create a copy of the reference date
+  const date = new Date(referenceDate);
 
-  // Compare if dateToCheck is within the current week's Monday-Sunday range
-  return !(dateToCheck >= monday && dateToCheck <= sunday);
+  // Adjust the date to the desired week
+  date.setDate(date.getDate() + weekOffset * 7);
+
+  // Find the Monday of the week
+  const day = date.getDay();
+  const diff = (day === 0 ? -6 : 1) - day; // Adjust when day is Sunday (0)
+  const weekStart = new Date(date);
+  weekStart.setDate(date.getDate() + diff);
+  weekStart.setHours(0, 0, 0, 0);
+
+  // Find the Sunday of the week
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+  weekEnd.setHours(23, 59, 59, 999);
+
+  return { start: weekStart, end: weekEnd };
 }

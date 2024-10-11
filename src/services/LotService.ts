@@ -1,7 +1,12 @@
 import React from 'react';
 
 import useLotStore from '../stores/useLotStore';
-import { LotInterface } from '../types/types';
+import {
+  LotInterface,
+  LotWithNeedMowingInterface,
+  ZoneInterface,
+  NeighbourhoodInterface,
+} from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 
 const hardCodedLots: LotInterface[] = [
@@ -248,30 +253,13 @@ const hardCodedLots: LotInterface[] = [
   },
 ];
 
-// Custom hook to get zones options using Zustand's state and React's useMemo
-export const useZonesOptions = () => {
-  // Access the lots from the Zustand store
+export const useZonesOptions = (): NeighbourhoodInterface[] => {
   const lots = useLotStore((state) => state.lots);
 
-  // useMemo will recompute the zones options only when 'lots' changes
-  return React.useMemo(() => {
-    const result: {
-      neighbourhood: string;
-      zones: {
-        zone: string;
-        needMowing: number;
-        doesntNeedMowing: number;
-        lots: {
-          number: string;
-          needMowing: boolean;
-          lastMowingDate: Date;
-        }[];
-      }[];
-      needMowing: number;
-      doesntNeedMowing: number;
-    }[] = [];
+  return React.useMemo<NeighbourhoodInterface[]>(() => {
+    const result: NeighbourhoodInterface[] = [];
 
-    // Group lots by neighbourhood and then by zone within each neighbourhood
+    // Group lots by neighbourhood and zone
     const lotsByNeighbourhoodAndZone = lots.reduce(
       (acc, lot) => {
         const { neighbourhood, zone } = lot;
@@ -292,53 +280,68 @@ export const useZonesOptions = () => {
 
     // Iterate over each neighbourhood
     for (const neighbourhood in lotsByNeighbourhoodAndZone) {
+      let neighbourhoodNeedMowingCritically = 0;
       let neighbourhoodNeedMowing = 0;
       let neighbourhoodDoesntNeedMowing = 0;
 
+      const zones: ZoneInterface[] = [];
+
       // Iterate over each zone within the neighbourhood
-      const zones = Object.keys(lotsByNeighbourhoodAndZone[neighbourhood]).map(
-        (zone) => {
-          const lotsInZone = lotsByNeighbourhoodAndZone[neighbourhood][zone];
-          let zoneNeedMowing = 0;
-          let zoneDoesntNeedMowing = 0;
+      for (const zone in lotsByNeighbourhoodAndZone[neighbourhood]) {
+        const lotsInZone = lotsByNeighbourhoodAndZone[neighbourhood][zone];
+        let zoneNeedMowingCritically = 0;
+        let zoneNeedMowing = 0;
+        let zoneDoesntNeedMowing = 0;
 
-          const lots = lotsInZone.map((lot) => {
-            const needsMowing = lotNeedsMowing(lot.lastMowingDate);
+        const lots: LotWithNeedMowingInterface[] = lotsInZone.map((lot) => {
+          const needsMowing = lotNeedsMowing(lot.lastMowingDate);
 
-            if (needsMowing) {
-              zoneNeedMowing++;
-            } else {
-              zoneDoesntNeedMowing++;
-            }
-
-            return {
-              ...lot,
-              needMowing: needsMowing,
-            };
-          });
-
-          neighbourhoodNeedMowing += zoneNeedMowing;
-          neighbourhoodDoesntNeedMowing += zoneDoesntNeedMowing;
+          if (needsMowing === 2) {
+            zoneNeedMowingCritically++;
+          } else if (needsMowing === 1) {
+            zoneNeedMowing++;
+          } else {
+            zoneDoesntNeedMowing++;
+          }
 
           return {
-            zone,
-            needMowing: zoneNeedMowing,
-            doesntNeedMowing: zoneDoesntNeedMowing,
-            lots,
+            ...lot,
+            needMowing: needsMowing,
           };
-        },
-      );
+        });
 
-      result.push({
+        neighbourhoodNeedMowingCritically += zoneNeedMowingCritically;
+        neighbourhoodNeedMowing += zoneNeedMowing;
+        neighbourhoodDoesntNeedMowing += zoneDoesntNeedMowing;
+
+        const zoneOption: ZoneInterface = {
+          zone,
+          zoneId: zone,
+          needMowingCritically: zoneNeedMowingCritically,
+          needMowing: zoneNeedMowing,
+          doesntNeedMowing: zoneDoesntNeedMowing,
+          isSelected: false, // Initialize as needed
+          lots,
+        };
+
+        zones.push(zoneOption);
+      }
+
+      const neighbourhoodOption: NeighbourhoodInterface = {
         neighbourhood,
-        zones,
+        neighbourhoodId: neighbourhood,
+        needMowingCritically: neighbourhoodNeedMowingCritically,
         needMowing: neighbourhoodNeedMowing,
         doesntNeedMowing: neighbourhoodDoesntNeedMowing,
-      });
+        isSelected: false, // Initialize as needed
+        zones,
+      };
+
+      result.push(neighbourhoodOption);
     }
 
     return result;
-  }, [lots]); // Dependencies array: this ensures that the computation runs only when 'lots' changes
+  }, [lots]);
 };
 
 const initializeLots = () => {

@@ -18,7 +18,7 @@ const ChooseZonesForTodaysLots = () => {
             title={neighbourhood.neighbourhood}
             level={0} // Neighbourhood level
             thisWeeksNormalLotsToMow={neighbourhood.needMowing}
-            thisWeeksCriticalLotsToMow={neighbourhood.needMowing}
+            thisWeeksCriticalLotsToMow={neighbourhood.needMowingCritically}
           >
             {neighbourhood.zones.map((zone, zoneIndex) => (
               <CustomAccordion
@@ -26,7 +26,7 @@ const ChooseZonesForTodaysLots = () => {
                 title={`Zona ${zone.zone}`}
                 level={1} // Zone level
                 thisWeeksNormalLotsToMow={zone.needMowing}
-                thisWeeksCriticalLotsToMow={zone.needMowing}
+                thisWeeksCriticalLotsToMow={zone.needMowingCritically}
               >
                 {zone.lots.map((lot, lotIndex) => (
                   <OneLotForCustomAccordion

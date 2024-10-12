@@ -11,6 +11,7 @@ type CustomAccordionProps = {
   level: number; // Pass the level of accordion (neighbourhood or zone)
   thisWeeksNormalLotsToMow?: number;
   thisWeeksCriticalLotsToMow?: number;
+  isSelected: boolean;
 };
 
 const CustomAccordion: React.FC<CustomAccordionProps> = ({
@@ -19,6 +20,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   level,
   thisWeeksNormalLotsToMow,
   thisWeeksCriticalLotsToMow,
+  isSelected,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -40,7 +42,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
           >
             <MaterialCommunityIcons
-              name={true ? 'circle-slice-8' : 'circle-outline'}
+              name={isSelected ? 'circle-slice-8' : 'circle-outline'}
               color={theme.colors.primary}
               size={28}
             />

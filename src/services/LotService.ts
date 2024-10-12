@@ -272,6 +272,7 @@ export const useZonesOptions = (): NeighbourhoodInterface[] => {
         let zoneNeedMowing = 0;
         let zoneDoesntNeedMowing = 0;
         let zoneLabel = '';
+        let zoneSelectedLotsCounter = 0;
 
         // Iterate over each lot within the zone
         const lots: LotWithNeedMowingInterface[] = lotsInZone.map((lot) => {
@@ -279,9 +280,12 @@ export const useZonesOptions = (): NeighbourhoodInterface[] => {
           neighbourhoodLabel = lot.neighbourhoodLabel;
           zoneLabel = lot.zoneLabel;
 
-          //getting info for the lot
-          const needsMowing = lotNeedsMowing(lot.lastMowingDate);
+          if (lot.lotIsSelected) {
+            zoneSelectedLotsCounter++;
+          }
 
+          // checking if the lot needs mowing
+          const needsMowing = lotNeedsMowing(lot.lastMowingDate);
           if (needsMowing === 2) {
             zoneNeedMowingCritically++;
           } else if (needsMowing === 1) {
@@ -300,13 +304,22 @@ export const useZonesOptions = (): NeighbourhoodInterface[] => {
         neighbourhoodNeedMowing += zoneNeedMowing;
         neighbourhoodDoesntNeedMowing += zoneDoesntNeedMowing;
 
+        console.log(
+          'zoneSelectedLotsCounter: ',
+          zoneSelectedLotsCounter,
+          'lotsInZone.length: ',
+          lotsInZone.length,
+        );
+        const zoneIsSelected = zoneSelectedLotsCounter == lotsInZone.length;
+        console.log('zoneIsSelected: ', zoneIsSelected);
+
         const zoneOption: ZoneInterface = {
           zoneId: zone,
           zoneLabel: zoneLabel,
           needMowing: zoneNeedMowing,
           needMowingCritically: zoneNeedMowingCritically,
           doesntNeedMowing: zoneDoesntNeedMowing,
-          isSelected: false, // Initialize as needed
+          isSelected: zoneIsSelected, // Initialize as needed
           lots,
         };
 

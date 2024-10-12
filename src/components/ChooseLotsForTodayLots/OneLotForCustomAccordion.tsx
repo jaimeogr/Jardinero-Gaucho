@@ -3,10 +3,8 @@ import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import LotService from '../../services/LotService';
 import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
-import { LotInterface } from '../../types/types';
 
 interface OneLotForCustomAccordionProps {
   title: string;
@@ -21,9 +19,6 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
   isLastItem,
   lotId,
 }) => {
-  console.log('lot ID:');
-  console.log(lotId);
-
   // Use useLotStore with a state selector to get only the relevant data to avoid unnecessary re-renders
   const lot = useLotStore((state) =>
     state.lots.find((lot) => lot.lotId === lotId),

@@ -6,8 +6,11 @@ interface LotStoreState {
   lots: LotInterface[];
   initializeLots: (lots: LotInterface[]) => void;
   toggleLotSelection: (lotId: string) => void;
-  toggleZoneSelection: (zoneId: string) => void;
-  toggleNeighbourhoodSelection: (neighbourhoodId: string) => void;
+  toggleZoneSelection: (zoneId: string, newState: boolean) => void;
+  toggleNeighbourhoodSelection: (
+    neighbourhoodId: string,
+    newState: boolean,
+  ) => void;
 }
 
 const useLotStore = create<LotStoreState>((set, get) => ({
@@ -27,21 +30,22 @@ const useLotStore = create<LotStoreState>((set, get) => ({
     }));
   },
 
-  toggleZoneSelection: (zoneId: string) => {
+  toggleZoneSelection: (zoneId: string, newState: boolean) => {
     set((state) => ({
       lots: state.lots.map((lot) =>
-        lot.zoneId === zoneId
-          ? { ...lot, lotIsSelected: !lot.lotIsSelected }
-          : lot,
+        lot.zoneId === zoneId ? { ...lot, lotIsSelected: newState } : lot,
       ),
     }));
   },
 
-  toggleNeighbourhoodSelection: (neighbourhoodId: string) => {
+  toggleNeighbourhoodSelection: (
+    neighbourhoodId: string,
+    newState: boolean,
+  ) => {
     set((state) => ({
       lots: state.lots.map((lot) =>
         lot.neighbourhoodId === neighbourhoodId
-          ? { ...lot, lotIsSelected: !lot.lotIsSelected }
+          ? { ...lot, lotIsSelected: newState }
           : lot,
       ),
     }));

@@ -331,7 +331,7 @@ export const useZonesOptions = (): NeighbourhoodInterface[] => {
         needMowingCritically: neighbourhoodNeedMowingCritically,
         doesntNeedMowing: neighbourhoodDoesntNeedMowing,
         isSelected:
-          neighbourhoodSelectedLotsCounter == neighbourhoodAllLotsCounter, // Initialize as needed
+          neighbourhoodSelectedLotsCounter == neighbourhoodAllLotsCounter, // if all lots in a neighbourhood are selected, then the neighbourhood is selected
         zones,
       };
 

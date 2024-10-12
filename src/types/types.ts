@@ -1,14 +1,16 @@
 // types.ts or interfaces.ts
 
 export interface LotInterface {
-  id: number; // Optional id for the lot
-  number: string; // Lot number
-  zone: string; // Area of the lot
-  neighbourhood: string; // Neighbourhood of the lot
-  lastMowingDate: Date;
-  isSelected: boolean;
+  lotId: string; // Unique identifier for the lot, now as a UUID
+  lotLabel: string; // Lot number or label
+  zoneId: string; // ID of the zone the lot belongs to, as a UUID
+  zoneLabel: string; // Name of the zone
+  neighbourhoodId: string; // ID of the neighbourhood the lot belongs to, as a UUID
+  neighbourhoodLabel: string; // Name of the neighbourhood
+  lastMowingDate: Date; // Last mowing date for the lot
+  lotIsSelected: boolean; // Selection state of the lot
   extraNotes?: string; // Optional extra notes about the lot
-  assignedTo?: number[]; // Optional users assigned to the lot
+  assignedTo: string[]; // Users assigned to the lot, can still be numbers if these are internal references
 }
 
 export interface GroupOfLotsInterface {
@@ -20,20 +22,20 @@ export interface LotWithNeedMowingInterface extends LotInterface {
 }
 
 export interface ZoneInterface {
-  zone: string;
   zoneId: string; // Ensure you have this data or adjust accordingly
-  needMowingCritically: number;
+  zoneLabel: string;
   needMowing: number;
+  needMowingCritically: number;
   doesntNeedMowing: number;
   isSelected: boolean;
   lots: LotWithNeedMowingInterface[];
 }
 
 export interface NeighbourhoodInterface {
-  neighbourhood: string;
   neighbourhoodId: string; // Ensure you have this data or adjust accordingly
-  needMowingCritically: number;
+  neighbourhoodLabel: string;
   needMowing: number;
+  needMowingCritically: number;
   doesntNeedMowing: number;
   isSelected: boolean;
   zones: ZoneInterface[];
@@ -41,7 +43,7 @@ export interface NeighbourhoodInterface {
 
 // You can define additional interfaces for other data types in your app
 export interface UserInterface {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   email: string;

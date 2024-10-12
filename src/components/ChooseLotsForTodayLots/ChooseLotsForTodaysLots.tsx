@@ -15,7 +15,7 @@ const ChooseZonesForTodaysLots = () => {
         {zonesOptions.map((neighbourhood, neighbourhoodIndex) => (
           <CustomAccordion
             key={neighbourhoodIndex}
-            title={neighbourhood.neighbourhood}
+            title={neighbourhood.neighbourhoodLabel}
             level={0} // Neighbourhood level
             thisWeeksNormalLotsToMow={neighbourhood.needMowing}
             thisWeeksCriticalLotsToMow={neighbourhood.needMowingCritically}
@@ -23,7 +23,7 @@ const ChooseZonesForTodaysLots = () => {
             {neighbourhood.zones.map((zone, zoneIndex) => (
               <CustomAccordion
                 key={zoneIndex}
-                title={`Zona ${zone.zone}`}
+                title={`Zona ${zone.zoneLabel}`}
                 level={1} // Zone level
                 thisWeeksNormalLotsToMow={zone.needMowing}
                 thisWeeksCriticalLotsToMow={zone.needMowingCritically}
@@ -31,9 +31,9 @@ const ChooseZonesForTodaysLots = () => {
                 {zone.lots.map((lot, lotIndex) => (
                   <OneLotForCustomAccordion
                     key={lotIndex}
-                    title={`Lote ${lot.number}`}
+                    title={`Lote ${lot.lotLabel}`}
                     description={`Ultima pasada: ${lot.lastMowingDate.toDateString()}`}
-                    lotId={lot.id}
+                    lotId={lot.lotId}
                     isLastItem={lotIndex === zone.lots.length - 1}
                   />
                 ))}

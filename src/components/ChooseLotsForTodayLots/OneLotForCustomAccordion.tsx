@@ -11,7 +11,7 @@ import { LotInterface } from '../../types/types';
 interface OneLotForCustomAccordionProps {
   title: string;
   description: string;
-  lotId: number; // Use LotInterface to type the lot prop
+  lotId: string; // Use LotInterface to type the lot prop
   isLastItem: boolean;
 }
 
@@ -26,7 +26,7 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
 
   // Use useLotStore with a state selector to get only the relevant data to avoid unnecessary re-renders
   const lot = useLotStore((state) =>
-    state.lots.find((lot) => lot.id === lotId),
+    state.lots.find((lot) => lot.lotId === lotId),
   );
   const toggleLotSelection = useLotStore((state) => state.toggleLotSelection);
 
@@ -44,7 +44,7 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
     <View>
       <TouchableOpacity
         style={
-          lot.isSelected
+          lot.lotIsSelected
             ? [styles.container, styles.lotIsSelected]
             : styles.container
         }
@@ -55,7 +55,7 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
         >
           <MaterialCommunityIcons
-            name={lot.isSelected ? 'circle-slice-8' : 'circle-outline'}
+            name={lot.lotIsSelected ? 'circle-slice-8' : 'circle-outline'}
             color={theme.colors.primary}
             size={28}
           />
@@ -63,7 +63,7 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
 
         {/* Title and Description */}
         <View style={styles.textContainer}>
-          <Text style={styles.title}>{lot.number}</Text>
+          <Text style={styles.title}>{lot.lotLabel}</Text>
           <Text style={styles.description}>{description}</Text>
         </View>
 
@@ -77,7 +77,7 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
         </TouchableOpacity>
       </TouchableOpacity>
       {/* divider at the bottom of the item renders when the item is not selected and when its not the last item in the iteration. */}
-      {lot.isSelected || isLastItem ? null : (
+      {lot.lotIsSelected || isLastItem ? null : (
         <Divider style={styles.divider} bold={true} />
       )}
     </View>

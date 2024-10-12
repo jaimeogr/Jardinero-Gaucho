@@ -8,9 +8,9 @@ import { theme } from '../../styles/styles';
 import { LotInterface } from '../../types/types';
 
 const OneLotForTodaysLots: React.FC<LotInterface> = ({
-  number,
-  zone,
-  neighbourhood,
+  lotLabel: number,
+  zoneId: zone,
+  neighbourhoodId: neighbourhood,
   lastMowingDate: completed,
   extraNotes,
 }) => {

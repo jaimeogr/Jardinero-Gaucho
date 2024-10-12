@@ -14,9 +14,9 @@ const AllLotsForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
         {lots.map((lot, index) => (
           <React.Fragment key={index}>
             <OneLotForTodaysLots
-              number={lot.number}
-              zone={lot.zone}
-              neighbourhood={lot.neighbourhood}
+              lotLabel={lot.lotLabel}
+              zoneId={lot.zoneId}
+              neighbourhoodId={lot.neighbourhoodId}
               extraNotes={lot.extraNotes}
               lastMowingDate={lot.lastMowingDate}
             />

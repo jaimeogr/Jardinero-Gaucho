@@ -262,6 +262,8 @@ export const useZonesOptions = (): NeighbourhoodInterface[] => {
       let neighbourhoodNeedMowing = 0;
       let neighbourhoodDoesntNeedMowing = 0;
       let neighbourhoodLabel = '';
+      let neighbourhoodSelectedLotsCounter = 0;
+      let neighbourhoodAllLotsCounter = 0;
 
       const zones: ZoneInterface[] = [];
 
@@ -280,9 +282,11 @@ export const useZonesOptions = (): NeighbourhoodInterface[] => {
           neighbourhoodLabel = lot.neighbourhoodLabel;
           zoneLabel = lot.zoneLabel;
 
+          // logic for determining if the zone / neighbourhood is selected
           if (lot.lotIsSelected) {
             zoneSelectedLotsCounter++;
           }
+          neighbourhoodAllLotsCounter++;
 
           // checking if the lot needs mowing
           const needsMowing = lotNeedsMowing(lot.lastMowingDate);
@@ -300,18 +304,12 @@ export const useZonesOptions = (): NeighbourhoodInterface[] => {
           };
         });
 
+        // Update neighbourhood counters for mowing requirements
         neighbourhoodNeedMowingCritically += zoneNeedMowingCritically;
         neighbourhoodNeedMowing += zoneNeedMowing;
         neighbourhoodDoesntNeedMowing += zoneDoesntNeedMowing;
-
-        console.log(
-          'zoneSelectedLotsCounter: ',
-          zoneSelectedLotsCounter,
-          'lotsInZone.length: ',
-          lotsInZone.length,
-        );
-        const zoneIsSelected = zoneSelectedLotsCounter == lotsInZone.length;
-        console.log('zoneIsSelected: ', zoneIsSelected);
+        // Update neighbourhood counters for selected lots
+        neighbourhoodSelectedLotsCounter += zoneSelectedLotsCounter;
 
         const zoneOption: ZoneInterface = {
           zoneId: zone,
@@ -319,7 +317,7 @@ export const useZonesOptions = (): NeighbourhoodInterface[] => {
           needMowing: zoneNeedMowing,
           needMowingCritically: zoneNeedMowingCritically,
           doesntNeedMowing: zoneDoesntNeedMowing,
-          isSelected: zoneIsSelected, // Initialize as needed
+          isSelected: zoneSelectedLotsCounter == lotsInZone.length, // If all lots for the zone are selected, the zone is selected
           lots,
         };
 
@@ -332,7 +330,8 @@ export const useZonesOptions = (): NeighbourhoodInterface[] => {
         needMowing: neighbourhoodNeedMowing,
         needMowingCritically: neighbourhoodNeedMowingCritically,
         doesntNeedMowing: neighbourhoodDoesntNeedMowing,
-        isSelected: false, // Initialize as needed
+        isSelected:
+          neighbourhoodSelectedLotsCounter == neighbourhoodAllLotsCounter, // Initialize as needed
         zones,
       };
 

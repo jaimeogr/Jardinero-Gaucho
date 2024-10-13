@@ -6,6 +6,23 @@ import { IconButton } from 'react-native-paper';
 import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
 
+const {
+  accodion: {
+    // neighbourhood not selected
+    neighbourhoodAccordionBorderNotSelected,
+    neighbourhoodAccordionBackgroundNotSelected,
+    // neighbourhood selected
+    neighbourhoodAccordionBorderSelected,
+    neighbourhoodAccordionBackgroundSelected,
+    // neighbourhood not selected
+    zoneAccordionBorderNotSelected,
+    zoneAccordionBackgroundNotSelected,
+    // neighbourhood selected
+    zoneAccordionBorderSelected,
+    zoneAccordionBackgroundSelected,
+  },
+} = theme.colors;
+
 type CustomAccordionProps = {
   id: string;
   title: string;
@@ -40,11 +57,17 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
 
   return (
     <View
-      style={
+      style={[
         level === 0
           ? styles.accordionContainerForNeighbourhood
-          : styles.accordionContainerForZone
-      }
+          : styles.accordionContainerForZone,
+        isSelected && level === 0
+          ? styles.accordionContainterIsSelectedForNeighbourhood
+          : null,
+        isSelected && level === 1
+          ? styles.accordionContainterIsSelectedForZone
+          : null,
+      ]}
     >
       <TouchableOpacity
         onPress={() => setExpanded(!expanded)}
@@ -93,17 +116,25 @@ const styles = StyleSheet.create({
   accordionContainerForNeighbourhood: {
     marginBottom: 18,
     borderRadius: 10,
-    borderColor: 'purple',
+    borderColor: neighbourhoodAccordionBorderNotSelected,
     borderWidth: 3,
-    backgroundColor: '#FFE1FF',
+    backgroundColor: neighbourhoodAccordionBackgroundNotSelected,
+  },
+  accordionContainterIsSelectedForNeighbourhood: {
+    backgroundColor: neighbourhoodAccordionBackgroundSelected,
+    borderColor: neighbourhoodAccordionBorderSelected,
   },
   accordionContainerForZone: {
     marginBottom: 18,
     borderRadius: 10,
-    borderColor: '#347928',
+    borderColor: zoneAccordionBorderNotSelected,
     borderWidth: 3,
-    backgroundColor: '#E7FBE6',
+    backgroundColor: zoneAccordionBackgroundNotSelected,
     paddingLeft: 6,
+  },
+  accordionContainterIsSelectedForZone: {
+    backgroundColor: zoneAccordionBackgroundSelected,
+    borderColor: zoneAccordionBorderSelected,
   },
   accordionHeader: {
     flexDirection: 'row',

@@ -7,7 +7,7 @@ import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
 
 const {
-  accodion: {
+  accordion: {
     // neighbourhood not selected
     neighbourhoodAccordionBorderNotSelected,
     neighbourhoodAccordionBackgroundNotSelected,

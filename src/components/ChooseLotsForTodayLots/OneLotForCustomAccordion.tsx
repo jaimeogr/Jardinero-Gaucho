@@ -6,6 +6,13 @@ import { Divider } from 'react-native-paper';
 import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
 
+const {
+  lotBackgroundNotSelected,
+  lotBorderNotSelected,
+  lotBackgroundSelected,
+  lotBorderSelected,
+} = theme.colors.accordion;
+
 interface OneLotForCustomAccordionProps {
   title: string;
   description: string;
@@ -86,6 +93,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 10,
     marginVertical: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: lotBackgroundNotSelected,
+    borderColor: lotBorderNotSelected,
   },
   leftIconContainer: {
     paddingHorizontal: 10,
@@ -106,10 +117,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   lotIsSelected: {
-    backgroundColor: '#e0f7fa', // Light blue for selected items across all levels
-    borderColor: '#00796b', // Optional border for emphasis
-    borderWidth: 1,
-    borderRadius: 10,
+    backgroundColor: lotBackgroundSelected, // Light blue for selected items across all levels
+    borderColor: lotBorderSelected, // Optional border for emphasis
   },
   divider: {
     width: '95%',

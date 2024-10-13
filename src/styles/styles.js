@@ -15,7 +15,7 @@ export const theme = {
     background3: '#F5EFE3', // 6BCB77 C1F8CF
     ripple: '#EAE7E7',
 
-    accodion: {
+    accordion: {
       // neighbourhood not selected
       neighbourhoodAccordionBackgroundNotSelected: '#FFE1FF',
       neighbourhoodAccordionBorderNotSelected: '#8559A5',
@@ -29,6 +29,14 @@ export const theme = {
       // zone selected
       zoneAccordionBackgroundSelected: '#C5E1A5',
       zoneAccordionBorderSelected: '#C5E1A5',
+
+      // lot item not selected
+      lotBackgroundNotSelected: '#e0f7fa',
+      lotBorderNotSelected: '#00796b',
+
+      // lot item selected
+      lotBackgroundSelected: '#e0f7fa',
+      lotBorderSelected: '#00796b',
     },
   },
 };

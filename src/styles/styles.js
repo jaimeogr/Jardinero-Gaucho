@@ -20,15 +20,15 @@ export const theme = {
       neighbourhoodAccordionBackgroundNotSelected: '#FFE1FF',
       neighbourhoodAccordionBorderNotSelected: '#8559A5',
       // neighbourhood selected
-      neighbourhoodAccordionBackgroundSelected: '#E1C0E1',
-      neighbourhoodAccordionBorderSelected: 'purple',
+      neighbourhoodAccordionBackgroundSelected: '#F2AFEF',
+      neighbourhoodAccordionBorderSelected: '#F2AFEF',
 
       // zone not selected
       zoneAccordionBackgroundNotSelected: '#E7FBE6',
       zoneAccordionBorderNotSelected: '#347928',
       // zone selected
-      zoneAccordionBackgroundSelected: '#C8E6C9',
-      zoneAccordionBorderSelected: '#347928',
+      zoneAccordionBackgroundSelected: '#C5E1A5',
+      zoneAccordionBorderSelected: '#C5E1A5',
     },
   },
 };

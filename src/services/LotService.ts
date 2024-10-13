@@ -346,12 +346,7 @@ const initializeLots = () => {
   useLotStore.getState().initializeLots(hardCodedLots);
 };
 
-const setSelected = (id: number) => {
-  useLotStore.getState().toggleLotSelection(id);
-};
-
 export default {
   initializeLots,
-  setSelected,
   useZonesOptions,
 };

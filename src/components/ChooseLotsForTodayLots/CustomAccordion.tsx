@@ -1,11 +1,13 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
+import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
 
 type CustomAccordionProps = {
+  id: string;
   title: string;
   children: React.ReactNode;
   level: number; // Pass the level of accordion (neighbourhood or zone)
@@ -15,6 +17,7 @@ type CustomAccordionProps = {
 };
 
 const CustomAccordion: React.FC<CustomAccordionProps> = ({
+  id,
   title,
   children,
   level,
@@ -23,6 +26,17 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   isSelected,
 }) => {
   const [expanded, setExpanded] = useState(false);
+
+  const toogleIsSelected = useLotStore((state) =>
+    level === 0
+      ? state.toggleNeighbourhoodSelection
+      : state.toggleZoneSelection,
+  );
+
+  // Wrap the toggle function with useCallback to avoid creating a new function on each render
+  const handleToggle = useCallback(() => {
+    toogleIsSelected(id, !isSelected);
+  }, [toogleIsSelected, id, isSelected]);
 
   return (
     <View
@@ -38,7 +52,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
       >
         <View style={styles.accordionHeaderLeftSide}>
           <TouchableOpacity
-            onPress={() => console.log('Icon pressed')}
+            onPress={handleToggle}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
           >
             <MaterialCommunityIcons

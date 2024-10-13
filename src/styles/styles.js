@@ -16,27 +16,26 @@ export const theme = {
     ripple: '#EAE7E7',
 
     accordion: {
-      // neighbourhood not selected
-      neighbourhoodAccordionBackgroundNotSelected: '#FFE1FF',
-      neighbourhoodAccordionBorderNotSelected: '#8559A5',
       // neighbourhood selected
-      neighbourhoodAccordionBackgroundSelected: '#F2AFEF',
-      neighbourhoodAccordionBorderSelected: '#F2AFEF',
+      neighbourhoodAccordionBackgroundSelected: '#FFE1FF',
+      neighbourhoodAccordionBorderSelected: 'purple', //#8559A5
+      // neighbourhood not selected
+      neighbourhoodAccordionBackgroundNotSelected: '#F2AFEF',
+      neighbourhoodAccordionBorderNotSelected: '#F2AFEF',
 
-      // zone not selected
-      zoneAccordionBackgroundNotSelected: '#E7FBE6',
-      zoneAccordionBorderNotSelected: '#347928',
       // zone selected
-      zoneAccordionBackgroundSelected: '#C5E1A5',
-      zoneAccordionBorderSelected: '#C5E1A5',
-
-      // lot item not selected
-      lotBackgroundNotSelected: '#e0f7fa',
-      lotBorderNotSelected: '#00796b',
+      zoneAccordionBackgroundSelected: '#E7FBE6',
+      zoneAccordionBorderSelected: '#347928',
+      // zone not selected
+      zoneAccordionBackgroundNotSelected: '#C5E1A5',
+      zoneAccordionBorderNotSelected: '#C5E1A5',
 
       // lot item selected
       lotBackgroundSelected: '#e0f7fa',
       lotBorderSelected: '#00796b',
+      // lot item not selected
+      lotBackgroundNotSelected: '#D9EEF3',
+      lotBorderNotSelected: '#D9EEF3',
     },
   },
 };

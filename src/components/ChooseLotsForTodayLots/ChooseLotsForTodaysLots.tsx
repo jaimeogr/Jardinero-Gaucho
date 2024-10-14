@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 2,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   selectedIndicatorsText: {
     marginLeft: 8,

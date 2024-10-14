@@ -20,6 +20,7 @@ const ChooseZonesForTodaysLots = () => {
     deselectLots(/* pass the necessary lotId here */);
   }, [deselectLots]);
 
+  // this will handle the Native OS back button press event
   useEffect(() => {
     const onBackPress = () => {
       handleDeselectLots();
@@ -43,12 +44,6 @@ const ChooseZonesForTodaysLots = () => {
         <View style={styles.upperSide}>
           <View style={styles.selectedIndicatorsTextAndButtons}>
             <View style={styles.selectedIndicatorsLeftSide}>
-              {/* <Appbar.Action
-                icon="arrow-left"
-                color={upperIndicatorsAndButtonsColor}
-                size={28}
-                onPress={handleDeselectLots}
-              /> */}
               <Appbar.BackAction
                 color={upperIndicatorsAndButtonsColor}
                 size={28}

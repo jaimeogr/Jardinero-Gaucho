@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useCallback } from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, Text, BackHandler } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
@@ -20,6 +20,20 @@ const ChooseZonesForTodaysLots = () => {
     deselectLots(/* pass the necessary lotId here */);
   }, [deselectLots]);
 
+  useEffect(() => {
+    const onBackPress = () => {
+      handleDeselectLots();
+      return true; // Return true to prevent the default back behavior
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      onBackPress,
+    );
+
+    return () => backHandler.remove(); // Cleanup the listener when the component unmounts
+  }, [handleDeselectLots]);
+
   return (
     <View style={styles.container}>
       {/* when there are selected lots, it renders the buttons to interact with the selected lots
@@ -29,8 +43,13 @@ const ChooseZonesForTodaysLots = () => {
         <View style={styles.upperSide}>
           <View style={styles.selectedIndicatorsTextAndButtons}>
             <View style={styles.selectedIndicatorsLeftSide}>
-              <Appbar.Action
+              {/* <Appbar.Action
                 icon="arrow-left"
+                color={upperIndicatorsAndButtonsColor}
+                size={28}
+                onPress={handleDeselectLots}
+              /> */}
+              <Appbar.BackAction
                 color={upperIndicatorsAndButtonsColor}
                 size={28}
                 onPress={handleDeselectLots}

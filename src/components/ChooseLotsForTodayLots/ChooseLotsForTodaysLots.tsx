@@ -54,7 +54,7 @@ const ChooseZonesForTodaysLots = () => {
           </View>
         </View>
       ) : (
-        <Text style={[styles.upperSide, styles.title]}>Mis lotes</Text>
+        <Text style={styles.title}>Mis lotes</Text>
       )}
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -113,6 +113,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    alignSelf: 'flex-start',
+    paddingTop: 12,
+    marginLeft: 24,
+    marginBottom: 12,
   },
   selectedIndicatorsTextAndButtons: {
     flex: 1,

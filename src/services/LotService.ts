@@ -231,11 +231,20 @@ const hardCodedLots: LotInterface[] = [
   },
 ];
 
-export const useZonesOptions = (): NeighbourhoodInterface[] => {
+interface NeighbourhoodInterfaceWithIndicators {
+  nestedLots: NeighbourhoodInterface[];
+  selectedLots: number;
+}
+
+export const useZonesOptions = (): NeighbourhoodInterfaceWithIndicators => {
   const lots = useLotStore((state) => state.lots);
 
-  return React.useMemo<NeighbourhoodInterface[]>(() => {
-    const result: NeighbourhoodInterface[] = [];
+  return React.useMemo<NeighbourhoodInterfaceWithIndicators>(() => {
+    const result: NeighbourhoodInterfaceWithIndicators = {
+      nestedLots: [],
+      selectedLots: 0,
+    };
+    let selectedLotsCounter = 0;
 
     // Group lots by neighbourhood and zone
     const lotsByNeighbourhoodAndZone = lots.reduce(
@@ -335,9 +344,11 @@ export const useZonesOptions = (): NeighbourhoodInterface[] => {
         zones,
       };
 
-      result.push(neighbourhoodOption);
-    }
+      selectedLotsCounter += neighbourhoodSelectedLotsCounter;
 
+      result.nestedLots.push(neighbourhoodOption);
+    }
+    result.selectedLots = selectedLotsCounter;
     return result;
   }, [lots]);
 };

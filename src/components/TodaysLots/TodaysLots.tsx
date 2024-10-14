@@ -18,8 +18,6 @@ const TodaysLots = () => {
     <Surface style={styles.surface}>
       {selectingLots ? (
         <View style={styles.content}>
-          <Text style={styles.title}>Seleccioná los lotes de hoy</Text>
-
           <ChooseLotsForTodaysLots />
         </View>
       ) : (

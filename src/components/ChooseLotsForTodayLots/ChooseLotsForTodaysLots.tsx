@@ -1,17 +1,24 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
 import { useZonesOptions } from '../../services/LotService';
+import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
 
 const upperIndicatorsAndButtonsColor = theme.colors.primary;
 
 const ChooseZonesForTodaysLots = () => {
   const { nestedLots, selectedLots } = useZonesOptions();
+
+  const deselectLots = useLotStore((state) => state.deselectAllLots);
+
+  const handleDeselectLots = useCallback(() => {
+    deselectLots(/* pass the necessary lotId here */);
+  }, [deselectLots]);
 
   return (
     <View style={styles.container}>
@@ -26,7 +33,7 @@ const ChooseZonesForTodaysLots = () => {
                 icon="arrow-left"
                 color={upperIndicatorsAndButtonsColor}
                 size={28}
-                onPress={() => {}}
+                onPress={handleDeselectLots}
               />
               <Text style={styles.selectedIndicatorsText}>{selectedLots}</Text>
             </View>

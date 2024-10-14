@@ -5,6 +5,7 @@ import { LotInterface } from '../types/types';
 interface LotStoreState {
   lots: LotInterface[];
   initializeLots: (lots: LotInterface[]) => void;
+  deselectAllLots: () => void;
   toggleLotSelection: (lotId: string) => void;
   toggleZoneSelection: (zoneId: string, newState: boolean) => void;
   toggleNeighbourhoodSelection: (
@@ -18,6 +19,15 @@ const useLotStore = create<LotStoreState>((set, get) => ({
 
   initializeLots: (lots: LotInterface[]) => {
     set({ lots });
+  },
+
+  deselectAllLots: () => {
+    set((state) => ({
+      lots: state.lots.map((lot) => ({
+        ...lot,
+        lotIsSelected: false,
+      })),
+    }));
   },
 
   toggleLotSelection: (lotId: string) => {

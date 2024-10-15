@@ -1,5 +1,3 @@
-// stores/useUserStore.ts
-
 import { create } from 'zustand';
 
 import { UserInterface } from '../types/types';

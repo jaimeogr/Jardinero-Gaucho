@@ -12,6 +12,8 @@ interface LotStoreState {
     neighbourhoodId: string,
     newState: boolean,
   ) => void;
+  updateLotLastMowingDate: (lotId: string, date: Date) => void;
+  updateLot: (lotId: string, updatedInfo: Partial<LotInterface>) => void;
 }
 
 const useLotStore = create<LotStoreState>((set, get) => ({
@@ -57,6 +59,22 @@ const useLotStore = create<LotStoreState>((set, get) => ({
         lot.neighbourhoodId === neighbourhoodId
           ? { ...lot, lotIsSelected: newState }
           : lot,
+      ),
+    }));
+  },
+
+  updateLotLastMowingDate: (lotId: string, date: Date) => {
+    set((state) => ({
+      lots: state.lots.map((lot) =>
+        lot.lotId === lotId ? { ...lot, lastMowingDate: date } : lot,
+      ),
+    }));
+  },
+
+  updateLot: (lotId: string, updatedInfo: Partial<LotInterface>) => {
+    set((state) => ({
+      lots: state.lots.map((lot) =>
+        lot.lotId === lotId ? { ...lot, ...updatedInfo } : lot,
       ),
     }));
   },

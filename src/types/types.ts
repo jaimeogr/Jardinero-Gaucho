@@ -62,15 +62,15 @@ export interface WorkgroupInterface {
   workgroupId: string;
   name: string;
   primaryOwnerId: string; // User ID of the primary owner
-  ownerIds: number[]; // User IDs who are secondary owners
-  managerIds: number[]; // User IDs who are managers
-  memberIds: number[]; // User IDs who are members
+  ownerIds: string[]; // User IDs who are secondary owners
+  managerIds: string[]; // User IDs who are managers
+  memberIds: string[]; // User IDs who are members
 }
 
 export interface TaskInterface {
   taskId: string;
   lotId: string;
-  userId: number;
+  userId: string;
   taskType: 'mowing' | 'watering' | 'fertilizing' | string;
   date: Date;
   completed: boolean;

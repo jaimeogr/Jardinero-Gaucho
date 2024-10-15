@@ -51,7 +51,7 @@ export interface GroupOfUsersInterface {
 export type UserRole = 'PrimaryOwner' | 'SecondaryOwner' | 'Manager' | 'Member';
 
 export interface UserInterface {
-  userId: number;
+  userId: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -61,7 +61,8 @@ export interface UserInterface {
 export interface WorkgroupInterface {
   workgroupId: string;
   name: string;
-  ownerIds: number[]; // User IDs who are owners
+  primaryOwnerId: string; // User ID of the primary owner
+  ownerIds: number[]; // User IDs who are secondary owners
   managerIds: number[]; // User IDs who are managers
   memberIds: number[]; // User IDs who are members
 }

@@ -48,7 +48,7 @@ export interface GroupOfUsersInterface {
 
 // types/types.ts
 
-export type UserRole = 'PrimaryOwner' | 'SecondaryOwner' | 'Manager' | 'Member';
+export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
 
 export interface UserInterface {
   userId: string;

@@ -22,6 +22,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: '9c3f7d9e-60f3-4676-aab1-867ab9fa4bde',
@@ -33,6 +34,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-06'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: '7f3c6e12-6e1a-44d5-a2a7-9a4b6e8df5a1',
@@ -44,6 +46,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-07'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: '29c32fda-598d-4a2d-a1de-134c7e4bd7fa',
@@ -55,6 +58,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-07'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: 'c84a8d1b-391d-4a3a-929e-6bb4f517dca5',
@@ -66,6 +70,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-08'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: '471fa1d8-45b2-4b3f-b8f3-e9283cf3bb8c',
@@ -77,6 +82,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
 
   // Neighbourhood: El Canton, Zone: 2
@@ -90,6 +96,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: '9d8f73a7-ded3-46c5-befa-caa5f8b8adfa',
@@ -101,6 +108,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: 'f5c6734a-04f0-4f3b-9bb0-b4a4d88faef9',
@@ -112,6 +120,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-04'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: 'f1185936-7696-4f44-9c6d-8a0ecce9e9c7',
@@ -123,6 +132,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
 
   // Neighbourhood: La Laguna, Zone: 3
@@ -136,6 +146,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-02'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: '7a153674-38c1-45d9-84b2-09b9b735d6f6',
@@ -147,6 +158,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: 'b284b2e3-d169-4c2b-b1b1-4149821f5e8a',
@@ -158,6 +170,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
 
   // Neighbourhood: El Tero, Zone: 7
@@ -171,6 +184,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-08'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: 'c4e7e2c7-4b78-4921-9f2c-33dcefdf7328',
@@ -182,6 +196,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-08'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
 
   // Neighbourhood: El Naudir, Zone: 1
@@ -195,6 +210,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: 'd66de7af-3d5e-4f77-a8f5-0bff6adf88c7',
@@ -206,6 +222,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: 'fb5d1b54-fb2e-464c-9e3d-ec6b9e1d35f1',
@@ -217,6 +234,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
   {
     lotId: 'bafb7a5c-8a25-4e79-8df2-124153c34371',
@@ -228,6 +246,7 @@ const hardCodedLots: LotInterface[] = [
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
     assignedTo: [],
+    workgroupId: '1',
   },
 ];
 

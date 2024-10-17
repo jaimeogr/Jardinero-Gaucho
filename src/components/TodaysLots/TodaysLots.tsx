@@ -4,7 +4,7 @@ import { Text, Surface } from 'react-native-paper';
 
 import AllLotsForTodaysLots from './AllLotsForTodaysLots';
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
-import ControllerService from '../../services/ControllerService';
+import ControllerService from '../../services/useControllerService';
 import ChooseLotsForTodaysLots from '../ChooseLotsForTodayLots/ChooseLotsForTodaysLots';
 
 const TodaysLots = () => {

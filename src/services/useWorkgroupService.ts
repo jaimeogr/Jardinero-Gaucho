@@ -1,6 +1,11 @@
-import DatabaseService from './DatabaseService';
+import BackendService from '../backend/BackendService';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
 import { WorkgroupInterface, UserRole } from '../types/types';
+
+const initializeWorkgroups = () => {
+  const workgroups = BackendService.getMyWorgroups();
+  useWorkgroupStore.getState().initializeWorkgroups(workgroups);
+};
 
 const createWorkgroup = (workgroup: WorkgroupInterface) => {
   useWorkgroupStore.getState().addWorkgroup(workgroup);
@@ -73,9 +78,10 @@ const updateWorkgroupRoles = (
   }
 };
 
-const initializeWorkgroups = () => {
-  const workgroups = DatabaseService.getMyWorgroups();
-  useWorkgroupStore.getState().initializeWorkgroups(workgroups);
+const useGetWorkgroupById = (workgroupId: string) => {
+  return useWorkgroupStore((state) =>
+    state.workgroups.find((wg) => wg.workgroupId === workgroupId),
+  );
 };
 
 export default {
@@ -84,4 +90,5 @@ export default {
   addUserToWorkgroup,
   removeUserFromWorkgroup,
   updateWorkgroupRoles,
+  useGetWorkgroupById,
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
-import DatabaseService from './DatabaseService';
+import BackendService from '../backend/BackendService';
 import useLotStore from '../stores/useLotStore';
 import useUserStore from '../stores/useUserStore';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
@@ -19,6 +19,11 @@ const { getWorkgroupById } = useWorkgroupStore.getState();
 const { updateLotLastMowingDate } = useLotStore.getState();
 
 const { currentUser } = useUserStore.getState();
+
+const initializeLots = () => {
+  const lots = BackendService.getMyLots();
+  useLotStore.getState().initializeLots(lots);
+};
 
 const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
   const { lots } = useLotStore.getState();
@@ -199,11 +204,6 @@ export const useNestedLots = (): NestedLotsWithIndicators => {
     result.selectedLots = selectedLotsCounter;
     return result;
   }, [lots]);
-};
-
-const initializeLots = () => {
-  const lots = DatabaseService.getMyLots();
-  useLotStore.getState().initializeLots(lots);
 };
 
 export default {

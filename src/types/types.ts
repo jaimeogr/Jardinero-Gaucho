@@ -42,6 +42,11 @@ export interface NeighbourhoodInterface {
   zones: ZoneInterface[];
 }
 
+export interface NestedLotsWithIndicators {
+  nestedLots: NeighbourhoodInterface[];
+  selectedLots: number;
+}
+
 export interface GroupOfUsersInterface {
   users: UserInterface[];
 }

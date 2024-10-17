@@ -10,6 +10,7 @@ import {
   LotWithNeedMowingInterface,
   ZoneInterface,
   NeighbourhoodInterface,
+  NestedLotsWithIndicators,
 } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 import { userHasPermission } from '../utils/permissionUtils';
@@ -22,7 +23,6 @@ const { currentUser } = useUserStore.getState();
 const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
   const { lots } = useLotStore.getState();
   const lot = lots.find((lot) => lot.lotId === lotId);
-
   if (!lot) {
     throw new Error('Lot not found');
   }
@@ -30,12 +30,10 @@ const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
     console.error('User not authenticated');
     return false;
   }
-
   const workgroup = getWorkgroupById(lot.workgroupId);
   if (!workgroup) {
     throw new Error('Workgroup not found');
   }
-
   // Check if the user has permission to complete the task
   const hasPermission = userHasPermission(
     workgroup,
@@ -46,13 +44,10 @@ const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
     console.error('User does not have permission to complete this task');
     return false;
   }
-
   // Complete the task and update the store
   updateLotLastMowingDate(lotId, date ? date : new Date());
-
   // Sync with the database (replace with actual API call)
   // syncLotWithDatabase(lotId, { lastMowingDate: new Date() });
-
   return true;
 };
 
@@ -64,12 +59,10 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
     console.log('No lots selected');
     return false;
   }
-
   // Mark each selected lot as completed with the provided date or today's date
   selectedLots.forEach((lot) => {
     updateLotLastMowingDate(lot.lotId, date || new Date());
   });
-
   console.log(`${selectedLots.length} lots marked as completed`);
   return true;
 };
@@ -91,16 +84,11 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
 //   syncLotWithDatabase(lotId, { assignedTo: [newUserId] });
 // };
 
-interface NeighbourhoodInterfaceWithIndicators {
-  nestedLots: NeighbourhoodInterface[];
-  selectedLots: number;
-}
-
-export const useNestedLots = (): NeighbourhoodInterfaceWithIndicators => {
+export const useNestedLots = (): NestedLotsWithIndicators => {
   const lots = useLotStore((state) => state.lots);
 
-  return React.useMemo<NeighbourhoodInterfaceWithIndicators>(() => {
-    const result: NeighbourhoodInterfaceWithIndicators = {
+  return React.useMemo<NestedLotsWithIndicators>(() => {
+    const result: NestedLotsWithIndicators = {
       nestedLots: [],
       selectedLots: 0,
     };

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Surface } from 'react-native-paper';
 
-import AllLotsForTodaysLots from './AllLotsForTodaysLots';
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
-import ControllerService from '../../services/useControllerService';
-import ChooseLotsForTodaysLots from '../ChooseLotsForTodayLots/ChooseLotsForTodaysLots';
+import ListViewLots from './ListViewLots/ListViewLots';
+import ControllerService from '../services/useControllerService';
+import LotsNestedView from './NestedViewLots/NestedViewLots';
 
 const TodaysLots = () => {
   const [selectingLots, setSelectingLots] = useState(true);
@@ -18,12 +18,12 @@ const TodaysLots = () => {
     <Surface style={styles.surface}>
       {selectingLots ? (
         <View style={styles.content}>
-          <ChooseLotsForTodaysLots />
+          <LotsNestedView />
         </View>
       ) : (
         <View style={styles.content}>
           <Text style={styles.title}>Mis lotes de hoy</Text>
-          {/* <AllLotsForTodaysLots lots={lots} /> */}
+          {/* <ListViewLots lots={lots} /> */}
           <BottomElementsForTodaysLots onPress={setSelectingLots} />
         </View>
       )}

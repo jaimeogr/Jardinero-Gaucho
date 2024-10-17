@@ -4,7 +4,7 @@ import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import OneLotForTodaysLots from './OneLotForTodaysLots';
+import OneLotForListViewLots from './OneLotForListViewLots';
 import { GroupOfLotsInterface } from '../../types/types';
 
 const AllLotsForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
@@ -13,7 +13,7 @@ const AllLotsForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {lots.map((lot, index) => (
           <React.Fragment key={index}>
-            <OneLotForTodaysLots
+            <OneLotForListViewLots
               lotLabel={lot.lotLabel}
               zoneId={lot.zoneId}
               neighbourhoodId={lot.neighbourhoodId}

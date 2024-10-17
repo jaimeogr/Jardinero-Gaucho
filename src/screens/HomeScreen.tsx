@@ -5,7 +5,7 @@ import { View, StyleSheet } from 'react-native';
 import { Surface } from 'react-native-paper';
 
 import ClickableRoundButton from '../components/ClickableRoundButton';
-import TodaysLots from '../components/TodaysLots/TodaysLots';
+import TodaysLots from '../components/TodaysLots';
 import { theme } from '../styles/styles';
 
 const HomeScreen = ({ navigation }) => {

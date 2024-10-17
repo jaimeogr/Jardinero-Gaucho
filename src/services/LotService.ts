@@ -78,7 +78,7 @@ interface NeighbourhoodInterfaceWithIndicators {
   selectedLots: number;
 }
 
-export const useZonesOptions = (): NeighbourhoodInterfaceWithIndicators => {
+export const useNestedLots = (): NeighbourhoodInterfaceWithIndicators => {
   const lots = useLotStore((state) => state.lots);
 
   return React.useMemo<NeighbourhoodInterfaceWithIndicators>(() => {
@@ -202,5 +202,5 @@ const initializeLots = () => {
 
 export default {
   initializeLots,
-  useZonesOptions,
+  useZonesOptions: useNestedLots,
 };

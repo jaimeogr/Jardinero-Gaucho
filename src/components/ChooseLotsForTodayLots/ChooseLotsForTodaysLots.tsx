@@ -5,14 +5,14 @@ import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import { useZonesOptions } from '../../services/LotService';
+import { useNestedLots } from '../../services/LotService';
 import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
 
 const upperIndicatorsAndButtonsColor = theme.colors.primary;
 
 const ChooseZonesForTodaysLots = () => {
-  const { nestedLots, selectedLots } = useZonesOptions();
+  const { nestedLots, selectedLots } = useNestedLots();
 
   const deselectLots = useLotStore((state) => state.deselectAllLots);
 
@@ -26,12 +26,10 @@ const ChooseZonesForTodaysLots = () => {
       handleDeselectLots();
       return true; // Return true to prevent the default back behavior
     };
-
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       onBackPress,
     );
-
     return () => backHandler.remove(); // Cleanup the listener when the component unmounts
   }, [handleDeselectLots]);
 

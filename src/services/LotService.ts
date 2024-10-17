@@ -1,7 +1,10 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
+import DatabaseService from './DatabaseService';
 import useLotStore from '../stores/useLotStore';
+import useUserStore from '../stores/useUserStore';
+import useWorkgroupStore from '../stores/useWorkgroupStore';
 import {
   LotInterface,
   LotWithNeedMowingInterface,
@@ -9,246 +12,66 @@ import {
   NeighbourhoodInterface,
 } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
+import { userHasPermission } from '../utils/permissionUtils';
 
-const hardCodedLots: LotInterface[] = [
-  // Neighbourhood: El Canton, Zone: 1
-  {
-    lotId: 'b1597fc2-cc63-4dd2-9f54-3fa5a19b8c37',
-    lotLabel: '106',
-    zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
-    zoneLabel: '1',
-    neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel: 'El Canton',
-    lastMowingDate: new Date('2024-10-10'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: '9c3f7d9e-60f3-4676-aab1-867ab9fa4bde',
-    lotLabel: '101',
-    zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
-    zoneLabel: '1',
-    neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel: 'El Canton',
-    lastMowingDate: new Date('2024-10-06'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: '7f3c6e12-6e1a-44d5-a2a7-9a4b6e8df5a1',
-    lotLabel: '102',
-    zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
-    zoneLabel: '1',
-    neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel: 'El Canton',
-    lastMowingDate: new Date('2024-10-07'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: '29c32fda-598d-4a2d-a1de-134c7e4bd7fa',
-    lotLabel: '103',
-    zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
-    zoneLabel: '1',
-    neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel: 'El Canton',
-    lastMowingDate: new Date('2024-10-07'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: 'c84a8d1b-391d-4a3a-929e-6bb4f517dca5',
-    lotLabel: '104',
-    zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
-    zoneLabel: '1',
-    neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel: 'El Canton',
-    lastMowingDate: new Date('2024-10-08'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: '471fa1d8-45b2-4b3f-b8f3-e9283cf3bb8c',
-    lotLabel: '105',
-    zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
-    zoneLabel: '1',
-    neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel: 'El Canton',
-    lastMowingDate: new Date('2024-10-09'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
+const { getWorkgroupById } = useWorkgroupStore.getState();
+const { updateLotLastMowingDate } = useLotStore.getState();
 
-  // Neighbourhood: El Canton, Zone: 2
-  {
-    lotId: 'a3f4db11-49d7-4d21-9a7e-4b7f85a1f376',
-    lotLabel: '200',
-    zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
-    zoneLabel: '2',
-    neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel: 'El Canton',
-    lastMowingDate: new Date('2024-10-09'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: '9d8f73a7-ded3-46c5-befa-caa5f8b8adfa',
-    lotLabel: '201',
-    zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
-    zoneLabel: '2',
-    neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel: 'El Canton',
-    lastMowingDate: new Date('2024-10-10'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: 'f5c6734a-04f0-4f3b-9bb0-b4a4d88faef9',
-    lotLabel: '202',
-    zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
-    zoneLabel: '2',
-    neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel: 'El Canton',
-    lastMowingDate: new Date('2024-10-04'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: 'f1185936-7696-4f44-9c6d-8a0ecce9e9c7',
-    lotLabel: '202',
-    zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
-    zoneLabel: '2',
-    neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel: 'El Canton',
-    lastMowingDate: new Date('2024-10-09'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
+const { currentUser } = useUserStore.getState();
 
-  // Neighbourhood: La Laguna, Zone: 3
-  {
-    lotId: 'e71829f1-7c6a-4d8e-bd4f-0981d640d1cf',
-    lotLabel: '506',
-    zoneId: '8cf9d5f0-995e-4c9a-854f-df5e5bb62c41',
-    zoneLabel: '3',
-    neighbourhoodId: '2f8bcb8a-1c2f-4dcb-a6b8-15f3d39e8ad9',
-    neighbourhoodLabel: 'La Laguna',
-    lastMowingDate: new Date('2024-10-02'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: '7a153674-38c1-45d9-84b2-09b9b735d6f6',
-    lotLabel: '507',
-    zoneId: '8cf9d5f0-995e-4c9a-854f-df5e5bb62c41',
-    zoneLabel: '3',
-    neighbourhoodId: '2f8bcb8a-1c2f-4dcb-a6b8-15f3d39e8ad9',
-    neighbourhoodLabel: 'La Laguna',
-    lastMowingDate: new Date('2024-10-09'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: 'b284b2e3-d169-4c2b-b1b1-4149821f5e8a',
-    lotLabel: '508',
-    zoneId: '8cf9d5f0-995e-4c9a-854f-df5e5bb62c41',
-    zoneLabel: '3',
-    neighbourhoodId: '2f8bcb8a-1c2f-4dcb-a6b8-15f3d39e8ad9',
-    neighbourhoodLabel: 'La Laguna',
-    lastMowingDate: new Date('2024-10-10'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
+export const completeLotTask = (lotId: string) => {
+  const { lots } = useLotStore.getState();
+  const lot = lots.find((lot) => lot.lotId === lotId);
 
-  // Neighbourhood: El Tero, Zone: 7
-  {
-    lotId: 'b8bcbf3b-6e56-4b82-9cfa-30b4579c5165',
-    lotLabel: '707',
-    zoneId: '93d740f2-49eb-43b8-b87e-1b7c63c3f522',
-    zoneLabel: '7',
-    neighbourhoodId: '6a714a8b-0ac2-4b2b-8320-8b4c78c92f98',
-    neighbourhoodLabel: 'El Tero',
-    lastMowingDate: new Date('2024-10-08'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: 'c4e7e2c7-4b78-4921-9f2c-33dcefdf7328',
-    lotLabel: '708',
-    zoneId: '93d740f2-49eb-43b8-b87e-1b7c63c3f522',
-    zoneLabel: '7',
-    neighbourhoodId: '6a714a8b-0ac2-4b2b-8320-8b4c78c92f98',
-    neighbourhoodLabel: 'El Tero',
-    lastMowingDate: new Date('2024-10-08'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
+  if (!lot) {
+    throw new Error('Lot not found');
+  }
+  if (!currentUser) {
+    console.error('User not authenticated');
+    return false;
+  }
 
-  // Neighbourhood: El Naudir, Zone: 1
-  {
-    lotId: '27c0b89a-1d9d-44b9-b767-948d5f2c2309',
-    lotLabel: '54',
-    zoneId: '9e373c57-26a3-42ab-97a0-4235c6baf39f',
-    zoneLabel: '1',
-    neighbourhoodId: '33f8e2a5-f56e-4bfc-94b4-12e1a6cf8b24',
-    neighbourhoodLabel: 'El Naudir',
-    lastMowingDate: new Date('2024-10-10'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: 'd66de7af-3d5e-4f77-a8f5-0bff6adf88c7',
-    lotLabel: '55',
-    zoneId: '9e373c57-26a3-42ab-97a0-4235c6baf39f',
-    zoneLabel: '1',
-    neighbourhoodId: '33f8e2a5-f56e-4bfc-94b4-12e1a6cf8b24',
-    neighbourhoodLabel: 'El Naudir',
-    lastMowingDate: new Date('2024-10-09'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: 'fb5d1b54-fb2e-464c-9e3d-ec6b9e1d35f1',
-    lotLabel: '56',
-    zoneId: '9e373c57-26a3-42ab-97a0-4235c6baf39f',
-    zoneLabel: '1',
-    neighbourhoodId: '33f8e2a5-f56e-4bfc-94b4-12e1a6cf8b24',
-    neighbourhoodLabel: 'El Naudir',
-    lastMowingDate: new Date('2024-10-09'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-  {
-    lotId: 'bafb7a5c-8a25-4e79-8df2-124153c34371',
-    lotLabel: '57',
-    zoneId: '9e373c57-26a3-42ab-97a0-4235c6baf39f',
-    zoneLabel: '1',
-    neighbourhoodId: '33f8e2a5-f56e-4bfc-94b4-12e1a6cf8b24',
-    neighbourhoodLabel: 'El Naudir',
-    lastMowingDate: new Date('2024-10-10'),
-    lotIsSelected: false,
-    assignedTo: [],
-    workgroupId: '1',
-  },
-];
+  const workgroup = getWorkgroupById(lot.workgroupId);
+  if (!workgroup) {
+    throw new Error('Workgroup not found');
+  }
+
+  // Check if the user has permission to complete the task
+  const hasPermission = userHasPermission(
+    workgroup,
+    currentUser.userId,
+    'Member',
+  );
+  if (!hasPermission) {
+    console.error('User does not have permission to complete this task');
+    return false;
+  }
+
+  // Complete the task and update the store
+  updateLotLastMowingDate(lotId, new Date());
+
+  // Sync with the database (replace with actual API call)
+  // syncLotWithDatabase(lotId, { lastMowingDate: new Date() });
+
+  return true;
+};
+
+// Function to reassign a lot (stub for further implementation)
+// export const reassignLot = (lotId: string, newUserId: number) => {
+//   const lot = useLotStore.getState().lots.find((lot) => lot.lotId === lotId);
+//   if (!lot) {
+//     throw new Error('Lot not found');
+//   }
+
+//   // Check if the user is allowed to reassign tasks
+//   checkUserAuthentication(lot.workgroupId, 'Manager'); // Only Managers and Owners can reassign tasks
+
+//   // Update the lot assignment in the store
+//   useLotStore.getState().updateLot(lotId, { assignedTo: [newUserId] });
+
+//   // Sync with the database (replace with actual API call)
+//   syncLotWithDatabase(lotId, { assignedTo: [newUserId] });
+// };
 
 interface NeighbourhoodInterfaceWithIndicators {
   nestedLots: NeighbourhoodInterface[];
@@ -373,7 +196,8 @@ export const useZonesOptions = (): NeighbourhoodInterfaceWithIndicators => {
 };
 
 const initializeLots = () => {
-  useLotStore.getState().initializeLots(hardCodedLots);
+  const lots = DatabaseService.getMyLots();
+  useLotStore.getState().initializeLots(lots);
 };
 
 export default {

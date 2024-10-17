@@ -25,13 +25,11 @@ const useCheckUserHasPermission = (requiredRole: UserRole) => {
     console.error('Current user not found.');
     return false;
   }
-
   const workgroup = useWorkgroupService.useGetWorkgroupById(currentUserId);
   if (!workgroup) {
     console.error('Workgroup not found for the current user.');
     return false;
   }
-
   return userHasPermission(workgroup, currentUserId, requiredRole);
 };
 

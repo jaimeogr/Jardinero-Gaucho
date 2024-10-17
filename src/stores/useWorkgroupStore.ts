@@ -3,8 +3,10 @@ import { create } from 'zustand';
 import { WorkgroupInterface } from '../types/types';
 
 interface WorkgroupStoreState {
+  activeWorkgroupId: string | null;
   workgroups: WorkgroupInterface[];
   initializeWorkgroups: (workgroups: WorkgroupInterface[]) => void;
+  setActiveWorkgroup: (workgroupId: string) => void;
   addWorkgroup: (workgroup: WorkgroupInterface) => void;
   updateWorkgroup: (
     workgroupId: string,
@@ -15,10 +17,14 @@ interface WorkgroupStoreState {
 }
 
 const useWorkgroupStore = create<WorkgroupStoreState>((set, get) => ({
+  activeWorkgroupId: null,
   workgroups: [],
 
   initializeWorkgroups: (workgroups: WorkgroupInterface[]) =>
     set({ workgroups }),
+
+  setActiveWorkgroup: (workgroupId: string) =>
+    set({ activeWorkgroupId: workgroupId }),
 
   addWorkgroup: (workgroup: WorkgroupInterface) =>
     set((state) => ({ workgroups: [...state.workgroups, workgroup] })),

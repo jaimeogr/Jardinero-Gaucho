@@ -5,7 +5,7 @@ import { Text, Surface } from 'react-native-paper';
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
 import ListViewLots from './ListViewLots/ListViewLots';
 import ControllerService from '../services/useControllerService';
-import LotsNestedView from './NestedViewLots/NestedViewLots';
+import NestedViewLots from './NestedViewLots/NestedViewLots';
 
 const TodaysLots = () => {
   const [selectingLots, setSelectingLots] = useState(true);
@@ -18,7 +18,7 @@ const TodaysLots = () => {
     <Surface style={styles.surface}>
       {selectingLots ? (
         <View style={styles.content}>
-          <LotsNestedView />
+          <NestedViewLots />
         </View>
       ) : (
         <View style={styles.content}>

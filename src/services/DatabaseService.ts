@@ -1,4 +1,8 @@
-import { LotInterface, WorkgroupInterface } from '../types/types';
+import {
+  LotInterface,
+  WorkgroupInterface,
+  UserInterface,
+} from '../types/types';
 
 const hardCodedLots: LotInterface[] = [
   // Neighbourhood: El Canton, Zone: 1
@@ -251,6 +255,14 @@ const hardCodedWorkgroups: WorkgroupInterface[] = [
   },
 ];
 
+const currentUser: UserInterface = {
+  userId: '1',
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'jdoe@gmail.com',
+  workgroupRoles: { '1': 'PrimaryOwner', '2': 'Member' },
+};
+
 const getMyLots = () => {
   return hardCodedLots;
 };
@@ -259,7 +271,12 @@ const getMyWorgroups = () => {
   return hardCodedWorkgroups;
 };
 
+const getMyUser = () => {
+  return currentUser;
+};
+
 export default {
   getMyLots,
   getMyWorgroups,
+  getMyUser,
 };

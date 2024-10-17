@@ -46,8 +46,6 @@ export interface GroupOfUsersInterface {
   users: UserInterface[];
 }
 
-// types/types.ts
-
 export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
 
 export interface UserInterface {

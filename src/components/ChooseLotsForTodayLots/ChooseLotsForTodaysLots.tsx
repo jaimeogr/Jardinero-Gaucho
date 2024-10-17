@@ -5,14 +5,17 @@ import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import { useZonesOptions } from '../../services/LotService';
+import ControllerService from '../../services/ControllerService';
+import { useNestedLots } from '../../services/LotService';
 import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
+
+const { markSelectedLotsCompletedForSpecificDate } = ControllerService;
 
 const upperIndicatorsAndButtonsColor = theme.colors.primary;
 
 const ChooseZonesForTodaysLots = () => {
-  const { nestedLots, selectedLots } = useZonesOptions();
+  const { nestedLots, selectedLots } = useNestedLots();
 
   const deselectLots = useLotStore((state) => state.deselectAllLots);
 
@@ -26,14 +29,22 @@ const ChooseZonesForTodaysLots = () => {
       handleDeselectLots();
       return true; // Return true to prevent the default back behavior
     };
-
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       onBackPress,
     );
-
     return () => backHandler.remove(); // Cleanup the listener when the component unmounts
   }, [handleDeselectLots]);
+
+  const handleMarkLotsCompleted = () => {
+    const success = markSelectedLotsCompletedForSpecificDate();
+    if (success) {
+      console.log('Selected lots marked as completed');
+      handleDeselectLots();
+    } else {
+      console.error('No lots were selected to mark as completed');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -57,7 +68,7 @@ const ChooseZonesForTodaysLots = () => {
                 icon="check-circle-outline"
                 color={upperIndicatorsAndButtonsColor}
                 size={28}
-                onPress={() => {}}
+                onPress={handleMarkLotsCompleted}
               />
               <Appbar.Action
                 icon="account-arrow-left"

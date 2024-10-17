@@ -4,14 +4,14 @@ import { Text, Surface } from 'react-native-paper';
 
 import AllLotsForTodaysLots from './AllLotsForTodaysLots';
 import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
-import LotService from '../../services/LotService';
+import ControllerService from '../../services/ControllerService';
 import ChooseLotsForTodaysLots from '../ChooseLotsForTodayLots/ChooseLotsForTodaysLots';
 
 const TodaysLots = () => {
   const [selectingLots, setSelectingLots] = useState(true);
 
   useEffect(() => {
-    LotService.initializeLots();
+    ControllerService.initializeServices();
   }, []);
 
   return (

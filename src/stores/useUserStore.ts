@@ -1,4 +1,3 @@
-// UserStore.ts
 import { create } from 'zustand';
 
 import { UserInterface } from '../types/types';
@@ -7,37 +6,44 @@ interface UserStoreState {
   users: UserInterface[];
   initializeUsers: (users: UserInterface[]) => void;
   setUsers: (users: UserInterface[]) => void;
-  getUserById: (id: number) => UserInterface | undefined;
+  getUserById: (id: string) => UserInterface | undefined;
   addUser: (user: UserInterface) => void;
-  updateUser: (id: number, updatedInfo: Partial<UserInterface>) => void;
-  removeUser: (id: number) => void;
+  updateUser: (id: string, updatedInfo: Partial<UserInterface>) => void;
+  removeUser: (id: string) => void;
+  currentUser: UserInterface | null;
+  setCurrentUser: (user: UserInterface | null) => void;
 }
 
 const useUserStore = create<UserStoreState>((set, get) => ({
   users: [],
+  currentUser: null,
+
   initializeUsers: (users: UserInterface[]) => {
     set({ users });
   },
   setUsers: (users: UserInterface[]) => {
     set({ users });
   },
-  getUserById: (id: number) => {
-    return get().users.find((user) => user.id === id);
+  getUserById: (id: string) => {
+    return get().users.find((user) => user.userId === id);
   },
   addUser: (user: UserInterface) => {
     set((state) => ({ users: [...state.users, user] }));
   },
-  updateUser: (id: number, updatedInfo: Partial<UserInterface>) => {
+  updateUser: (id: string, updatedInfo: Partial<UserInterface>) => {
     set((state) => ({
       users: state.users.map((user) =>
-        user.id === id ? { ...user, ...updatedInfo } : user,
+        user.userId === id ? { ...user, ...updatedInfo } : user,
       ),
     }));
   },
-  removeUser: (id: number) => {
+  removeUser: (id: string) => {
     set((state) => ({
-      users: state.users.filter((user) => user.id !== id),
+      users: state.users.filter((user) => user.userId !== id),
     }));
+  },
+  setCurrentUser: (user: UserInterface | null) => {
+    set({ currentUser: user });
   },
 }));
 

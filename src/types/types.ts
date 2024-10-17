@@ -11,6 +11,7 @@ export interface LotInterface {
   lotIsSelected: boolean; // Selection state of the lot
   extraNotes?: string; // Optional extra notes about the lot
   assignedTo: string[]; // Users assigned to the lot, can still be numbers if these are internal references
+  workgroupId: string;
 }
 
 export interface GroupOfLotsInterface {
@@ -41,14 +42,40 @@ export interface NeighbourhoodInterface {
   zones: ZoneInterface[];
 }
 
-// You can define additional interfaces for other data types in your app
-export interface UserInterface {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
+export interface NestedLotsWithIndicators {
+  nestedLots: NeighbourhoodInterface[];
+  selectedLots: number;
 }
 
 export interface GroupOfUsersInterface {
   users: UserInterface[];
+}
+
+export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
+
+export interface UserInterface {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  workgroupRoles: { [workgroupId: string]: UserRole };
+}
+
+export interface WorkgroupInterface {
+  workgroupId: string;
+  name: string;
+  primaryOwnerId: string; // User ID of the primary owner
+  ownerIds: string[]; // User IDs who are secondary owners
+  managerIds: string[]; // User IDs who are managers
+  memberIds: string[]; // User IDs who are members
+}
+
+export interface TaskInterface {
+  taskId: string;
+  lotId: string;
+  userId: string;
+  taskType: 'mowing' | 'watering' | 'fertilizing' | string;
+  date: Date;
+  completed: boolean;
+  workgroupId: string;
 }

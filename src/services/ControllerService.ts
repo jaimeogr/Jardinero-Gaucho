@@ -9,6 +9,16 @@ const initializeServices = () => {
   WorkgroupService.initializeWorkgroups();
 };
 
+const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
+  LotService.markLotCompletedForSpecificDate(lotId, date);
+};
+
+const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
+  return LotService.markSelectedLotsCompletedForSpecificDate(date);
+};
+
 export default {
   initializeServices,
+  markLotCompletedForSpecificDate,
+  markSelectedLotsCompletedForSpecificDate,
 };

@@ -19,7 +19,7 @@ const { updateLotLastMowingDate } = useLotStore.getState();
 
 const { currentUser } = useUserStore.getState();
 
-export const completeLotTask = (lotId: string) => {
+const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
   const { lots } = useLotStore.getState();
   const lot = lots.find((lot) => lot.lotId === lotId);
 
@@ -48,11 +48,29 @@ export const completeLotTask = (lotId: string) => {
   }
 
   // Complete the task and update the store
-  updateLotLastMowingDate(lotId, new Date());
+  updateLotLastMowingDate(lotId, date ? date : new Date());
 
   // Sync with the database (replace with actual API call)
   // syncLotWithDatabase(lotId, { lastMowingDate: new Date() });
 
+  return true;
+};
+
+const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
+  const { lots } = useLotStore.getState();
+  // Filter out only the selected lots
+  const selectedLots = lots.filter((lot) => lot.lotIsSelected);
+  if (selectedLots.length === 0) {
+    console.log('No lots selected');
+    return false;
+  }
+
+  // Mark each selected lot as completed with the provided date or today's date
+  selectedLots.forEach((lot) => {
+    updateLotLastMowingDate(lot.lotId, date || new Date());
+  });
+
+  console.log(`${selectedLots.length} lots marked as completed`);
   return true;
 };
 
@@ -202,5 +220,7 @@ const initializeLots = () => {
 
 export default {
   initializeLots,
-  useZonesOptions: useNestedLots,
+  useNestedLots,
+  markLotCompletedForSpecificDate,
+  markSelectedLotsCompletedForSpecificDate,
 };

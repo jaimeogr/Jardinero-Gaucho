@@ -5,9 +5,12 @@ import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
+import ControllerService from '../../services/ControllerService';
 import { useNestedLots } from '../../services/LotService';
 import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
+
+const { markSelectedLotsCompletedForSpecificDate } = ControllerService;
 
 const upperIndicatorsAndButtonsColor = theme.colors.primary;
 
@@ -33,6 +36,16 @@ const ChooseZonesForTodaysLots = () => {
     return () => backHandler.remove(); // Cleanup the listener when the component unmounts
   }, [handleDeselectLots]);
 
+  const handleMarkLotsCompleted = () => {
+    const success = markSelectedLotsCompletedForSpecificDate();
+    if (success) {
+      console.log('Selected lots marked as completed');
+      handleDeselectLots();
+    } else {
+      console.error('No lots were selected to mark as completed');
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* when there are selected lots, it renders the buttons to interact with the selected lots
@@ -55,7 +68,7 @@ const ChooseZonesForTodaysLots = () => {
                 icon="check-circle-outline"
                 color={upperIndicatorsAndButtonsColor}
                 size={28}
-                onPress={() => {}}
+                onPress={handleMarkLotsCompleted}
               />
               <Appbar.Action
                 icon="account-arrow-left"

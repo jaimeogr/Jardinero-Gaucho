@@ -257,11 +257,35 @@ const hardCodedWorkgroups: WorkgroupInterface[] = [
 
 const currentUser: UserInterface = {
   userId: '1',
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'jdoe@gmail.com',
-  workgroupRoles: { '1': 'PrimaryOwner', '2': 'Member' },
+  firstName: 'jefe',
+  lastName: 'jefe',
+  email: 'jardineria@gmail.com',
+  workgroupRoles: { '1': 'PrimaryOwner', '2': 'PrimaryOwner' },
 };
+
+const usersFromAllMyWorkgroups: UserInterface[] = [
+  {
+    userId: '1',
+    firstName: 'jefe',
+    lastName: 'jefe',
+    email: 'cajardineria@gmail.com',
+    workgroupRoles: { '1': 'PrimaryOwner', '2': 'PrimaryOwner' },
+  },
+  {
+    userId: '2',
+    firstName: 'pedro',
+    lastName: 'Abigail',
+    email: 'pabigail@gmail.com',
+    workgroupRoles: { '1': 'Member', '2': 'Member' },
+  },
+  {
+    userId: '3',
+    firstName: 'dibu',
+    lastName: 'martinez',
+    email: 'dibumartinez@gmail.com',
+    workgroupRoles: { '1': 'Member', '2': 'Member' },
+  },
+];
 
 const getMyLots = () => {
   return hardCodedLots;
@@ -275,8 +299,13 @@ const getMyUser = () => {
   return currentUser;
 };
 
+const getUsersFromAllMyWorkgroups = () => {
+  return usersFromAllMyWorkgroups;
+};
+
 export default {
   getMyLots,
   getMyWorgroups,
   getMyUser,
+  getUsersFromAllMyWorkgroups,
 };

@@ -1,29 +1,16 @@
 // UserService.ts
+import DatabaseService from './DatabaseService';
 import useUserStore from '../stores/useUserStore';
 import { UserInterface } from '../types/types';
 
-const myTeam: UserInterface[] = [
-  {
-    id: 1,
-    firstName: 'Cristian',
-    lastName: 'Alvarez',
-    email: 'cajardineria@gmail.com',
-  },
-  {
-    id: 2,
-    firstName: 'pedro',
-    lastName: 'Abigail',
-    email: 'pabigail@gmail.com',
-  },
-  {
-    id: 3,
-    firstName: 'dibu',
-    lastName: 'martinez',
-    email: 'dibumartinez@gmail.com',
-  },
-];
 const initializeUsers = () => {
-  useUserStore.getState().initializeUsers(myTeam);
+  const currentUser = DatabaseService.getMyUser();
+
+  const usersFromAllMyWorkgroups: UserInterface[] =
+    DatabaseService.getUsersFromAllMyWorkgroups();
+
+  useUserStore.getState().initializeUsers(usersFromAllMyWorkgroups);
+  useUserStore.getState().setCurrentUser(currentUser);
 };
 
 export default {

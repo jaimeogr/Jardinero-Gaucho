@@ -21,6 +21,7 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
 
 const createLot = (lot: LotInterface) => {
   useLotService.createLot(lot);
+  return true;
 };
 
 const useCheckUserHasPermission = (requiredRole: UserRole) => {

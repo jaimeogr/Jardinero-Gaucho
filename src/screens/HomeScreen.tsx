@@ -6,10 +6,7 @@ import { Surface } from 'react-native-paper';
 
 import ClickableRoundButton from '../components/ClickableRoundButton';
 import TodaysLots from '../components/TodaysLots';
-import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-
-const { createLot } = ControllerService;
 
 const HomeScreen = ({ navigation }) => {
   return (

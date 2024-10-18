@@ -29,7 +29,7 @@ const HomeStackNavigator = () => {
       <Stack.Screen
         name="LotCreation"
         component={LotCreationScreen}
-        options={{ title: 'Create New Lot' }}
+        options={{ title: 'Crear nuevo lote' }}
       />
     </Stack.Navigator>
   );

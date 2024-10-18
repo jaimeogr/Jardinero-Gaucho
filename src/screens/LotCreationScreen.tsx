@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
-import createLot from '../services/useControllerService';
+import useControllerService from '../services/useControllerService';
+
+const { createLot } = useControllerService;
 
 const LotCreationScreen = ({ navigation }) => {
   const [lotData, setLotData] = useState({

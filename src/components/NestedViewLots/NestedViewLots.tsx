@@ -14,7 +14,7 @@ const { markSelectedLotsCompletedForSpecificDate } = ControllerService;
 
 const upperIndicatorsAndButtonsColor = theme.colors.primary;
 
-const ChooseZonesForTodaysLots = () => {
+const NestedViewLots = () => {
   const { nestedLots, selectedLots } = useNestedLots();
 
   const deselectLots = useLotStore((state) => state.deselectAllLots);
@@ -22,6 +22,16 @@ const ChooseZonesForTodaysLots = () => {
   const handleDeselectLots = useCallback(() => {
     deselectLots(/* pass the necessary lotId here */);
   }, [deselectLots]);
+
+  const handleMarkLotsCompleted = () => {
+    const success = markSelectedLotsCompletedForSpecificDate();
+    if (success) {
+      console.log('Selected lots marked as completed');
+      handleDeselectLots();
+    } else {
+      console.error('No lots were selected to mark as completed');
+    }
+  };
 
   // this will handle the Native OS back button press event
   useEffect(() => {
@@ -35,16 +45,6 @@ const ChooseZonesForTodaysLots = () => {
     );
     return () => backHandler.remove(); // Cleanup the listener when the component unmounts
   }, [handleDeselectLots]);
-
-  const handleMarkLotsCompleted = () => {
-    const success = markSelectedLotsCompletedForSpecificDate();
-    if (success) {
-      console.log('Selected lots marked as completed');
-      handleDeselectLots();
-    } else {
-      console.error('No lots were selected to mark as completed');
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -186,4 +186,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChooseZonesForTodaysLots;
+export default NestedViewLots;

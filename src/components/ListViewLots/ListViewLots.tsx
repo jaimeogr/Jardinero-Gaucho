@@ -7,7 +7,7 @@ import { Divider } from 'react-native-paper';
 import OneLotForListViewLots from './OneLotForListViewLots';
 import { GroupOfLotsInterface } from '../../types/types';
 
-const AllLotsForTodaysLots = ({ lots }: GroupOfLotsInterface) => {
+const ListViewLots = ({ lots }: GroupOfLotsInterface) => {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AllLotsForTodaysLots;
+export default ListViewLots;

@@ -14,7 +14,7 @@ const { markSelectedLotsCompletedForSpecificDate } = ControllerService;
 
 const upperIndicatorsAndButtonsColor = theme.colors.primary;
 
-const ChooseZonesForTodaysLots = () => {
+const NestedViewLots = () => {
   const { nestedLots, selectedLots } = useNestedLots();
 
   const deselectLots = useLotStore((state) => state.deselectAllLots);
@@ -186,4 +186,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChooseZonesForTodaysLots;
+export default NestedViewLots;

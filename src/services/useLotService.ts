@@ -25,6 +25,10 @@ const initializeLots = () => {
   useLotStore.getState().initializeLots(lots);
 };
 
+const createLot = (newLot: LotInterface) => {
+  useLotStore.getState().addLot(newLot);
+};
+
 const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
   const { lots } = useLotStore.getState();
   const lot = lots.find((lot) => lot.lotId === lotId);
@@ -208,6 +212,7 @@ export const useNestedLots = (): NestedLotsWithIndicators => {
 
 export default {
   initializeLots,
+  createLot,
   useNestedLots,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,

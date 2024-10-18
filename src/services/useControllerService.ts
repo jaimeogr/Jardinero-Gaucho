@@ -2,7 +2,7 @@ import useLotService from './useLotService';
 import useUserService from './useUserService';
 import useWorkgroupService from './useWorkgroupService';
 import BackendService from '../backend/BackendService';
-import { UserRole } from '../types/types';
+import { UserRole, LotInterface } from '../types/types';
 import { userHasPermission } from '../utils/permissionUtils';
 
 const initializeServices = () => {
@@ -17,6 +17,10 @@ const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
 
 const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
   return useLotService.markSelectedLotsCompletedForSpecificDate(date);
+};
+
+const createLot = (lot: LotInterface) => {
+  useLotService.createLot(lot);
 };
 
 const useCheckUserHasPermission = (requiredRole: UserRole) => {
@@ -35,6 +39,7 @@ const useCheckUserHasPermission = (requiredRole: UserRole) => {
 
 export default {
   initializeServices,
+  createLot,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
   useCheckUserHasPermission,

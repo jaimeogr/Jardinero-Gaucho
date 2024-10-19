@@ -57,24 +57,38 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const [showZoneInput, setShowZoneInput] = useState(false);
 
   const handleInputChange = (field: string, value: string | Date) => {
-    setLotData({ ...lotData, [field]: value });
+    setLotData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
   };
 
   const handleSubmit = async () => {
     if (
       !lotData.lotLabel ||
-      !lotData.zoneLabel ||
-      !lotData.neighbourhoodLabel
+      !lotData.neighbourhoodLabel ||
+      !lotData.zoneLabel
     ) {
       Alert.alert('Validation Error', 'Please fill in all required fields.');
       return;
     }
 
+    // Generate new IDs if creating new neighbourhood or zone
+    let neighbourhoodId = lotData.neighbourhoodId;
+    if (!neighbourhoodId) {
+      neighbourhoodId = uuidv4();
+    }
+
+    let zoneId = lotData.zoneId;
+    if (!zoneId) {
+      zoneId = uuidv4();
+    }
+
     const newLot: LotInterface = {
       ...lotData,
       lotId: uuidv4(),
-      zoneId: uuidv4(),
-      neighbourhoodId: uuidv4(),
+      neighbourhoodId,
+      zoneId,
       lotIsSelected: false,
       assignedTo: [],
       workgroupId: '1',
@@ -104,10 +118,10 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Lot Label Input */}
-      <Text style={styles.label}>Lot Label</Text>
+      <Text style={styles.label}>Casa</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter lot label"
+        placeholder="Ingresá la casa"
         value={lotData.lotLabel}
         onChangeText={(text) => handleInputChange('lotLabel', text)}
       />

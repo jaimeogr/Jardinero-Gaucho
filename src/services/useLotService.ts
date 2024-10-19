@@ -11,7 +11,8 @@ import {
   ZoneInterface,
   NeighbourhoodInterface,
   NestedLotsWithIndicators,
-  NeighbourhoodZoneData,
+  NeighbourhoodData,
+  ZoneData,
 } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 import { userHasPermission } from '../utils/permissionUtils';
@@ -21,13 +22,38 @@ const { updateLotLastMowingDate } = useLotStore.getState();
 
 const { currentUser } = useUserStore.getState();
 
-const initializeLots = () => {
+const initializeStore = () => {
   const lots = BackendService.getMyLots();
+  const neighbourhoodsAndZones = BackendService.getNeighbourhoodZoneData();
   useLotStore.getState().initializeLots(lots);
+  useLotStore
+    .getState()
+    .initializeNeighbourhoodsAndZones(neighbourhoodsAndZones);
 };
 
 const createLot = (newLot: LotInterface) => {
   useLotStore.getState().addLot(newLot);
+};
+
+const addNeighbourhood = (neighbourhood: NeighbourhoodData) => {
+  useLotStore.getState().addNeighbourhood(neighbourhood);
+};
+
+const addZoneToNeighbourhood = (neighbourhoodId: string, zone: ZoneData) => {
+  useLotStore.getState().addZoneToNeighbourhood(neighbourhoodId, zone);
+};
+
+const useNeighbourhoodsAndZones = (workgroupId: string) => {
+  const neighbourhoodZoneData = useLotStore(
+    (state) => state.neighbourhoodZoneData,
+  );
+
+  return React.useMemo(() => {
+    const filteredNeighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
+      (n) => n.workgroupId === workgroupId,
+    );
+    return { neighbourhoods: filteredNeighbourhoods };
+  }, [neighbourhoodZoneData, workgroupId]);
 };
 
 const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
@@ -211,59 +237,13 @@ export const useNestedLots = (): NestedLotsWithIndicators => {
   }, [lots]);
 };
 
-const useNeighbourhoodsAndZones = (): NeighbourhoodZoneData => {
-  const lots = useLotStore((state) => state.lots);
-
-  return React.useMemo(() => {
-    const neighbourhoodMap: {
-      [neighbourhoodId: string]: {
-        neighbourhoodId: string;
-        neighbourhoodLabel: string;
-        zones: {
-          [zoneId: string]: {
-            zoneId: string;
-            zoneLabel: string;
-          };
-        };
-      };
-    } = {};
-
-    lots.forEach((lot) => {
-      const { neighbourhoodId, neighbourhoodLabel, zoneId, zoneLabel } = lot;
-
-      if (!neighbourhoodMap[neighbourhoodId]) {
-        neighbourhoodMap[neighbourhoodId] = {
-          neighbourhoodId,
-          neighbourhoodLabel,
-          zones: {},
-        };
-      }
-
-      if (!neighbourhoodMap[neighbourhoodId].zones[zoneId]) {
-        neighbourhoodMap[neighbourhoodId].zones[zoneId] = {
-          zoneId,
-          zoneLabel,
-        };
-      }
-    });
-
-    const neighbourhoods = Object.values(neighbourhoodMap).map(
-      (neighbourhood) => ({
-        neighbourhoodId: neighbourhood.neighbourhoodId,
-        neighbourhoodLabel: neighbourhood.neighbourhoodLabel,
-        zones: Object.values(neighbourhood.zones),
-      }),
-    );
-
-    return { neighbourhoods };
-  }, [lots]);
-};
-
 export default {
-  initializeLots,
+  initializeStore,
   createLot,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
   useNestedLots,
   useNeighbourhoodsAndZones,
+  addZoneToNeighbourhood,
+  addNeighbourhood,
 };

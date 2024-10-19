@@ -1,11 +1,20 @@
 import { create } from 'zustand';
 
-import { LotInterface } from '../types/types';
+import {
+  LotInterface,
+  NeighbourhoodZoneData,
+  NeighbourhoodData,
+  ZoneData,
+} from '../types/types';
 
 interface LotStoreState {
   lots: LotInterface[];
+  neighbourhoodZoneData: NeighbourhoodZoneData;
   initializeLots: (lots: LotInterface[]) => void;
+  initializeNeighbourhoodsAndZones: (data: NeighbourhoodZoneData) => void;
   addLot: (newLot: LotInterface) => void;
+  addNeighbourhood: (neighbourhood: NeighbourhoodData) => void;
+  addZoneToNeighbourhood: (neighbourhoodId: string, zone: ZoneData) => void;
   deselectAllLots: () => void;
   toggleLotSelection: (lotId: string) => void;
   toggleZoneSelection: (zoneId: string, newState: boolean) => void;
@@ -19,14 +28,46 @@ interface LotStoreState {
 
 const useLotStore = create<LotStoreState>((set, get) => ({
   lots: [],
+  neighbourhoodZoneData: { neighbourhoods: [] },
 
   initializeLots: (lots: LotInterface[]) => {
     set({ lots });
   },
 
+  initializeNeighbourhoodsAndZones: (data: NeighbourhoodZoneData) => {
+    set({ neighbourhoodZoneData: data });
+  },
+
   addLot: (newLot: LotInterface) => {
     set((state) => ({
       lots: [...state.lots, newLot],
+    }));
+  },
+
+  addNeighbourhood: (neighbourhood) => {
+    set((state) => ({
+      neighbourhoodZoneData: {
+        neighbourhoods: [
+          ...state.neighbourhoodZoneData.neighbourhoods,
+          neighbourhood,
+        ],
+      },
+    }));
+  },
+
+  addZoneToNeighbourhood: (neighbourhoodId, zone) => {
+    set((state) => ({
+      neighbourhoodZoneData: {
+        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => {
+          if (n.neighbourhoodId === neighbourhoodId) {
+            return {
+              ...n,
+              zones: [...n.zones, zone],
+            };
+          }
+          return n;
+        }),
+      },
     }));
   },
 

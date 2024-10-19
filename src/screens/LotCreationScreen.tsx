@@ -42,6 +42,10 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const { createLot, getNeighbourhoodsAndZones } = ControllerService;
   const { neighbourhoods } = getNeighbourhoodsAndZones();
 
+  // Local state for neighbourhoods and zones
+  const [localNeighbourhoods, setLocalNeighbourhoods] =
+    useState(neighbourhoods);
+
   const [lotData, setLotData] = useState({
     lotLabel: '',
     neighbourhoodId: '',
@@ -60,6 +64,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const [showZoneModal, setShowZoneModal] = useState(false);
   const [newZoneLabel, setNewZoneLabel] = useState('');
 
+  // Handle input changes
   const handleInputChange = (field: string, value: string | Date | null) => {
     setLotData((prevData) => ({
       ...prevData,
@@ -67,14 +72,12 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     }));
   };
 
+  // Handle neighbourhood selection
   const handleNeighbourhoodChange = (value: string) => {
     if (value === 'add_new') {
       setShowNeighbourhoodModal(true);
-      // Clear current selection
-      handleInputChange('neighbourhoodId', '');
-      handleInputChange('neighbourhoodLabel', '');
     } else {
-      const selectedNeighbourhood = neighbourhoods.find(
+      const selectedNeighbourhood = localNeighbourhoods.find(
         (n) => n.neighbourhoodId === value,
       );
       if (selectedNeighbourhood) {
@@ -89,19 +92,16 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
         // Reset zone selection
         handleInputChange('zoneId', '');
         handleInputChange('zoneLabel', '');
-        setNewZoneLabel('');
       }
     }
   };
 
+  // Handle zone selection
   const handleZoneChange = (value: string) => {
     if (value === 'add_new') {
       setShowZoneModal(true);
-      // Clear current selection
-      handleInputChange('zoneId', '');
-      handleInputChange('zoneLabel', '');
     } else {
-      const selectedNeighbourhood = neighbourhoods.find(
+      const selectedNeighbourhood = localNeighbourhoods.find(
         (n) => n.neighbourhoodId === lotData.neighbourhoodId,
       );
       const selectedZone = selectedNeighbourhood?.zones.find(
@@ -114,6 +114,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
+  // Add new neighbourhood
   const handleAddNeighbourhood = () => {
     if (newNeighbourhoodLabel.trim() === '') {
       Alert.alert('Validation Error', 'Please enter a neighbourhood label.');
@@ -128,8 +129,18 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     // Reset zone selection
     handleInputChange('zoneId', '');
     handleInputChange('zoneLabel', '');
+    // Add the new neighbourhood to localNeighbourhoods
+    setLocalNeighbourhoods((prevNeighbourhoods) => [
+      ...prevNeighbourhoods,
+      {
+        neighbourhoodId: newNeighbourhoodId,
+        neighbourhoodLabel: newNeighbourhoodLabel.trim(),
+        zones: [],
+      },
+    ]);
   };
 
+  // Add new zone
   const handleAddZone = () => {
     if (newZoneLabel.trim() === '') {
       Alert.alert('Validation Error', 'Please enter a zone label.');
@@ -141,8 +152,59 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     // Close modal
     setShowZoneModal(false);
     setNewZoneLabel('');
+    // Add the new zone to the selected neighbourhood in localNeighbourhoods
+    setLocalNeighbourhoods((prevNeighbourhoods) =>
+      prevNeighbourhoods.map((n) => {
+        if (n.neighbourhoodId === lotData.neighbourhoodId) {
+          return {
+            ...n,
+            zones: [
+              ...n.zones,
+              {
+                zoneId: newZoneId,
+                zoneLabel: newZoneLabel.trim(),
+              },
+            ],
+          };
+        }
+        return n;
+      }),
+    );
   };
 
+  // Handle date change
+  const onDateChange = (event: any, selectedDate?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+      if (event.type === 'set' && selectedDate) {
+        handleInputChange('lastMowingDate', selectedDate);
+      }
+    } else {
+      if (selectedDate) {
+        handleInputChange('lastMowingDate', selectedDate);
+      }
+    }
+  };
+
+  // Clear selected date
+  const clearDate = () => {
+    handleInputChange('lastMowingDate', null);
+  };
+
+  // Set date to past week
+  const setPastWeekDate = () => {
+    const pastWeekDate = new Date();
+    pastWeekDate.setDate(pastWeekDate.getDate() - 7);
+    handleInputChange('lastMowingDate', pastWeekDate);
+  };
+
+  // Set date to this week (today)
+  const setThisWeekDate = () => {
+    const today = new Date();
+    handleInputChange('lastMowingDate', today);
+  };
+
+  // Submit lot and navigate back
   const handleSubmit = async () => {
     if (
       !lotData.lotLabel ||
@@ -153,22 +215,9 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
-    // Generate new IDs if creating new neighbourhood or zone
-    let neighbourhoodId = lotData.neighbourhoodId;
-    if (!neighbourhoodId) {
-      neighbourhoodId = uuidv4();
-    }
-
-    let zoneId = lotData.zoneId;
-    if (!zoneId) {
-      zoneId = uuidv4();
-    }
-
     const newLot: LotInterface = {
       ...lotData,
       lotId: uuidv4(),
-      neighbourhoodId,
-      zoneId,
       lotIsSelected: false,
       assignedTo: [],
       workgroupId: '1',
@@ -188,17 +237,52 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  const onDateChange = (event: any, selectedDate?: Date) => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
+  // Submit lot and reset form for next entry
+  const handleSubmitAndLoadNext = async () => {
+    if (
+      !lotData.lotLabel ||
+      !lotData.neighbourhoodLabel ||
+      !lotData.zoneLabel
+    ) {
+      Alert.alert('Validation Error', 'Please fill in all required fields.');
+      return;
     }
-    if (selectedDate) {
-      handleInputChange('lastMowingDate', selectedDate);
+
+    const newLot: LotInterface = {
+      ...lotData,
+      lotId: uuidv4(),
+      lotIsSelected: false,
+      assignedTo: [],
+      workgroupId: '1',
+      lastMowingDate: lotData.lastMowingDate || undefined,
+    };
+
+    try {
+      const success = createLot(newLot);
+      if (success) {
+        console.log('Created a new lot.');
+        // Reset form for next lot
+        setLotData((prevData) => ({
+          ...prevData,
+          lotLabel: '',
+          extraNotes: '',
+          lastMowingDate: null,
+        }));
+      } else {
+        console.error('Failure: no lot was created.');
+      }
+    } catch (error) {
+      console.error('An error occurred while creating the lot:', error);
     }
   };
 
+  // Cancel and navigate back
+  const handleCancel = () => {
+    navigation.goBack();
+  };
+
   // Prepare picker items
-  const neighbourhoodItems = neighbourhoods.map((n) => ({
+  const neighbourhoodItems = localNeighbourhoods.map((n) => ({
     label: n.neighbourhoodLabel,
     value: n.neighbourhoodId,
   }));
@@ -207,7 +291,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     value: 'add_new',
   });
 
-  const selectedNeighbourhood = neighbourhoods.find(
+  const selectedNeighbourhood = localNeighbourhoods.find(
     (n) => n.neighbourhoodId === lotData.neighbourhoodId,
   );
   const zoneItems = selectedNeighbourhood
@@ -229,7 +313,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
         onChangeText={(text) => handleInputChange('lotLabel', text)}
       />
 
-      {/* Neighbourhood Picker/Input */}
+      {/* Neighbourhood Picker */}
       <Text style={styles.label}>Barrio</Text>
       <View style={styles.pickerContainer}>
         <RNPickerSelect
@@ -242,7 +326,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
         />
       </View>
 
-      {/* Zone Picker/Input */}
+      {/* Zone Picker */}
       {lotData.neighbourhoodId !== '' && (
         <>
           <Text style={styles.label}>Zona</Text>
@@ -261,21 +345,35 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
 
       {/* Last Mowing Date - Date Picker */}
       <Text style={styles.label}>Última Fecha de Corte de Pasto</Text>
-      <TouchableOpacity
-        onPress={() => setShowDatePicker(true)}
-        style={styles.input}
-      >
-        <Text
-          style={{
-            color: lotData.lastMowingDate ? 'black' : '#aaa',
-            fontSize: 16,
-          }}
+      <View style={styles.dateContainer}>
+        <TouchableOpacity
+          onPress={() => setShowDatePicker(true)}
+          style={styles.input}
         >
-          {lotData.lastMowingDate
-            ? lotData.lastMowingDate.toDateString()
-            : 'La última fecha de corte de pasto'}
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={{
+              color: lotData.lastMowingDate ? 'black' : '#aaa',
+              fontSize: 16,
+            }}
+          >
+            {lotData.lastMowingDate
+              ? lotData.lastMowingDate.toDateString()
+              : 'La última fecha de corte de pasto'}
+          </Text>
+        </TouchableOpacity>
+        {/* Date Options */}
+        <View style={styles.dateButtonsContainer}>
+          <TouchableOpacity onPress={setPastWeekDate} style={styles.dateButton}>
+            <Text style={styles.dateButtonText}>Semana Pasada</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={setThisWeekDate} style={styles.dateButton}>
+            <Text style={styles.dateButtonText}>Esta Semana</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={clearDate} style={styles.clearDateButton}>
+            <Text style={styles.clearDateButtonText}>Limpiar Fecha</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       {showDatePicker && (
         <DateTimePicker
           value={lotData.lastMowingDate || new Date()}
@@ -295,10 +393,21 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
         multiline
       />
 
-      {/* Submit Button */}
-      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-        <Text style={styles.submitButtonText}>Crear Lote</Text>
-      </TouchableOpacity>
+      {/* Buttons */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <Text style={styles.submitButtonText}>Crear Lote</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.nextLotButton}
+          onPress={handleSubmitAndLoadNext}
+        >
+          <Text style={styles.nextLotButtonText}>Cargar el siguiente lote</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+          <Text style={styles.cancelButtonText}>Cancelar</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Neighbourhood Modal */}
       <Modal
@@ -317,19 +426,19 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             />
             <View style={styles.modalButtonContainer}>
               <TouchableOpacity
-                style={styles.cancelButton}
+                style={styles.modalCancelButton}
                 onPress={() => {
                   setShowNeighbourhoodModal(false);
                   setNewNeighbourhoodLabel('');
                 }}
               >
-                <Text style={styles.buttonText}>Cancelar</Text>
+                <Text style={styles.modalButtonText}>Cancelar</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.addButton}
+                style={styles.modalAddButton}
                 onPress={handleAddNeighbourhood}
               >
-                <Text style={styles.buttonText}>Agregar</Text>
+                <Text style={styles.modalButtonText}>Agregar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -349,19 +458,19 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             />
             <View style={styles.modalButtonContainer}>
               <TouchableOpacity
-                style={styles.cancelButton}
+                style={styles.modalCancelButton}
                 onPress={() => {
                   setShowZoneModal(false);
                   setNewZoneLabel('');
                 }}
               >
-                <Text style={styles.buttonText}>Cancelar</Text>
+                <Text style={styles.modalButtonText}>Cancelar</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.addButton}
+                style={styles.modalAddButton}
                 onPress={handleAddZone}
               >
-                <Text style={styles.buttonText}>Agregar</Text>
+                <Text style={styles.modalButtonText}>Agregar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -396,14 +505,73 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 16,
   },
+  dateContainer: {
+    marginBottom: 16,
+  },
+  dateButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  dateButton: {
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: 'white',
+    marginRight: 8,
+  },
+  dateButtonText: {
+    color: theme.colors.primary,
+    fontSize: 14,
+  },
+  clearDateButton: {
+    borderWidth: 1,
+    borderColor: 'red',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: 'white',
+  },
+  clearDateButtonText: {
+    color: 'red',
+    fontSize: 14,
+  },
+  buttonContainer: {
+    marginTop: 16,
+  },
   submitButton: {
     backgroundColor: theme.colors.primary,
     borderRadius: 10,
     paddingVertical: 12,
     alignItems: 'center',
-    marginTop: 16,
+    marginBottom: 16,
   },
   submitButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  nextLotButton: {
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 10,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  nextLotButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  cancelButton: {
+    backgroundColor: 'red',
+    borderRadius: 10,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  cancelButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
@@ -431,7 +599,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 16,
   },
-  cancelButton: {
+  modalCancelButton: {
     borderWidth: 1,
     borderColor: 'red',
     borderRadius: 10,
@@ -439,7 +607,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: 'white',
   },
-  addButton: {
+  modalAddButton: {
     borderWidth: 1,
     borderColor: theme.colors.primary,
     borderRadius: 10,
@@ -447,7 +615,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: 'white',
   },
-  buttonText: {
+  modalButtonText: {
     color: theme.colors.primary,
     fontSize: 16,
   },
@@ -468,6 +636,9 @@ const pickerSelectStyles = StyleSheet.create({
     paddingVertical: 8,
     color: 'black',
     paddingRight: 30,
+  },
+  placeholder: {
+    color: '#aaa', // Same color as text inputs
   },
 });
 

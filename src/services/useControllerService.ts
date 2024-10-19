@@ -38,10 +38,15 @@ const useCheckUserHasPermission = (requiredRole: UserRole) => {
   return userHasPermission(workgroup, currentUserId, requiredRole);
 };
 
+const getNeighbourhoodsAndZones = () => {
+  return useLotService.useNeighbourhoodsAndZones();
+};
+
 export default {
   initializeServices,
   createLot,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
   useCheckUserHasPermission,
+  getNeighbourhoodsAndZones,
 };

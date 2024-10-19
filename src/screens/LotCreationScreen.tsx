@@ -1,5 +1,6 @@
 // LotCreationScreen.tsx
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
@@ -17,6 +18,8 @@ import { v4 as uuidv4 } from 'uuid'; // ID Generator
 
 import ControllerService from '../services/useControllerService'; // Correct import
 import { LotInterface } from '../types/types';
+
+const { createLot, getNeighbourhoodsAndZones } = ControllerService;
 
 type RootStackParamList = {
   LotCreation: undefined;
@@ -36,17 +39,22 @@ interface Props {
 }
 
 const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
-  const { createLot } = ControllerService;
+  const { neighbourhoods } = getNeighbourhoodsAndZones();
 
   const [lotData, setLotData] = useState({
     lotLabel: '',
-    zoneLabel: '',
+    neighbourhoodId: '',
     neighbourhoodLabel: '',
+    zoneId: '',
+    zoneLabel: '',
     lastMowingDate: new Date(),
     extraNotes: '',
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const [showNeighbourhoodInput, setShowNeighbourhoodInput] = useState(false);
+  const [showZoneInput, setShowZoneInput] = useState(false);
 
   const handleInputChange = (field: string, value: string | Date) => {
     setLotData({ ...lotData, [field]: value });
@@ -95,6 +103,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {/* Lot Label Input */}
       <Text style={styles.label}>Lot Label</Text>
       <TextInput
         style={styles.input}
@@ -103,22 +112,106 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
         onChangeText={(text) => handleInputChange('lotLabel', text)}
       />
 
-      <Text style={styles.label}>Zone Label</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter zone label"
-        value={lotData.zoneLabel}
-        onChangeText={(text) => handleInputChange('zoneLabel', text)}
-      />
+      {/* Neighbourhood Picker/Input */}
+      <Text style={styles.label}>Neighbourhood</Text>
+      {showNeighbourhoodInput ? (
+        <TextInput
+          style={styles.input}
+          placeholder="Enter new neighbourhood label"
+          value={lotData.neighbourhoodLabel}
+          onChangeText={(text) => handleInputChange('neighbourhoodLabel', text)}
+        />
+      ) : (
+        <Picker
+          selectedValue={lotData.neighbourhoodId}
+          onValueChange={(itemValue) => {
+            if (itemValue === 'add_new') {
+              setShowNeighbourhoodInput(true);
+              handleInputChange('neighbourhoodId', '');
+              handleInputChange('neighbourhoodLabel', '');
+            } else {
+              const selectedNeighbourhood = neighbourhoods.find(
+                (n) => n.neighbourhoodId === itemValue,
+              );
+              if (selectedNeighbourhood) {
+                handleInputChange(
+                  'neighbourhoodId',
+                  selectedNeighbourhood.neighbourhoodId,
+                );
+                handleInputChange(
+                  'neighbourhoodLabel',
+                  selectedNeighbourhood.neighbourhoodLabel,
+                );
+                // Reset zone selection
+                handleInputChange('zoneId', '');
+                handleInputChange('zoneLabel', '');
+                setShowZoneInput(false);
+              }
+            }
+          }}
+        >
+          <Picker.Item label="Select Neighbourhood" value="" />
+          {neighbourhoods.map((n) => (
+            <Picker.Item
+              key={n.neighbourhoodId}
+              label={n.neighbourhoodLabel}
+              value={n.neighbourhoodId}
+            />
+          ))}
+          <Picker.Item label="Add New Neighbourhood..." value="add_new" />
+        </Picker>
+      )}
 
-      <Text style={styles.label}>Neighbourhood Label</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter neighbourhood label"
-        value={lotData.neighbourhoodLabel}
-        onChangeText={(text) => handleInputChange('neighbourhoodLabel', text)}
-      />
+      {/* Zone Picker/Input */}
+      {lotData.neighbourhoodId !== '' && !showNeighbourhoodInput && (
+        <>
+          <Text style={styles.label}>Zone</Text>
+          {showZoneInput ? (
+            <TextInput
+              style={styles.input}
+              placeholder="Enter new zone label"
+              value={lotData.zoneLabel}
+              onChangeText={(text) => handleInputChange('zoneLabel', text)}
+            />
+          ) : (
+            <Picker
+              selectedValue={lotData.zoneId}
+              onValueChange={(itemValue) => {
+                if (itemValue === 'add_new') {
+                  setShowZoneInput(true);
+                  handleInputChange('zoneId', '');
+                  handleInputChange('zoneLabel', '');
+                } else {
+                  const selectedNeighbourhood = neighbourhoods.find(
+                    (n) => n.neighbourhoodId === lotData.neighbourhoodId,
+                  );
+                  const selectedZone = selectedNeighbourhood?.zones.find(
+                    (z) => z.zoneId === itemValue,
+                  );
+                  if (selectedZone) {
+                    handleInputChange('zoneId', selectedZone.zoneId);
+                    handleInputChange('zoneLabel', selectedZone.zoneLabel);
+                  }
+                }
+              }}
+            >
+              <Picker.Item label="Select Zone" value="" />
+              {neighbourhoods
+                .find((n) => n.neighbourhoodId === lotData.neighbourhoodId)
+                ?.zones.map((z) => (
+                  <Picker.Item
+                    key={z.zoneId}
+                    label={z.zoneLabel}
+                    value={z.zoneId}
+                  />
+                ))}
+              <Picker.Item label="Add New Zone..." value="add_new" />
+            </Picker>
+          )}
+        </>
+      )}
 
+      {/* Last Mowing Date - Date Picker */}
       <Text style={styles.label}>Last Mowing Date</Text>
       <TouchableOpacity onPress={() => setShowDatePicker(true)}>
         <TextInput
@@ -137,6 +230,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
         />
       )}
 
+      {/* Extra Notes */}
       <Text style={styles.label}>Extra Notes</Text>
       <TextInput
         style={[styles.input, { height: 80 }]}
@@ -146,11 +240,11 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
         multiline
       />
 
+      {/* Submit Button */}
       <Button title="Create Lot" onPress={handleSubmit} />
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,

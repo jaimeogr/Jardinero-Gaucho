@@ -24,8 +24,9 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
   return useLotService.markSelectedLotsCompletedForSpecificDate(date);
 };
 
-const createLot = (lot: LotInterface) => {
-  useLotService.createLot(lot);
+const createLot = (lot: Partial<LotInterface>) => {
+  const workgroupId = getActiveWorkgroup()?.workgroupId;
+  useLotService.createLot(workgroupId, lot);
   return true;
 };
 

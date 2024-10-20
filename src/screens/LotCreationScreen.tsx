@@ -1,4 +1,5 @@
 // LotCreationScreen.tsx
+
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -15,11 +16,11 @@ import {
   Platform,
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import { v4 as uuidv4 } from 'uuid'; // ID Generator
+import { v4 as uuidv4 } from 'uuid';
 
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { LotInterface } from '../types/types';
+import { LotInterface, NeighbourhoodData, ZoneData } from '../types/types';
 
 type RootStackParamList = {
   LotCreation: undefined;
@@ -39,12 +40,13 @@ interface Props {
 }
 
 const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
-  const { createLot, getNeighbourhoodsAndZones } = ControllerService;
+  const {
+    createLot,
+    getNeighbourhoodsAndZones,
+    addNeighbourhood,
+    addZoneToNeighbourhood,
+  } = ControllerService;
   const { neighbourhoods } = getNeighbourhoodsAndZones();
-
-  // Local state for neighbourhoods and zones
-  const [localNeighbourhoods, setLocalNeighbourhoods] =
-    useState(neighbourhoods);
 
   const [lotData, setLotData] = useState({
     lotLabel: '',
@@ -77,7 +79,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     if (value === 'add_new') {
       setShowNeighbourhoodModal(true);
     } else {
-      const selectedNeighbourhood = localNeighbourhoods.find(
+      const selectedNeighbourhood = neighbourhoods.find(
         (n) => n.neighbourhoodId === value,
       );
       if (selectedNeighbourhood) {
@@ -101,7 +103,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     if (value === 'add_new') {
       setShowZoneModal(true);
     } else {
-      const selectedNeighbourhood = localNeighbourhoods.find(
+      const selectedNeighbourhood = neighbourhoods.find(
         (n) => n.neighbourhoodId === lotData.neighbourhoodId,
       );
       const selectedZone = selectedNeighbourhood?.zones.find(
@@ -117,63 +119,50 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   // Add new neighbourhood
   const handleAddNeighbourhood = () => {
     if (newNeighbourhoodLabel.trim() === '') {
-      Alert.alert('Validation Error', 'Please enter a neighbourhood label.');
+      Alert.alert(
+        'Problema con el texto ingresado',
+        'El Barrio no puede estar vacio, al menos poner un numero. No seas Vago',
+      );
       return;
     }
-    const newNeighbourhoodId = uuidv4();
-    handleInputChange('neighbourhoodId', newNeighbourhoodId);
-    handleInputChange('neighbourhoodLabel', newNeighbourhoodLabel.trim());
+
+    const newNeighbourhood = addNeighbourhood(newNeighbourhoodLabel.trim());
+    handleInputChange('neighbourhoodId', newNeighbourhood.neighbourhoodId);
+    handleInputChange(
+      'neighbourhoodLabel',
+      newNeighbourhood.neighbourhoodLabel,
+    );
     // Close modal
     setShowNeighbourhoodModal(false);
     setNewNeighbourhoodLabel('');
     // Reset zone selection
     handleInputChange('zoneId', '');
     handleInputChange('zoneLabel', '');
-    // Add the new neighbourhood to localNeighbourhoods
-    setLocalNeighbourhoods((prevNeighbourhoods) => [
-      ...prevNeighbourhoods,
-      {
-        neighbourhoodId: newNeighbourhoodId,
-        neighbourhoodLabel: newNeighbourhoodLabel.trim(),
-        zones: [],
-      },
-    ]);
   };
 
   // Add new zone
   const handleAddZone = () => {
     if (newZoneLabel.trim() === '') {
-      Alert.alert('Validation Error', 'Please enter a zone label.');
+      Alert.alert(
+        'Problema con el texto ingresado',
+        'La zona no puede estar vacia, al menos poner un numero. No seas Vago',
+      );
       return;
     }
-    const newZoneId = uuidv4();
-    handleInputChange('zoneId', newZoneId);
-    handleInputChange('zoneLabel', newZoneLabel.trim());
+
+    const newZone = addZoneToNeighbourhood(
+      lotData.neighbourhoodId,
+      newZoneLabel.trim(),
+    );
+    handleInputChange('zoneId', newZone.zoneId);
+    handleInputChange('zoneLabel', newZone.zoneLabel);
     // Close modal
     setShowZoneModal(false);
     setNewZoneLabel('');
-    // Add the new zone to the selected neighbourhood in localNeighbourhoods
-    setLocalNeighbourhoods((prevNeighbourhoods) =>
-      prevNeighbourhoods.map((n) => {
-        if (n.neighbourhoodId === lotData.neighbourhoodId) {
-          return {
-            ...n,
-            zones: [
-              ...n.zones,
-              {
-                zoneId: newZoneId,
-                zoneLabel: newZoneLabel.trim(),
-              },
-            ],
-          };
-        }
-        return n;
-      }),
-    );
   };
 
   // Handle date change
-  const onDateChange = (event: any, selectedDate?: Date) => {
+  const onDateChange = (event, selectedDate?: Date) => {
     if (Platform.OS === 'android') {
       setShowDatePicker(false);
       if (event.type === 'set' && selectedDate) {
@@ -205,30 +194,41 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   // Submit lot and navigate back
-  const handleSubmit = async () => {
+  const handleSubmit = async (keepCreating: boolean) => {
     if (
       !lotData.lotLabel ||
       !lotData.neighbourhoodLabel ||
       !lotData.zoneLabel
     ) {
-      Alert.alert('Validation Error', 'Please fill in all required fields.');
+      Alert.alert(
+        'Falta información.',
+        'Es necesario que completes todos los campos.',
+      );
       return;
     }
-
-    const newLot: LotInterface = {
+    const newLot: Partial<LotInterface> = {
       ...lotData,
-      lotId: uuidv4(),
+      lotId: undefined,
       lotIsSelected: false,
       assignedTo: [],
-      workgroupId: '1',
+      workgroupId: undefined,
       lastMowingDate: lotData.lastMowingDate || undefined,
     };
-
     try {
       const success = createLot(newLot);
       if (success) {
         console.log('Created a new lot.');
-        navigation.goBack();
+        // if the user wants to keep creating lots
+        if (keepCreating) {
+          setLotData((prevData) => ({
+            ...prevData,
+            lotLabel: '',
+            extraNotes: '',
+            lastMowingDate: null,
+          }));
+        } else {
+          navigation.goBack();
+        }
       } else {
         console.error('Failure: no lot was created.');
       }
@@ -244,16 +244,19 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       !lotData.neighbourhoodLabel ||
       !lotData.zoneLabel
     ) {
-      Alert.alert('Validation Error', 'Please fill in all required fields.');
+      Alert.alert(
+        'Falta información.',
+        'Es necesario que completes todos los campos.',
+      );
       return;
     }
 
-    const newLot: LotInterface = {
+    const newLot: Partial<LotInterface> = {
       ...lotData,
       lotId: uuidv4(),
       lotIsSelected: false,
       assignedTo: [],
-      workgroupId: '1',
+      workgroupId: undefined,
       lastMowingDate: lotData.lastMowingDate || undefined,
     };
 
@@ -282,7 +285,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   // Prepare picker items
-  const neighbourhoodItems = localNeighbourhoods.map((n) => ({
+  const neighbourhoodItems = neighbourhoods.map((n) => ({
     label: n.neighbourhoodLabel,
     value: n.neighbourhoodId,
   }));
@@ -291,7 +294,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     value: 'add_new',
   });
 
-  const selectedNeighbourhood = localNeighbourhoods.find(
+  const selectedNeighbourhood = neighbourhoods.find(
     (n) => n.neighbourhoodId === lotData.neighbourhoodId,
   );
   const zoneItems = selectedNeighbourhood
@@ -395,12 +398,15 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={() => handleSubmit(false)}
+        >
           <Text style={styles.submitButtonText}>Crear Lote</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.nextLotButton}
-          onPress={handleSubmitAndLoadNext}
+          onPress={() => handleSubmit(true)}
         >
           <Text style={styles.nextLotButtonText}>Cargar el siguiente lote</Text>
         </TouchableOpacity>
@@ -621,14 +627,13 @@ const styles = StyleSheet.create({
   },
 });
 
-// Custom styles for RNPickerSelect
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 16,
     paddingVertical: 12,
     paddingHorizontal: 10,
     color: 'black',
-    paddingRight: 30, // to ensure the text is not behind the icon
+    paddingRight: 30,
   },
   inputAndroid: {
     fontSize: 16,
@@ -638,7 +643,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingRight: 30,
   },
   placeholder: {
-    color: '#aaa', // Same color as text inputs
+    color: '#aaa',
   },
 });
 

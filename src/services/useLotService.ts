@@ -31,8 +31,18 @@ const initializeStore = () => {
     .initializeNeighbourhoodsAndZones(neighbourhoodsAndZones);
 };
 
-const createLot = (newLot: LotInterface) => {
-  useLotStore.getState().addLot(newLot);
+const createLot = (workgroupId: string, newLot: Partial<LotInterface>) => {
+  if (!newLot.lotLabel || !newLot.zoneId || !newLot.neighbourhoodId) {
+    throw new Error('Missing required fields in new lot');
+  }
+
+  const lot: LotInterface = {
+    ...newLot,
+    lotId: uuidv4(),
+    workgroupId: workgroupId,
+  };
+
+  useLotStore.getState().addLot(lot);
 };
 
 const addNeighbourhood = (

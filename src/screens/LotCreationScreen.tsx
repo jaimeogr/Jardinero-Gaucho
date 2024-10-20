@@ -39,6 +39,16 @@ interface Props {
   route: LotCreationScreenRouteProp;
 }
 
+const initialLotData = {
+  lotLabel: '',
+  neighbourhoodId: '',
+  neighbourhoodLabel: '',
+  zoneId: '',
+  zoneLabel: '',
+  lastMowingDate: null as Date | null,
+  extraNotes: '',
+};
+
 const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const {
     createLot,
@@ -48,15 +58,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   } = ControllerService;
   const { neighbourhoods } = getNeighbourhoodsAndZones();
 
-  const [lotData, setLotData] = useState({
-    lotLabel: '',
-    neighbourhoodId: '',
-    neighbourhoodLabel: '',
-    zoneId: '',
-    zoneLabel: '',
-    lastMowingDate: null as Date | null,
-    extraNotes: '',
-  });
+  const [lotData, setLotData] = useState(initialLotData);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -220,57 +222,10 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
         console.log('Created a new lot.');
         // if the user wants to keep creating lots
         if (keepCreating) {
-          setLotData((prevData) => ({
-            ...prevData,
-            lotLabel: '',
-            extraNotes: '',
-            lastMowingDate: null,
-          }));
+          setLotData(initialLotData);
         } else {
           navigation.goBack();
         }
-      } else {
-        console.error('Failure: no lot was created.');
-      }
-    } catch (error) {
-      console.error('An error occurred while creating the lot:', error);
-    }
-  };
-
-  // Submit lot and reset form for next entry
-  const handleSubmitAndLoadNext = async () => {
-    if (
-      !lotData.lotLabel ||
-      !lotData.neighbourhoodLabel ||
-      !lotData.zoneLabel
-    ) {
-      Alert.alert(
-        'Falta información.',
-        'Es necesario que completes todos los campos.',
-      );
-      return;
-    }
-
-    const newLot: Partial<LotInterface> = {
-      ...lotData,
-      lotId: uuidv4(),
-      lotIsSelected: false,
-      assignedTo: [],
-      workgroupId: undefined,
-      lastMowingDate: lotData.lastMowingDate || undefined,
-    };
-
-    try {
-      const success = createLot(newLot);
-      if (success) {
-        console.log('Created a new lot.');
-        // Reset form for next lot
-        setLotData((prevData) => ({
-          ...prevData,
-          lotLabel: '',
-          extraNotes: '',
-          lastMowingDate: null,
-        }));
       } else {
         console.error('Failure: no lot was created.');
       }

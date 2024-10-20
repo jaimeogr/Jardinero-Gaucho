@@ -1,13 +1,13 @@
+import {
+  NeighbourhoodData,
+  UserRole,
+  LotInterface,
+  ZoneData,
+} from './../types/types';
 import useLotService from './useLotService';
 import useUserService from './useUserService';
 import useWorkgroupService from './useWorkgroupService';
 import BackendService from '../backend/BackendService';
-import {
-  UserRole,
-  LotInterface,
-  NeighbourhoodData,
-  ZoneData,
-} from '../types/types';
 import { userHasPermission } from '../utils/permissionUtils';
 
 const initializeServices = () => {
@@ -29,21 +29,30 @@ const createLot = (lot: LotInterface) => {
   return true;
 };
 
-const addNeighbourhood = (neighbourhood: NeighbourhoodData) => {
-  useLotService.addNeighbourhood(neighbourhood);
+const addNeighbourhood = (neighbourhoodLabel: string): NeighbourhoodData => {
+  const activeWorkgroup = getActiveWorkgroup()?.workgroupId;
+  return useLotService.addNeighbourhood(activeWorkgroup, neighbourhoodLabel);
 };
 
-const addZoneToNeighbourhood = (neighbourhoodId: string, zone: ZoneData) => {
-  useLotService.addZoneToNeighbourhood(neighbourhoodId, zone);
+const addZoneToNeighbourhood = (
+  neighbourhoodId: string,
+  zoneLabel: string,
+): ZoneData => {
+  return useLotService.addZoneToNeighbourhood(neighbourhoodId, zoneLabel);
 };
 
 const getNeighbourhoodsAndZones = () => {
-  const activeWorkgroup = useWorkgroupService.getOrSetActiveWorkgroup();
+  const activeWorkgroup = getActiveWorkgroup()?.workgroupId;
   if (!activeWorkgroup) {
     console.error('No active workgroup found.');
     return { neighbourhoods: [] };
   }
-  return useLotService.useNeighbourhoodsAndZones(activeWorkgroup.workgroupId);
+  return useLotService.useNeighbourhoodsAndZones(activeWorkgroup);
+};
+
+const getActiveWorkgroup = () => {
+  const activeWorkgroup = useWorkgroupService.getOrSetActiveWorkgroup();
+  return activeWorkgroup;
 };
 
 const useCheckUserHasPermission = (requiredRole: UserRole) => {

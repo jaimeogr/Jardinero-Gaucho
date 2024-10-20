@@ -13,8 +13,8 @@ interface LotStoreState {
   initializeLots: (lots: LotInterface[]) => void;
   initializeNeighbourhoodsAndZones: (data: NeighbourhoodZoneData) => void;
   addLot: (newLot: LotInterface) => void;
-  addNeighbourhood: (neighbourhood: NeighbourhoodData) => void;
-  addZoneToNeighbourhood: (neighbourhoodId: string, zone: ZoneData) => void;
+  addNeighbourhood: (neighbourhood: NeighbourhoodData) => NeighbourhoodData;
+  addZoneToNeighbourhood: (neighbourhoodId: string, zone: ZoneData) => ZoneData;
   deselectAllLots: () => void;
   toggleLotSelection: (lotId: string) => void;
   toggleZoneSelection: (zoneId: string, newState: boolean) => void;
@@ -53,6 +53,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
         ],
       },
     }));
+    return neighbourhood;
   },
 
   addZoneToNeighbourhood: (neighbourhoodId, zone) => {
@@ -69,6 +70,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
         }),
       },
     }));
+    return zone;
   },
 
   deselectAllLots: () => {

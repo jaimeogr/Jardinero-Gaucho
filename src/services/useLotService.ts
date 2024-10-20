@@ -35,12 +35,28 @@ const createLot = (newLot: LotInterface) => {
   useLotStore.getState().addLot(newLot);
 };
 
-const addNeighbourhood = (neighbourhood: NeighbourhoodData) => {
-  useLotStore.getState().addNeighbourhood(neighbourhood);
+const addNeighbourhood = (
+  workgroupId: string,
+  neighbourhoodLabel: string,
+): NeighbourhoodData => {
+  const newNeighbourhood: NeighbourhoodData = {
+    workgroupId: workgroupId,
+    neighbourhoodId: uuidv4(),
+    neighbourhoodLabel: neighbourhoodLabel,
+    zones: [],
+  };
+  return useLotStore.getState().addNeighbourhood(newNeighbourhood);
 };
 
-const addZoneToNeighbourhood = (neighbourhoodId: string, zone: ZoneData) => {
-  useLotStore.getState().addZoneToNeighbourhood(neighbourhoodId, zone);
+const addZoneToNeighbourhood = (
+  neighbourhoodId: string,
+  zoneLabel: string,
+): ZoneData => {
+  const zone: ZoneData = {
+    zoneId: uuidv4(),
+    zoneLabel: zoneLabel,
+  };
+  return useLotStore.getState().addZoneToNeighbourhood(neighbourhoodId, zone);
 };
 
 const useNeighbourhoodsAndZones = (workgroupId: string) => {

@@ -21,8 +21,6 @@ interface OneLotForCustomAccordionProps {
 }
 
 const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
-  title,
-  description,
   isLastItem,
   lotId,
 }) => {
@@ -66,7 +64,11 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
         {/* Title and Description */}
         <View style={styles.textContainer}>
           <Text style={styles.title}>{lot.lotLabel}</Text>
-          <Text style={styles.description}>{description}</Text>
+          <Text style={styles.description}>
+            {lot.lastMowingDate
+              ? 'Ultima Pasada ' + lot.lastMowingDate.toDateString()
+              : null}
+          </Text>
         </View>
 
         {/* Right Side */}

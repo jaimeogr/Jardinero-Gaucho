@@ -113,8 +113,6 @@ const NestedViewLots = () => {
                 {zone.lots.map((lot, lotIndex) => (
                   <OneLotForCustomAccordion
                     key={lotIndex}
-                    title={`Lote ${lot.lotLabel}`}
-                    description={`Ultima pasada: ${lot.lastMowingDate.toDateString()}`}
                     lotId={lot.lotId}
                     isLastItem={lotIndex === zone.lots.length - 1}
                   />

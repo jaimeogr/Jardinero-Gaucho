@@ -14,8 +14,6 @@ const {
 } = theme.colors.accordion;
 
 interface OneLotForCustomAccordionProps {
-  title: string;
-  description: string;
   lotId: string; // Use LotInterface to type the lot prop
   isLastItem: boolean;
 }

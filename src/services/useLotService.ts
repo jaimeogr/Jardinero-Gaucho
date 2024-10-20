@@ -73,7 +73,6 @@ const useNeighbourhoodsAndZones = (workgroupId: string) => {
   const neighbourhoodZoneData = useLotStore(
     (state) => state.neighbourhoodZoneData,
   );
-
   return React.useMemo(() => {
     const filteredNeighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
       (n) => n.workgroupId === workgroupId,

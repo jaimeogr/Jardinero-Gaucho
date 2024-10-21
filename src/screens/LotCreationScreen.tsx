@@ -361,8 +361,11 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             >
               <Text style={styles.subtleButtonText}>Esta Semana</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={clearDate} style={styles.clearButton}>
-              <Text style={styles.clearButtonText}>Limpiar Fecha</Text>
+            <TouchableOpacity
+              onPress={clearDate}
+              style={styles.clearDateButton}
+            >
+              <Text style={styles.clearDateButtonText}>Limpiar Fecha</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -385,25 +388,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           multiline
         />
       </ScrollView>
-
-      {/* Buttons */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={() => handleSubmit(false)}
-        >
-          <Text style={styles.submitButtonText}>Crear Lote</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.nextLotButton}
-          onPress={() => handleSubmit(true)}
-        >
-          <Text style={styles.nextLotButtonText}>Cargar el siguiente lote</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
-          <Text style={styles.cancelButtonText}>Cancelar</Text>
-        </TouchableOpacity>
-      </View>
 
       {/* Neighbourhood Modal */}
       <Modal
@@ -472,6 +456,28 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           </View>
         </View>
       </Modal>
+
+      {/* Buttons */}
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={[styles.button, styles.cancelButton]}
+          onPress={handleCancel}
+        >
+          <Text style={styles.cancelButtonText}>Cancelar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.submitButton]}
+          onPress={() => handleSubmit(false)}
+        >
+          <Text style={styles.submitButtonText}>Crear Lote</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.nextLotButton]}
+          onPress={() => handleSubmit(true)}
+        >
+          <Text style={styles.nextLotButtonText}>Cargar el siguiente lote</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -555,7 +561,7 @@ const styles = StyleSheet.create({
     color: '#555',
     fontSize: 14,
   },
-  clearButton: {
+  clearDateButton: {
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderWidth: 1,
@@ -563,47 +569,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#ffe6e6',
   },
-  clearButtonText: {
+  clearDateButtonText: {
     color: 'red',
     fontSize: 14,
-  },
-  buttonContainer: {
-    marginTop: 16,
-  },
-  submitButton: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: 10,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  submitButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  nextLotButton: {
-    backgroundColor: theme.colors.secondary,
-    borderRadius: 10,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  nextLotButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  cancelButton: {
-    backgroundColor: 'red',
-    borderRadius: 10,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
   modalOverlay: {
     flex: 1,
@@ -647,6 +615,43 @@ const styles = StyleSheet.create({
   modalButtonText: {
     color: theme.colors.primary,
     fontSize: 16,
+  },
+  buttonsContainer: {
+    marginTop: 16,
+  },
+  button: {
+    borderRadius: 50,
+    marginHorizontal: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  cancelButton: {
+    borderWidth: 1,
+    borderColor: 'red',
+    backgroundColor: '#ffe6e6',
+  },
+  cancelButtonText: {
+    color: 'red',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  submitButton: {
+    borderColor: theme.colors.primary,
+    borderWidth: 1,
+  },
+  submitButtonText: {
+    color: theme.colors.primary,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  nextLotButton: {
+    backgroundColor: theme.colors.accent,
+    margin: 16,
+  },
+  nextLotButtonText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 

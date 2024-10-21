@@ -514,7 +514,7 @@ const styles = StyleSheet.create({
     height: 30, // Adjust height for the fading effect
     zIndex: 1, // Ensure it's above the scroll content
     elevation: 10, // Android layering
-    marginRight: 2,
+    marginRight: 4,
   },
   label: {
     fontSize: 16,
@@ -526,7 +526,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
     borderRadius: 10,
     padding: 8,
-    marginBottom: 16,
+    marginBottom: 20,
     height: 45,
     fontSize: 16,
   },
@@ -539,20 +539,21 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
     borderRadius: 10,
     overflow: 'hidden',
-    marginBottom: 16,
+    marginBottom: 18,
   },
   disabledPickerContainer: {
     backgroundColor: '#f0f0f0',
     borderColor: '#f0f0f0',
   },
   dateContainer: {
-    marginBottom: 16,
+    marginBottom: 20,
   },
   datePicker: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 0,
+    marginBottom: 12,
   },
   datePickerText: {
     fontSize: 16,

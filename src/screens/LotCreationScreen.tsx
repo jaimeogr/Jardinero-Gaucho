@@ -271,118 +271,120 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   zoneItems.push({ label: 'Agregar Nueva Zona...', value: 'add_new' });
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Neighbourhood Picker */}
-      <Text style={styles.label}>Barrio</Text>
-      <View style={styles.pickerContainer}>
-        <RNPickerSelect
-          onValueChange={handleNeighbourhoodChange}
-          items={neighbourhoodItems}
-          value={lotData.neighbourhoodId}
-          placeholder={{ label: 'Seleccionar Barrio', value: '' }}
-          style={pickerSelectStyles}
-          useNativeAndroidPickerStyle={false}
-        />
-      </View>
-
-      {/* Zone Picker */}
-      <Text style={styles.label}>Zona</Text>
-      <View
-        style={[
-          styles.pickerContainer,
-          lotData.neighbourhoodId ? {} : styles.disabledPickerContainer,
-        ]}
-      >
-        <RNPickerSelect
-          onValueChange={handleZoneChange}
-          items={zoneItems} // No need for conditional; it’s disabled anyway
-          value={lotData.zoneId}
-          placeholder={{
-            label: lotData.neighbourhoodId
-              ? 'Seleccionar Zona'
-              : 'Selecciona un barrio primero', // Dynamic placeholder
-            value: '',
-          }}
-          style={pickerSelectStyles}
-          useNativeAndroidPickerStyle={false}
-          disabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
-        />
-      </View>
-
-      {/* Lot Label Input */}
-      <Text style={styles.label}>Casa</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Ingresá la casa"
-        placeholderTextColor={styles.placeholderText.color}
-        value={lotData.lotLabel}
-        onChangeText={(text) => handleInputChange('lotLabel', text)}
-      />
-
-      {/* Last Mowing Date - Date Picker */}
-      <Text style={styles.label}>Última Fecha de Corte de Pasto</Text>
-      <View style={styles.dateContainer}>
-        <TouchableOpacity
-          onPress={() => setShowDatePicker(true)}
-          style={[styles.input, styles.datePicker]}
-        >
-          <Text
-            style={[
-              {
-                color: lotData.lastMowingDate ? 'black' : '#aaa',
-              },
-              styles.datePickerText,
-            ]}
-          >
-            {lotData.lastMowingDate
-              ? lotData.lastMowingDate.toDateString()
-              : 'La última fecha de corte de pasto'}
-          </Text>
-          <View style={styles.iconContainer}>
-            <Icon
-              name="calendar-range"
-              size={22}
-              color="#fff" // White icon color
-            />
-          </View>
-        </TouchableOpacity>
-        {/* Date Options */}
-        <View style={styles.dateButtonsContainer}>
-          <TouchableOpacity
-            onPress={setPastWeekDate}
-            style={styles.subtleButton}
-          >
-            <Text style={styles.subtleButtonText}>Semana Pasada</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={setThisWeekDate}
-            style={styles.subtleButton}
-          >
-            <Text style={styles.subtleButtonText}>Esta Semana</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={clearDate} style={styles.clearButton}>
-            <Text style={styles.clearButtonText}>Limpiar Fecha</Text>
-          </TouchableOpacity>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Neighbourhood Picker */}
+        <Text style={styles.label}>Barrio</Text>
+        <View style={styles.pickerContainer}>
+          <RNPickerSelect
+            onValueChange={handleNeighbourhoodChange}
+            items={neighbourhoodItems}
+            value={lotData.neighbourhoodId}
+            placeholder={{ label: 'Seleccionar Barrio', value: '' }}
+            style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
+          />
         </View>
-      </View>
-      {showDatePicker && (
-        <DateTimePicker
-          value={lotData.lastMowingDate || new Date()}
-          mode="date"
-          display="default"
-          onChange={onDateChange}
-        />
-      )}
 
-      {/* Extra Notes */}
-      <Text style={styles.label}>Notas Adicionales</Text>
-      <TextInput
-        style={[styles.input, { height: 80 }]}
-        placeholder="Ingresá notas adicionales.."
-        value={lotData.extraNotes}
-        onChangeText={(text) => handleInputChange('extraNotes', text)}
-        multiline
-      />
+        {/* Zone Picker */}
+        <Text style={styles.label}>Zona</Text>
+        <View
+          style={[
+            styles.pickerContainer,
+            lotData.neighbourhoodId ? {} : styles.disabledPickerContainer,
+          ]}
+        >
+          <RNPickerSelect
+            onValueChange={handleZoneChange}
+            items={zoneItems} // No need for conditional; it’s disabled anyway
+            value={lotData.zoneId}
+            placeholder={{
+              label: lotData.neighbourhoodId
+                ? 'Seleccionar Zona'
+                : 'Selecciona un barrio primero', // Dynamic placeholder
+              value: '',
+            }}
+            style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
+            disabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
+          />
+        </View>
+
+        {/* Lot Label Input */}
+        <Text style={styles.label}>Casa</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Ingresá la casa"
+          placeholderTextColor={styles.placeholderText.color}
+          value={lotData.lotLabel}
+          onChangeText={(text) => handleInputChange('lotLabel', text)}
+        />
+
+        {/* Last Mowing Date - Date Picker */}
+        <Text style={styles.label}>Última Fecha de Corte de Pasto</Text>
+        <View style={styles.dateContainer}>
+          <TouchableOpacity
+            onPress={() => setShowDatePicker(true)}
+            style={[styles.input, styles.datePicker]}
+          >
+            <Text
+              style={[
+                {
+                  color: lotData.lastMowingDate ? 'black' : '#aaa',
+                },
+                styles.datePickerText,
+              ]}
+            >
+              {lotData.lastMowingDate
+                ? lotData.lastMowingDate.toDateString()
+                : 'La última fecha de corte de pasto'}
+            </Text>
+            <View style={styles.iconContainer}>
+              <Icon
+                name="calendar-range"
+                size={22}
+                color="#fff" // White icon color
+              />
+            </View>
+          </TouchableOpacity>
+          {/* Date Options */}
+          <View style={styles.dateButtonsContainer}>
+            <TouchableOpacity
+              onPress={setPastWeekDate}
+              style={styles.subtleButton}
+            >
+              <Text style={styles.subtleButtonText}>Semana Pasada</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={setThisWeekDate}
+              style={styles.subtleButton}
+            >
+              <Text style={styles.subtleButtonText}>Esta Semana</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={clearDate} style={styles.clearButton}>
+              <Text style={styles.clearButtonText}>Limpiar Fecha</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        {showDatePicker && (
+          <DateTimePicker
+            value={lotData.lastMowingDate || new Date()}
+            mode="date"
+            display="default"
+            onChange={onDateChange}
+          />
+        )}
+
+        {/* Extra Notes */}
+        <Text style={styles.label}>Notas Adicionales</Text>
+        <TextInput
+          style={[styles.input, { height: 80 }]}
+          placeholder="Ingresá notas adicionales.."
+          value={lotData.extraNotes}
+          onChangeText={(text) => handleInputChange('extraNotes', text)}
+          multiline
+        />
+      </ScrollView>
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
@@ -470,15 +472,18 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  scrollContent: {
     flexGrow: 1,
     padding: 16,
-    backgroundColor: '#fff',
   },
   label: {
     fontSize: 16,

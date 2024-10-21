@@ -326,11 +326,12 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           style={[styles.input, styles.datePicker]}
         >
           <Text
-            style={{
-              color: lotData.lastMowingDate ? 'black' : '#aaa',
-              fontSize: 16,
-              padding: 8,
-            }}
+            style={[
+              {
+                color: lotData.lastMowingDate ? 'black' : '#aaa',
+              },
+              styles.datePickerText,
+            ]}
           >
             {lotData.lastMowingDate
               ? lotData.lastMowingDate.toDateString()
@@ -490,6 +491,7 @@ const styles = StyleSheet.create({
     padding: 8,
     marginBottom: 16,
     flex: 1,
+    height: 45,
   },
   pickerContainer: {
     borderWidth: 1,
@@ -510,6 +512,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 0,
+  },
+  datePickerText: {
+    fontSize: 16,
+    padding: 8,
   },
   iconContainer: {
     backgroundColor: theme.colors.primary,

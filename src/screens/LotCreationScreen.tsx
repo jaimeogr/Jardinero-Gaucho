@@ -577,10 +577,10 @@ const styles = StyleSheet.create({
   subtleButton: {
     paddingVertical: 6,
     paddingHorizontal: 12,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderColor: '#d3d3d3', // Subtle border color to reduce visual weight
     borderRadius: 8,
-    backgroundColor: '#f8f8f8', // Lighter background
+    backgroundColor: '#f0f0f0', // Lighter background
     marginRight: 4,
   },
   subtleButtonText: {
@@ -590,10 +590,10 @@ const styles = StyleSheet.create({
   clearDateButton: {
     paddingVertical: 6,
     paddingHorizontal: 12,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderColor: '#ffe6e6',
     borderRadius: 8,
-    backgroundColor: '#ffe6e6',
+    backgroundColor: '#f0f0f0',
   },
   clearDateButtonText: {
     color: 'red',
@@ -657,8 +657,8 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     borderWidth: 1,
-    borderColor: '#ffe6e6',
-    backgroundColor: '#ffe6e6',
+    borderColor: '#aaa',
+    // backgroundColor: '#ffe6e6',
   },
   cancelButtonText: {
     color: 'red',

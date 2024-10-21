@@ -80,6 +80,12 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const handleNeighbourhoodChange = (value: string) => {
     if (value === 'add_new') {
       setShowNeighbourhoodModal(true);
+    } else if (value === '') {
+      handleInputChange('neighbourhoodId', '');
+      handleInputChange('neighbourhoodLabel', '');
+      // Reset zone selection
+      handleInputChange('zoneId', '');
+      handleInputChange('zoneLabel', '');
     } else {
       const selectedNeighbourhood = neighbourhoods.find(
         (n) => n.neighbourhoodId === value,
@@ -104,6 +110,9 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const handleZoneChange = (value: string) => {
     if (value === 'add_new') {
       setShowZoneModal(true);
+    } else if (value === '') {
+      handleInputChange('zoneId', '');
+      handleInputChange('zoneLabel', '');
     } else {
       const selectedNeighbourhood = neighbourhoods.find(
         (n) => n.neighbourhoodId === lotData.neighbourhoodId,

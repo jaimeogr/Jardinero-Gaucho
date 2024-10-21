@@ -21,3 +21,6 @@ This configuration is required inside your .vscode/settings.json file:
 }
 
 Its probably better to code in Ubuntu to have access to Flipper and debug and analyze the components tree more easily and with better integration.
+
+Icons:
+import { MaterialCommunityIcons } from '@expo/vector-icons';

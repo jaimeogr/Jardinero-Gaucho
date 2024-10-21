@@ -350,7 +350,11 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
                   />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={clearDate} style={styles.trashIcon}>
+              <TouchableOpacity
+                onPress={clearDate}
+                style={styles.trashIcon}
+                hitSlop={{ top: 5, left: 5, right: 5, bottom: 5 }}
+              >
                 <Icon name="delete" size={28} color="gray" />
               </TouchableOpacity>
             </View>
@@ -590,7 +594,6 @@ const styles = StyleSheet.create({
   subtleButton: {
     paddingVertical: 6,
     paddingHorizontal: 12,
-    // borderWidth: 1,
     borderColor: '#d3d3d3', // Subtle border color to reduce visual weight
     borderRadius: 8,
     backgroundColor: '#f0f0f0', // Lighter background
@@ -677,7 +680,7 @@ const styles = StyleSheet.create({
     // backgroundColor: '#ffe6e6',
   },
   cancelButtonText: {
-    color: 'red',
+    color: 'gray',
     fontSize: 14,
     fontWeight: 'bold',
   },

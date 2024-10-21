@@ -262,15 +262,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* Lot Label Input */}
-      <Text style={styles.label}>Casa</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Ingresá la casa"
-        value={lotData.lotLabel}
-        onChangeText={(text) => handleInputChange('lotLabel', text)}
-      />
-
       {/* Neighbourhood Picker */}
       <Text style={styles.label}>Barrio</Text>
       <View style={styles.pickerContainer}>
@@ -285,21 +276,37 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       </View>
 
       {/* Zone Picker */}
-      {lotData.neighbourhoodId !== '' && (
-        <>
-          <Text style={styles.label}>Zona</Text>
-          <View style={styles.pickerContainer}>
-            <RNPickerSelect
-              onValueChange={handleZoneChange}
-              items={zoneItems}
-              value={lotData.zoneId}
-              placeholder={{ label: 'Seleccionar Zona', value: '' }}
-              style={pickerSelectStyles}
-              useNativeAndroidPickerStyle={false}
-            />
-          </View>
-        </>
-      )}
+      <Text style={styles.label}>Zona</Text>
+      <View
+        style={[
+          styles.pickerContainer,
+          lotData.neighbourhoodId ? {} : styles.disabledPickerContainer,
+        ]}
+      >
+        <RNPickerSelect
+          onValueChange={handleZoneChange}
+          items={zoneItems} // No need for conditional; it’s disabled anyway
+          value={lotData.zoneId}
+          placeholder={{
+            label: lotData.neighbourhoodId
+              ? 'Seleccionar Zona'
+              : 'Selecciona un barrio primero', // Dynamic placeholder
+            value: '',
+          }}
+          style={pickerSelectStyles}
+          useNativeAndroidPickerStyle={false}
+          disabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
+        />
+      </View>
+
+      {/* Lot Label Input */}
+      <Text style={styles.label}>Casa</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Ingresá la casa"
+        value={lotData.lotLabel}
+        onChangeText={(text) => handleInputChange('lotLabel', text)}
+      />
 
       {/* Last Mowing Date - Date Picker */}
       <Text style={styles.label}>Última Fecha de Corte de Pasto</Text>
@@ -465,6 +472,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 16,
+  },
+  disabledPickerContainer: {
+    backgroundColor: '#f0f0f0',
+    borderColor: '#d3d3d3',
   },
   dateContainer: {
     marginBottom: 16,

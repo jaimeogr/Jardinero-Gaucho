@@ -511,7 +511,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: 20, // Adjust height for the fading effect
+    height: 30, // Adjust height for the fading effect
     zIndex: 1, // Ensure it's above the scroll content
     elevation: 10, // Android layering
     marginRight: 2,
@@ -643,11 +643,10 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     marginHorizontal: 6,
-    marginBottom: 12,
+    marginTop: 12,
   },
   buttonsCancelAndSubmit: {
     flexDirection: 'row',
-    // marginHorizontal: 12,
   },
   button: {
     borderRadius: 50,

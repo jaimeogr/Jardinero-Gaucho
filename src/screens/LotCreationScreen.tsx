@@ -314,6 +314,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Ingresá la casa"
+        placeholderTextColor={styles.placeholderText.color}
         value={lotData.lotLabel}
         onChangeText={(text) => handleInputChange('lotLabel', text)}
       />
@@ -377,7 +378,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       <Text style={styles.label}>Notas Adicionales</Text>
       <TextInput
         style={[styles.input, { height: 80 }]}
-        placeholder="Ingresá notas adicionales"
+        placeholder="Ingresá notas adicionales.."
         value={lotData.extraNotes}
         onChangeText={(text) => handleInputChange('extraNotes', text)}
         multiline
@@ -492,6 +493,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     flex: 1,
     height: 45,
+    fontSize: 16,
+  },
+  placeholderText: {
+    color: '#aaa', // Reusable placeholder color
+    fontSize: 16,
   },
   pickerContainer: {
     borderWidth: 1,
@@ -502,7 +508,7 @@ const styles = StyleSheet.create({
   },
   disabledPickerContainer: {
     backgroundColor: '#f0f0f0',
-    borderColor: '#d3d3d3',
+    borderColor: '#f0f0f0',
   },
   dateContainer: {
     marginBottom: 16,
@@ -549,7 +555,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor: '#ffe6e6',
     borderRadius: 8,
     backgroundColor: '#ffe6e6',
   },

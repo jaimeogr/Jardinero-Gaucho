@@ -323,19 +323,26 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.dateContainer}>
         <TouchableOpacity
           onPress={() => setShowDatePicker(true)}
-          style={[styles.input, styles.textWithIcon]}
+          style={[styles.input, styles.datePicker]}
         >
-          <Icon name="calendar-range" size={22} color={theme.colors.primary} />
           <Text
             style={{
               color: lotData.lastMowingDate ? 'black' : '#aaa',
               fontSize: 16,
+              padding: 8,
             }}
           >
             {lotData.lastMowingDate
               ? lotData.lastMowingDate.toDateString()
               : 'La última fecha de corte de pasto'}
           </Text>
+          <View style={styles.iconContainer}>
+            <Icon
+              name="calendar-range"
+              size={22}
+              color="#fff" // White icon color
+            />
+          </View>
         </TouchableOpacity>
         {/* Date Options */}
         <View style={styles.dateButtonsContainer}>
@@ -482,6 +489,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 8,
     marginBottom: 16,
+    flex: 1,
   },
   pickerContainer: {
     borderWidth: 1,
@@ -496,6 +504,22 @@ const styles = StyleSheet.create({
   },
   dateContainer: {
     marginBottom: 16,
+  },
+  datePicker: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 0,
+  },
+  iconContainer: {
+    backgroundColor: theme.colors.primary,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 8,
+    borderBottomRightRadius: 8,
+    borderTopRightRadius: 8,
+    paddingHorizontal: 14,
   },
   dateButtonsContainer: {
     flexDirection: 'row',

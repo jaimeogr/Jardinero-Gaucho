@@ -459,18 +459,20 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
 
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.cancelButton]}
-          onPress={handleCancel}
-        >
-          <Text style={styles.cancelButtonText}>Cancelar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.submitButton]}
-          onPress={() => handleSubmit(false)}
-        >
-          <Text style={styles.submitButtonText}>Crear Lote</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonsCancelAndSubmit}>
+          <TouchableOpacity
+            style={[styles.button, styles.cancelButton, { flex: 6 }]}
+            onPress={handleCancel}
+          >
+            <Text style={styles.cancelButtonText}>Cancelar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.button, styles.submitButton, { flex: 6 }]}
+            onPress={() => handleSubmit(false)}
+          >
+            <Text style={styles.submitButtonText}>Crear Lote</Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
           style={[styles.button, styles.nextLotButton]}
           onPress={() => handleSubmit(true)}
@@ -617,7 +619,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonsContainer: {
-    marginTop: 16,
+    marginHorizontal: 6,
+    marginBottom: 12,
+  },
+  buttonsCancelAndSubmit: {
+    flexDirection: 'row',
+    // marginHorizontal: 12,
   },
   button: {
     borderRadius: 50,
@@ -627,12 +634,12 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor: '#ffe6e6',
     backgroundColor: '#ffe6e6',
   },
   cancelButtonText: {
     color: 'red',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   submitButton: {
@@ -641,7 +648,7 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: theme.colors.primary,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   nextLotButton: {

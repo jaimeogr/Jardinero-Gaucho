@@ -325,49 +325,48 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           {/* Last Mowing Date - Date Picker */}
           <Text style={styles.label}>Última Fecha de Corte de Pasto</Text>
           <View style={styles.dateContainer}>
-            <TouchableOpacity
-              onPress={() => setShowDatePicker(true)}
-              style={[styles.input, styles.datePicker]}
-            >
-              <Text
-                style={[
-                  {
-                    color: lotData.lastMowingDate ? 'black' : '#aaa',
-                  },
-                  styles.datePickerText,
-                ]}
+            <View style={styles.dateFirstRow}>
+              <TouchableOpacity
+                onPress={() => setShowDatePicker(true)}
+                style={[styles.input, styles.datePicker]}
               >
-                {lotData.lastMowingDate
-                  ? lotData.lastMowingDate.toDateString()
-                  : 'La última fecha de corte de pasto'}
-              </Text>
-              <View style={styles.iconContainer}>
-                <Icon
-                  name="calendar-range"
-                  size={22}
-                  color="#fff" // White icon color
-                />
-              </View>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    {
+                      color: lotData.lastMowingDate ? 'black' : '#aaa',
+                    },
+                    styles.datePickerText,
+                  ]}
+                >
+                  {lotData.lastMowingDate
+                    ? lotData.lastMowingDate.toDateString()
+                    : 'La última fecha de corte de pasto'}
+                </Text>
+                <View style={styles.iconContainer}>
+                  <Icon
+                    name="calendar-range"
+                    size={22}
+                    color="#fff" // White icon color
+                  />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={clearDate} style={styles.trashIcon}>
+                <Icon name="delete" size={28} color="gray" />
+              </TouchableOpacity>
+            </View>
             {/* Date Options */}
-            <View style={styles.dateButtonsContainer}>
+            <View style={styles.dateSecondRow}>
               <TouchableOpacity
                 onPress={setPastWeekDate}
                 style={styles.subtleButton}
               >
-                <Text style={styles.subtleButtonText}>Semana Pasada</Text>
+                <Text style={styles.subtleButtonText}>La Semana Pasada</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={setThisWeekDate}
                 style={styles.subtleButton}
               >
                 <Text style={styles.subtleButtonText}>Esta Semana</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={clearDate}
-                style={styles.clearDateButton}
-              >
-                <Text style={styles.clearDateButtonText}>Limpiar Fecha</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -548,7 +547,13 @@ const styles = StyleSheet.create({
   dateContainer: {
     marginBottom: 20,
   },
+  dateFirstRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   datePicker: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -568,11 +573,19 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
     borderTopRightRadius: 8,
     paddingHorizontal: 14,
+    marginRight: 0,
   },
-  dateButtonsContainer: {
+  trashIcon: {
+    marginLeft: 12,
+    padding: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dateSecondRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     marginTop: 0,
+    gap: 14,
   },
   subtleButton: {
     paddingVertical: 6,
@@ -594,6 +607,9 @@ const styles = StyleSheet.create({
     borderColor: '#ffe6e6',
     borderRadius: 8,
     backgroundColor: '#f0f0f0',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   clearDateButtonText: {
     color: 'red',

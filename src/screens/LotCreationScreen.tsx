@@ -1,5 +1,6 @@
 // LotCreationScreen.tsx
 
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -322,8 +323,9 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.dateContainer}>
         <TouchableOpacity
           onPress={() => setShowDatePicker(true)}
-          style={styles.input}
+          style={[styles.input, styles.textWithIcon]}
         >
+          <Icon name="calendar-range" size={22} color={theme.colors.primary} />
           <Text
             style={{
               color: lotData.lastMowingDate ? 'black' : '#aaa',
@@ -337,14 +339,20 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
         </TouchableOpacity>
         {/* Date Options */}
         <View style={styles.dateButtonsContainer}>
-          <TouchableOpacity onPress={setPastWeekDate} style={styles.dateButton}>
-            <Text style={styles.dateButtonText}>Semana Pasada</Text>
+          <TouchableOpacity
+            onPress={setPastWeekDate}
+            style={styles.subtleButton}
+          >
+            <Text style={styles.subtleButtonText}>Semana Pasada</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={setThisWeekDate} style={styles.dateButton}>
-            <Text style={styles.dateButtonText}>Esta Semana</Text>
+          <TouchableOpacity
+            onPress={setThisWeekDate}
+            style={styles.subtleButton}
+          >
+            <Text style={styles.subtleButtonText}>Esta Semana</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={clearDate} style={styles.clearDateButton}>
-            <Text style={styles.clearDateButtonText}>Limpiar Fecha</Text>
+          <TouchableOpacity onPress={clearDate} style={styles.clearButton}>
+            <Text style={styles.clearButtonText}>Limpiar Fecha</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -492,30 +500,30 @@ const styles = StyleSheet.create({
   dateButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 8,
+    marginTop: 0,
   },
-  dateButton: {
+  subtleButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-    marginRight: 8,
+    borderColor: '#d3d3d3', // Subtle border color to reduce visual weight
+    borderRadius: 8,
+    backgroundColor: '#f8f8f8', // Lighter background
+    marginRight: 4,
   },
-  dateButtonText: {
-    color: theme.colors.primary,
+  subtleButtonText: {
+    color: '#555',
     fontSize: 14,
   },
-  clearDateButton: {
+  clearButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: 'red',
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
+    borderRadius: 8,
+    backgroundColor: '#ffe6e6',
   },
-  clearDateButtonText: {
+  clearButtonText: {
     color: 'red',
     fontSize: 14,
   },

@@ -475,7 +475,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           style={[styles.button, styles.nextLotButton]}
           onPress={() => handleSubmit(true)}
         >
-          <Text style={styles.nextLotButtonText}>Cargar el siguiente lote</Text>
+          <Text style={styles.nextLotButtonText}>Crear Lote y Siguiente</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -645,7 +645,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   nextLotButton: {
-    backgroundColor: theme.colors.accent,
+    backgroundColor: theme.colors.primary,
     margin: 16,
   },
   nextLotButtonText: {

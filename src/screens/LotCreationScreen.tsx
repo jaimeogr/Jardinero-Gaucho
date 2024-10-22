@@ -323,7 +323,10 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           />
 
           {/* Last Mowing Date - Date Picker */}
-          <Text style={styles.label}>Última Fecha de Corte de Pasto</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+            <Text style={styles.label}>Última Fecha de Corte de Pasto</Text>
+            <Text style={styles.optionalText}>(opcional)</Text>
+          </View>
           <View style={styles.dateContainer}>
             <View style={styles.dateFirstRow}>
               <TouchableOpacity
@@ -384,7 +387,10 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           )}
 
           {/* Extra Notes */}
-          <Text style={styles.label}>Notas Adicionales</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+            <Text style={styles.label}>Notas Adicionales</Text>
+            <Text style={styles.optionalText}>(opcional)</Text>
+          </View>
           <TextInput
             style={[styles.input, { height: 80 }]}
             placeholder="Ingresá notas adicionales.."
@@ -523,6 +529,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
+  },
+  optionalText: {
+    fontSize: 15,
+    color: 'gray',
+    marginLeft: 4,
   },
   input: {
     borderWidth: 1,

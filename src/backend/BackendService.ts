@@ -1,8 +1,55 @@
 import {
   LotInterface,
+  NeighbourhoodZoneData,
+  NeighbourhoodData,
   WorkgroupInterface,
   UserInterface,
 } from '../types/types';
+
+const getNeighbourhoodZoneData = (
+  lots?: LotInterface[],
+): NeighbourhoodZoneData => {
+  const neighbourhoodMap: { [key: string]: NeighbourhoodData } = {};
+
+  if (!lots) {
+    lots = getMyLots();
+  }
+
+  lots.forEach((lot) => {
+    const {
+      neighbourhoodId,
+      neighbourhoodLabel,
+      zoneId,
+      zoneLabel,
+      workgroupId,
+    } = lot;
+
+    // Initialize neighbourhood if it doesn't exist
+    if (!neighbourhoodMap[neighbourhoodId]) {
+      neighbourhoodMap[neighbourhoodId] = {
+        workgroupId,
+        neighbourhoodId,
+        neighbourhoodLabel,
+        zones: [],
+      };
+    }
+
+    const neighbourhood = neighbourhoodMap[neighbourhoodId];
+
+    // Check if the zone already exists in the neighbourhood
+    const zoneExists = neighbourhood.zones.some(
+      (zone) => zone.zoneId === zoneId,
+    );
+
+    // Add the zone if it doesn't exist
+    if (!zoneExists) {
+      neighbourhood.zones.push({ zoneId, zoneLabel });
+    }
+  });
+
+  // Convert the neighbourhoodMap to an array
+  return { neighbourhoods: Object.values(neighbourhoodMap) };
+};
 
 const hardCodedLots: LotInterface[] = [
   // Neighbourhood: El Canton, Zone: 1
@@ -308,4 +355,5 @@ export default {
   getMyWorgroups,
   getMyUser,
   getUsersFromAllMyWorkgroups,
+  getNeighbourhoodZoneData,
 };

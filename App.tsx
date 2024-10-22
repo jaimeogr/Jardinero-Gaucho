@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';

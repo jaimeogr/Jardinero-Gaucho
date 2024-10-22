@@ -11,6 +11,8 @@ import {
   ZoneInterface,
   NeighbourhoodInterface,
   NestedLotsWithIndicators,
+  NeighbourhoodData,
+  ZoneData,
 } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 import { userHasPermission } from '../utils/permissionUtils';
@@ -20,13 +22,63 @@ const { updateLotLastMowingDate } = useLotStore.getState();
 
 const { currentUser } = useUserStore.getState();
 
-const initializeLots = () => {
+const initializeStore = () => {
   const lots = BackendService.getMyLots();
+  const neighbourhoodsAndZones = BackendService.getNeighbourhoodZoneData();
   useLotStore.getState().initializeLots(lots);
+  useLotStore
+    .getState()
+    .initializeNeighbourhoodsAndZones(neighbourhoodsAndZones);
 };
 
-const createLot = (newLot: LotInterface) => {
-  useLotStore.getState().addLot(newLot);
+const createLot = (workgroupId: string, newLot: Partial<LotInterface>) => {
+  if (!newLot.lotLabel || !newLot.zoneId || !newLot.neighbourhoodId) {
+    throw new Error('Missing required fields in new lot');
+  }
+
+  const lot: LotInterface = {
+    ...newLot,
+    lotId: uuidv4(),
+    workgroupId: workgroupId,
+  };
+
+  useLotStore.getState().addLot(lot);
+};
+
+const addNeighbourhood = (
+  workgroupId: string,
+  neighbourhoodLabel: string,
+): NeighbourhoodData => {
+  const newNeighbourhood: NeighbourhoodData = {
+    workgroupId: workgroupId,
+    neighbourhoodId: uuidv4(),
+    neighbourhoodLabel: neighbourhoodLabel,
+    zones: [],
+  };
+  return useLotStore.getState().addNeighbourhood(newNeighbourhood);
+};
+
+const addZoneToNeighbourhood = (
+  neighbourhoodId: string,
+  zoneLabel: string,
+): ZoneData => {
+  const zone: ZoneData = {
+    zoneId: uuidv4(),
+    zoneLabel: zoneLabel,
+  };
+  return useLotStore.getState().addZoneToNeighbourhood(neighbourhoodId, zone);
+};
+
+const useNeighbourhoodsAndZones = (workgroupId: string) => {
+  const neighbourhoodZoneData = useLotStore(
+    (state) => state.neighbourhoodZoneData,
+  );
+  return React.useMemo(() => {
+    const filteredNeighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
+      (n) => n.workgroupId === workgroupId,
+    );
+    return { neighbourhoods: filteredNeighbourhoods };
+  }, [neighbourhoodZoneData, workgroupId]);
 };
 
 const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
@@ -211,9 +263,12 @@ export const useNestedLots = (): NestedLotsWithIndicators => {
 };
 
 export default {
-  initializeLots,
+  initializeStore,
   createLot,
-  useNestedLots,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
+  useNestedLots,
+  useNeighbourhoodsAndZones,
+  addZoneToNeighbourhood,
+  addNeighbourhood,
 };

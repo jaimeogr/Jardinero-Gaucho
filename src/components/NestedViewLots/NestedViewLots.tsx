@@ -5,12 +5,12 @@ import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import ControllerService from '../../services/useControllerService';
+import useControllerService from '../../services/useControllerService';
 import { useNestedLots } from '../../services/useLotService';
 import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
 
-const { markSelectedLotsCompletedForSpecificDate } = ControllerService;
+const { markSelectedLotsCompletedForSpecificDate } = useControllerService;
 
 const upperIndicatorsAndButtonsColor = theme.colors.primary;
 
@@ -113,8 +113,6 @@ const NestedViewLots = () => {
                 {zone.lots.map((lot, lotIndex) => (
                   <OneLotForCustomAccordion
                     key={lotIndex}
-                    title={`Lote ${lot.lotLabel}`}
-                    description={`Ultima pasada: ${lot.lastMowingDate.toDateString()}`}
                     lotId={lot.lotId}
                     isLastItem={lotIndex === zone.lots.length - 1}
                   />

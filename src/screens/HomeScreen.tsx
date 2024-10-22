@@ -6,34 +6,9 @@ import { Surface } from 'react-native-paper';
 
 import ClickableRoundButton from '../components/ClickableRoundButton';
 import TodaysLots from '../components/TodaysLots';
-import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 
-const { createLot } = ControllerService;
-
 const HomeScreen = ({ navigation }) => {
-  const handleCreateLot = () => {
-    const newLot = {
-      lotId: 'bafb7a5c-8a25-4e79-8df2-124153c34390',
-      lotLabel: '58 - nuevo lote',
-      zoneId: '9e373c57-26a3-42ab-97a0-4235c6baf39f',
-      zoneLabel: '1',
-      neighbourhoodId: '33f8e2a5-f56e-4bfc-94b4-12e1a6cf8b24',
-      neighbourhoodLabel: 'El Naudir',
-      lastMowingDate: new Date('2024-10-19'),
-      lotIsSelected: false,
-      assignedTo: [],
-      workgroupId: '1',
-    };
-
-    const success = createLot(newLot);
-    if (success) {
-      console.log('created a new lot.');
-    } else {
-      console.error('Failuer: no lot was created.');
-    }
-  };
-
   return (
     <LinearGradient
       colors={[theme.colors.background, theme.colors.background2]} // Define the gradient colors
@@ -56,7 +31,7 @@ const HomeScreen = ({ navigation }) => {
           <ClickableRoundButton
             title="Nuevo Lote"
             iconName="home-plus"
-            onPress={handleCreateLot}
+            onPress={() => navigation.navigate('LotCreation')}
           />
         </Surface>
         <TodaysLots />

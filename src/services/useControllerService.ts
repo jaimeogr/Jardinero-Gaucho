@@ -1,12 +1,17 @@
+import {
+  NeighbourhoodData,
+  UserRole,
+  LotInterface,
+  ZoneData,
+} from './../types/types';
 import useLotService from './useLotService';
 import useUserService from './useUserService';
 import useWorkgroupService from './useWorkgroupService';
 import BackendService from '../backend/BackendService';
-import { UserRole, LotInterface } from '../types/types';
 import { userHasPermission } from '../utils/permissionUtils';
 
 const initializeServices = () => {
-  useLotService.initializeLots();
+  useLotService.initializeStore();
   useUserService.initializeUsers();
   useWorkgroupService.initializeWorkgroups();
 };
@@ -19,9 +24,36 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
   return useLotService.markSelectedLotsCompletedForSpecificDate(date);
 };
 
-const createLot = (lot: LotInterface) => {
-  useLotService.createLot(lot);
+const createLot = (lot: Partial<LotInterface>) => {
+  const workgroupId = getActiveWorkgroup()?.workgroupId;
+  useLotService.createLot(workgroupId, lot);
   return true;
+};
+
+const addNeighbourhood = (neighbourhoodLabel: string): NeighbourhoodData => {
+  const activeWorkgroup = getActiveWorkgroup()?.workgroupId;
+  return useLotService.addNeighbourhood(activeWorkgroup, neighbourhoodLabel);
+};
+
+const addZoneToNeighbourhood = (
+  neighbourhoodId: string,
+  zoneLabel: string,
+): ZoneData => {
+  return useLotService.addZoneToNeighbourhood(neighbourhoodId, zoneLabel);
+};
+
+const getNeighbourhoodsAndZones = () => {
+  const activeWorkgroup = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroup) {
+    console.error('No active workgroup found.');
+    return { neighbourhoods: [] };
+  }
+  return useLotService.useNeighbourhoodsAndZones(activeWorkgroup);
+};
+
+const getActiveWorkgroup = () => {
+  const activeWorkgroup = useWorkgroupService.getOrSetActiveWorkgroup();
+  return activeWorkgroup;
 };
 
 const useCheckUserHasPermission = (requiredRole: UserRole) => {
@@ -44,4 +76,7 @@ export default {
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
   useCheckUserHasPermission,
+  getNeighbourhoodsAndZones,
+  addZoneToNeighbourhood,
+  addNeighbourhood,
 };

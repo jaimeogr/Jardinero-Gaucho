@@ -47,6 +47,23 @@ export interface NestedLotsWithIndicators {
   selectedLots: number;
 }
 
+// useful for selectors/pickers in LotCreationScreen and maybe useful for other places too
+export interface ZoneData {
+  zoneId: string;
+  zoneLabel: string;
+}
+
+export interface NeighbourhoodData {
+  workgroupId: string;
+  neighbourhoodId: string;
+  neighbourhoodLabel: string;
+  zones: ZoneData[];
+}
+
+export interface NeighbourhoodZoneData {
+  neighbourhoods: NeighbourhoodData[];
+}
+
 export interface GroupOfUsersInterface {
   users: UserInterface[];
 }

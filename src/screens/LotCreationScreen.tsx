@@ -570,14 +570,14 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     backgroundColor: theme.colors.primary,
-    height: '100%',
+    height: 45,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 8,
     borderBottomRightRadius: 8,
     borderTopRightRadius: 8,
     paddingHorizontal: 14,
-    marginRight: 0,
+    marginRight: -1,
   },
   trashIcon: {
     marginLeft: 12,

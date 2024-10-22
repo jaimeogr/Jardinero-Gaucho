@@ -17,7 +17,7 @@
     "clean-1": "emulator -avd Medium_Phone_API_35 -no-snapshot-load"
   },
   "dependencies": {
-    "@react-native-community/datetimepicker": "^8.0.1",
+    "@react-native-community/datetimepicker": "8.0.1",
     "@react-native-picker/picker": "^2.7.5",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",

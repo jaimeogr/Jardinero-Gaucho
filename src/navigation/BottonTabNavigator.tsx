@@ -6,6 +6,7 @@ import { TouchableRipple } from 'react-native-paper';
 
 // Import your screen components or stack navigators
 import HomeStackNavigator from './HomeStackNavigator';
+import TeamStackNavigator from './TeamStackNavigator';
 import MoneyManagementScreen from '../screens/MoneyManagementScreen';
 import MyTeamScreen from '../screens/MyTeamScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -62,7 +63,7 @@ const BottomTabNavigator = () => {
     >
       <Tab.Screen name="Lotes" component={HomeStackNavigator} />
       <Tab.Screen name="Plata" component={MoneyManagementScreen} />
-      <Tab.Screen name="Mi Equipo" component={MyTeamScreen} />
+      <Tab.Screen name="Mi Equipo" component={TeamStackNavigator} />
       <Tab.Screen name="Configuración" component={SettingsScreen} />
     </Tab.Navigator>
   );

@@ -295,19 +295,22 @@ const hardCodedWorkgroups: WorkgroupInterface[] = [
   {
     workgroupId: '1',
     name: 'Workgroup 1',
-    primaryOwnerId: '1',
-    ownerIds: [],
-    managerIds: [],
-    memberIds: [],
   },
 ];
 
 const currentUser: UserInterface = {
-  userId: '1',
-  firstName: 'jefe',
-  lastName: 'jefe',
-  email: 'jardineria@gmail.com',
-  workgroupRoles: { '1': 'PrimaryOwner', '2': 'PrimaryOwner' },
+  userId: 'user-1',
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'john.doe@example.com',
+  workgroupAssignments: [
+    {
+      workgroupId: '1',
+      role: 'PrimaryOwner',
+      accessToAllLots: true,
+      hasAcceptedPresenceInWorkgroup: true,
+    },
+  ],
 };
 
 const usersFromAllMyWorkgroups: UserInterface[] = [
@@ -316,21 +319,42 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
     firstName: 'jefe',
     lastName: 'jefe',
     email: 'cajardineria@gmail.com',
-    workgroupRoles: { '1': 'PrimaryOwner', '2': 'PrimaryOwner' },
+    workgroupAssignments: [
+      {
+        workgroupId: '1',
+        role: 'Owner',
+        accessToAllLots: true,
+        hasAcceptedPresenceInWorkgroup: true,
+      },
+    ],
   },
   {
     userId: '2',
     firstName: 'pedro',
     lastName: 'Abigail',
     email: 'pabigail@gmail.com',
-    workgroupRoles: { '1': 'Member', '2': 'Member' },
+    workgroupAssignments: [
+      {
+        workgroupId: '1',
+        role: 'Member',
+        accessToAllLots: true,
+        hasAcceptedPresenceInWorkgroup: true,
+      },
+    ],
   },
   {
     userId: '3',
     firstName: 'dibu',
     lastName: 'martinez',
     email: 'dibumartinez@gmail.com',
-    workgroupRoles: { '1': 'Member', '2': 'Member' },
+    workgroupAssignments: [
+      {
+        workgroupId: '1',
+        role: 'Manager',
+        accessToAllLots: true,
+        hasAcceptedPresenceInWorkgroup: true,
+      },
+    ],
   },
 ];
 

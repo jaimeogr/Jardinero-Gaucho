@@ -70,21 +70,24 @@ export interface GroupOfUsersInterface {
 
 export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
 
+export interface WorkgroupAssignment {
+  workgroupId: string;
+  role: UserRole;
+  accessToAllLots: boolean;
+  hasAcceptedPresenceInWorkgroup: boolean;
+}
+
 export interface UserInterface {
   userId: string;
   firstName: string;
   lastName: string;
   email: string;
-  workgroupRoles: { [workgroupId: string]: UserRole };
+  workgroupAssignments: WorkgroupAssignment[];
 }
 
 export interface WorkgroupInterface {
   workgroupId: string;
   name: string;
-  primaryOwnerId: string; // User ID of the primary owner
-  ownerIds: string[]; // User IDs who are secondary owners
-  managerIds: string[]; // User IDs who are managers
-  memberIds: string[]; // User IDs who are members
 }
 
 export interface TaskInterface {

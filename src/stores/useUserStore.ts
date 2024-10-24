@@ -1,3 +1,5 @@
+// src/stores/useUserStore.ts
+
 import { create } from 'zustand';
 
 import { UserInterface } from '../types/types';
@@ -5,7 +7,6 @@ import { UserInterface } from '../types/types';
 interface UserStoreState {
   users: UserInterface[];
   initializeUsers: (users: UserInterface[]) => void;
-  setUsers: (users: UserInterface[]) => void;
   getUserById: (id: string) => UserInterface | undefined;
   addUser: (user: UserInterface) => void;
   updateUser: (id: string, updatedInfo: Partial<UserInterface>) => void;
@@ -19,9 +20,6 @@ const useUserStore = create<UserStoreState>((set, get) => ({
   currentUser: null,
 
   initializeUsers: (users: UserInterface[]) => {
-    set({ users });
-  },
-  setUsers: (users: UserInterface[]) => {
     set({ users });
   },
   getUserById: (id: string) => {

@@ -1,4 +1,4 @@
-// UserService.ts
+// useUserService.ts
 import BackendService from '../backend/BackendService';
 import useUserStore from '../stores/useUserStore';
 import { UserInterface } from '../types/types';
@@ -18,7 +18,27 @@ const useGetCurrentUser = () => {
   return currentUser;
 };
 
+const getUserById = (userId: string): UserInterface | undefined => {
+  return useUserStore.getState().getUserById(userId);
+};
+
+const getAllUsers = (): UserInterface[] => {
+  return useUserStore.getState().users;
+};
+
+const addUser = (user: UserInterface) => {
+  useUserStore.getState().addUser(user);
+};
+
+const updateUser = (userId: string, updatedInfo: Partial<UserInterface>) => {
+  useUserStore.getState().updateUser(userId, updatedInfo);
+};
+
 export default {
   initializeUsers,
   useGetCurrentUser,
+  getUserById,
+  getAllUsers,
+  addUser,
+  updateUser,
 };

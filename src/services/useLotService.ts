@@ -8,9 +8,9 @@ import useWorkgroupStore from '../stores/useWorkgroupStore';
 import {
   LotInterface,
   LotWithNeedMowingInterface,
-  ZoneInterface,
-  NeighbourhoodInterface,
-  NestedLotsWithIndicators,
+  ZoneWithIndicatorsInterface,
+  NeighbourhoodWithIndicatorsInterface,
+  NestedLotsWithIndicatorsInterface,
   NeighbourhoodData,
   ZoneData,
 } from '../types/types';
@@ -43,6 +43,14 @@ const createLot = (workgroupId: string, newLot: Partial<LotInterface>) => {
   };
 
   useLotStore.getState().addLot(lot);
+};
+
+const getLotById = (lotId: string): LotInterface => {
+  const lot = useLotStore.getState().lots.find((lot) => lot.lotId === lotId);
+  if (!lot) {
+    throw new Error('Lot not found');
+  }
+  return lot;
 };
 
 const addNeighbourhood = (
@@ -145,11 +153,11 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
 //   syncLotWithDatabase(lotId, { assignedTo: [newUserId] });
 // };
 
-export const useNestedLots = (): NestedLotsWithIndicators => {
+export const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
   const lots = useLotStore((state) => state.lots);
 
-  return React.useMemo<NestedLotsWithIndicators>(() => {
-    const result: NestedLotsWithIndicators = {
+  return React.useMemo<NestedLotsWithIndicatorsInterface>(() => {
+    const result: NestedLotsWithIndicatorsInterface = {
       nestedLots: [],
       selectedLots: 0,
     };
@@ -183,7 +191,7 @@ export const useNestedLots = (): NestedLotsWithIndicators => {
       let neighbourhoodSelectedLotsCounter = 0;
       let neighbourhoodAllLotsCounter = 0;
 
-      const zones: ZoneInterface[] = [];
+      const zones: ZoneWithIndicatorsInterface[] = [];
 
       // Iterate over each zone within the neighbourhood
       for (const zone in lotsByNeighbourhoodAndZone[neighbourhood]) {
@@ -229,7 +237,7 @@ export const useNestedLots = (): NestedLotsWithIndicators => {
         // Update neighbourhood counters for selected lots
         neighbourhoodSelectedLotsCounter += zoneSelectedLotsCounter;
 
-        const zoneOption: ZoneInterface = {
+        const zoneOption: ZoneWithIndicatorsInterface = {
           zoneId: zone,
           zoneLabel: zoneLabel,
           needMowing: zoneNeedMowing,
@@ -242,7 +250,7 @@ export const useNestedLots = (): NestedLotsWithIndicators => {
         zones.push(zoneOption);
       }
 
-      const neighbourhoodOption: NeighbourhoodInterface = {
+      const neighbourhoodOption: NeighbourhoodWithIndicatorsInterface = {
         neighbourhoodId: neighbourhood,
         neighbourhoodLabel: neighbourhoodLabel,
         needMowing: neighbourhoodNeedMowing,
@@ -262,8 +270,42 @@ export const useNestedLots = (): NestedLotsWithIndicators => {
   }, [lots]);
 };
 
+const toggleLotSelection = (lotId: string, newState: boolean) => {
+  useLotStore.getState().toggleLotSelection(lotId, newState);
+};
+
+const toggleZoneSelection = (zoneId: string, newState: boolean) => {
+  useLotStore.getState().toggleZoneSelection(zoneId, newState);
+};
+
+const toggleNeighbourhoodSelection = (
+  neighbourhoodId: string,
+  newState: boolean,
+) => {
+  useLotStore
+    .getState()
+    .toggleNeighbourhoodSelection(neighbourhoodId, newState);
+};
+
+const deselectAllLots = () => {
+  useLotStore.getState().deselectAllLots();
+};
+
+const assignMembersToSelection = (userIds: string[]) => {
+  const { lots, zones, neighbourhoods, updateLot } = useLotStore.getState();
+
+  // Filter selected lots
+  const selectedLots = lots.filter((lot) => lot.lotIsSelected);
+
+  selectedLots.forEach((lot) => {
+    const updatedAssignedTo = userIds;
+    updateLot(lot.lotId, { assignedTo: updatedAssignedTo });
+  });
+};
+
 export default {
   initializeStore,
+  getLotById,
   createLot,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
@@ -271,4 +313,9 @@ export default {
   useNeighbourhoodsAndZones,
   addZoneToNeighbourhood,
   addNeighbourhood,
+  toggleLotSelection,
+  toggleZoneSelection,
+  toggleNeighbourhoodSelection,
+  deselectAllLots,
+  assignMembersToSelection,
 };

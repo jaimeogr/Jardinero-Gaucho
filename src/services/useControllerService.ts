@@ -21,6 +21,10 @@ const initializeServices = () => {
   useWorkgroupService.initializeWorkgroups();
 };
 
+const getLotById = (lotId: string) => {
+  return useLotService.getLotById(lotId);
+};
+
 const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
   useLotService.markLotCompletedForSpecificDate(lotId, date);
 };
@@ -187,8 +191,24 @@ const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
   return usersInWorkgroup;
 };
 
+const toggleLotSelection = (lotId: string, newState: boolean) => {
+  useLotService.toggleLotSelection(lotId, newState);
+};
+
+const toggleZoneSelection = (zoneId: string, newState: boolean) => {};
+
+const toggleNeighbourhoodSelection = (
+  neighbourhoodId: string,
+  newState: boolean,
+) => {};
+
+const deselectAllLots = () => {
+  useLotService.deselectAllLots();
+};
+
 export default {
   initializeServices,
+  getLotById,
   createLot,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
@@ -200,4 +220,8 @@ export default {
   updateUserRoleInActiveWorkgroup,
   updateUserAccessToAllLots,
   getUsersInActiveWorkgroupWithRoles,
+  toggleLotSelection,
+  toggleZoneSelection,
+  toggleNeighbourhoodSelection,
+  deselectAllLots,
 };

@@ -7,21 +7,19 @@ import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
 import useControllerService from '../../services/useControllerService';
 import { useNestedLots } from '../../services/useLotService';
-import useLotStore from '../../stores/useLotStore';
 import { theme } from '../../styles/styles';
-
-const { markSelectedLotsCompletedForSpecificDate } = useControllerService;
 
 const upperIndicatorsAndButtonsColor = theme.colors.primary;
 
 const NestedViewLots = () => {
+  const { markSelectedLotsCompletedForSpecificDate, deselectAllLots } =
+    useControllerService;
+
   const { nestedLots, selectedLots } = useNestedLots();
 
-  const deselectLots = useLotStore((state) => state.deselectAllLots);
-
   const handleDeselectLots = useCallback(() => {
-    deselectLots(/* pass the necessary lotId here */);
-  }, [deselectLots]);
+    deselectAllLots();
+  }, [deselectAllLots]);
 
   const handleMarkLotsCompleted = () => {
     const success = markSelectedLotsCompletedForSpecificDate();

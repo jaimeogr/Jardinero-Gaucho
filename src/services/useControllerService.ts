@@ -162,6 +162,7 @@ const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
   role: UserRole;
   accessToAllLots: boolean;
   hasAcceptedPresenceInWorkgroup: boolean;
+  assignedLotsCount: number;
 })[] => {
   const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
   if (!activeWorkgroupId) return [];
@@ -173,12 +174,18 @@ const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
         (wa) => wa.workgroupId === activeWorkgroupId,
       );
       if (assignment) {
+        const assignedLotsCount =
+          useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
+            activeWorkgroupId,
+            user.userId,
+          );
         return {
           ...user,
           role: assignment.role,
           accessToAllLots: assignment.accessToAllLots,
           hasAcceptedPresenceInWorkgroup:
             assignment.hasAcceptedPresenceInWorkgroup,
+          assignedLotsCount: assignedLotsCount,
         };
       }
       return null;
@@ -187,6 +194,7 @@ const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
     role: UserRole;
     accessToAllLots: boolean;
     hasAcceptedPresenceInWorkgroup: boolean;
+    assignedLotsCount: number;
   })[];
 
   return usersInWorkgroup;

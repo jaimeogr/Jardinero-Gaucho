@@ -13,6 +13,7 @@ import {
   NestedLotsWithIndicatorsInterface,
   NeighbourhoodData,
   ZoneData,
+  WorkgroupAssignment,
 } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 import { userHasPermission } from '../utils/permissionUtils';
@@ -303,6 +304,17 @@ const assignMembersToSelection = (userIds: string[]) => {
   });
 };
 
+const getNumberOfAssignedLotsForUserInSpecificWorkgroup = (
+  WorkgroupId: string,
+  userId: string,
+): number => {
+  const { lots } = useLotStore.getState();
+  const assignedLots = lots.filter(
+    (lot) => lot.workgroupId === WorkgroupId && lot.assignedTo.includes(userId),
+  );
+  return assignedLots.length;
+};
+
 export default {
   initializeStore,
   getLotById,
@@ -318,4 +330,5 @@ export default {
   toggleNeighbourhoodSelection,
   deselectAllLots,
   assignMembersToSelection,
+  getNumberOfAssignedLotsForUserInSpecificWorkgroup,
 };

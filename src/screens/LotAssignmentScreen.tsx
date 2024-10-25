@@ -18,10 +18,7 @@ import CustomAccordion from '../components/NestedViewLots/CustomAccordion';
 import OneLotForCustomAccordion from '../components/NestedViewLots/OneLotForCustomAccordion';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import {
-  NestedLotsWithIndicatorsInterface,
-  UserInterface,
-} from '../types/types';
+import { NestedLotsWithIndicators, UserInterface } from '../types/types';
 
 type RootStackParamList = {
   LotAssignment: undefined;

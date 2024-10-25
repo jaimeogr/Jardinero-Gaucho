@@ -54,6 +54,7 @@ export interface ZoneData {
   zoneId: string;
   zoneLabel: string;
   isSelected: boolean;
+  assignedTo: string[]; // Users assigned
 }
 
 export interface NeighbourhoodData {
@@ -62,6 +63,7 @@ export interface NeighbourhoodData {
   neighbourhoodLabel: string;
   zones: ZoneData[];
   isSelected: boolean;
+  assignedTo: string[]; // Users assigned
 }
 
 export interface NeighbourhoodZoneData {

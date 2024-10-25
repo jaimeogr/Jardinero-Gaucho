@@ -41,6 +41,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
         role: UserRole;
         accessToAllLots: boolean;
         hasAcceptedPresenceInWorkgroup: boolean;
+        assignedLotsCount: number;
       }
     >
   >([]);
@@ -50,6 +51,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
     const fetchUsers = () => {
       const usersWithRoles =
         ControllerService.getUsersInActiveWorkgroupWithRoles();
+
       setUsers(usersWithRoles);
     };
 

@@ -186,6 +186,7 @@ const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
     .filter((user) => user !== null) as (UserInterface & {
     role: UserRole;
     accessToAllLots: boolean;
+    hasAcceptedPresenceInWorkgroup: boolean;
   })[];
 
   return usersInWorkgroup;

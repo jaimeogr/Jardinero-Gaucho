@@ -282,6 +282,7 @@ const toggleNeighbourhoodSelection = (
   neighbourhoodId: string,
   newState: boolean,
 ) => {
+  console.log('toggleNeighbourhoodSelection', neighbourhoodId, newState);
   useLotStore
     .getState()
     .toggleNeighbourhoodSelection(neighbourhoodId, newState);

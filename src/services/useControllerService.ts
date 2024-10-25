@@ -195,12 +195,16 @@ const toggleLotSelection = (lotId: string, newState: boolean) => {
   useLotService.toggleLotSelection(lotId, newState);
 };
 
-const toggleZoneSelection = (zoneId: string, newState: boolean) => {};
+const toggleZoneSelection = (zoneId: string, newState: boolean) => {
+  useLotService.toggleZoneSelection(zoneId, newState);
+};
 
 const toggleNeighbourhoodSelection = (
   neighbourhoodId: string,
   newState: boolean,
-) => {};
+) => {
+  useLotService.toggleNeighbourhoodSelection(neighbourhoodId, newState);
+};
 
 const deselectAllLots = () => {
   useLotService.deselectAllLots();

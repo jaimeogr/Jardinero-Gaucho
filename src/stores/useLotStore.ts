@@ -119,6 +119,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
     neighbourhoodId: string,
     newState: boolean,
   ) => {
+    console.log('toggleNeighbourhoodSelection', neighbourhoodId, newState);
     const { neighbourhoodZoneData } = get();
 
     const neighbourhood = neighbourhoodZoneData.neighbourhoods.find(

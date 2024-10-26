@@ -14,6 +14,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Surface } from 'react-native-paper';
+import RNPickerSelect from 'react-native-picker-select';
 
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
@@ -93,8 +94,8 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Invitar Nuevo Integrante</Text>
-
+      {/* Email Input */}
+      <Text style={styles.inputTitle}>Email</Text>
       <TextInput
         style={styles.input}
         placeholder="Ingresá el email del integrante"
@@ -103,6 +104,21 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       />
 
       {/* Role Picker */}
+      <Text style={styles.inputTitle}>Rol</Text>
+      <View style={styles.pickerContainer}>
+        <RNPickerSelect
+          onValueChange={setSelectedRole}
+          items={[
+            { label: 'Jardinero', value: 'Jardinero' },
+            { label: 'Administrador', value: 'Administrador' },
+            { label: 'Socio', value: 'Socio' },
+          ]}
+          value={selectedRole}
+          style={pickerSelectStyles}
+          useNativeAndroidPickerStyle={false}
+        />
+      </View>
+
       <TouchableOpacity
         style={styles.picker}
         onPress={() => setModalVisible(true)}
@@ -116,6 +132,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Access to All Lots Picker */}
+      <Text style={styles.inputTitle}>Acceso a lotes</Text>
       <View style={styles.picker}>
         <Text style={styles.pickerText}>Acceso a todos los lotes</Text>
         <TouchableOpacity onPress={() => setAccessToAllLots(!accessToAllLots)}>
@@ -159,18 +176,24 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#f5f5f5',
   },
-  title: {
-    fontSize: 24,
+  inputTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 8,
+    borderColor: theme.colors.primary,
+    borderRadius: 10,
     padding: 12,
     marginBottom: 16,
     fontSize: 16,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    borderRadius: 10,
+    marginBottom: 16,
   },
   picker: {
     flexDirection: 'row',
@@ -218,6 +241,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 8,
     color: 'gray',
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    color: 'black',
+    paddingRight: 30,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    color: 'black',
+    paddingRight: 30,
   },
 });
 

@@ -85,6 +85,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
       </View>
 
       <FlatList
+        contentContainerStyle={styles.usersList}
         data={users}
         keyExtractor={(item) => item.userId}
         renderItem={({ item }) => {
@@ -198,6 +199,10 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  usersList: {
+    paddingTop: 16,
+    paddingBottom: 60,
+  },
   userItem: {
     margin: 14,
     marginBottom: 6,
@@ -265,7 +270,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: 30,
+    height: 40,
     marginRight: 4,
   },
 });

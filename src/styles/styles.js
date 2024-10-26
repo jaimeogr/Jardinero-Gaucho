@@ -39,8 +39,8 @@ export const theme = {
     },
 
     roles: {
-      PrimaryOwner: '#D32F2F', // Red
-      Owner: '#F57C00', // Orange
+      PrimaryOwner: 'purple', // Red
+      Owner: 'purple', // Orange
       Manager: '#1976D2', // Blue
       Member: '#388E3C', // Green
     },

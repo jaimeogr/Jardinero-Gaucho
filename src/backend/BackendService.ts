@@ -350,7 +350,63 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
     workgroupAssignments: [
       {
         workgroupId: '1',
+        role: 'Owner',
+        accessToAllLots: true,
+        hasAcceptedPresenceInWorkgroup: true,
+      },
+    ],
+  },
+  {
+    userId: '4',
+    firstName: 'di',
+    lastName: 'bu',
+    email: 'dibu@gmail.com',
+    workgroupAssignments: [
+      {
+        workgroupId: '1',
+        role: 'PrimaryOwner',
+        accessToAllLots: true,
+        hasAcceptedPresenceInWorkgroup: true,
+      },
+    ],
+  },
+  {
+    userId: '5',
+    firstName: 'pablo',
+    lastName: 'diaz',
+    email: 'pablotski@gmail.com',
+    workgroupAssignments: [
+      {
+        workgroupId: '1',
         role: 'Manager',
+        accessToAllLots: true,
+        hasAcceptedPresenceInWorkgroup: true,
+      },
+    ],
+  },
+  {
+    userId: '6',
+    firstName: 'Juan',
+    lastName: 'Nomiente',
+    email: 'juansimiente@gmail.com',
+    workgroupAssignments: [
+      {
+        workgroupId: '1',
+        role: 'Member',
+        accessToAllLots: true,
+        hasAcceptedPresenceInWorkgroup: true,
+      },
+    ],
+  },
+  {
+    userId: '7',
+    firstName: 'torta',
+    lastName: 'frita',
+    email: 'tortafrita@gmail.com',
+    workgroupAssignments: [
+      {
+        workgroupId: '1',
+        role: 'Member',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
       },

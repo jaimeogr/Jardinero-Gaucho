@@ -164,6 +164,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 12,
     width: '100%',
+    // Shadow for iOS
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+
+    // Elevation for Android
+    elevation: 3,
   },
   title: {
     fontSize: 28,

@@ -105,20 +105,6 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
 
       {/* Role Picker */}
       <Text style={styles.inputTitle}>Rol</Text>
-      <View style={styles.pickerContainer}>
-        <RNPickerSelect
-          onValueChange={setSelectedRole}
-          items={[
-            { label: 'Jardinero', value: 'Jardinero' },
-            { label: 'Administrador', value: 'Administrador' },
-            { label: 'Socio', value: 'Socio' },
-          ]}
-          value={selectedRole}
-          style={pickerSelectStyles}
-          useNativeAndroidPickerStyle={false}
-        />
-      </View>
-
       <TouchableOpacity
         style={styles.picker}
         onPress={() => setModalVisible(true)}
@@ -128,7 +114,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
             ? roles.find((r) => r.role === selectedRole)?.title
             : 'Seleccionar Rol'}
         </Text>
-        <Icon name="chevron-down" size={24} color="gray" />
+        <Icon name="chevron-down" size={24} color={theme.colors.primary} />
       </TouchableOpacity>
 
       {/* Access to All Lots Picker */}
@@ -191,7 +177,6 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: theme.colors.primary,
     borderRadius: 10,
     marginBottom: 16,
   },
@@ -200,8 +185,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 8,
+    borderColor: theme.colors.primary,
+    borderRadius: 10,
     padding: 12,
     marginBottom: 16,
   },

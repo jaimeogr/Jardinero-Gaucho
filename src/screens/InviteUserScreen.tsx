@@ -33,7 +33,7 @@ interface Props {
 const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<UserRole>('Member');
-  const [accessToAllLots, setAccessToAllLots] = useState<boolean>(false);
+  const [accessToAllLots, setAccessToAllLots] = useState<boolean>(true);
 
   const handleInviteUser = () => {
     if (!inviteEmail) {
@@ -67,9 +67,9 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
         <RNPickerSelect
           onValueChange={(value) => setInviteRole(value)}
           items={[
-            { label: 'Owner', value: 'Owner' },
-            { label: 'Manager', value: 'Manager' },
-            { label: 'Member', value: 'Member' },
+            { label: 'Socio', value: 'Owner' },
+            { label: 'Administrador', value: 'Manager' },
+            { label: 'Jardinero', value: 'Member' },
           ]}
           value={inviteRole}
           style={pickerSelectStyles}

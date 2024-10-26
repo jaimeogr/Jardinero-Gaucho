@@ -13,11 +13,10 @@ import {
   Alert,
 } from 'react-native';
 import { Surface, Chip } from 'react-native-paper';
-import RNPickerSelect from 'react-native-picker-select';
 
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { UserInterface, UserRole, LotInterface } from '../types/types';
+import { UserInterface, UserRole } from '../types/types';
 
 type RootStackParamList = {
   MyTeam: undefined;
@@ -56,75 +55,38 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
     };
 
     fetchUsers();
-    // Optionally, set up a subscription to data changes here
   }, []);
 
-  const handleRoleChange = (userId: string, newRole: UserRole) => {
-    if (newRole === 'PrimaryOwner') {
-      Alert.alert(
-        'No se puede asignar rol de Propietario Principal',
-        'Sólo se permite un Propietario Principal.',
-      );
-      return;
-    }
-    const success = ControllerService.updateUserRoleInActiveWorkgroup(
-      userId,
-      newRole,
-    );
-    if (success) {
-      // Update the users list
-      const updatedUsers = users.map((user) => {
-        if (user.userId === userId) {
-          return { ...user, role: newRole };
-        }
-        return user;
-      });
-      setUsers(updatedUsers);
-    }
-  };
-
-  const handleAccessToAllLotsChange = (userId: string, access: boolean) => {
-    ControllerService.updateUserAccessToAllLots(userId, access);
-    // Update the users list
-    const updatedUsers = users.map((user) => {
-      if (user.userId === userId) {
-        return { ...user, accessToAllLots: access };
-      }
-      return user;
-    });
-    setUsers(updatedUsers);
-  };
-
-  const handleRemoveUser = (userId: string) => {
-    Alert.alert(
-      'Eliminar integrante',
-      '¿Estás seguro de que deseas eliminar este integrante del equipo?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Eliminar',
-          style: 'destructive',
-          onPress: () => {
-            // Implement remove user logic
-            // For now, remove user from local state
-            const updatedUsers = users.filter((user) => user.userId !== userId);
-            setUsers(updatedUsers);
-          },
-        },
-      ],
-    );
-  };
+  // Count of integrantes
+  const integrantesCount = users.length;
 
   return (
     <View style={styles.container}>
+      {/* Title and Add Button */}
+      <View style={styles.header}>
+        <Text style={styles.title}>Mi Equipo</Text>
+        <View style={styles.headerRight}>
+          <Text style={styles.integrantesCount}>
+            Integrantes: {integrantesCount}
+          </Text>
+          <TouchableOpacity
+            style={styles.inviteButton}
+            onPress={() => navigation.navigate('InviteUser')}
+          >
+            <Text style={styles.inviteButtonText}>Agregar Integrante</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
       <FlatList
         data={users}
         keyExtractor={(item) => item.userId}
         renderItem={({ item }) => {
           const hasAcceptedPresenceInWorkgroup =
             !item.hasAcceptedPresenceInWorkgroup;
-          const accessToAllLots = item.accessToAllLots;
-          const assignedLotsText = accessToAllLots ? 'Todos' : 'Seleccionados';
+          const accessText = item.accessToAllLots
+            ? 'Todos los lotes'
+            : `${item.assignedLotsCount} lotes`;
 
           // Define colors for roles
           const roleColors = {
@@ -149,12 +111,17 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
                   ) : (
                     <>
                       <Text style={styles.userName}>
-                        {item.firstName} {item.lastName}
+                        {item.firstName.charAt(0).toUpperCase() +
+                          item.firstName.slice(1)}{' '}
+                        {item.lastName.charAt(0).toUpperCase() +
+                          item.lastName.slice(1)}
                       </Text>
                       <Text style={styles.userEmail}>{item.email}</Text>
                     </>
                   )}
                 </View>
+
+                {/* Role Chip - Top Right Corner */}
                 <Chip
                   mode="outlined"
                   style={[
@@ -168,51 +135,22 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
               </View>
 
               <View style={styles.userBody}>
-                <Text style={styles.assignedLotsText}>
-                  Lotes asignados: {assignedLotsText}
-                </Text>
-                {/* Switch or Picker for accessToAllLots */}
-                <View style={styles.switchContainer}>
-                  <Text style={styles.switchLabel}>
-                    Acceso a todos los lotes
-                  </Text>
-                  <RNPickerSelect
-                    onValueChange={(value) =>
-                      handleAccessToAllLotsChange(item.userId, value)
-                    }
-                    items={[
-                      { label: 'Sí', value: true },
-                      { label: 'No', value: false },
-                    ]}
-                    value={item.accessToAllLots}
-                    style={pickerSelectStyles}
-                    useNativeAndroidPickerStyle={false}
-                  />
-                </View>
+                <Text style={styles.accessText}>Acceso: {accessText}</Text>
               </View>
 
-              {/* Delete icon */}
-              {item.role !== 'PrimaryOwner' && (
-                <TouchableOpacity
-                  onPress={() => handleRemoveUser(item.userId)}
-                  style={styles.deleteButton}
-                >
-                  <Icon name="delete" size={24} color="red" />
-                </TouchableOpacity>
-              )}
+              {/* Edit Button - Bottom Right Corner */}
+              <TouchableOpacity
+                onPress={() => {
+                  /* Add edit function here */
+                }}
+                style={styles.editButton}
+              >
+                <Icon name="pencil" size={20} color={theme.colors.primary} />
+                <Text style={styles.editButtonText}>Editar</Text>
+              </TouchableOpacity>
             </Surface>
           );
         }}
-        ListHeaderComponent={
-          <View>
-            <TouchableOpacity
-              style={styles.inviteButton}
-              onPress={() => navigation.navigate('InviteUser')}
-            >
-              <Text style={styles.inviteButtonText}>Agregar Integrante</Text>
-            </TouchableOpacity>
-          </View>
-        }
       />
       {/* Gradient at the bottom */}
       <LinearGradient
@@ -239,11 +177,46 @@ const styles = StyleSheet.create({
     elevation: 10,
     marginRight: 4,
   },
+  header: {
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  headerRight: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  integrantesCount: {
+    fontSize: 18,
+    color: theme.colors.primary,
+    fontWeight: 'bold',
+  },
+  inviteButton: {
+    backgroundColor: theme.colors.primary,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 50,
+    alignItems: 'center',
+  },
+  inviteButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   userItem: {
-    marginBottom: 12,
+    marginBottom: 16,
     padding: 16,
     elevation: 2,
     borderRadius: 12,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
   },
   userHeader: {
     flexDirection: 'row',
@@ -253,79 +226,45 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userName: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   userWaitingText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: 'gray',
   },
   userEmail: {
-    fontSize: 14,
+    fontSize: 16,
     color: 'gray',
   },
   roleChip: {
     alignSelf: 'flex-start',
     borderRadius: 50,
+    marginTop: -8,
   },
   userBody: {
     marginTop: 12,
   },
-  assignedLotsText: {
-    fontSize: 14,
+  accessText: {
+    fontSize: 16,
     color: 'gray',
   },
-  switchContainer: {
-    marginTop: 12,
+  editButton: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  switchLabel: {
-    fontSize: 14,
-    marginRight: 8,
-  },
-  deleteButton: {
-    position: 'absolute',
-    right: 12,
-    top: 12,
-  },
-  inviteButton: {
-    backgroundColor: theme.colors.primary,
-    padding: 12,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    padding: 6,
     borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 16,
   },
-  inviteButtonText: {
-    color: '#fff',
+  editButtonText: {
     fontSize: 16,
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 14,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    color: 'black',
-    paddingRight: 30,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-  },
-  inputAndroid: {
-    fontSize: 14,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    color: 'black',
-    paddingRight: 30,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-  },
-  placeholder: {
-    color: '#aaa',
+    color: theme.colors.primary,
+    marginLeft: 4,
   },
 });
 

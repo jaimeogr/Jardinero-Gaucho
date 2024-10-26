@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   usersList: {
-    paddingTop: 16,
+    paddingTop: 8,
     paddingBottom: 60,
   },
   userItem: {

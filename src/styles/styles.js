@@ -37,5 +37,12 @@ export const theme = {
       lotBackgroundNotSelected: '#D9EEF3',
       lotBorderNotSelected: '#D9EEF3',
     },
+
+    roles: {
+      PrimaryOwner: '#D32F2F', // Red
+      Owner: '#F57C00', // Orange
+      Manager: '#1976D2', // Blue
+      Member: '#388E3C', // Green
+    },
   },
 };

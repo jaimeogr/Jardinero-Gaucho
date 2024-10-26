@@ -197,7 +197,13 @@ const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
     assignedLotsCount: number;
   })[];
 
-  return usersInWorkgroup;
+  // Sort by role priority: PrimaryOwner > Owner > Manager > Member
+  const usersSortedByRole = usersInWorkgroup.sort((a, b) => {
+    const rolePriority = { PrimaryOwner: 1, Owner: 2, Manager: 3, Member: 4 };
+    return rolePriority[a.role] - rolePriority[b.role];
+  });
+
+  return usersSortedByRole;
 };
 
 const toggleLotSelection = (lotId: string, newState: boolean) => {

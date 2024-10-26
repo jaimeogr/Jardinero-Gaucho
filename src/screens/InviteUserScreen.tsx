@@ -131,6 +131,14 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
           value={accessToAllLots}
           style={pickerSelectStyles}
           useNativeAndroidPickerStyle={false}
+          Icon={() => (
+            <Icon
+              name="chevron-down"
+              size={24}
+              color={theme.colors.primary} // Adjust icon color
+              style={{ marginRight: 12 }} // Adjust margin if needed
+            />
+          )}
         />
       </View>
 
@@ -179,7 +187,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.primary,
     borderRadius: 10,
-    padding: 12,
+    padding: 10,
     marginBottom: 16,
     fontSize: 16,
   },
@@ -244,7 +252,7 @@ const styles = StyleSheet.create({
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 10,
     color: 'black',
     paddingRight: 30,
@@ -252,9 +260,12 @@ const pickerSelectStyles = StyleSheet.create({
   inputAndroid: {
     fontSize: 16,
     paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingVertical: 10,
     color: 'black',
     paddingRight: 30,
+  },
+  iconContainer: {
+    top: 12, // Adjust the position
   },
 });
 

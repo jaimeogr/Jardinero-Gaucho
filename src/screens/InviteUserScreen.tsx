@@ -121,11 +121,17 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
 
       {/* Access to All Lots Picker */}
       <Text style={styles.inputTitle}>Acceso a lotes</Text>
-      <View style={styles.picker}>
-        <Text style={styles.pickerText}>Acceso a todos los lotes</Text>
-        <TouchableOpacity onPress={() => setAccessToAllLots(!accessToAllLots)}>
-          <Text style={styles.pickerText}>{accessToAllLots ? 'Sí' : 'No'}</Text>
-        </TouchableOpacity>
+      <View style={styles.pickerContainer}>
+        <RNPickerSelect
+          onValueChange={() => setAccessToAllLots(!accessToAllLots)}
+          items={[
+            { label: 'Todos los lotes', value: true },
+            { label: 'Sólo los lotes seleccionados', value: false },
+          ]}
+          value={accessToAllLots}
+          style={pickerSelectStyles}
+          useNativeAndroidPickerStyle={false}
+        />
       </View>
 
       {/* Dynamic CTA Button */}
@@ -179,6 +185,7 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     borderWidth: 1,
+    borderColor: theme.colors.primary,
     borderRadius: 10,
     marginBottom: 16,
   },

@@ -124,6 +124,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.pickerContainer}>
         <RNPickerSelect
           onValueChange={() => setAccessToAllLots(!accessToAllLots)}
+          placeholder={{ label: 'Selecciona una opción...', value: null }}
           items={[
             { label: 'Todos los lotes', value: true },
             { label: 'Sólo los lotes seleccionados', value: false },

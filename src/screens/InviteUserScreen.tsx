@@ -1,20 +1,41 @@
 // src/screens/InviteUserScreen.tsx
 
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
+  Modal,
+  FlatList,
   Alert,
+  StyleSheet,
 } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
+import { Surface } from 'react-native-paper';
 
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 import { UserRole } from '../types/types';
+
+const roles = [
+  {
+    role: 'Owner',
+    title: 'Socio',
+    description: 'Gestión total del equipo.',
+  },
+  {
+    role: 'Manager',
+    title: 'Administrador',
+    description: 'Asigna tareas y supervisa lotes.',
+  },
+  {
+    role: 'Member',
+    title: 'Jardinero',
+    description: 'Realiza tareas asignadas.',
+  },
+];
 
 type RootStackParamList = {
   InviteUser: undefined;
@@ -31,78 +52,103 @@ interface Props {
 }
 
 const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
-  const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteRole, setInviteRole] = useState<UserRole>('Member');
-  const [accessToAllLots, setAccessToAllLots] = useState<boolean>(true);
+  const [email, setEmail] = useState('');
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [accessToAllLots, setAccessToAllLots] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const handleInviteUser = () => {
-    if (!inviteEmail) {
-      Alert.alert('Email inválido', 'Por favor ingresá un email válido.');
-      return;
-    }
-    const success = ControllerService.inviteUserToActiveWorkgroup(
-      inviteEmail,
-      inviteRole,
-      accessToAllLots,
-    );
-    if (success) {
-      Alert.alert('Éxito', 'El integrante ha sido invitado.');
-      navigation.goBack();
+  const handleRoleSelect = (role: string) => {
+    setSelectedRole(role);
+    setModalVisible(false); // Close the modal after selection
+  };
+
+  const getDynamicButtonText = () => {
+    return accessToAllLots
+      ? 'Invitar Integrante'
+      : 'Seleccionar Lotes para el Integrante';
+  };
+
+  const handleDynamicButtonPress = () => {
+    if (accessToAllLots) {
+      // Proceed with inviting the user
+      console.log('Inviting user...');
+      if (!email) {
+        Alert.alert('Email inválido', 'Por favor ingresá un email válido.');
+        return;
+      }
+      const success = ControllerService.inviteUserToActiveWorkgroup(
+        email,
+        inviteRole,
+        accessToAllLots,
+      );
+      if (success) {
+        Alert.alert('Éxito', 'El integrante ha sido invitado.');
+        navigation.goBack();
+      }
+    } else {
+      // Navigate to lot selection screen
+      navigation.navigate('LotSelectionScreen');
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Invitar Nuevo Integrante</Text>
+
       <TextInput
         style={styles.input}
         placeholder="Ingresá el email del integrante"
-        value={inviteEmail}
-        onChangeText={setInviteEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
       />
-      <Text style={styles.label}>Seleccionar Rol</Text>
-      <View style={styles.pickerContainer}>
-        <RNPickerSelect
-          onValueChange={(value) => setInviteRole(value)}
-          items={[
-            { label: 'Socio', value: 'Owner' },
-            { label: 'Administrador', value: 'Manager' },
-            { label: 'Jardinero', value: 'Member' },
-          ]}
-          value={inviteRole}
-          style={pickerSelectStyles}
-          useNativeAndroidPickerStyle={false}
-        />
-      </View>
-      <Text style={styles.label}>Acceso a todos los lotes</Text>
-      <View style={styles.pickerContainer}>
-        <RNPickerSelect
-          onValueChange={(value) => setAccessToAllLots(value)}
-          items={[
-            { label: 'Sí', value: true },
-            { label: 'No', value: false },
-          ]}
-          value={accessToAllLots}
-          style={pickerSelectStyles}
-          useNativeAndroidPickerStyle={false}
-        />
-      </View>
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          style={[styles.button, styles.cancelButton]}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.cancelButtonText}>Cancelar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.submitButton]}
-          onPress={handleInviteUser}
-        >
-          <Text style={styles.submitButtonText}>Invitar</Text>
+
+      {/* Role Picker */}
+      <TouchableOpacity
+        style={styles.picker}
+        onPress={() => setModalVisible(true)}
+      >
+        <Text style={styles.pickerText}>
+          {selectedRole
+            ? roles.find((r) => r.role === selectedRole)?.title
+            : 'Seleccionar Rol'}
+        </Text>
+        <Icon name="chevron-down" size={24} color="gray" />
+      </TouchableOpacity>
+
+      {/* Access to All Lots Picker */}
+      <View style={styles.picker}>
+        <Text style={styles.pickerText}>Acceso a todos los lotes</Text>
+        <TouchableOpacity onPress={() => setAccessToAllLots(!accessToAllLots)}>
+          <Text style={styles.pickerText}>{accessToAllLots ? 'Sí' : 'No'}</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Dynamic CTA Button */}
+      <TouchableOpacity
+        style={styles.dynamicButton}
+        onPress={handleDynamicButtonPress}
+      >
+        <Text style={styles.dynamicButtonText}>{getDynamicButtonText()}</Text>
+      </TouchableOpacity>
+
+      {/* Role Selection Modal */}
+      <Modal visible={modalVisible} transparent={true} animationType="slide">
+        <View style={styles.modalContainer}>
+          <FlatList
+            data={roles}
+            keyExtractor={(item) => item.role}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.roleCard}
+                onPress={() => handleRoleSelect(item.role)}
+              >
+                <Text style={styles.roleTitle}>{item.title}</Text>
+                <Text style={styles.roleDescription}>{item.description}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -111,83 +157,68 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   input: {
     borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-    padding: 8,
-    marginBottom: 20,
+    borderColor: 'gray',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
     fontSize: 16,
   },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-    overflow: 'hidden',
-    marginBottom: 18,
-  },
-  buttonsContainer: {
+  picker: {
     flexDirection: 'row',
-    marginTop: 24,
-  },
-  button: {
-    flex: 1,
-    borderRadius: 50,
-    paddingVertical: 12,
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 8,
-  },
-  cancelButton: {
     borderWidth: 1,
-    borderColor: '#aaa',
+    borderColor: 'gray',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
   },
-  cancelButtonText: {
-    color: 'gray',
-    fontSize: 14,
-    fontWeight: 'bold',
+  pickerText: {
+    fontSize: 16,
   },
-  submitButton: {
-    backgroundColor: theme.colors.primary,
+  dynamicButton: {
+    backgroundColor: '#1976D2',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 16,
   },
-  submitButtonText: {
+  dynamicButtonText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  roleCard: {
+    backgroundColor: '#fff',
+    padding: 16,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 8,
+    elevation: 3,
+  },
+  roleTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  roleDescription: {
+    fontSize: 14,
+    marginTop: 8,
+    color: 'gray',
   },
 });
 
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    color: 'black',
-    paddingRight: 30,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    color: 'black',
-    paddingRight: 30,
-  },
-  placeholder: {
-    color: '#aaa',
-  },
-  viewContainer: {
-    paddingHorizontal: 8,
-    paddingVertical: 12,
-  },
-});
 export default InviteUserScreen;

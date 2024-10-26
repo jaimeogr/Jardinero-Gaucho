@@ -109,7 +109,9 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
         style={styles.picker}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.pickerText}>
+        <Text
+          style={[styles.pickerText, selectedRole ? null : styles.placeholder]}
+        >
           {selectedRole
             ? roles.find((r) => r.role === selectedRole)?.title
             : 'Seleccionar Rol'}
@@ -225,6 +227,9 @@ const styles = StyleSheet.create({
   roleDescription: {
     fontSize: 14,
     marginTop: 8,
+    color: 'gray',
+  },
+  placeholder: {
     color: 'gray',
   },
 });

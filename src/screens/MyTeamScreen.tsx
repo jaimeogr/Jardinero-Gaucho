@@ -60,6 +60,13 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
   // Count of integrantes
   const integrantesCount = users.length;
 
+  const getRoleChipText = (role: UserRole) => {
+    if (role === 'PrimaryOwner') return 'Socio Principal';
+    if (role === 'Owner') return 'Socio';
+    if (role === 'Manager') return 'Administrador';
+    if (role === 'Member') return 'Jardinero';
+  };
+
   return (
     <View style={styles.container}>
       {/* Title and Add Button */}
@@ -130,7 +137,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
                   ]}
                   textStyle={{ color: '#fff', fontWeight: 'bold' }}
                 >
-                  {item.role}
+                  {getRoleChipText(item.role)}
                 </Chip>
               </View>
 

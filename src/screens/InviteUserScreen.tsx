@@ -69,7 +69,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       : 'Seleccionar Lotes para el Integrante';
   };
 
-  const handleDynamicButtonPress = () => {
+  const handleButtonPress = () => {
     if (accessToAllLots) {
       // Proceed with inviting the user
       console.log('Inviting user...');
@@ -143,12 +143,9 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
         />
       </View>
 
-      {/* Dynamic CTA Button */}
-      <TouchableOpacity
-        style={styles.dynamicButton}
-        onPress={handleDynamicButtonPress}
-      >
-        <Text style={styles.dynamicButtonText}>{getDynamicButtonText()}</Text>
+      {/* Dynamic CTA Button - Call to Action */}
+      <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
+        <Text style={styles.buttonText}>{getDynamicButtonText()}</Text>
       </TouchableOpacity>
 
       {/* Role Selection Modal */}
@@ -211,16 +208,19 @@ const styles = StyleSheet.create({
   pickerText: {
     fontSize: 16,
   },
-  dynamicButton: {
-    backgroundColor: '#1976D2',
-    paddingVertical: 12,
-    borderRadius: 8,
+  button: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: 50,
+    paddingVertical: 16,
     alignItems: 'center',
-    marginTop: 16,
+    position: 'absolute',
+    bottom: 20,
+    left: 16,
+    right: 16,
   },
-  dynamicButtonText: {
+  buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   modalContainer: {

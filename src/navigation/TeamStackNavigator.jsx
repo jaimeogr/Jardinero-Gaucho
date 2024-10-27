@@ -22,7 +22,7 @@ const TeamStackNavigator = () => {
       <Stack.Screen
         name="InviteUser"
         component={InviteUserScreen}
-        options={{ title: 'Agregar integrante' }}
+        options={{ title: 'Invitar integrante' }}
       />
     </Stack.Navigator>
   );

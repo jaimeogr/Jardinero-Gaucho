@@ -99,6 +99,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Ingresá el email del integrante"
+        placeholderTextColor={theme.colors.placeholder}
         value={email}
         onChangeText={setEmail}
       />
@@ -123,8 +124,11 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       <Text style={styles.inputTitle}>Acceso a lotes</Text>
       <View style={styles.pickerContainer}>
         <RNPickerSelect
-          onValueChange={() => setAccessToAllLots(!accessToAllLots)}
-          placeholder={{ label: 'Selecciona una opción...', value: null }}
+          onValueChange={(value) => setAccessToAllLots(value)}
+          placeholder={{
+            label: 'Seleccioná una opción...',
+            value: null,
+          }}
           items={[
             { label: 'Todos los lotes', value: true },
             { label: 'Sólo los lotes seleccionados', value: false },
@@ -246,7 +250,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   placeholder: {
-    color: 'gray',
+    color: theme.colors.placeholder,
   },
 });
 

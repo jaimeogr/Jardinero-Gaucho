@@ -14,6 +14,7 @@ export const theme = {
     background2: '#EAE7E7',
     background3: '#F5EFE3', // 6BCB77 C1F8CF
     ripple: '#EAE7E7',
+    placeholder: '#A0A0A0',
 
     accordion: {
       // neighbourhood selected

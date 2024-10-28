@@ -12,8 +12,9 @@ import {
   FlatList,
   Alert,
   StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
-import { Surface } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 
 import ControllerService from '../services/useControllerService';
@@ -153,22 +154,33 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Role Selection Modal */}
-      <Modal visible={modalVisible} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
-          <FlatList
-            data={roles}
-            keyExtractor={(item) => item.role}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.roleCard}
-                onPress={() => handleRoleSelect(item.role)}
-              >
-                <Text style={styles.roleTitle}>{item.title}</Text>
-                <Text style={styles.roleDescription}>{item.description}</Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+
+      <Modal visible={modalVisible} transparent={true} animationType="fade">
+        <TouchableWithoutFeedback
+          onPress={() => setModalVisible(false)} // Close the modal on outside press
+        >
+          <View style={styles.centeredOverlay}>
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+              <View style={styles.centeredModal}>
+                <FlatList
+                  data={roles}
+                  keyExtractor={(item) => item.role}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={styles.roleCard}
+                      onPress={() => handleRoleSelect(item.role)}
+                    >
+                      <Text style={styles.roleTitle}>{item.title}</Text>
+                      <Text style={styles.roleDescription}>
+                        {item.description}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );
@@ -227,10 +239,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  modalContainer: {
+  centeredOverlay: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Transparent black background
+    justifyContent: 'center', // Center the content
+    alignItems: 'center', // Align horizontally
+  },
+  centeredModal: {
+    width: '80%', // Width of the modal
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 10,
+    elevation: 5, // Shadow effect for Android
   },
   roleCard: {
     backgroundColor: '#fff',

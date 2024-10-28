@@ -188,8 +188,18 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       </View>
 
       {/* Dynamic CTA Button - Call to Action */}
-      <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
-        <Text style={styles.buttonText}>{getDynamicButtonText()}</Text>
+      <TouchableOpacity
+        style={[styles.button, accessToAllLots ? null : styles.secondaryButton]}
+        onPress={handleButtonPress}
+      >
+        <Text
+          style={[
+            styles.buttonText,
+            accessToAllLots ? null : styles.secondaryText,
+          ]}
+        >
+          {getDynamicButtonText()}
+        </Text>
       </TouchableOpacity>
 
       {/* Role Selection Modal */}
@@ -295,6 +305,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  secondaryButton: {
+    backgroundColor: 'transparent',
+    borderColor: theme.colors.primary,
+    borderWidth: 2,
+  },
+  secondaryText: {
+    color: theme.colors.primary,
   },
   centeredOverlay: {
     flex: 1,

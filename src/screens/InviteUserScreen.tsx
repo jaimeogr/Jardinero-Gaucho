@@ -162,6 +162,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
           <View style={styles.centeredOverlay}>
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
               <View style={styles.centeredModal}>
+                <Text style={styles.rolesModalTitle}>Seleccionar el Rol</Text>
                 <FlatList
                   data={roles}
                   keyExtractor={(item) => item.role}
@@ -252,6 +253,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderRadius: 10,
     elevation: 5, // Shadow effect for Android
+  },
+  rolesModalTitle: {
+    paddingLeft: 16,
+    marginBottom: 10,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   roleCard: {
     backgroundColor: '#fff',

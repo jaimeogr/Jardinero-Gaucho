@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   inputTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
   },

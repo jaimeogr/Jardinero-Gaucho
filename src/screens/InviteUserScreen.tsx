@@ -94,6 +94,30 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
+  const getRoleDescription = (role: string): string => {
+    switch (role) {
+      case 'Owner':
+        return (
+          '- Podrá modificar información de lotes.\n' +
+          '- Podrá modificar integrantes del grupo de trabajo (pero no podrá eliminar o modificar el único socio principal).\n' +
+          '- Podrá modificar información de pagos.\n' +
+          '- Podrá gestionar la subscripción a esta plataforma.'
+        );
+      case 'Manager':
+        return (
+          '- Podrá modificar información de lotes.\n' +
+          '- No podrá modificar o eliminar otra información.'
+        );
+      case 'Member':
+        return (
+          '- Agregar trabajos realizados dentro de sus lotes asignados.\n' +
+          '- No podrá modificar o eliminar otra información.'
+        );
+      default:
+        return 'Descripción no disponible.';
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Email Input */}
@@ -191,7 +215,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
                         {item.title}
                       </Badge>
                       <Text style={styles.roleDescription}>
-                        {item.description}
+                        {getRoleDescription(item.role)}
                       </Text>
                     </TouchableOpacity>
                   )}

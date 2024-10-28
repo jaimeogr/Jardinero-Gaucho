@@ -248,19 +248,24 @@ const styles = StyleSheet.create({
   centeredModal: {
     width: '80%', // Width of the modal
     backgroundColor: '#fff',
-    padding: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 4,
     borderRadius: 10,
     elevation: 5, // Shadow effect for Android
   },
   roleCard: {
     backgroundColor: '#fff',
-    padding: 16,
-    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginVertical: 10,
     marginHorizontal: 16,
     borderRadius: 8,
-    elevation: 3,
+    elevation: 1,
   },
   roleTitle: {
+    // marginTop: 4,
     fontSize: 18,
     fontWeight: 'bold',
   },

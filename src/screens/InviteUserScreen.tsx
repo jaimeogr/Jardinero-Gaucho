@@ -22,6 +22,19 @@ import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 import { UserRole } from '../types/types';
 
+const RoleDescriptionForRoleCard: React.FC<{ items: string[] }> = ({
+  items,
+}) => (
+  <View>
+    {items.map((item, index) => (
+      <View key={index} style={styles.bulletItem}>
+        <Text style={styles.bullet}>•</Text>
+        <Text style={styles.bulletText}>{item}</Text>
+      </View>
+    ))}
+  </View>
+);
+
 const roles = [
   {
     role: 'Owner',
@@ -94,27 +107,28 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  const getRoleDescription = (role: string): string => {
+  // Helper function to get descriptions based on role
+  const getRoleDescriptionArray = (role: string): string[] => {
     switch (role) {
       case 'Owner':
-        return (
-          '- Podrá modificar información de lotes.\n' +
-          '- Podrá modificar integrantes del grupo de trabajo (pero no podrá eliminar o modificar el único socio principal).\n' +
-          '- Podrá modificar información de pagos.\n' +
-          '- Podrá gestionar la subscripción a esta plataforma.'
-        );
+        return [
+          'Podrá modificar información de lotes.',
+          'Podrá modificar integrantes del grupo de trabajo (excepto a el único socio principal).',
+          'Podrá modificar información de pagos.',
+          'Podrá gestionar la subscripción a esta plataforma.',
+        ];
       case 'Manager':
-        return (
-          '- Podrá modificar información de lotes.\n' +
-          '- No podrá modificar o eliminar otra información.'
-        );
+        return [
+          'Podrá modificar información de lotes.',
+          'No podrá modificar o eliminar otra información.',
+        ];
       case 'Member':
-        return (
-          '- Agregar trabajos realizados dentro de sus lotes asignados.\n' +
-          '- No podrá modificar o eliminar otra información.'
-        );
+        return [
+          'Agregar trabajos realizados dentro de sus lotes asignados.',
+          'No podrá modificar o eliminar otra información.',
+        ];
       default:
-        return 'Descripción no disponible.';
+        return ['Descripción no disponible.'];
     }
   };
 
@@ -214,9 +228,9 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
                       >
                         {item.title}
                       </Badge>
-                      <Text style={styles.roleDescription}>
-                        {getRoleDescription(item.role)}
-                      </Text>
+                      <RoleDescriptionForRoleCard
+                        items={getRoleDescriptionArray(item.role)}
+                      />
                     </TouchableOpacity>
                   )}
                 />
@@ -284,7 +298,7 @@ const styles = StyleSheet.create({
   },
   centeredOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Transparent black background
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Transparent black background
     justifyContent: 'center', // Center the content
     alignItems: 'center', // Align horizontally
   },
@@ -306,7 +320,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 3,
     borderColor: 'lightgray',
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
     paddingVertical: 8,
     marginVertical: 10,
     marginHorizontal: 16,
@@ -314,7 +328,6 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   roleTitle: {
-    // marginTop: 4,
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -324,12 +337,32 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontWeight: 'bold',
     fontSize: 16,
-    marginLeft: -6,
+    marginLeft: 6,
+    marginBottom: 6,
   },
   roleDescription: {
     fontSize: 14,
     marginTop: 8,
     color: 'gray',
+  },
+  bulletItem: {
+    flexDirection: 'row', // Align bullet and text side by side
+    alignItems: 'flex-start', // Align text with top of bullet
+    marginBottom: 6, // Space between items
+    marginHorizontal: 12, // Space from left and right
+  },
+  bullet: {
+    fontSize: 22, // Slightly larger bullet size
+    lineHeight: 16, // Align bullet with text vertically
+    marginRight: 6, // Space between bullet and text
+    marginTop: 4, // Adjust vertical alignment
+    color: '#16423C',
+  },
+  bulletText: {
+    flex: 1, // Allow text to take the remaining space
+    fontSize: 16,
+    lineHeight: 16, // Ensure proper spacing between lines
+    color: '#16423C',
   },
   placeholder: {
     color: theme.colors.placeholder,

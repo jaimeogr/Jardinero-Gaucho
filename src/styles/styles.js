@@ -10,6 +10,7 @@ export const theme = {
     accent2: '#4D96FF',
     accent3: '#A0E418',
     gray: '#515661',
+    darkGray: '#16423C',
     background: '#155E63', // 155E63 36AE7C
     background2: '#EAE7E7',
     background3: '#F5EFE3', // 6BCB77 C1F8CF

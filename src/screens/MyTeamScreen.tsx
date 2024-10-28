@@ -134,7 +134,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
                 </View>
               </View>
 
-              <View style={styles.userBody}>
+              <View style={styles.userAccess}>
                 <Text style={styles.accessText}>Acceso: {accessText}</Text>
               </View>
 
@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
     margin: 14,
     marginBottom: 6,
     padding: 16,
+    paddingTop: 12,
     backgroundColor: '#fff',
     borderRadius: 12,
     elevation: 2,
@@ -221,12 +222,13 @@ const styles = StyleSheet.create({
   },
   userNameAndBadge: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'flex-start',
     justifyContent: 'space-between',
   },
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 4,
   },
   userWaitingText: {
     fontSize: 18,
@@ -242,9 +244,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontWeight: 'bold',
     fontSize: 14,
+    marginTop: -12,
   },
-  userBody: {
-    marginTop: 8,
+  userAccess: {
+    marginTop: 28,
   },
   accessText: {
     fontSize: 16,

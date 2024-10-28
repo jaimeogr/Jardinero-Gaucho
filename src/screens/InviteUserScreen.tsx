@@ -15,6 +15,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+import { Badge } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 
 import ControllerService from '../services/useControllerService';
@@ -168,10 +169,27 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
                   keyExtractor={(item) => item.role}
                   renderItem={({ item }) => (
                     <TouchableOpacity
-                      style={styles.roleCard}
+                      style={[
+                        styles.roleCard,
+                        {
+                          borderColor:
+                            theme.colors.roles[item.role] || '#1976D2',
+                        },
+                      ]}
                       onPress={() => handleRoleSelect(item.role)}
                     >
-                      <Text style={styles.roleTitle}>{item.title}</Text>
+                      <Badge
+                        style={[
+                          styles.roleBadge,
+                          {
+                            backgroundColor:
+                              theme.colors.roles[item.role] || '#1976D2',
+                          },
+                        ]}
+                        size={24}
+                      >
+                        {item.title}
+                      </Badge>
                       <Text style={styles.roleDescription}>
                         {item.description}
                       </Text>
@@ -262,19 +280,27 @@ const styles = StyleSheet.create({
   },
   roleCard: {
     backgroundColor: '#fff',
-    borderWidth: 1,
+    borderWidth: 3,
     borderColor: 'lightgray',
     paddingHorizontal: 16,
     paddingVertical: 8,
     marginVertical: 10,
     marginHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: 12,
     elevation: 1,
   },
   roleTitle: {
     // marginTop: 4,
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  roleBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginLeft: -6,
   },
   roleDescription: {
     fontSize: 14,

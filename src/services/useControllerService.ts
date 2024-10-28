@@ -1,8 +1,13 @@
+// src/services/useControllerService.ts
+
+import { v4 as uuidv4 } from 'uuid'; //ID Generator
+
 import {
   NeighbourhoodData,
   UserRole,
   LotInterface,
   ZoneData,
+  UserInterface,
 } from './../types/types';
 import useLotService from './useLotService';
 import useUserService from './useUserService';
@@ -14,6 +19,10 @@ const initializeServices = () => {
   useLotService.initializeStore();
   useUserService.initializeUsers();
   useWorkgroupService.initializeWorkgroups();
+};
+
+const getLotById = (lotId: string) => {
+  return useLotService.getLotById(lotId);
 };
 
 const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
@@ -70,8 +79,155 @@ const useCheckUserHasPermission = (requiredRole: UserRole) => {
   return userHasPermission(workgroup, currentUserId, requiredRole);
 };
 
+const inviteUserToActiveWorkgroup = (
+  email: string,
+  role: UserRole,
+  accessToAllLots: boolean,
+) => {
+  const userId = uuidv4();
+  const activeWorkgroup = getActiveWorkgroup();
+  if (!activeWorkgroup) {
+    console.error('No active workgroup found.');
+    return false;
+  }
+
+  const newUser: UserInterface = {
+    userId,
+    email,
+    firstName: '', // Since we only have the email at this point
+    lastName: '',
+    workgroupAssignments: [
+      {
+        workgroupId: activeWorkgroup.workgroupId,
+        role,
+        accessToAllLots,
+      },
+    ],
+  };
+  // Add user to user store
+  useUserService.addUser(newUser);
+  return true;
+};
+
+const updateUserRoleInActiveWorkgroup = (userId: string, newRole: UserRole) => {
+  const user = useUserService.getUserById(userId);
+  if (!user) return false;
+
+  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroupId) return false;
+
+  const assignmentIndex = user.workgroupAssignments.findIndex(
+    (assignment) => assignment.workgroupId === activeWorkgroupId,
+  );
+  if (assignmentIndex >= 0) {
+    user.workgroupAssignments[assignmentIndex].role = newRole;
+  } else {
+    // If assignment doesn't exist, create one
+    user.workgroupAssignments.push({
+      workgroupId: activeWorkgroupId,
+      role: newRole,
+      accessToAllLots: false, // Default value or you can set it accordingly
+    });
+  }
+
+  useUserService.updateUser(userId, user);
+  return true;
+};
+
+const updateUserAccessToAllLots = (userId: string, access: boolean) => {
+  const user = useUserService.getUserById(userId);
+  if (!user) return;
+
+  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroupId) return;
+
+  const assignmentIndex = user.workgroupAssignments.findIndex(
+    (assignment) => assignment.workgroupId === activeWorkgroupId,
+  );
+  if (assignmentIndex >= 0) {
+    user.workgroupAssignments[assignmentIndex].accessToAllLots = access;
+  } else {
+    // If assignment doesn't exist, create one
+    user.workgroupAssignments.push({
+      workgroupId: activeWorkgroupId,
+      role: 'Member', // Default role or you can set it accordingly
+      accessToAllLots: access,
+    });
+  }
+
+  useUserService.updateUser(userId, user);
+};
+
+const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
+  role: UserRole;
+  accessToAllLots: boolean;
+  hasAcceptedPresenceInWorkgroup: boolean;
+  assignedLotsCount: number;
+})[] => {
+  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroupId) return [];
+
+  const allUsers = useUserService.getAllUsers();
+  const usersInWorkgroup = allUsers
+    .map((user) => {
+      const assignment = user.workgroupAssignments.find(
+        (wa) => wa.workgroupId === activeWorkgroupId,
+      );
+      if (assignment) {
+        const assignedLotsCount =
+          useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
+            activeWorkgroupId,
+            user.userId,
+          );
+        return {
+          ...user,
+          role: assignment.role,
+          accessToAllLots: assignment.accessToAllLots,
+          hasAcceptedPresenceInWorkgroup:
+            assignment.hasAcceptedPresenceInWorkgroup,
+          assignedLotsCount: assignedLotsCount,
+        };
+      }
+      return null;
+    })
+    .filter((user) => user !== null) as (UserInterface & {
+    role: UserRole;
+    accessToAllLots: boolean;
+    hasAcceptedPresenceInWorkgroup: boolean;
+    assignedLotsCount: number;
+  })[];
+
+  // Sort by role priority: PrimaryOwner > Owner > Manager > Member
+  const usersSortedByRole = usersInWorkgroup.sort((a, b) => {
+    const rolePriority = { PrimaryOwner: 1, Owner: 2, Manager: 3, Member: 4 };
+    return rolePriority[a.role] - rolePriority[b.role];
+  });
+
+  return usersSortedByRole;
+};
+
+const toggleLotSelection = (lotId: string, newState: boolean) => {
+  useLotService.toggleLotSelection(lotId, newState);
+};
+
+const toggleZoneSelection = (zoneId: string, newState: boolean) => {
+  useLotService.toggleZoneSelection(zoneId, newState);
+};
+
+const toggleNeighbourhoodSelection = (
+  neighbourhoodId: string,
+  newState: boolean,
+) => {
+  useLotService.toggleNeighbourhoodSelection(neighbourhoodId, newState);
+};
+
+const deselectAllLots = () => {
+  useLotService.deselectAllLots();
+};
+
 export default {
   initializeServices,
+  getLotById,
   createLot,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
@@ -79,4 +235,12 @@ export default {
   getNeighbourhoodsAndZones,
   addZoneToNeighbourhood,
   addNeighbourhood,
+  inviteUserToActiveWorkgroup,
+  updateUserRoleInActiveWorkgroup,
+  updateUserAccessToAllLots,
+  getUsersInActiveWorkgroupWithRoles,
+  toggleLotSelection,
+  toggleZoneSelection,
+  toggleNeighbourhoodSelection,
+  deselectAllLots,
 };

@@ -14,6 +14,7 @@ export const theme = {
     background2: '#EAE7E7',
     background3: '#F5EFE3', // 6BCB77 C1F8CF
     ripple: '#EAE7E7',
+    placeholder: '#A0A0A0',
 
     accordion: {
       // neighbourhood selected
@@ -36,6 +37,13 @@ export const theme = {
       // lot item not selected
       lotBackgroundNotSelected: '#D9EEF3',
       lotBorderNotSelected: '#D9EEF3',
+    },
+
+    roles: {
+      PrimaryOwner: 'purple', // Red
+      Owner: 'purple', // Orange
+      Manager: '#1976D2', // Blue
+      Member: '#388E3C', // Green
     },
   },
 };

@@ -1,5 +1,7 @@
+import { NeighbourhoodData } from './types';
 // types.ts or interfaces.ts
 
+// LOTS / ZONES / NEIGHBOURHOODS
 export interface LotInterface {
   lotId: string; // Unique identifier for the lot, now as a UUID
   lotLabel: string; // Lot number or label
@@ -22,7 +24,7 @@ export interface LotWithNeedMowingInterface extends LotInterface {
   needMowing: number;
 }
 
-export interface ZoneInterface {
+export interface ZoneWithIndicatorsInterface {
   zoneId: string; // Ensure you have this data or adjust accordingly
   zoneLabel: string;
   needMowing: number;
@@ -32,18 +34,18 @@ export interface ZoneInterface {
   lots: LotWithNeedMowingInterface[];
 }
 
-export interface NeighbourhoodInterface {
+export interface NeighbourhoodWithIndicatorsInterface {
   neighbourhoodId: string; // Ensure you have this data or adjust accordingly
   neighbourhoodLabel: string;
   needMowing: number;
   needMowingCritically: number;
   doesntNeedMowing: number;
   isSelected: boolean;
-  zones: ZoneInterface[];
+  zones: ZoneWithIndicatorsInterface[];
 }
 
-export interface NestedLotsWithIndicators {
-  nestedLots: NeighbourhoodInterface[];
+export interface NestedLotsWithIndicatorsInterface {
+  nestedLots: NeighbourhoodWithIndicatorsInterface[];
   selectedLots: number;
 }
 
@@ -51,6 +53,8 @@ export interface NestedLotsWithIndicators {
 export interface ZoneData {
   zoneId: string;
   zoneLabel: string;
+  isSelected: boolean;
+  assignedTo: string[]; // Users assigned
 }
 
 export interface NeighbourhoodData {
@@ -58,33 +62,49 @@ export interface NeighbourhoodData {
   neighbourhoodId: string;
   neighbourhoodLabel: string;
   zones: ZoneData[];
+  isSelected: boolean;
+  assignedTo: string[]; // Users assigned
 }
 
 export interface NeighbourhoodZoneData {
   neighbourhoods: NeighbourhoodData[];
 }
 
+// export interface zoneIsSelectedInterface {
+//   zoneId: string;
+//   isSelected: boolean;
+// }
+
+// export interface neighbourhoodIsSelectedInterface {
+//   NeighbourhoodId: string;
+//   isSelected: boolean;
+// }
+
+// USERS / WORKGROUPS
+export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
+
 export interface GroupOfUsersInterface {
   users: UserInterface[];
 }
 
-export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
+export interface WorkgroupAssignment {
+  workgroupId: string;
+  role: UserRole;
+  accessToAllLots: boolean;
+  hasAcceptedPresenceInWorkgroup: boolean;
+}
 
 export interface UserInterface {
   userId: string;
   firstName: string;
   lastName: string;
   email: string;
-  workgroupRoles: { [workgroupId: string]: UserRole };
+  workgroupAssignments: WorkgroupAssignment[];
 }
 
 export interface WorkgroupInterface {
   workgroupId: string;
   name: string;
-  primaryOwnerId: string; // User ID of the primary owner
-  ownerIds: string[]; // User IDs who are secondary owners
-  managerIds: string[]; // User IDs who are managers
-  memberIds: string[]; // User IDs who are members
 }
 
 export interface TaskInterface {

@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
-import useLotStore from '../../stores/useLotStore';
+import useControllerService from '../../services/useControllerService';
 import { theme } from '../../styles/styles';
 
 const {
@@ -42,18 +42,24 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   thisWeeksCriticalLotsToMow,
   isSelected,
 }) => {
+  const { toggleZoneSelection, toggleNeighbourhoodSelection } =
+    useControllerService;
   const [expanded, setExpanded] = useState(false);
 
-  const toogleIsSelected = useLotStore((state) =>
-    level === 0
-      ? state.toggleNeighbourhoodSelection
-      : state.toggleZoneSelection,
-  );
-
-  // Wrap the toggle function with useCallback to avoid creating a new function on each render
   const handleToggle = useCallback(() => {
-    toogleIsSelected(id, !isSelected);
-  }, [toogleIsSelected, id, isSelected]);
+    const newState = !isSelected;
+    if (level === 0) {
+      toggleNeighbourhoodSelection(id, newState);
+    } else {
+      toggleZoneSelection(id, newState);
+    }
+  }, [
+    id,
+    isSelected,
+    level,
+    toggleZoneSelection,
+    toggleNeighbourhoodSelection,
+  ]);
 
   return (
     <View

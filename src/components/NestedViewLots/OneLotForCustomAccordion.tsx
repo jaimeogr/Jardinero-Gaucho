@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import useLotStore from '../../stores/useLotStore';
+import useControllerService from '../../services/useControllerService';
 import { theme } from '../../styles/styles';
 
 const {
@@ -22,16 +22,14 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
   isLastItem,
   lotId,
 }) => {
+  const { getLotById, toggleLotSelection } = useControllerService;
   // Use useLotStore with a state selector to get only the relevant data to avoid unnecessary re-renders
-  const lot = useLotStore((state) =>
-    state.lots.find((lot) => lot.lotId === lotId),
-  );
-  const toggleLotSelection = useLotStore((state) => state.toggleLotSelection);
+  const lot = getLotById(lotId);
 
   // Wrap the toggle function with useCallback to avoid creating a new function on each render
   const handleToggle = useCallback(() => {
-    toggleLotSelection(lotId);
-  }, [toggleLotSelection, lotId]);
+    toggleLotSelection(lotId, !lot.lotIsSelected);
+  }, [toggleLotSelection, lotId, lot]);
 
   // Ensure that if the lot is not found, we don't trigger re-renders unnecessarily
   if (!lot) {

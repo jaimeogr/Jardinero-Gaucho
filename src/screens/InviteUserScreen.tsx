@@ -85,13 +85,20 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleButtonPress = () => {
+    if (!email) {
+      Alert.alert('Email inválido', 'Por favor ingresá un email válido.');
+      return;
+    }
+    if (accessToAllLots === null) {
+      Alert.alert(
+        'Acceso a lotes debe estar completo',
+        'Por favor seleccioná una opción.',
+      );
+      return;
+    }
     if (accessToAllLots) {
       // Proceed with inviting the user
       console.log('Inviting user...');
-      if (!email) {
-        Alert.alert('Email inválido', 'Por favor ingresá un email válido.');
-        return;
-      }
       const success = ControllerService.inviteUserToActiveWorkgroup(
         email,
         inviteRole,
@@ -103,7 +110,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       }
     } else {
       // Navigate to lot selection screen
-      navigation.navigate('LotSelectionScreen');
+      navigation.navigate('LotAssignmentScreen');
     }
   };
 

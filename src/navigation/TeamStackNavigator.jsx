@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 
 // Import your screen components
 import InviteUserScreen from '../screens/InviteUserScreen';
+import LotAssignmentScreen from '../screens/LotAssignmentScreen';
 import MyTeamScreen from '../screens/MyTeamScreen';
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +24,11 @@ const TeamStackNavigator = () => {
         name="InviteUser"
         component={InviteUserScreen}
         options={{ title: 'Invitar integrante' }}
+      />
+      <Stack.Screen
+        name="LotAssignment"
+        component={LotAssignmentScreen}
+        options={{ title: 'Asignar Lotes' }}
       />
     </Stack.Navigator>
   );

@@ -177,8 +177,14 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
             value: null,
           }}
           items={[
-            { label: 'Todos los lotes', value: true },
-            { label: 'Sólo los lotes seleccionados', value: false },
+            {
+              label: 'Todos los lotes (Ideal para empezar)',
+              value: true,
+            },
+            {
+              label: 'Solo los seleccionados (Mayor control)',
+              value: false,
+            },
           ]}
           value={accessToAllLots}
           style={pickerSelectStyles}

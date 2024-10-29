@@ -110,7 +110,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       }
     } else {
       // Navigate to lot selection screen
-      navigation.navigate('LotAssignmentScreen');
+      navigation.navigate('LotAssignment');
     }
   };
 

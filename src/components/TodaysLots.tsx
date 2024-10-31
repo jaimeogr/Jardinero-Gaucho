@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text, Surface } from 'react-native-paper';
+import { Surface } from 'react-native-paper';
 
 import ControllerService from '../services/useControllerService';
 import NestedViewLots from './NestedViewLots/NestedViewLots';

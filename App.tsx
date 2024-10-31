@@ -1,10 +1,11 @@
 import 'react-native-get-random-values';
 import { NavigationContainer } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import BottomTabNavigator from './src/navigation/BottonTabNavigator';
+import useControllerService from './src/services/useControllerService';
 
 if (__DEV__) {
   console.log('The app is running in development mode');
@@ -16,6 +17,10 @@ if (__DEV__) {
 }
 
 export default function App() {
+  useEffect(() => {
+    useControllerService.initializeServices();
+  }, []);
+
   return (
     <PaperProvider>
       <SafeAreaProvider>

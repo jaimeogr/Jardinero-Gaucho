@@ -2,14 +2,9 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Surface } from 'react-native-paper';
 
-import ControllerService from '../services/useControllerService';
 import NestedViewLots from './NestedViewLots/NestedViewLots';
 
 const LotsOnSurfaceForHomeScreen = () => {
-  useEffect(() => {
-    ControllerService.initializeServices();
-  }, []);
-
   return (
     <Surface style={styles.surface}>
       <View style={styles.content}>

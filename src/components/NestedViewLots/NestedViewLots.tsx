@@ -9,25 +9,11 @@ import useControllerService from '../../services/useControllerService';
 import { useNestedLots } from '../../services/useLotService';
 import { theme } from '../../styles/styles';
 
-const NestedViewLots = () => {
-  const { markSelectedLotsCompletedForSpecificDate, deselectAllLots } =
-    useControllerService;
-
+const NestedViewLots = ({
+  selectingStateRightSideActions,
+  handleDeselectLots,
+}) => {
   const { nestedLots, selectedLots } = useNestedLots();
-
-  const handleDeselectLots = useCallback(() => {
-    deselectAllLots();
-  }, [deselectAllLots]);
-
-  const handleMarkLotsCompleted = () => {
-    const success = markSelectedLotsCompletedForSpecificDate();
-    if (success) {
-      console.log('Selected lots marked as completed');
-      handleDeselectLots();
-    } else {
-      console.error('No lots were selected to mark as completed');
-    }
-  };
 
   // this will handle the Native OS back button press event
   useEffect(() => {
@@ -50,7 +36,7 @@ const NestedViewLots = () => {
       {selectedLots ? (
         <View style={styles.upperSide}>
           <View style={styles.selectedIndicatorsTextAndButtons}>
-            <View style={styles.selectedIndicatorsLeftSide}>
+            <View style={styles.selectingStateLeftSideCounter}>
               <Appbar.BackAction
                 color={theme.colors.primary}
                 size={28}
@@ -59,25 +45,8 @@ const NestedViewLots = () => {
               <Text style={styles.selectedIndicatorsText}>{selectedLots}</Text>
             </View>
 
-            <View style={styles.selectedIndicatorsRightSide}>
-              <Appbar.Action
-                icon="check-circle-outline"
-                color={theme.colors.primary}
-                size={28}
-                onPress={handleMarkLotsCompleted}
-              />
-              <Appbar.Action
-                icon="account-arrow-left"
-                color={theme.colors.primary}
-                size={28}
-                onPress={() => {}}
-              />
-              <Appbar.Action
-                icon="dots-vertical"
-                color={theme.colors.primary}
-                size={28}
-                onPress={() => {}}
-              />
+            <View style={styles.selectingStateRightSideActions}>
+              {selectingStateRightSideActions}
             </View>
           </View>
         </View>
@@ -158,11 +127,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: theme.colors.primary,
   },
-  selectedIndicatorsLeftSide: {
+  selectingStateLeftSideCounter: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  selectedIndicatorsRightSide: {
+  selectingStateRightSideActions: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 0,

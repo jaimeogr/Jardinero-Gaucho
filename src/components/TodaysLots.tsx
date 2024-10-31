@@ -2,31 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Surface } from 'react-native-paper';
 
-import BottomElementsForTodaysLots from './BottomElementsForTodaysLots';
-import ListViewLots from './ListViewLots/ListViewLots';
 import ControllerService from '../services/useControllerService';
 import NestedViewLots from './NestedViewLots/NestedViewLots';
 
 const TodaysLots = () => {
-  const [selectingLots, setSelectingLots] = useState(true);
-
   useEffect(() => {
     ControllerService.initializeServices();
   }, []);
 
   return (
     <Surface style={styles.surface}>
-      {selectingLots ? (
-        <View style={styles.content}>
-          <NestedViewLots />
-        </View>
-      ) : (
-        <View style={styles.content}>
-          <Text style={styles.title}>Mis lotes de hoy</Text>
-          {/* <ListViewLots lots={lots} /> */}
-          <BottomElementsForTodaysLots onPress={setSelectingLots} />
-        </View>
-      )}
+      <View style={styles.content}>
+        <NestedViewLots />
+      </View>
     </Surface>
   );
 };
@@ -45,18 +33,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     justifyContent: 'space-between',
-  },
-  todaysLots: {
-    flex: 1,
-    marginBottom: 16,
-    padding: 0,
-  },
-  title: {
-    fontSize: 24,
-    alignSelf: 'flex-start',
-    paddingTop: 12,
-    marginLeft: 24,
-    marginBottom: 12,
   },
 });
 export default TodaysLots;

@@ -119,20 +119,19 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
     switch (role) {
       case 'Owner':
         return [
-          'Podrá modificar información de lotes.',
-          'Podrá modificar integrantes del grupo de trabajo (excepto a el único socio principal).',
-          'Podrá modificar información de pagos.',
-          'Podrá gestionar la subscripción a esta plataforma.',
+          'Acceso completo a la plataforma y a la información de pagos.',
+          'Control sobre el equipo (excepto sobre el socio principal).',
         ];
       case 'Manager':
         return [
-          'Podrá modificar información de lotes.',
-          'No podrá modificar o eliminar otra información.',
+          'Gestión y supervisión de lotes.',
+          'Capacidad para invitar a nuevos administradores y jardineros.',
+          'Sin otros derechos.',
         ];
       case 'Member':
         return [
-          'Agregar trabajos realizados dentro de sus lotes asignados.',
-          'No podrá modificar o eliminar otra información.',
+          'Registra tareas realizadas en los lotes asignados.',
+          'Sin accesos adicionales.',
         ];
       default:
         return ['Descripción no disponible.'];

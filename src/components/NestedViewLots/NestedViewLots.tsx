@@ -9,8 +9,6 @@ import useControllerService from '../../services/useControllerService';
 import { useNestedLots } from '../../services/useLotService';
 import { theme } from '../../styles/styles';
 
-const upperIndicatorsAndButtonsColor = theme.colors.primary;
-
 const NestedViewLots = () => {
   const { markSelectedLotsCompletedForSpecificDate, deselectAllLots } =
     useControllerService;
@@ -54,7 +52,7 @@ const NestedViewLots = () => {
           <View style={styles.selectedIndicatorsTextAndButtons}>
             <View style={styles.selectedIndicatorsLeftSide}>
               <Appbar.BackAction
-                color={upperIndicatorsAndButtonsColor}
+                color={theme.colors.primary}
                 size={28}
                 onPress={handleDeselectLots}
               />
@@ -64,19 +62,19 @@ const NestedViewLots = () => {
             <View style={styles.selectedIndicatorsRightSide}>
               <Appbar.Action
                 icon="check-circle-outline"
-                color={upperIndicatorsAndButtonsColor}
+                color={theme.colors.primary}
                 size={28}
                 onPress={handleMarkLotsCompleted}
               />
               <Appbar.Action
                 icon="account-arrow-left"
-                color={upperIndicatorsAndButtonsColor}
+                color={theme.colors.primary}
                 size={28}
                 onPress={() => {}}
               />
               <Appbar.Action
                 icon="dots-vertical"
-                color={upperIndicatorsAndButtonsColor}
+                color={theme.colors.primary}
                 size={28}
                 onPress={() => {}}
               />

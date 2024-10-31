@@ -5,7 +5,7 @@ import { Surface } from 'react-native-paper';
 import ControllerService from '../services/useControllerService';
 import NestedViewLots from './NestedViewLots/NestedViewLots';
 
-const TodaysLots = () => {
+const LotsOnSurfaceForHomeScreen = () => {
   useEffect(() => {
     ControllerService.initializeServices();
   }, []);
@@ -35,4 +35,4 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 });
-export default TodaysLots;
+export default LotsOnSurfaceForHomeScreen;

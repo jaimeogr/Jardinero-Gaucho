@@ -5,7 +5,6 @@ import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import useControllerService from '../../services/useControllerService';
 import { useNestedLots } from '../../services/useLotService';
 import { theme } from '../../styles/styles';
 
@@ -45,6 +44,7 @@ const NestedViewLots = ({
               <Text style={styles.selectedIndicatorsText}>{selectedLots}</Text>
             </View>
 
+            {/* The right side will render the prop */}
             <View style={styles.selectingStateRightSideActions}>
               {selectingStateRightSideActions}
             </View>

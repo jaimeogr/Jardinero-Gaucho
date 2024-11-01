@@ -1,11 +1,16 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import React, { useEffect, useCallback } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Surface, Appbar } from 'react-native-paper';
 
 import NestedViewLots from './NestedViewLots/NestedViewLots';
 import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
+import {
+  LotWithNeedMowingInterface,
+  ZoneWithIndicatorsInterface,
+  NeighbourhoodWithIndicatorsInterface,
+} from '../types/types';
 
 const LotsOnSurfaceForHomeScreen = () => {
   const { markSelectedLotsCompletedForSpecificDate, deselectAllLots } =
@@ -25,17 +30,63 @@ const LotsOnSurfaceForHomeScreen = () => {
     }
   };
 
-  const renderRightSideForOneLot = useCallback((lot) => {
-    if (lot) {
-      return (
-        <TouchableOpacity style={{ paddingHorizontal: 10 }}>
-          <Icon name="clock-outline" size={28} color="orange" />
-        </TouchableOpacity>
-      );
-    } else {
-      return null;
-    }
-  }, []);
+  const renderRightSideForOneLot = useCallback(
+    (lot: LotWithNeedMowingInterface) => {
+      if (lot) {
+        return (
+          <TouchableOpacity style={{ paddingHorizontal: 10 }}>
+            <Icon name="clock-outline" size={28} color="orange" />
+          </TouchableOpacity>
+        );
+      } else {
+        return null;
+      }
+    },
+    [],
+  );
+
+  const renderRightSideForAccordion = useCallback(
+    (
+      element:
+        | ZoneWithIndicatorsInterface
+        | NeighbourhoodWithIndicatorsInterface,
+    ) => {
+      if (element) {
+        console.log('element', element);
+        return (
+          <>
+            {element.needMowing ? (
+              <View
+                style={[
+                  styles.accordionHeaderIndicator,
+                  styles.accordionHeaderIndicatorNormal,
+                ]}
+              >
+                <Text style={styles.accordionHeaderIndicatorText}>
+                  {element.needMowing}
+                </Text>
+              </View>
+            ) : null}
+            {element.needMowingCritically ? (
+              <View
+                style={[
+                  styles.accordionHeaderIndicator,
+                  styles.accordionHeaderIndicatorCritical,
+                ]}
+              >
+                <Text style={styles.accordionHeaderIndicatorText}>
+                  {element.needMowingCritically}
+                </Text>
+              </View>
+            ) : null}
+          </>
+        );
+      } else {
+        return null;
+      }
+    },
+    [],
+  );
 
   const selectingStateRightSideActions = (
     <>
@@ -66,6 +117,7 @@ const LotsOnSurfaceForHomeScreen = () => {
         <NestedViewLots
           selectingStateRightSideActions={selectingStateRightSideActions}
           handleDeselectLots={handleDeselectLots}
+          renderRightSideForAccordion={renderRightSideForAccordion}
           renderRightSideForOneLot={renderRightSideForOneLot}
         />
       </View>
@@ -87,6 +139,20 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     justifyContent: 'space-between',
+  },
+  accordionHeaderIndicator: {
+    marginLeft: 16,
+    borderRadius: 16,
+    padding: 7,
+  },
+  accordionHeaderIndicatorNormal: {
+    backgroundColor: theme.colors.lightBlue,
+  },
+  accordionHeaderIndicatorCritical: {
+    backgroundColor: 'orange',
+  },
+  accordionHeaderIndicatorText: {
+    fontWeight: 'bold',
   },
 });
 export default LotsOnSurfaceForHomeScreen;

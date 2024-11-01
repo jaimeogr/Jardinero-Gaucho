@@ -11,6 +11,7 @@ import { theme } from '../../styles/styles';
 const NestedViewLots = ({
   selectingStateRightSideActions,
   handleDeselectLots,
+  renderRightSideForAccordion,
   renderRightSideForOneLot,
 }) => {
   const { nestedLots, selectedLots } = useNestedLots();
@@ -60,20 +61,20 @@ const NestedViewLots = ({
           <CustomAccordion
             key={neighbourhoodIndex}
             id={neighbourhood.neighbourhoodId}
+            element={neighbourhood}
             title={neighbourhood.neighbourhoodLabel}
             level={0} // Neighbourhood level
-            thisWeeksNormalLotsToMow={neighbourhood.needMowing}
-            thisWeeksCriticalLotsToMow={neighbourhood.needMowingCritically}
+            renderRightSide={renderRightSideForAccordion}
             isSelected={neighbourhood.isSelected}
           >
             {neighbourhood.zones.map((zone, zoneIndex) => (
               <CustomAccordion
                 key={zoneIndex}
                 id={zone.zoneId}
+                element={zone}
                 title={`Zona ${zone.zoneLabel}`}
                 level={1} // Zone level
-                thisWeeksNormalLotsToMow={zone.needMowing}
-                thisWeeksCriticalLotsToMow={zone.needMowingCritically}
+                renderRightSide={renderRightSideForAccordion}
                 isSelected={zone.isSelected}
               >
                 {zone.lots.map((lot, lotIndex) => (

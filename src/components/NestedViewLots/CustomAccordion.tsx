@@ -5,6 +5,10 @@ import { IconButton } from 'react-native-paper';
 
 import useControllerService from '../../services/useControllerService';
 import { theme } from '../../styles/styles';
+import {
+  ZoneWithIndicatorsInterface,
+  NeighbourhoodWithIndicatorsInterface,
+} from '../../types/types';
 
 const {
   accordion: {
@@ -28,19 +32,20 @@ type CustomAccordionProps = {
   title: string;
   children: React.ReactNode;
   level: number; // Pass the level of accordion (neighbourhood or zone)
-  thisWeeksNormalLotsToMow?: number;
-  thisWeeksCriticalLotsToMow?: number;
   isSelected: boolean;
+  renderRightSide?: (
+    element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface,
+  ) => JSX.Element;
 };
 
 const CustomAccordion: React.FC<CustomAccordionProps> = ({
   id,
+  element,
   title,
   children,
   level,
-  thisWeeksNormalLotsToMow,
-  thisWeeksCriticalLotsToMow,
   isSelected,
+  renderRightSide,
 }) => {
   const { toggleZoneSelection, toggleNeighbourhoodSelection } =
     useControllerService;
@@ -94,18 +99,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
         </View>
 
         <View style={styles.accordionHeaderRightSide}>
-          {thisWeeksNormalLotsToMow ? (
-            <View style={styles.accordionHeaderIndicatorNormal}>
-              <Text>{thisWeeksNormalLotsToMow}</Text>
-            </View>
-          ) : null}
-          {thisWeeksCriticalLotsToMow ? (
-            <View style={styles.accordionHeaderIndicatorCritical}>
-              <Text style={styles.accordionHeaderIndicatorText}>
-                {thisWeeksCriticalLotsToMow}
-              </Text>
-            </View>
-          ) : null}
+          {renderRightSide && <View>{renderRightSide(element)}</View>}
           <IconButton
             icon={expanded ? 'chevron-up' : 'chevron-down'}
             size={20}
@@ -161,16 +155,6 @@ const styles = StyleSheet.create({
   accordionHeaderRightSide: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  accordionHeaderIndicatorNormal: {},
-  accordionHeaderIndicatorCritical: {
-    marginLeft: 16,
-    backgroundColor: 'orange',
-    borderRadius: 16,
-    padding: 7,
-  },
-  accordionHeaderIndicatorText: {
-    fontWeight: 'bold',
   },
   accordionContent: {
     padding: 10,

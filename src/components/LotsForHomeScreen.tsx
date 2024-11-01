@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     padding: 7,
   },
   accordionHeaderIndicatorNormal: {
-    backgroundColor: theme.colors.lightBlue,
+    backgroundColor: theme.colors.lightBrown,
   },
   accordionHeaderIndicatorCritical: {
     backgroundColor: 'orange',

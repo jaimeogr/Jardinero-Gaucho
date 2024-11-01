@@ -52,21 +52,8 @@ const LotsForHomeScreen = () => {
         | NeighbourhoodWithIndicatorsInterface,
     ) => {
       if (element) {
-        console.log('element', element);
         return (
           <View style={styles.indicatorsContainer}>
-            {element.needMowing ? (
-              <View
-                style={[
-                  styles.accordionHeaderIndicator,
-                  styles.accordionHeaderIndicatorNormal,
-                ]}
-              >
-                <Text style={styles.accordionHeaderIndicatorText}>
-                  {element.needMowing}
-                </Text>
-              </View>
-            ) : null}
             {element.needMowingCritically ? (
               <View
                 style={[
@@ -76,6 +63,18 @@ const LotsForHomeScreen = () => {
               >
                 <Text style={styles.accordionHeaderIndicatorText}>
                   {element.needMowingCritically}
+                </Text>
+              </View>
+            ) : null}
+            {element.needMowing ? (
+              <View
+                style={[
+                  styles.accordionHeaderIndicator,
+                  styles.accordionHeaderIndicatorNormal,
+                ]}
+              >
+                <Text style={styles.accordionHeaderIndicatorText}>
+                  {element.needMowing}
                 </Text>
               </View>
             ) : null}
@@ -141,11 +140,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   indicatorsContainer: {
+    marginLeft: 16,
     flexDirection: 'row',
     alignItems: 'center',
   },
   accordionHeaderIndicator: {
-    marginLeft: 16,
+    marginLeft: 6,
     borderRadius: 16,
     padding: 7,
   },

@@ -95,7 +95,13 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
               size={28}
             />
           </TouchableOpacity>
-          <Text style={styles.accordionTitle}>{title}</Text>
+          <Text
+            style={styles.accordionTitle}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {title}
+          </Text>
         </View>
 
         <View style={styles.accordionHeaderRightSide}>

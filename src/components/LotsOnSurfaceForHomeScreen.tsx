@@ -1,5 +1,6 @@
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import React, { useEffect, useCallback } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Surface, Appbar } from 'react-native-paper';
 
 import NestedViewLots from './NestedViewLots/NestedViewLots';
@@ -23,6 +24,18 @@ const LotsOnSurfaceForHomeScreen = () => {
       console.error('No lots were selected to mark as completed');
     }
   };
+
+  const renderRightSideForOneLot = useCallback((lot) => {
+    if (lot) {
+      return (
+        <TouchableOpacity style={{ paddingHorizontal: 10 }}>
+          <Icon name="clock-outline" size={28} color="orange" />
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
+  }, []);
 
   const selectingStateRightSideActions = (
     <>
@@ -53,6 +66,7 @@ const LotsOnSurfaceForHomeScreen = () => {
         <NestedViewLots
           selectingStateRightSideActions={selectingStateRightSideActions}
           handleDeselectLots={handleDeselectLots}
+          renderRightSideForOneLot={renderRightSideForOneLot}
         />
       </View>
     </Surface>

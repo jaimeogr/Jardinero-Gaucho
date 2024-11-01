@@ -16,11 +16,13 @@ const {
 interface OneLotForCustomAccordionProps {
   lotId: string; // Use LotInterface to type the lot prop
   isLastItem: boolean;
+  renderRightSide?: (lot) => JSX.Element;
 }
 
 const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
   isLastItem,
   lotId,
+  renderRightSide,
 }) => {
   const { getLotById, toggleLotSelection } = useControllerService;
   // Use useLotStore with a state selector to get only the relevant data to avoid unnecessary re-renders
@@ -68,13 +70,9 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
         </View>
 
         {/* Right Side */}
-        <TouchableOpacity style={styles.rightIconContainer}>
-          <MaterialCommunityIcons
-            name="clock-outline"
-            size={28}
-            color="orange"
-          />
-        </TouchableOpacity>
+        {renderRightSide && (
+          <View style={styles.lotRightSide}>{renderRightSide(lot)}</View>
+        )}
       </TouchableOpacity>
       {/* divider at the bottom of the item renders when the item is not selected and when its not the last item in the iteration. */}
       {lot.lotIsSelected || isLastItem ? null : (
@@ -111,7 +109,7 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: 14,
   },
-  rightIconContainer: {
+  lotRightSide: {
     paddingHorizontal: 10,
   },
   lotIsSelected: {

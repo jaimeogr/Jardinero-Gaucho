@@ -11,6 +11,7 @@ import { theme } from '../../styles/styles';
 const NestedViewLots = ({
   selectingStateRightSideActions,
   handleDeselectLots,
+  renderRightSideForOneLot,
 }) => {
   const { nestedLots, selectedLots } = useNestedLots();
 
@@ -80,6 +81,7 @@ const NestedViewLots = ({
                     key={lotIndex}
                     lotId={lot.lotId}
                     isLastItem={lotIndex === zone.lots.length - 1}
+                    renderRightSide={renderRightSideForOneLot}
                   />
                 ))}
               </CustomAccordion>

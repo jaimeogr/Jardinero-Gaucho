@@ -5,7 +5,7 @@ import { View, StyleSheet } from 'react-native';
 import { Surface } from 'react-native-paper';
 
 import ClickableRoundButton from '../components/ClickableRoundButton';
-import LotsOnSurfaceForHomeScreen from '../components/LotsOnSurfaceForHomeScreen';
+import LotsForHomeScreen from '../components/LotsForHomeScreen';
 import { theme } from '../styles/styles';
 
 const HomeScreen = ({ navigation }) => {
@@ -34,7 +34,7 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('LotCreation')}
           />
         </Surface>
-        <LotsOnSurfaceForHomeScreen />
+        <LotsForHomeScreen />
       </View>
     </LinearGradient>
   );

@@ -12,7 +12,7 @@ import {
   NeighbourhoodWithIndicatorsInterface,
 } from '../types/types';
 
-const LotsOnSurfaceForHomeScreen = () => {
+const LotsForHomeScreen = () => {
   const { markSelectedLotsCompletedForSpecificDate, deselectAllLots } =
     useControllerService;
 
@@ -155,4 +155,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-export default LotsOnSurfaceForHomeScreen;
+export default LotsForHomeScreen;

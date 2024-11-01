@@ -1,4 +1,3 @@
-import { NeighbourhoodData } from './types';
 // types.ts or interfaces.ts
 
 // LOTS / ZONES / NEIGHBOURHOODS

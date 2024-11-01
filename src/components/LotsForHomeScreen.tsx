@@ -54,7 +54,7 @@ const LotsForHomeScreen = () => {
       if (element) {
         console.log('element', element);
         return (
-          <>
+          <View style={styles.indicatorsContainer}>
             {element.needMowing ? (
               <View
                 style={[
@@ -79,7 +79,7 @@ const LotsForHomeScreen = () => {
                 </Text>
               </View>
             ) : null}
-          </>
+          </View>
         );
       } else {
         return null;
@@ -139,6 +139,10 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     justifyContent: 'space-between',
+  },
+  indicatorsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   accordionHeaderIndicator: {
     marginLeft: 16,

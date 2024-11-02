@@ -54,7 +54,10 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
                 size={28}
                 onPress={handleDeselectLots}
               />
-              <Text style={styles.selectedIndicatorsText}>{selectedLots}</Text>
+              <Text style={styles.selectedIndicatorsText}>
+                {selectedLots}
+                {'   '}lotes
+              </Text>
             </View>
 
             {/* Conditionally render right-side actions if provided */}

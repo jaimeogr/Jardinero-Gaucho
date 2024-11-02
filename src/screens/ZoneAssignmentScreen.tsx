@@ -160,11 +160,8 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation }) => {
       />
 
       {/* Button to assign the selected lots */}
-      <TouchableOpacity
-        style={styles.assignButton}
-        onPress={handleAssignMember}
-      >
-        <Text style={styles.assignButtonText}>Guardar Cambios</Text>
+      <TouchableOpacity style={styles.button} onPress={handleAssignMember}>
+        <Text style={styles.buttonText}>Guardar Cambios</Text>
       </TouchableOpacity>
     </View>
   );
@@ -220,16 +217,17 @@ const styles = StyleSheet.create({
   dropdownItemText: {
     fontSize: 16,
   },
-  assignButton: {
+  button: {
     backgroundColor: theme.colors.primary,
-    padding: 16,
+    borderRadius: 50,
+    paddingVertical: 16,
     alignItems: 'center',
     margin: 16,
-    borderRadius: 8,
   },
-  assignButtonText: {
-    color: 'white',
-    fontSize: 16,
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

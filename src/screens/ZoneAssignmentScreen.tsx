@@ -170,6 +170,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   userSelectionContainer: {
     padding: 16,

@@ -46,10 +46,12 @@ const NestedViewLots = ({
               <Text style={styles.selectedIndicatorsText}>{selectedLots}</Text>
             </View>
 
-            {/* The right side will render the prop */}
-            <View style={styles.selectingStateRightSideActions}>
-              {selectingStateRightSideActions}
-            </View>
+            {/* Conditionally render right-side actions if provided */}
+            {selectingStateRightSideActions && (
+              <View style={styles.selectingStateRightSideActions}>
+                {selectingStateRightSideActions}
+              </View>
+            )}
           </View>
         </View>
       ) : (

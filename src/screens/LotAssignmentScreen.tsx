@@ -3,18 +3,20 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Modal,
   Alert,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+  Modal,
 } from 'react-native';
 
 import CustomAccordion from '../components/NestedViewLots/CustomAccordion';
+import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
 import OneLotForCustomAccordion from '../components/NestedViewLots/OneLotForCustomAccordion';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
@@ -36,17 +38,13 @@ interface Props {
 
 const LotAssignmentScreen: React.FC<Props> = ({ navigation }) => {
   const {
-    useNestedLotsWithAssignments,
-    assignMembersToSelectedLots,
-    toggleLotSelection,
+    assignMemberToSelectedLots,
     deselectAllLots,
     getUsersInActiveWorkgroupWithRoles,
-    getUserById,
   } = ControllerService;
 
-  const { nestedLots } = useNestedLotsWithAssignments();
-  const [assigneeModalVisible, setAssigneeModalVisible] = useState(false);
-  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
 
   // Clear selections when the screen is focused
   useEffect(() => {
@@ -54,164 +52,182 @@ const LotAssignmentScreen: React.FC<Props> = ({ navigation }) => {
       deselectAllLots();
     });
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, deselectAllLots]);
 
-  // Handler for lot selection
-  const handleLotToggle = (lotId: string) => {
-    toggleLotSelection(lotId);
-  };
+  // Handler for deselecting lots
+  const handleDeselectLots = useCallback(() => {
+    deselectAllLots();
+  }, [deselectAllLots]);
 
-  // Handler for assigning members
-  const handleAssignMembers = () => {
-    if (selectedUserIds.length === 0) {
+  // Handler for assigning member
+  const handleAssignMember = () => {
+    if (!selectedUserId) {
       Alert.alert(
-        'Selecciona integrantes',
-        'Debes seleccionar al menos un integrante.',
+        'Selecciona un integrante',
+        'Debes seleccionar un integrante.',
       );
       return;
     }
-    assignMembersToSelectedLots(selectedUserIds);
-    setAssigneeModalVisible(false);
-    setSelectedUserIds([]);
+    assignMemberToSelectedLots(selectedUserId);
+    setSelectedUserId(null);
     deselectAllLots();
+    Alert.alert('Asignación exitosa', 'Los lotes han sido asignados.');
   };
 
-  // Function to get user initials
-  const getUserInitials = (userId: string) => {
-    const user = getUserById(userId);
-    if (user) {
-      return (
-        user.firstName.charAt(0).toUpperCase() +
-        user.lastName.charAt(0).toUpperCase()
-      );
-    }
-    return '';
-  };
+  // Render right-side for one lot
+  const renderRightSideForOneLot = useCallback(() => {
+    return null; // No right-side icon for lots in assignment screen
+  }, []);
 
-  // Get team members for the modal
+  // Render right-side for accordion (zones and neighborhoods)
+  const renderRightSideForAccordion = useCallback(() => {
+    return null; // No right-side icon for accordions in assignment screen
+  }, []);
+
+  // Get team members for the dropdown
   const teamMembers = getUsersInActiveWorkgroupWithRoles();
 
-  // Render the nested lots similar to NestedViewLots component
+  // Function to render the badge or dropdown
+  const renderUserSelection = () => {
+    const selectedUser = teamMembers.find(
+      (user) => user.userId === selectedUserId,
+    );
 
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={nestedLots}
-        keyExtractor={(item) => item.neighbourhoodId}
-        renderItem={({ item: neighbourhood }) => (
-          <CustomAccordion
-            id={neighbourhood.neighbourhoodId}
-            title={neighbourhood.neighbourhoodLabel}
-            level={0}
-            thisWeeksNormalLotsToMow={neighbourhood.needMowing}
-            thisWeeksCriticalLotsToMow={neighbourhood.needMowingCritically}
-            isSelected={neighbourhood.isSelected}
-          >
-            {neighbourhood.zones.map((zone) => (
-              <CustomAccordion
-                id={zone.zoneId}
-                title={`Zona ${zone.zoneLabel}`}
-                level={1}
-                thisWeeksNormalLotsToMow={zone.needMowing}
-                thisWeeksCriticalLotsToMow={zone.needMowingCritically}
-                isSelected={zone.isSelected}
-                key={zone.zoneId}
-              >
-                {zone.lots.map((lot, index) => (
-                  <OneLotForCustomAccordion
-                    key={lot.lotId}
-                    lotId={lot.lotId}
-                    isLastItem={index === zone.lots.length - 1}
-                    onLotPress={() => handleLotToggle(lot.lotId)}
-                    assignedTo={lot.assignedTo}
-                    getUserInitials={getUserInitials}
-                  />
-                ))}
-              </CustomAccordion>
-            ))}
-          </CustomAccordion>
-        )}
-      />
-
-      {/* Sticky Footer Button */}
-      <View style={styles.footer}>
+    return (
+      <View>
         <TouchableOpacity
-          style={styles.assignButton}
-          onPress={() => setAssigneeModalVisible(true)}
+          style={styles.userSelectionTouchable}
+          onPress={() => setDropdownVisible(!dropdownVisible)}
         >
-          <Text style={styles.assignButtonText}>Seleccionar Integrantes</Text>
+          {selectedUser ? (
+            <View style={styles.badgeContainer}>
+              <Text style={styles.badgeText}>
+                {selectedUser.firstName} {selectedUser.lastName}
+              </Text>
+            </View>
+          ) : (
+            <Text style={styles.dropdownPlaceholderText}>
+              Seleccionar integrante
+            </Text>
+          )}
+          <Icon
+            name={dropdownVisible ? 'chevron-up' : 'chevron-down'}
+            size={24}
+            color="#000"
+          />
         </TouchableOpacity>
-      </View>
 
-      {/* Assignee Selection Modal */}
-      <Modal
-        visible={assigneeModalVisible}
-        transparent={true}
-        animationType="slide"
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Seleccionar Integrantes</Text>
-            {/* Use a FlatList to render team members with checkboxes */}
-            <FlatList
-              data={teamMembers}
-              keyExtractor={(item) => item.userId}
-              renderItem={({ item }) => (
+        {dropdownVisible && (
+          <View style={styles.dropdownMenu}>
+            <ScrollView>
+              {teamMembers.map((user) => (
                 <TouchableOpacity
+                  key={user.userId}
+                  style={styles.dropdownItem}
                   onPress={() => {
-                    if (selectedUserIds.includes(item.userId)) {
-                      setSelectedUserIds(
-                        selectedUserIds.filter((id) => id !== item.userId),
-                      );
-                    } else {
-                      setSelectedUserIds([...selectedUserIds, item.userId]);
-                    }
+                    setSelectedUserId(user.userId);
+                    setDropdownVisible(false);
                   }}
-                  style={styles.userItem}
                 >
-                  <View style={styles.userInfo}>
-                    <Text>
-                      {item.firstName} {item.lastName}
-                    </Text>
-                  </View>
-                  {selectedUserIds.includes(item.userId) && (
+                  <Text style={styles.dropdownItemText}>
+                    {user.firstName} {user.lastName}
+                  </Text>
+                  {selectedUserId === user.userId && (
                     <Icon name="check" size={20} color={theme.colors.primary} />
                   )}
                 </TouchableOpacity>
-              )}
-            />
-            <View style={styles.modalButtonContainer}>
-              <TouchableOpacity
-                style={styles.modalCancelButton}
-                onPress={() => setAssigneeModalVisible(false)}
-              >
-                <Text style={styles.modalButtonText}>Cancelar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalAddButton}
-                onPress={handleAssignMembers}
-              >
-                <Text style={styles.modalButtonText}>
-                  Asignar Integrantes a Lotes Seleccionados
-                </Text>
-              </TouchableOpacity>
-            </View>
+              ))}
+            </ScrollView>
           </View>
-        </View>
-      </Modal>
+        )}
+      </View>
+    );
+  };
 
-      {/* Gradient at the bottom */}
-      <LinearGradient
-        colors={['transparent', 'rgba(255, 255, 255, 0.9)']}
-        style={styles.gradientOverlay}
-        pointerEvents="none"
+  return (
+    <View style={styles.container}>
+      {/* Render the user selection dropdown */}
+      <View style={styles.userSelectionContainer}>{renderUserSelection()}</View>
+
+      {/* Button to assign the selected lots */}
+      <TouchableOpacity
+        style={styles.assignButton}
+        onPress={handleAssignMember}
+      >
+        <Text style={styles.assignButtonText}>Asignar lotes seleccionados</Text>
+      </TouchableOpacity>
+
+      {/* Render the nested lots */}
+      <NestedViewLots
+        handleDeselectLots={handleDeselectLots}
+        renderRightSideForAccordion={renderRightSideForAccordion}
+        renderRightSideForOneLot={renderRightSideForOneLot}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  // Your styles here
+  container: {
+    flex: 1,
+  },
+  userSelectionContainer: {
+    padding: 16,
+    backgroundColor: 'white',
+  },
+  userSelectionTouchable: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  badgeContainer: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: 12,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  badgeText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  dropdownPlaceholderText: {
+    color: '#999',
+    fontSize: 16,
+  },
+  dropdownMenu: {
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    backgroundColor: 'white',
+    maxHeight: 200, // Limit height if you have many team members
+  },
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  dropdownItemText: {
+    fontSize: 16,
+  },
+  assignButton: {
+    backgroundColor: theme.colors.primary,
+    padding: 16,
+    alignItems: 'center',
+    margin: 16,
+    borderRadius: 8,
+  },
+  assignButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
 });
 
 export default LotAssignmentScreen;

@@ -101,7 +101,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       console.log('Inviting user...');
       const success = ControllerService.inviteUserToActiveWorkgroup(
         email,
-        inviteRole,
+        selectedRole as UserRole,
         accessToAllLots,
       );
       if (success) {

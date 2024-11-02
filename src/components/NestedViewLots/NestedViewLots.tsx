@@ -13,6 +13,7 @@ interface NestedViewLotsProps {
   handleDeselectLots: () => void;
   renderRightSideForAccordion: Function;
   renderRightSideForOneLot: Function;
+  title?: string;
   onlyZonesAreSelectable?: boolean;
   expandNeighbourhood?: boolean;
 }
@@ -22,6 +23,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   handleDeselectLots,
   renderRightSideForAccordion,
   renderRightSideForOneLot,
+  title = 'Mis lotes',
   onlyZonesAreSelectable = false,
   expandNeighbourhood = false,
 }) => {
@@ -69,7 +71,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
           </View>
         </View>
       ) : (
-        <Text style={styles.title}>Mis lotes</Text>
+        <Text style={styles.title}>{title}</Text>
       )}
 
       <ScrollView contentContainerStyle={styles.scrollContent}>

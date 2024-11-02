@@ -36,7 +36,7 @@ interface Props {
   navigation: LotAssignmentScreenNavigationProp;
 }
 
-const LotAssignmentScreen: React.FC<Props> = ({ navigation }) => {
+const ZoneAssignmentScreen: React.FC<Props> = ({ navigation }) => {
   const {
     assignMemberToSelectedLots,
     deselectAllLots,
@@ -149,22 +149,23 @@ const LotAssignmentScreen: React.FC<Props> = ({ navigation }) => {
       {/* Render the user selection dropdown */}
       <View style={styles.userSelectionContainer}>{renderUserSelection()}</View>
 
-      {/* Button to assign the selected lots */}
-      <TouchableOpacity
-        style={styles.assignButton}
-        onPress={handleAssignMember}
-      >
-        <Text style={styles.assignButtonText}>Asignar lotes seleccionados</Text>
-      </TouchableOpacity>
-
       {/* Render the nested lots */}
       <NestedViewLots
         handleDeselectLots={handleDeselectLots}
         renderRightSideForAccordion={renderRightSideForAccordion}
         renderRightSideForOneLot={renderRightSideForOneLot}
+        title="Zonas"
         onlyZonesAreSelectable={true}
         expandNeighbourhood={true}
       />
+
+      {/* Button to assign the selected lots */}
+      <TouchableOpacity
+        style={styles.assignButton}
+        onPress={handleAssignMember}
+      >
+        <Text style={styles.assignButtonText}>Guardar Cambios</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -232,4 +233,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LotAssignmentScreen;
+export default ZoneAssignmentScreen;

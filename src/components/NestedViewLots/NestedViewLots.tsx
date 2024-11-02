@@ -8,11 +8,22 @@ import OneLotForCustomAccordion from './OneLotForCustomAccordion';
 import { useNestedLots } from '../../services/useLotService';
 import { theme } from '../../styles/styles';
 
-const NestedViewLots = ({
-  selectingStateRightSideActions,
+interface NestedViewLotsProps {
+  selectingStateRightSideActions?: React.ReactNode;
+  handleDeselectLots: () => void;
+  renderRightSideForAccordion: Function;
+  renderRightSideForOneLot: Function;
+  onlyZonesAreSelectable?: boolean;
+  expandNeighbourhood?: boolean;
+}
+
+const NestedViewLots: React.FC<NestedViewLotsProps> = ({
+  selectingStateRightSideActions = null,
   handleDeselectLots,
   renderRightSideForAccordion,
   renderRightSideForOneLot,
+  onlyZonesAreSelectable = false,
+  expandNeighbourhood = false,
 }) => {
   const { nestedLots, selectedLots } = useNestedLots();
 
@@ -68,6 +79,8 @@ const NestedViewLots = ({
             level={0} // Neighbourhood level
             renderRightSide={renderRightSideForAccordion}
             isSelected={neighbourhood.isSelected}
+            isSelectable={!onlyZonesAreSelectable}
+            startExpanded={expandNeighbourhood}
           >
             {neighbourhood.zones.map((zone, zoneIndex) => (
               <CustomAccordion
@@ -76,14 +89,15 @@ const NestedViewLots = ({
                 element={zone}
                 title={`Zona ${zone.zoneLabel}`}
                 level={1} // Zone level
-                renderRightSide={renderRightSideForAccordion}
                 isSelected={zone.isSelected}
+                renderRightSide={renderRightSideForAccordion}
               >
                 {zone.lots.map((lot, lotIndex) => (
                   <OneLotForCustomAccordion
                     key={lotIndex}
                     lotId={lot.lotId}
                     isLastItem={lotIndex === zone.lots.length - 1}
+                    isSelectable={!onlyZonesAreSelectable}
                     renderRightSide={renderRightSideForOneLot}
                   />
                 ))}

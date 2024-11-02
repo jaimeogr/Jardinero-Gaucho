@@ -16,12 +16,14 @@ const {
 interface OneLotForCustomAccordionProps {
   lotId: string; // Use LotInterface to type the lot prop
   isLastItem: boolean;
+  isSelectable?: boolean;
   renderRightSide?: (lot) => JSX.Element;
 }
 
 const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
   isLastItem,
   lotId,
+  isSelectable = true,
   renderRightSide,
 }) => {
   const { getLotById, toggleLotSelection } = useControllerService;
@@ -48,16 +50,18 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
         }
       >
         {/* Left Icon */}
-        <TouchableOpacity
-          onPress={handleToggle}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
-        >
-          <MaterialCommunityIcons
-            name={lot.lotIsSelected ? 'circle-slice-8' : 'circle-outline'}
-            color={theme.colors.primary}
-            size={28}
-          />
-        </TouchableOpacity>
+        {isSelectable && (
+          <TouchableOpacity
+            onPress={handleToggle}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
+          >
+            <MaterialCommunityIcons
+              name={lot.lotIsSelected ? 'circle-slice-8' : 'circle-outline'}
+              color={theme.colors.primary}
+              size={28}
+            />
+          </TouchableOpacity>
+        )}
 
         {/* Title and Description */}
         <View style={styles.textContainer}>

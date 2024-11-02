@@ -27,16 +27,19 @@ const {
   },
 } = theme.colors;
 
-type CustomAccordionProps = {
+interface CustomAccordionProps {
   id: string;
+  element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface;
   title: string;
   children: React.ReactNode;
   level: number; // Pass the level of accordion (neighbourhood or zone)
   isSelected: boolean;
+  isSelectable?: boolean;
+  startExpanded?: boolean;
   renderRightSide?: (
     element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface,
   ) => JSX.Element;
-};
+}
 
 const CustomAccordion: React.FC<CustomAccordionProps> = ({
   id,
@@ -45,11 +48,13 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   children,
   level,
   isSelected,
+  isSelectable = true,
+  startExpanded = false,
   renderRightSide,
 }) => {
   const { toggleZoneSelection, toggleNeighbourhoodSelection } =
     useControllerService;
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(startExpanded);
 
   const handleToggle = useCallback(() => {
     const newState = !isSelected;
@@ -85,16 +90,19 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
         style={styles.accordionHeader}
       >
         <View style={styles.accordionHeaderLeftSide}>
-          <TouchableOpacity
-            onPress={handleToggle}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
-          >
-            <MaterialCommunityIcons
-              name={isSelected ? 'circle-slice-8' : 'circle-outline'}
-              color={theme.colors.primary}
-              size={28}
-            />
-          </TouchableOpacity>
+          {isSelectable && (
+            <TouchableOpacity
+              onPress={handleToggle}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <MaterialCommunityIcons
+                name={isSelected ? 'circle-slice-8' : 'circle-outline'}
+                color={theme.colors.primary}
+                size={28}
+              />
+            </TouchableOpacity>
+          )}
+
           <Text
             style={styles.accordionTitle}
             numberOfLines={1}
@@ -152,6 +160,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+  },
+  iconPlaceholder: {
+    width: 28, // Same size as the icon to maintain layout
+    height: 28,
   },
   accordionTitle: {
     fontSize: 17,

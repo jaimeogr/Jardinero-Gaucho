@@ -162,6 +162,8 @@ const LotAssignmentScreen: React.FC<Props> = ({ navigation }) => {
         handleDeselectLots={handleDeselectLots}
         renderRightSideForAccordion={renderRightSideForAccordion}
         renderRightSideForOneLot={renderRightSideForOneLot}
+        onlyZonesAreSelectable={true}
+        expandNeighbourhood={true}
       />
     </View>
   );

@@ -78,12 +78,6 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
     setModalVisible(false); // Close the modal after selection
   };
 
-  const getDynamicButtonText = () => {
-    return accessToAllLots
-      ? 'Invitar Integrante'
-      : 'Seleccionar Lotes para el Integrante';
-  };
-
   const handleButtonPress = () => {
     if (!email) {
       Alert.alert('Email inválido', 'Por favor ingresá un email válido.');
@@ -91,19 +85,20 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
     }
     if (accessToAllLots === null) {
       Alert.alert(
-        'Acceso a lotes debe estar completo',
+        'Acceso a zonas debe estar completo',
         'Por favor seleccioná una opción.',
       );
       return;
     }
+
+    // Proceed with inviting the user
+    console.log('Inviting user...');
+    const success = ControllerService.inviteUserToActiveWorkgroup(
+      email,
+      selectedRole as UserRole,
+      accessToAllLots,
+    );
     if (accessToAllLots) {
-      // Proceed with inviting the user
-      console.log('Inviting user...');
-      const success = ControllerService.inviteUserToActiveWorkgroup(
-        email,
-        selectedRole as UserRole,
-        accessToAllLots,
-      );
       if (success) {
         Alert.alert('Éxito', 'El integrante ha sido invitado.');
         navigation.goBack();
@@ -130,7 +125,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
         ];
       case 'Member':
         return [
-          'Registra tareas realizadas en los lotes asignados.',
+          'Registra tareas realizadas en las zonas asignados.',
           'Sin accesos adicionales.',
         ];
       default:
@@ -167,7 +162,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Access to All Lots Picker */}
-      <Text style={styles.inputTitle}>Acceso a lotes</Text>
+      <Text style={styles.inputTitle}>Acceso a zonas</Text>
       <View style={styles.pickerContainer}>
         <RNPickerSelect
           onValueChange={(value) => setAccessToAllLots(value)}
@@ -177,11 +172,11 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
           }}
           items={[
             {
-              label: 'Todos los lotes (Ideal para empezar)',
+              label: 'Todas las zonas (Ideal para empezar)',
               value: true,
             },
             {
-              label: 'Solo los seleccionados (Mayor control)',
+              label: 'Solo las seleccionadas (Mayor control)',
               value: false,
             },
           ]}
@@ -210,7 +205,9 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
             accessToAllLots ? null : styles.secondaryText,
           ]}
         >
-          {getDynamicButtonText()}
+          {accessToAllLots
+            ? 'Invitar Integrante'
+            : 'Invitar Integrante y Seleccionar sus Zonas'}
         </Text>
       </TouchableOpacity>
 

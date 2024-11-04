@@ -101,6 +101,7 @@ const inviteUserToActiveWorkgroup = (
         workgroupId: activeWorkgroup.workgroupId,
         role,
         accessToAllLots,
+        hasAcceptedPresenceInWorkgroup: false,
       },
     ],
   };

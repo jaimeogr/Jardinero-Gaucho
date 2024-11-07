@@ -298,7 +298,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           >
             <RNPickerSelect
               onValueChange={handleZoneChange}
-              items={zoneItems} // No need for conditional; it’s disabled anyway
+              items={zoneItems}
               value={lotData.zoneId}
               placeholder={{
                 label: lotData.neighbourhoodId

@@ -17,6 +17,8 @@ export const theme = {
     ripple: '#EAE7E7',
     placeholder: '#A0A0A0',
     lightBrown: '#B0A695',
+    disabled: '#f0f0f0',
+    disabledText: '#aaa',
 
     accordion: {
       // neighbourhood selected

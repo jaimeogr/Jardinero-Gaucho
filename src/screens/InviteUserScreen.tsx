@@ -73,9 +73,15 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
   const [accessToAllLots, setAccessToAllLots] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const isPickerDisabled =
+    selectedRole === 'Owner' || selectedRole === 'Manager';
+
   const handleRoleSelect = (role: string) => {
     setSelectedRole(role);
     setModalVisible(false); // Close the modal after selection
+    if (isPickerDisabled) {
+      setAccessToAllLots(true);
+    }
   };
 
   const handleButtonPress = () => {
@@ -163,7 +169,12 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
 
       {/* Access to All Lots Picker */}
       <Text style={styles.inputTitle}>Acceso a zonas</Text>
-      <View style={styles.pickerContainer}>
+      <View
+        style={[
+          styles.pickerContainer,
+          isPickerDisabled ? styles.pickerContainerDisabled : null,
+        ]}
+      >
         <RNPickerSelect
           onValueChange={(value) => setAccessToAllLots(value)}
           placeholder={{
@@ -172,7 +183,9 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
           }}
           items={[
             {
-              label: 'Todas las zonas (Ideal para empezar)',
+              label: isPickerDisabled
+                ? 'Todas las zonas'
+                : 'Todas las zonas (Ideal para empezar)',
               value: true,
             },
             {
@@ -181,16 +194,31 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
             },
           ]}
           value={accessToAllLots}
-          style={pickerSelectStyles}
+          style={{
+            ...pickerSelectStyles,
+            inputIOS: {
+              ...pickerSelectStyles.inputIOS,
+              opacity: isPickerDisabled ? 0.5 : 1, // Apply opacity directly based on disabled state
+            },
+            inputAndroid: {
+              ...pickerSelectStyles.inputAndroid,
+              opacity: isPickerDisabled ? 0.5 : 1, // Apply opacity directly based on disabled state
+            },
+          }}
           useNativeAndroidPickerStyle={false}
           Icon={() => (
             <Icon
               name="chevron-down"
               size={24}
-              color={theme.colors.primary} // Adjust icon color
+              color={
+                isPickerDisabled
+                  ? theme.colors.disabledText
+                  : theme.colors.primary
+              } // Adjust icon color
               style={{ marginRight: 12 }} // Adjust margin if needed
             />
           )}
+          disabled={isPickerDisabled}
         />
       </View>
 
@@ -266,7 +294,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
   },
   inputTitle: {
     fontSize: 18,
@@ -286,6 +314,10 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
     borderRadius: 10,
     marginBottom: 16,
+  },
+  pickerContainerDisabled: {
+    borderColor: theme.colors.disabled,
+    backgroundColor: theme.colors.disabled,
   },
   picker: {
     flexDirection: 'row',
@@ -414,6 +446,12 @@ const pickerSelectStyles = StyleSheet.create({
   iconContainer: {
     top: 12, // Adjust the position
   },
+});
+
+const pickerSelectDisabledStyles = StyleSheet.create({
+  inputIOS: {},
+  inputAndroid: {},
+  iconContainer: {},
 });
 
 export default InviteUserScreen;

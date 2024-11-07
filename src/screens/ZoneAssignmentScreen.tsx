@@ -154,14 +154,14 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation }) => {
         handleDeselectLots={handleDeselectLots}
         renderRightSideForAccordion={renderRightSideForAccordion}
         renderRightSideForOneLot={renderRightSideForOneLot}
-        title="Zonas"
+        title="seleccionar zonas:"
         onlyZonesAreSelectable={true}
         expandNeighbourhood={true}
       />
 
       {/* Button to assign the selected lots */}
       <TouchableOpacity style={styles.button} onPress={handleAssignMember}>
-        <Text style={styles.buttonText}>Guardar Cambios</Text>
+        <Text style={styles.buttonText}>Asignar Zonas</Text>
       </TouchableOpacity>
     </View>
   );

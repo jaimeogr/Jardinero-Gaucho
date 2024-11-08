@@ -168,7 +168,7 @@ const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
   const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
   if (!activeWorkgroupId) return [];
 
-  const allUsers = useUserService.getAllUsers();
+  const allUsers = useUserService.useAllUsers();
   const usersInWorkgroup = allUsers
     .map((user) => {
       const assignment = user.workgroupAssignments.find(

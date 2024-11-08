@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 import { Surface, Badge } from 'react-native-paper';
 
 import ControllerService from '../services/useControllerService';
+import useUserStore from '../stores/useUserStore';
 import { theme } from '../styles/styles';
 import { UserInterface, UserRole } from '../types/types';
 
@@ -30,26 +31,20 @@ interface Props {
   navigation: MyTeamScreenNavigationProp;
 }
 
-const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
-  const [users, setUsers] = useState<
-    Array<
-      UserInterface & {
-        role: UserRole;
-        accessToAllLots: boolean;
-        hasAcceptedPresenceInWorkgroup: boolean;
-        assignedLotsCount: number;
-      }
-    >
-  >([]);
+const useUsersWithRoles = () => {
+  const users = useUserStore((state) => state.users); // Subscribe to Zustand store
+  return ControllerService.getUsersInActiveWorkgroupWithRoles();
+};
 
-  useEffect(() => {
-    const fetchUsers = () => {
-      const usersWithRoles =
-        ControllerService.getUsersInActiveWorkgroupWithRoles();
-      setUsers(usersWithRoles);
-    };
-    fetchUsers();
-  }, []);
+const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
+  const users: Array<
+    UserInterface & {
+      role: UserRole;
+      accessToAllLots: boolean;
+      hasAcceptedPresenceInWorkgroup: boolean;
+      assignedLotsCount: number;
+    }
+  > = useUsersWithRoles();
 
   const integrantesCount = users.length;
 

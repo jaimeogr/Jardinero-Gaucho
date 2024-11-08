@@ -328,9 +328,11 @@ const getNumberOfAssignedLotsForUserInSpecificWorkgroup = (
   userId: string,
 ): number => {
   const { lots } = useLotStore.getState();
+  console.log('userID before:', userId);
   const assignedLots = lots.filter(
     (lot) => lot.workgroupId === WorkgroupId && lot.assignedTo.includes(userId),
   );
+  console.log('userID after:', userId);
   return assignedLots.length;
 };
 

@@ -23,6 +23,7 @@ import { theme } from '../styles/styles';
 import {
   UserInterface,
   UserInvitedPendingAcceptanceInterface,
+  UserRole,
 } from '../types/types';
 
 type RootStackParamList = {
@@ -78,6 +79,28 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     setSelectedUserId(null);
     deselectAllLots();
     Alert.alert('Asignación exitosa', 'Los lotes han sido asignados.');
+  };
+
+  // Handler for assigning to a new user
+  const handleInviteAndAssignToNewUser = () => {
+    if (!newUser) {
+      Alert.alert('Selecciona un usuario', 'Debes seleccionar un usuario.');
+      return;
+    }
+    // Proceed with inviting the user
+    console.log('Inviting user...');
+    const success = ControllerService.inviteUserToActiveWorkgroup(
+      newUser.email,
+      newUser.selectedRole as UserRole,
+      false,
+    );
+    if (success) {
+      assignMemberToSelectedLots(newUser.userId);
+      setSelectedUserId(null);
+      deselectAllLots();
+      Alert.alert('Asignación exitosa', 'Los lotes han sido asignados.');
+    }
+    navigation.navigate('MyTeam');
   };
 
   // Render right-side for one lot
@@ -174,7 +197,10 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       />
 
       {/* Button to assign the selected lots */}
-      <TouchableOpacity style={styles.button} onPress={handleAssignMember}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={newUser ? handleInviteAndAssignToNewUser : handleAssignMember}
+      >
         <Text style={styles.buttonText}>Asignar Zonas</Text>
       </TouchableOpacity>
     </View>

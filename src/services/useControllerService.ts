@@ -83,12 +83,12 @@ const inviteUserToActiveWorkgroup = (
   email: string,
   role: UserRole,
   accessToAllLots: boolean,
-) => {
+): UserInterface | null => {
   const userId = uuidv4();
   const activeWorkgroup = getActiveWorkgroup();
   if (!activeWorkgroup) {
     console.error('No active workgroup found.');
-    return false;
+    return null;
   }
 
   const newUser: UserInterface = {
@@ -107,7 +107,7 @@ const inviteUserToActiveWorkgroup = (
   };
   // Add user to user store
   useUserService.addUser(newUser);
-  return true;
+  return newUser;
 };
 
 const updateUserRoleInActiveWorkgroup = (userId: string, newRole: UserRole) => {
@@ -175,6 +175,8 @@ const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
         (wa) => wa.workgroupId === activeWorkgroupId,
       );
       if (assignment) {
+        console.log('email:', user.email);
+        console.log('ID:', user.userId);
         const assignedLotsCount =
           useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
             activeWorkgroupId,

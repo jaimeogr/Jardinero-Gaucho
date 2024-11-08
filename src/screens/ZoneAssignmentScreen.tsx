@@ -119,14 +119,17 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
               Seleccionar integrante
             </Text>
           )}
-          <Icon
-            name={dropdownVisible ? 'chevron-up' : 'chevron-down'}
-            size={24}
-            color="#000"
-          />
+          {!newUser && (
+            <Icon
+              name={dropdownVisible ? 'chevron-up' : 'chevron-down'}
+              size={24}
+              color="#000"
+            />
+          )}
         </TouchableOpacity>
 
-        {dropdownVisible && (
+        {/* if there is a newUser then it will not be able to select another option */}
+        {dropdownVisible && !newUser && (
           <View style={styles.dropdownMenu}>
             <ScrollView>
               {teamMembers.map((user) => (
@@ -190,7 +193,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
+    borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

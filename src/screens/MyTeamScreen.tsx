@@ -32,7 +32,7 @@ interface Props {
 }
 
 const useUsersWithRoles = () => {
-  const users = useUserStore((state) => state.users); // Subscribe to Zustand store
+  const users = useUserStore((state) => state.users); // Subscribes to Zustand store
   return ControllerService.getUsersInActiveWorkgroupWithRoles();
 };
 

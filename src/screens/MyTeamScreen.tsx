@@ -87,7 +87,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
           const hasAcceptedPresenceInWorkgroup =
             !item.hasAcceptedPresenceInWorkgroup;
           const accessText = item.accessToAllLots
-            ? 'Todos los lotes'
+            ? 'Todas las zonas'
             : `${item.assignedLotsCount} lotes`;
 
           const roleColor = theme.colors.roles[item.role] || '#1976D2';

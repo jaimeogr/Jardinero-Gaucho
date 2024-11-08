@@ -110,8 +110,14 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
         navigation.goBack();
       }
     } else {
-      // Navigate to lot selection screen
-      navigation.navigate('ZoneAssignment');
+      // Prepare temporary user data
+      const newUser = {
+        email,
+        role: selectedRole,
+      };
+
+      // Navigate to zone assignment screen
+      navigation.navigate('ZoneAssignment', { newUser });
     }
   };
 

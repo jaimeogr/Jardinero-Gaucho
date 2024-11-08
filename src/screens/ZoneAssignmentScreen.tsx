@@ -20,28 +20,34 @@ import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
 import OneLotForCustomAccordion from '../components/NestedViewLots/OneLotForCustomAccordion';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { UserInterface } from '../types/types';
+import {
+  UserInterface,
+  UserInvitedPendingAcceptanceInterface,
+} from '../types/types';
 
 type RootStackParamList = {
-  LotAssignment: undefined;
+  ZoneAssignment: undefined;
   // Other routes...
 };
 
 type LotAssignmentScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'LotAssignment'
+  'ZoneAssignment'
 >;
 
 interface Props {
   navigation: LotAssignmentScreenNavigationProp;
+  route: any;
 }
 
-const ZoneAssignmentScreen: React.FC<Props> = ({ navigation }) => {
+const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const {
     assignMemberToSelectedLots,
     deselectAllLots,
     getUsersInActiveWorkgroupWithRoles,
   } = ControllerService;
+
+  const { newUser } = route.params;
 
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
@@ -99,10 +105,13 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation }) => {
           style={styles.userSelectionTouchable}
           onPress={() => setDropdownVisible(!dropdownVisible)}
         >
-          {selectedUser ? (
+          {selectedUser || newUser ? (
             <View style={styles.badgeContainer}>
               <Text style={styles.badgeText}>
-                {selectedUser.firstName} {selectedUser.lastName}
+                {/* if zones are being selected for a new user or for a selecteduser */}
+                {newUser
+                  ? newUser.email
+                  : `${selectedUser.firstName} ${selectedUser.lastName}`}
               </Text>
             </View>
           ) : (

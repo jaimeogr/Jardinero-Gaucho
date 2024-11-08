@@ -109,9 +109,10 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
             <View style={styles.badgeContainer}>
               <Text style={styles.badgeText}>
                 {/* if zones are being selected for a new user or for a selecteduser */}
-                {newUser
-                  ? newUser.email
-                  : `${selectedUser.firstName} ${selectedUser.lastName}`}
+                {newUser ? newUser.email : null}
+                {selectedUser
+                  ? `${selectedUser.firstName} ${selectedUser.lastName}`
+                  : null}
               </Text>
             </View>
           ) : (
@@ -119,6 +120,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
               Seleccionar integrante
             </Text>
           )}
+          {/* if its a newUser creation then it will not render the icon */}
           {!newUser && (
             <Icon
               name={dropdownVisible ? 'chevron-up' : 'chevron-down'}

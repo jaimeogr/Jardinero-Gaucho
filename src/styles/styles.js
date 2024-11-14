@@ -36,11 +36,11 @@ export const theme = {
       zoneAccordionBorderNotSelected: '#EB8EFA',
 
       // lot item selected
-      lotBackgroundSelected: '#e0f7fa',
-      lotBorderSelected: '#00796b',
+      lotBackgroundSelected: '#FEFCF9', // FCF8F3
+      lotBorderSelected: '#FEFCF9',
       // lot item not selected
-      lotBackgroundNotSelected: '#D9EEF3',
-      lotBorderNotSelected: '#D9EEF3',
+      lotBackgroundNotSelected: '#F5EEDC',
+      lotBorderNotSelected: '#F5EEDC', // D9EEF3 F1F1E8 EAE7E7 E2EBED FFFFDD
     },
 
     roles: {

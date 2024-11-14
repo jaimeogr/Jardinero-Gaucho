@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 8,
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 2,
     backgroundColor: lotBackgroundNotSelected,
     borderColor: lotBorderNotSelected,
   },

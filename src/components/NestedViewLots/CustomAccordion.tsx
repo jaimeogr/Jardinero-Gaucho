@@ -116,7 +116,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
           {renderRightSide && <View>{renderRightSide(element)}</View>}
           <IconButton
             icon={expanded ? 'chevron-up' : 'chevron-down'}
-            size={20}
+            size={28}
           />
         </View>
       </TouchableOpacity>

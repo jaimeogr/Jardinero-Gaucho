@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
   },
   accordionContent: {
     padding: 10,
+    paddingBottom: 0,
   },
 });
 

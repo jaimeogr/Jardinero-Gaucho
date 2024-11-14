@@ -128,7 +128,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
 
 const styles = StyleSheet.create({
   accordionContainerForNeighbourhood: {
-    marginBottom: 18,
+    marginBottom: 22,
     borderRadius: 10,
     borderColor: neighbourhoodAccordionBorderNotSelected,
     borderWidth: 3,

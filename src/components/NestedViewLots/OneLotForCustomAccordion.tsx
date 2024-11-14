@@ -79,9 +79,9 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
         )}
       </TouchableOpacity>
       {/* divider at the bottom of the item renders when the item is not selected and when its not the last item in the iteration. */}
-      {lot.lotIsSelected || isLastItem ? null : (
+      {/* {lot.lotIsSelected || isLastItem ? null : (
         <Divider style={styles.divider} bold={true} />
-      )}
+      )} */}
     </View>
   );
 };

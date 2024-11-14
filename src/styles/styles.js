@@ -22,18 +22,18 @@ export const theme = {
 
     accordion: {
       // neighbourhood selected
-      neighbourhoodAccordionBackgroundSelected: '#FFE1FF',
-      neighbourhoodAccordionBorderSelected: 'purple', //#8559A5
+      neighbourhoodAccordionBackgroundSelected: '#e0f7fa',
+      neighbourhoodAccordionBorderSelected: '#00796b', //#8559A5
       // neighbourhood not selected
-      neighbourhoodAccordionBackgroundNotSelected: '#F2AFEF',
-      neighbourhoodAccordionBorderNotSelected: '#F2AFEF',
+      neighbourhoodAccordionBackgroundNotSelected: '#B2DEEC',
+      neighbourhoodAccordionBorderNotSelected: '#B2DEEC',
 
       // zone selected
-      zoneAccordionBackgroundSelected: '#E7FBE6',
-      zoneAccordionBorderSelected: '#347928',
+      zoneAccordionBackgroundSelected: '#FFE1FF',
+      zoneAccordionBorderSelected: '#AB3EC0',
       // zone not selected
-      zoneAccordionBackgroundNotSelected: '#C5E1A5',
-      zoneAccordionBorderNotSelected: '#C5E1A5',
+      zoneAccordionBackgroundNotSelected: '#EB8EFA',
+      zoneAccordionBorderNotSelected: '#EB8EFA',
 
       // lot item selected
       lotBackgroundSelected: '#e0f7fa',
@@ -51,3 +51,8 @@ export const theme = {
     },
   },
 };
+
+// colores que me gustan
+// celeste electrico: 64DFDF
+// violeta electrico: BC6FF1
+// violeta electrico sin ser invasivo: D67BFF

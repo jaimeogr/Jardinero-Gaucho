@@ -317,26 +317,34 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Ingresá la casa"
-            placeholderTextColor={styles.placeholderText.color}
+            placeholderTextColor={theme.colors.placeholder}
             value={lotData.lotLabel}
             onChangeText={(text) => handleInputChange('lotLabel', text)}
           />
 
           {/* Last Mowing Date - Date Picker */}
           <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={styles.label}>Última Fecha de Corte de Pasto</Text>
-            <Text style={styles.optionalText}>(opcional)</Text>
+            <Text style={[styles.label, styles.labelIsOptional]}>
+              Última Fecha de Corte de Pasto
+            </Text>
+            <Text style={styles.optionalInParentheses}>(opcional)</Text>
           </View>
           <View style={styles.dateContainer}>
             <View style={styles.dateFirstRow}>
               <TouchableOpacity
                 onPress={() => setShowDatePicker(true)}
-                style={[styles.input, styles.datePicker]}
+                style={[
+                  styles.input,
+                  styles.inputIsOptional,
+                  styles.datePicker,
+                ]}
               >
                 <Text
                   style={[
                     {
-                      color: lotData.lastMowingDate ? 'black' : '#aaa',
+                      color: lotData.lastMowingDate
+                        ? 'black'
+                        : theme.colors.placeholder,
                     },
                     styles.datePickerText,
                   ]}
@@ -388,11 +396,13 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
 
           {/* Extra Notes */}
           <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={styles.label}>Notas Adicionales</Text>
-            <Text style={styles.optionalText}>(opcional)</Text>
+            <Text style={[styles.label, styles.labelIsOptional]}>
+              Notas Adicionales
+            </Text>
+            <Text style={styles.optionalInParentheses}>(opcional)</Text>
           </View>
           <TextInput
-            style={[styles.input, { height: 80 }]}
+            style={[styles.input, styles.inputIsOptional, { height: 80 }]}
             placeholder="Ingresá notas adicionales.."
             value={lotData.extraNotes}
             onChangeText={(text) => handleInputChange('extraNotes', text)}
@@ -529,34 +539,43 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: theme.colors.input.requiredLabelText,
   },
-  optionalText: {
+  labelIsOptional: {
+    color: theme.colors.input.optionalLabelText,
+    fontWeight: 'normal',
+  },
+  optionalInParentheses: {
     fontSize: 15,
-    color: 'gray',
+    color: theme.colors.input.optionalLabelText,
+    fontStyle: 'italic',
     marginLeft: 4,
   },
   input: {
     borderWidth: 1,
-    borderColor: theme.colors.primary,
+    borderColor: theme.colors.input.requiredFieldBorder,
     borderRadius: 10,
     padding: 8,
     marginBottom: 20,
     height: 45,
     fontSize: 16,
   },
+  inputIsOptional: {
+    borderColor: theme.colors.input.optionalFieldBorder,
+  },
   placeholderText: {
-    color: '#aaa', // Reusable placeholder color
+    color: theme.colors.placeholder, // Reusable placeholder color
     fontSize: 16,
   },
   pickerContainer: {
     borderWidth: 1,
-    borderColor: theme.colors.primary,
+    borderColor: theme.colors.input.requiredFieldBorder,
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 18,
   },
   disabledPickerContainer: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f0f0f0', // E0E0E0 f0f0f0
     borderColor: '#f0f0f0',
   },
   dateContainer: {
@@ -580,7 +599,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   iconContainer: {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: '#709090',
     height: 45,
     justifyContent: 'center',
     alignItems: 'center',
@@ -731,7 +750,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingRight: 30,
   },
   placeholder: {
-    color: '#aaa',
+    color: theme.colors.placeholder,
   },
 });
 

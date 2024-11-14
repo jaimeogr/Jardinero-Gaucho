@@ -306,7 +306,20 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
                   : 'Selecciona un barrio primero', // Dynamic placeholder
                 value: '',
               }}
-              style={pickerSelectStyles}
+              style={{
+                ...pickerSelectStyles,
+                inputAndroid: {
+                  ...pickerSelectStyles.inputAndroid,
+                  color: lotData.neighbourhoodId ? 'black' : '#6E6E6E', // Conditional color
+                },
+                inputIOS: {
+                  ...pickerSelectStyles.inputIOS,
+                  color: lotData.neighbourhoodId ? 'black' : '#6E6E6E', // Conditional color for iOS
+                },
+                placeholder: {
+                  color: '#6E6E6E', // Color for placeholder text
+                },
+              }}
               useNativeAndroidPickerStyle={false}
               disabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
             />
@@ -404,6 +417,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           <TextInput
             style={[styles.input, styles.inputIsOptional, { height: 80 }]}
             placeholder="Ingresá notas adicionales.."
+            placeholderTextColor={theme.colors.placeholder}
             value={lotData.extraNotes}
             onChangeText={(text) => handleInputChange('extraNotes', text)}
             multiline
@@ -562,6 +576,7 @@ const styles = StyleSheet.create({
   },
   inputIsOptional: {
     borderColor: theme.colors.input.optionalFieldBorder,
+    color: theme.colors.placeholder,
   },
   placeholderText: {
     color: theme.colors.placeholder, // Reusable placeholder color
@@ -575,8 +590,8 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   disabledPickerContainer: {
-    backgroundColor: '#f0f0f0', // E0E0E0 f0f0f0
-    borderColor: '#f0f0f0',
+    backgroundColor: '#E0E0E0', // E0E0E0 f0f0f0
+    borderColor: '#E0E0E0',
   },
   dateContainer: {
     marginBottom: 20,

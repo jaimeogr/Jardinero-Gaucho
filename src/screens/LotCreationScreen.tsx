@@ -193,19 +193,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     handleInputChange('lastMowingDate', null);
   };
 
-  // Set date to past week
-  const setPastWeekDate = () => {
-    const pastWeekDate = new Date();
-    pastWeekDate.setDate(pastWeekDate.getDate() - 7);
-    handleInputChange('lastMowingDate', pastWeekDate);
-  };
-
-  // Set date to this week (today)
-  const setThisWeekDate = () => {
-    const today = new Date();
-    handleInputChange('lastMowingDate', today);
-  };
-
   // Submit lot and navigate back
   const handleSubmit = async (keepCreating: boolean) => {
     if (
@@ -382,21 +369,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
                 <Icon name="delete" size={28} color="gray" />
               </TouchableOpacity>
             </View>
-            {/* Date Options */}
-            <View style={styles.dateSecondRow}>
-              <TouchableOpacity
-                onPress={setPastWeekDate}
-                style={styles.subtleButton}
-              >
-                <Text style={styles.subtleButtonText}>La Semana Pasada</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={setThisWeekDate}
-                style={styles.subtleButton}
-              >
-                <Text style={styles.subtleButtonText}>Esta Semana</Text>
-              </TouchableOpacity>
-            </View>
           </View>
           {showDatePicker && (
             <DateTimePicker
@@ -570,7 +542,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.input.requiredFieldBorder,
     borderRadius: 10,
     padding: 8,
-    marginBottom: 20,
+    marginBottom: 18,
     height: 45,
     fontSize: 16,
   },
@@ -595,7 +567,7 @@ const styles = StyleSheet.create({
     borderColor: '#E0E0E0',
   },
   dateContainer: {
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   dateFirstRow: {
     flexDirection: 'row',
@@ -608,7 +580,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 0,
-    marginBottom: 12,
   },
   datePickerText: {
     fontSize: 16,
@@ -630,24 +601,6 @@ const styles = StyleSheet.create({
     padding: 6,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  dateSecondRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginTop: 0,
-    gap: 14,
-  },
-  subtleButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderColor: '#d3d3d3', // Subtle border color to reduce visual weight
-    borderRadius: 8,
-    backgroundColor: '#f0f0f0', // Lighter background
-    marginRight: 4,
-  },
-  subtleButtonText: {
-    color: '#555',
-    fontSize: 14,
   },
   clearDateButton: {
     paddingVertical: 6,
@@ -717,18 +670,18 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 50,
     marginHorizontal: 8,
-    paddingVertical: 12,
+    paddingVertical: 10,
     alignItems: 'center',
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
 
-    // // iOS shadow properties
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 4 }, // Position of the shadow
-    // shadowOpacity: 0.2, // Transparency of the shadow
-    // shadowRadius: 4, // Blurriness of the shadow
+    // iOS shadow properties
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 }, // Position of the shadow
+    shadowOpacity: 0.2, // Transparency of the shadow
+    shadowRadius: 4, // Blurriness of the shadow
 
-    // // Android elevation
-    // elevation: 4, // Adjust this value as needed for more/less shadow depth
+    // Android elevation
+    elevation: 1, // Adjust this value as needed for more/less shadow depth
   },
   cancelButton: {
     borderWidth: 1.5,
@@ -749,6 +702,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   nextLotButton: {
+    paddingVertical: 16,
     backgroundColor: theme.colors.primary,
     margin: 16,
   },

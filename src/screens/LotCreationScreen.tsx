@@ -566,7 +566,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   input: {
-    borderWidth: 1,
+    borderWidth: 1.2,
     borderColor: theme.colors.input.requiredFieldBorder,
     borderRadius: 10,
     padding: 8,
@@ -575,6 +575,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputIsOptional: {
+    borderWidth: 1,
     borderColor: theme.colors.input.optionalFieldBorder,
     color: theme.colors.placeholder,
   },
@@ -583,7 +584,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   pickerContainer: {
-    borderWidth: 1,
+    borderWidth: 1.2,
     borderColor: theme.colors.input.requiredFieldBorder,
     borderRadius: 10,
     overflow: 'hidden',
@@ -718,24 +719,33 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     paddingVertical: 12,
     alignItems: 'center',
+    // backgroundColor: 'white',
+
+    // // iOS shadow properties
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 4 }, // Position of the shadow
+    // shadowOpacity: 0.2, // Transparency of the shadow
+    // shadowRadius: 4, // Blurriness of the shadow
+
+    // // Android elevation
+    // elevation: 4, // Adjust this value as needed for more/less shadow depth
   },
   cancelButton: {
-    borderWidth: 1,
-    borderColor: '#aaa',
-    // backgroundColor: '#ffe6e6',
+    borderWidth: 1.5,
+    borderColor: '#707070',
   },
   cancelButtonText: {
-    color: 'gray',
-    fontSize: 14,
+    color: '#606060',
+    fontSize: 16,
     fontWeight: 'bold',
   },
   submitButton: {
+    borderWidth: 1.5,
     borderColor: theme.colors.primary,
-    borderWidth: 1,
   },
   submitButtonText: {
     color: theme.colors.primary,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   nextLotButton: {

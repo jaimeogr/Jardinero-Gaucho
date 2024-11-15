@@ -15,15 +15,15 @@ export const theme = {
     background2: '#EAE7E7',
     background3: '#F5EFE3', // 6BCB77 C1F8CF
     ripple: '#EAE7E7',
-    placeholder: '#8B8B8B', // A0A0A0 505050 787878 709090
+    placeholder: '#606060', // A0A0A0 505050 787878 709090 8B8B8B
     lightBrown: '#B0A695',
     disabled: '#f0f0f0',
     disabledText: '#aaa',
 
     input: {
-      requiredLabelText: '#505050', // 606060
+      requiredLabelText: '#333333', // 606060
       requiredFieldBorder: '#404040',
-      optionalLabelText: '#6E6E6E', // 9A9A9A 6E6E6E
+      optionalLabelText: '#505050', // 9A9A9A 6E6E6E
       optionalFieldBorder: '#787878',
     },
 

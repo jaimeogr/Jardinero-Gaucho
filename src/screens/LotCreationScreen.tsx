@@ -20,6 +20,7 @@ import {
 import RNPickerSelect from 'react-native-picker-select';
 import { v4 as uuidv4 } from 'uuid';
 
+import AppPicker from '../components/AppPicker';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 import { LotInterface, NeighbourhoodData, ZoneData } from '../types/types';
@@ -263,54 +264,30 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.formContainer}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Neighbourhood Picker */}
-          <Text style={styles.label}>Barrio</Text>
-          <View style={styles.pickerContainer}>
-            <RNPickerSelect
-              onValueChange={handleNeighbourhoodChange}
-              items={neighbourhoodItems}
-              value={lotData.neighbourhoodId}
-              placeholder={{ label: 'Seleccionar Barrio', value: '' }}
-              style={pickerSelectStyles}
-              useNativeAndroidPickerStyle={false}
-            />
-          </View>
+          <AppPicker
+            label="Barrio"
+            value={lotData.neighbourhoodId}
+            items={neighbourhoodItems}
+            onValueChange={handleNeighbourhoodChange}
+            placeholder="Seleccionar Barrio"
+            isDisabled={false} // Neighbourhood picker is always enabled
+            style={styles.pickerContainer}
+          />
 
           {/* Zone Picker */}
-          <Text style={styles.label}>Zona</Text>
-          <View
-            style={[
-              styles.pickerContainer,
-              lotData.neighbourhoodId ? {} : styles.disabledPickerContainer,
-            ]}
-          >
-            <RNPickerSelect
-              onValueChange={handleZoneChange}
-              items={zoneItems}
-              value={lotData.zoneId}
-              placeholder={{
-                label: lotData.neighbourhoodId
-                  ? 'Seleccionar Zona'
-                  : 'Selecciona un barrio primero', // Dynamic placeholder
-                value: '',
-              }}
-              style={{
-                ...pickerSelectStyles,
-                inputAndroid: {
-                  ...pickerSelectStyles.inputAndroid,
-                  color: lotData.neighbourhoodId ? 'black' : '#6E6E6E', // Conditional color
-                },
-                inputIOS: {
-                  ...pickerSelectStyles.inputIOS,
-                  color: lotData.neighbourhoodId ? 'black' : '#6E6E6E', // Conditional color for iOS
-                },
-                placeholder: {
-                  color: '#6E6E6E', // Color for placeholder text
-                },
-              }}
-              useNativeAndroidPickerStyle={false}
-              disabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
-            />
-          </View>
+          <AppPicker
+            label="Zona"
+            value={lotData.zoneId}
+            items={zoneItems}
+            onValueChange={handleZoneChange}
+            placeholder={
+              lotData.neighbourhoodId
+                ? 'Seleccionar Zona'
+                : 'Selecciona un barrio primero'
+            }
+            isDisabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
+            style={styles.pickerContainer}
+          />
 
           {/* Lot Label Input */}
           <Text style={styles.label}>Casa</Text>

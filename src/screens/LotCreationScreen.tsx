@@ -21,6 +21,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { v4 as uuidv4 } from 'uuid';
 
 import AppPicker from '../components/AppPicker';
+import DatePickerField from '../components/DatePickerField';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 import { LotInterface, NeighbourhoodData, ZoneData } from '../types/types';
@@ -356,6 +357,14 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             />
           )}
 
+          <DatePickerField
+            label="Última Fecha de Corte de Pasto"
+            value={lotData.lastMowingDate}
+            onChange={(date) => handleInputChange('lastMowingDate', date)}
+            trashAction={clearDate}
+            isOptional={true}
+          />
+
           {/* Extra Notes */}
           <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
             <Text style={[styles.label, styles.labelIsOptional]}>
@@ -526,7 +535,6 @@ const styles = StyleSheet.create({
   inputIsOptional: {
     borderWidth: 1,
     borderColor: theme.colors.input.optionalFieldBorder,
-    color: theme.colors.placeholder,
   },
   placeholderText: {
     color: theme.colors.placeholder, // Reusable placeholder color

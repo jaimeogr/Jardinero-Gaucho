@@ -1,4 +1,4 @@
-emulator is now in the package lock, android variables have to be in the system variable path for that to work.
+emulator script is in the package json, android variables have to be in the system variable path for that to work.
 
 This configuration is required inside your .vscode/settings.json file:
 {

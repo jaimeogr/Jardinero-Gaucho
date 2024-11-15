@@ -22,8 +22,9 @@ const getUserById = (userId: string): UserInterface | undefined => {
   return useUserStore.getState().getUserById(userId);
 };
 
-const getAllUsers = (): UserInterface[] => {
-  return useUserStore.getState().users;
+const useAllUsers = (): UserInterface[] => {
+  const allUsers = useUserStore((state) => state.users);
+  return allUsers;
 };
 
 const addUser = (user: UserInterface) => {
@@ -38,7 +39,7 @@ export default {
   initializeUsers,
   useGetCurrentUser,
   getUserById,
-  getAllUsers,
+  useAllUsers,
   addUser,
   updateUser,
 };

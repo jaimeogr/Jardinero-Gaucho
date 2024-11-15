@@ -83,12 +83,12 @@ const inviteUserToActiveWorkgroup = (
   email: string,
   role: UserRole,
   accessToAllLots: boolean,
-) => {
+): UserInterface | null => {
   const userId = uuidv4();
   const activeWorkgroup = getActiveWorkgroup();
   if (!activeWorkgroup) {
     console.error('No active workgroup found.');
-    return false;
+    return null;
   }
 
   const newUser: UserInterface = {
@@ -101,12 +101,13 @@ const inviteUserToActiveWorkgroup = (
         workgroupId: activeWorkgroup.workgroupId,
         role,
         accessToAllLots,
+        hasAcceptedPresenceInWorkgroup: false,
       },
     ],
   };
   // Add user to user store
   useUserService.addUser(newUser);
-  return true;
+  return newUser;
 };
 
 const updateUserRoleInActiveWorkgroup = (userId: string, newRole: UserRole) => {
@@ -167,13 +168,15 @@ const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
   const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
   if (!activeWorkgroupId) return [];
 
-  const allUsers = useUserService.getAllUsers();
+  const allUsers = useUserService.useAllUsers();
   const usersInWorkgroup = allUsers
     .map((user) => {
       const assignment = user.workgroupAssignments.find(
         (wa) => wa.workgroupId === activeWorkgroupId,
       );
       if (assignment) {
+        console.log('email:', user.email);
+        console.log('ID:', user.userId);
         const assignedLotsCount =
           useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
             activeWorkgroupId,
@@ -225,6 +228,10 @@ const deselectAllLots = () => {
   useLotService.deselectAllLots();
 };
 
+const assignMemberToSelectedLots = (userId: string) => {
+  useLotService.assignMemberToSelection(userId);
+};
+
 export default {
   initializeServices,
   getLotById,
@@ -243,4 +250,5 @@ export default {
   toggleZoneSelection,
   toggleNeighbourhoodSelection,
   deselectAllLots,
+  assignMemberToSelectedLots,
 };

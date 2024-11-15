@@ -5,6 +5,10 @@ import { IconButton } from 'react-native-paper';
 
 import useControllerService from '../../services/useControllerService';
 import { theme } from '../../styles/styles';
+import {
+  ZoneWithIndicatorsInterface,
+  NeighbourhoodWithIndicatorsInterface,
+} from '../../types/types';
 
 const {
   accordion: {
@@ -23,28 +27,34 @@ const {
   },
 } = theme.colors;
 
-type CustomAccordionProps = {
+interface CustomAccordionProps {
   id: string;
+  element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface;
   title: string;
   children: React.ReactNode;
   level: number; // Pass the level of accordion (neighbourhood or zone)
-  thisWeeksNormalLotsToMow?: number;
-  thisWeeksCriticalLotsToMow?: number;
   isSelected: boolean;
-};
+  isSelectable?: boolean;
+  startExpanded?: boolean;
+  renderRightSide?: (
+    element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface,
+  ) => JSX.Element;
+}
 
 const CustomAccordion: React.FC<CustomAccordionProps> = ({
   id,
+  element,
   title,
   children,
   level,
-  thisWeeksNormalLotsToMow,
-  thisWeeksCriticalLotsToMow,
   isSelected,
+  isSelectable = true,
+  startExpanded = false,
+  renderRightSide,
 }) => {
   const { toggleZoneSelection, toggleNeighbourhoodSelection } =
     useControllerService;
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(startExpanded);
 
   const handleToggle = useCallback(() => {
     const newState = !isSelected;
@@ -80,35 +90,33 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
         style={styles.accordionHeader}
       >
         <View style={styles.accordionHeaderLeftSide}>
-          <TouchableOpacity
-            onPress={handleToggle}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
+          {isSelectable && (
+            <TouchableOpacity
+              onPress={handleToggle}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <MaterialCommunityIcons
+                name={isSelected ? 'circle-slice-8' : 'circle-outline'}
+                color={theme.colors.primary}
+                size={28}
+              />
+            </TouchableOpacity>
+          )}
+
+          <Text
+            style={styles.accordionTitle}
+            numberOfLines={1}
+            ellipsizeMode="tail"
           >
-            <MaterialCommunityIcons
-              name={isSelected ? 'circle-slice-8' : 'circle-outline'}
-              color={theme.colors.primary}
-              size={28}
-            />
-          </TouchableOpacity>
-          <Text style={styles.accordionTitle}>{title}</Text>
+            {title}
+          </Text>
         </View>
 
         <View style={styles.accordionHeaderRightSide}>
-          {thisWeeksNormalLotsToMow ? (
-            <View style={styles.accordionHeaderIndicatorNormal}>
-              <Text>{thisWeeksNormalLotsToMow}</Text>
-            </View>
-          ) : null}
-          {thisWeeksCriticalLotsToMow ? (
-            <View style={styles.accordionHeaderIndicatorCritical}>
-              <Text style={styles.accordionHeaderIndicatorText}>
-                {thisWeeksCriticalLotsToMow}
-              </Text>
-            </View>
-          ) : null}
+          {renderRightSide && <View>{renderRightSide(element)}</View>}
           <IconButton
             icon={expanded ? 'chevron-up' : 'chevron-down'}
-            size={20}
+            size={28}
           />
         </View>
       </TouchableOpacity>
@@ -120,7 +128,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
 
 const styles = StyleSheet.create({
   accordionContainerForNeighbourhood: {
-    marginBottom: 18,
+    marginBottom: 22,
     borderRadius: 10,
     borderColor: neighbourhoodAccordionBorderNotSelected,
     borderWidth: 3,
@@ -153,6 +161,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
+  iconPlaceholder: {
+    width: 28, // Same size as the icon to maintain layout
+    height: 28,
+  },
   accordionTitle: {
     fontSize: 17,
     fontWeight: 'bold',
@@ -162,18 +174,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  accordionHeaderIndicatorNormal: {},
-  accordionHeaderIndicatorCritical: {
-    marginLeft: 16,
-    backgroundColor: 'orange',
-    borderRadius: 16,
-    padding: 7,
-  },
-  accordionHeaderIndicatorText: {
-    fontWeight: 'bold',
-  },
   accordionContent: {
     padding: 10,
+    paddingBottom: 0,
   },
 });
 

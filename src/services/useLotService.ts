@@ -292,16 +292,35 @@ const deselectAllLots = () => {
   useLotStore.getState().deselectAllLots();
 };
 
-const assignMembersToSelection = (userIds: string[]) => {
-  const { lots, zones, neighbourhoods, updateLot } = useLotStore.getState();
+const assignMemberToSelection = (userId: string) => {
+  const { neighbourhoodZoneData } = useLotStore.getState();
 
-  // Filter selected lots
-  const selectedLots = lots.filter((lot) => lot.lotIsSelected);
+  // Clone the neighbourhoodZoneData to avoid direct mutation
+  const updatedNeighbourhoodZoneData = {
+    ...neighbourhoodZoneData,
+    neighbourhoods: neighbourhoodZoneData.neighbourhoods.map(
+      (neighbourhood) => ({
+        ...neighbourhood,
+        zones: neighbourhood.zones.map((zone) => {
+          const isZoneSelected = zone.isSelected;
 
-  selectedLots.forEach((lot) => {
-    const updatedAssignedTo = userIds;
-    updateLot(lot.lotId, { assignedTo: updatedAssignedTo });
-  });
+          return {
+            ...zone,
+            assignedTo: isZoneSelected
+              ? // Add userId if it's not already in the assignedTo array
+                zone.assignedTo.includes(userId)
+                ? zone.assignedTo
+                : [...zone.assignedTo, userId]
+              : // Remove userId if it exists in the array
+                zone.assignedTo.filter((id) => id !== userId),
+          };
+        }),
+      }),
+    ),
+  };
+
+  // Update the store with the modified neighbourhoodZoneData
+  useLotStore.setState({ neighbourhoodZoneData: updatedNeighbourhoodZoneData });
 };
 
 const getNumberOfAssignedLotsForUserInSpecificWorkgroup = (
@@ -309,9 +328,11 @@ const getNumberOfAssignedLotsForUserInSpecificWorkgroup = (
   userId: string,
 ): number => {
   const { lots } = useLotStore.getState();
+  console.log('userID before:', userId);
   const assignedLots = lots.filter(
     (lot) => lot.workgroupId === WorkgroupId && lot.assignedTo.includes(userId),
   );
+  console.log('userID after:', userId);
   return assignedLots.length;
 };
 
@@ -329,6 +350,6 @@ export default {
   toggleZoneSelection,
   toggleNeighbourhoodSelection,
   deselectAllLots,
-  assignMembersToSelection,
+  assignMemberToSelection,
   getNumberOfAssignedLotsForUserInSpecificWorkgroup,
 };

@@ -193,19 +193,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     handleInputChange('lastMowingDate', null);
   };
 
-  // Set date to past week
-  const setPastWeekDate = () => {
-    const pastWeekDate = new Date();
-    pastWeekDate.setDate(pastWeekDate.getDate() - 7);
-    handleInputChange('lastMowingDate', pastWeekDate);
-  };
-
-  // Set date to this week (today)
-  const setThisWeekDate = () => {
-    const today = new Date();
-    handleInputChange('lastMowingDate', today);
-  };
-
   // Submit lot and navigate back
   const handleSubmit = async (keepCreating: boolean) => {
     if (
@@ -298,7 +285,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           >
             <RNPickerSelect
               onValueChange={handleZoneChange}
-              items={zoneItems} // No need for conditional; it’s disabled anyway
+              items={zoneItems}
               value={lotData.zoneId}
               placeholder={{
                 label: lotData.neighbourhoodId
@@ -306,7 +293,20 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
                   : 'Selecciona un barrio primero', // Dynamic placeholder
                 value: '',
               }}
-              style={pickerSelectStyles}
+              style={{
+                ...pickerSelectStyles,
+                inputAndroid: {
+                  ...pickerSelectStyles.inputAndroid,
+                  color: lotData.neighbourhoodId ? 'black' : '#6E6E6E', // Conditional color
+                },
+                inputIOS: {
+                  ...pickerSelectStyles.inputIOS,
+                  color: lotData.neighbourhoodId ? 'black' : '#6E6E6E', // Conditional color for iOS
+                },
+                placeholder: {
+                  color: '#6E6E6E', // Color for placeholder text
+                },
+              }}
               useNativeAndroidPickerStyle={false}
               disabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
             />
@@ -317,26 +317,34 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           <TextInput
             style={styles.input}
             placeholder="Ingresá la casa"
-            placeholderTextColor={styles.placeholderText.color}
+            placeholderTextColor={theme.colors.placeholder}
             value={lotData.lotLabel}
             onChangeText={(text) => handleInputChange('lotLabel', text)}
           />
 
           {/* Last Mowing Date - Date Picker */}
           <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={styles.label}>Última Fecha de Corte de Pasto</Text>
-            <Text style={styles.optionalText}>(opcional)</Text>
+            <Text style={[styles.label, styles.labelIsOptional]}>
+              Última Fecha de Corte de Pasto
+            </Text>
+            <Text style={styles.optionalInParentheses}>(opcional)</Text>
           </View>
           <View style={styles.dateContainer}>
             <View style={styles.dateFirstRow}>
               <TouchableOpacity
                 onPress={() => setShowDatePicker(true)}
-                style={[styles.input, styles.datePicker]}
+                style={[
+                  styles.input,
+                  styles.inputIsOptional,
+                  styles.datePicker,
+                ]}
               >
                 <Text
                   style={[
                     {
-                      color: lotData.lastMowingDate ? 'black' : '#aaa',
+                      color: lotData.lastMowingDate
+                        ? 'black'
+                        : theme.colors.placeholder,
                     },
                     styles.datePickerText,
                   ]}
@@ -361,21 +369,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
                 <Icon name="delete" size={28} color="gray" />
               </TouchableOpacity>
             </View>
-            {/* Date Options */}
-            <View style={styles.dateSecondRow}>
-              <TouchableOpacity
-                onPress={setPastWeekDate}
-                style={styles.subtleButton}
-              >
-                <Text style={styles.subtleButtonText}>La Semana Pasada</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={setThisWeekDate}
-                style={styles.subtleButton}
-              >
-                <Text style={styles.subtleButtonText}>Esta Semana</Text>
-              </TouchableOpacity>
-            </View>
           </View>
           {showDatePicker && (
             <DateTimePicker
@@ -388,12 +381,15 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
 
           {/* Extra Notes */}
           <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={styles.label}>Notas Adicionales</Text>
-            <Text style={styles.optionalText}>(opcional)</Text>
+            <Text style={[styles.label, styles.labelIsOptional]}>
+              Notas Adicionales
+            </Text>
+            <Text style={styles.optionalInParentheses}>(opcional)</Text>
           </View>
           <TextInput
-            style={[styles.input, { height: 80 }]}
+            style={[styles.input, styles.inputIsOptional, { height: 80 }]}
             placeholder="Ingresá notas adicionales.."
+            placeholderTextColor={theme.colors.placeholder}
             value={lotData.extraNotes}
             onChangeText={(text) => handleInputChange('extraNotes', text)}
             multiline
@@ -529,38 +525,49 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: theme.colors.input.requiredLabelText,
   },
-  optionalText: {
+  labelIsOptional: {
+    color: theme.colors.input.optionalLabelText,
+    fontWeight: 'normal',
+  },
+  optionalInParentheses: {
     fontSize: 15,
-    color: 'gray',
+    color: theme.colors.input.optionalLabelText,
+    fontStyle: 'italic',
     marginLeft: 4,
   },
   input: {
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
+    borderWidth: 1.2,
+    borderColor: theme.colors.input.requiredFieldBorder,
     borderRadius: 10,
     padding: 8,
-    marginBottom: 20,
+    marginBottom: 18,
     height: 45,
     fontSize: 16,
   },
+  inputIsOptional: {
+    borderWidth: 1,
+    borderColor: theme.colors.input.optionalFieldBorder,
+    color: theme.colors.placeholder,
+  },
   placeholderText: {
-    color: '#aaa', // Reusable placeholder color
+    color: theme.colors.placeholder, // Reusable placeholder color
     fontSize: 16,
   },
   pickerContainer: {
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
+    borderWidth: 1.2,
+    borderColor: theme.colors.input.requiredFieldBorder,
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 18,
   },
   disabledPickerContainer: {
-    backgroundColor: '#f0f0f0',
-    borderColor: '#f0f0f0',
+    backgroundColor: '#E0E0E0', // E0E0E0 f0f0f0
+    borderColor: '#E0E0E0',
   },
   dateContainer: {
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   dateFirstRow: {
     flexDirection: 'row',
@@ -573,14 +580,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 0,
-    marginBottom: 12,
   },
   datePickerText: {
     fontSize: 16,
     padding: 8,
   },
   iconContainer: {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: '#709090',
     height: 45,
     justifyContent: 'center',
     alignItems: 'center',
@@ -595,24 +601,6 @@ const styles = StyleSheet.create({
     padding: 6,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  dateSecondRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginTop: 0,
-    gap: 14,
-  },
-  subtleButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderColor: '#d3d3d3', // Subtle border color to reduce visual weight
-    borderRadius: 8,
-    backgroundColor: '#f0f0f0', // Lighter background
-    marginRight: 4,
-  },
-  subtleButtonText: {
-    color: '#555',
-    fontSize: 14,
   },
   clearDateButton: {
     paddingVertical: 6,
@@ -682,29 +670,39 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 50,
     marginHorizontal: 8,
-    paddingVertical: 12,
+    paddingVertical: 10,
     alignItems: 'center',
+    backgroundColor: 'white',
+
+    // iOS shadow properties
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 }, // Position of the shadow
+    shadowOpacity: 0.2, // Transparency of the shadow
+    shadowRadius: 4, // Blurriness of the shadow
+
+    // Android elevation
+    elevation: 1, // Adjust this value as needed for more/less shadow depth
   },
   cancelButton: {
-    borderWidth: 1,
-    borderColor: '#aaa',
-    // backgroundColor: '#ffe6e6',
+    borderWidth: 1.5,
+    borderColor: '#707070',
   },
   cancelButtonText: {
-    color: 'gray',
-    fontSize: 14,
+    color: '#606060',
+    fontSize: 16,
     fontWeight: 'bold',
   },
   submitButton: {
+    borderWidth: 1.5,
     borderColor: theme.colors.primary,
-    borderWidth: 1,
   },
   submitButtonText: {
     color: theme.colors.primary,
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   nextLotButton: {
+    paddingVertical: 16,
     backgroundColor: theme.colors.primary,
     margin: 16,
   },
@@ -731,7 +729,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingRight: 30,
   },
   placeholder: {
-    color: '#aaa',
+    color: theme.colors.placeholder,
   },
 });
 

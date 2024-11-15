@@ -3,18 +3,18 @@
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "scripts": {
+    "emulator": "emulator -avd Medium_Phone_API_35",
     "1": "emulator -avd Medium_Phone_API_35",
-    "2": "expo start --android",
+    "clean-emulator": "emulator -avd Medium_Phone_API_35 -no-snapshot-load",
+    "c1": "npm run clean-emulator",
     "start": "expo start",
     "android": "expo start --android",
     "clean-android": "expo start --android -c",
-    "clean-2": "expo start --android -c",
+    "2": "expo start --android",
+    "c2": "npm run clean-android",
     "ios": "DARK_MODE=media expo start --ios",
     "web": "DARK_MODE=media expo start --web",
-    "lint": "eslint . --fix",
-    "emulator": "emulator -avd Medium_Phone_API_35",
-    "clean-emulator": "emulator -avd Medium_Phone_API_35 -no-snapshot-load",
-    "clean-1": "emulator -avd Medium_Phone_API_35 -no-snapshot-load"
+    "lint": "eslint . --fix"
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "8.0.1",

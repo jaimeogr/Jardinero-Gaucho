@@ -16,11 +16,15 @@ const {
 interface OneLotForCustomAccordionProps {
   lotId: string; // Use LotInterface to type the lot prop
   isLastItem: boolean;
+  isSelectable?: boolean;
+  renderRightSide?: (lot) => JSX.Element;
 }
 
 const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
   isLastItem,
   lotId,
+  isSelectable = true,
+  renderRightSide,
 }) => {
   const { getLotById, toggleLotSelection } = useControllerService;
   // Use useLotStore with a state selector to get only the relevant data to avoid unnecessary re-renders
@@ -46,16 +50,18 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
         }
       >
         {/* Left Icon */}
-        <TouchableOpacity
-          onPress={handleToggle}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
-        >
-          <MaterialCommunityIcons
-            name={lot.lotIsSelected ? 'circle-slice-8' : 'circle-outline'}
-            color={theme.colors.primary}
-            size={28}
-          />
-        </TouchableOpacity>
+        {isSelectable && (
+          <TouchableOpacity
+            onPress={handleToggle}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Increases pressable area without affecting visual size
+          >
+            <MaterialCommunityIcons
+              name={lot.lotIsSelected ? 'circle-slice-8' : 'circle-outline'}
+              color={theme.colors.primary}
+              size={28}
+            />
+          </TouchableOpacity>
+        )}
 
         {/* Title and Description */}
         <View style={styles.textContainer}>
@@ -68,18 +74,14 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
         </View>
 
         {/* Right Side */}
-        <TouchableOpacity style={styles.rightIconContainer}>
-          <MaterialCommunityIcons
-            name="clock-outline"
-            size={28}
-            color="orange"
-          />
-        </TouchableOpacity>
+        {renderRightSide && (
+          <View style={styles.lotRightSide}>{renderRightSide(lot)}</View>
+        )}
       </TouchableOpacity>
       {/* divider at the bottom of the item renders when the item is not selected and when its not the last item in the iteration. */}
-      {lot.lotIsSelected || isLastItem ? null : (
+      {/* {lot.lotIsSelected || isLastItem ? null : (
         <Divider style={styles.divider} bold={true} />
-      )}
+      )} */}
     </View>
   );
 };
@@ -92,7 +94,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 8,
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 2,
     backgroundColor: lotBackgroundNotSelected,
     borderColor: lotBorderNotSelected,
   },
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: 14,
   },
-  rightIconContainer: {
+  lotRightSide: {
     paddingHorizontal: 10,
   },
   lotIsSelected: {

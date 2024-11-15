@@ -1,4 +1,3 @@
-import { NeighbourhoodData } from './types';
 // types.ts or interfaces.ts
 
 // LOTS / ZONES / NEIGHBOURHOODS
@@ -82,6 +81,12 @@ export interface NeighbourhoodZoneData {
 
 // USERS / WORKGROUPS
 export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
+
+export interface UserInvitedPendingAcceptanceInterface {
+  email: string;
+  role: UserRole;
+  accessToAllLots: boolean; // Default
+}
 
 export interface GroupOfUsersInterface {
   users: UserInterface[];

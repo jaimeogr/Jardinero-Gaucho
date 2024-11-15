@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 import { Surface, Badge } from 'react-native-paper';
 
 import ControllerService from '../services/useControllerService';
+import useUserStore from '../stores/useUserStore';
 import { theme } from '../styles/styles';
 import { UserInterface, UserRole } from '../types/types';
 
@@ -30,26 +31,20 @@ interface Props {
   navigation: MyTeamScreenNavigationProp;
 }
 
-const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
-  const [users, setUsers] = useState<
-    Array<
-      UserInterface & {
-        role: UserRole;
-        accessToAllLots: boolean;
-        hasAcceptedPresenceInWorkgroup: boolean;
-        assignedLotsCount: number;
-      }
-    >
-  >([]);
+const useUsersWithRoles = () => {
+  const users = useUserStore((state) => state.users); // Subscribes to Zustand store
+  return ControllerService.getUsersInActiveWorkgroupWithRoles();
+};
 
-  useEffect(() => {
-    const fetchUsers = () => {
-      const usersWithRoles =
-        ControllerService.getUsersInActiveWorkgroupWithRoles();
-      setUsers(usersWithRoles);
-    };
-    fetchUsers();
-  }, []);
+const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
+  const users: Array<
+    UserInterface & {
+      role: UserRole;
+      accessToAllLots: boolean;
+      hasAcceptedPresenceInWorkgroup: boolean;
+      assignedLotsCount: number;
+    }
+  > = useUsersWithRoles();
 
   const integrantesCount = users.length;
 
@@ -92,7 +87,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
           const hasAcceptedPresenceInWorkgroup =
             !item.hasAcceptedPresenceInWorkgroup;
           const accessText = item.accessToAllLots
-            ? 'Todos los lotes'
+            ? 'Todas las zonas'
             : `${item.assignedLotsCount} lotes`;
 
           const roleColor = theme.colors.roles[item.role] || '#1976D2';
@@ -134,7 +129,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
                 </View>
               </View>
 
-              <View style={styles.userBody}>
+              <View style={styles.userAccess}>
                 <Text style={styles.accessText}>Acceso: {accessText}</Text>
               </View>
 
@@ -207,6 +202,7 @@ const styles = StyleSheet.create({
     margin: 14,
     marginBottom: 6,
     padding: 16,
+    paddingTop: 12,
     backgroundColor: '#fff',
     borderRadius: 12,
     elevation: 2,
@@ -221,12 +217,13 @@ const styles = StyleSheet.create({
   },
   userNameAndBadge: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'flex-start',
     justifyContent: 'space-between',
   },
   userName: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginBottom: 4,
   },
   userWaitingText: {
     fontSize: 18,
@@ -242,9 +239,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontWeight: 'bold',
     fontSize: 14,
+    marginTop: -12,
   },
-  userBody: {
-    marginTop: 8,
+  userAccess: {
+    marginTop: 28,
   },
   accessText: {
     fontSize: 16,

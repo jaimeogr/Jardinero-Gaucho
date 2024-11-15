@@ -5,31 +5,29 @@ import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import useControllerService from '../../services/useControllerService';
 import { useNestedLots } from '../../services/useLotService';
 import { theme } from '../../styles/styles';
 
-const upperIndicatorsAndButtonsColor = theme.colors.primary;
+interface NestedViewLotsProps {
+  selectingStateRightSideActions?: React.ReactNode;
+  handleDeselectLots: () => void;
+  renderRightSideForAccordion: Function;
+  renderRightSideForOneLot: Function;
+  title?: string;
+  onlyZonesAreSelectable?: boolean;
+  expandNeighbourhood?: boolean;
+}
 
-const NestedViewLots = () => {
-  const { markSelectedLotsCompletedForSpecificDate, deselectAllLots } =
-    useControllerService;
-
+const NestedViewLots: React.FC<NestedViewLotsProps> = ({
+  selectingStateRightSideActions = null,
+  handleDeselectLots,
+  renderRightSideForAccordion,
+  renderRightSideForOneLot,
+  title = 'Mis lotes',
+  onlyZonesAreSelectable = false,
+  expandNeighbourhood = false,
+}) => {
   const { nestedLots, selectedLots } = useNestedLots();
-
-  const handleDeselectLots = useCallback(() => {
-    deselectAllLots();
-  }, [deselectAllLots]);
-
-  const handleMarkLotsCompleted = () => {
-    const success = markSelectedLotsCompletedForSpecificDate();
-    if (success) {
-      console.log('Selected lots marked as completed');
-      handleDeselectLots();
-    } else {
-      console.error('No lots were selected to mark as completed');
-    }
-  };
 
   // this will handle the Native OS back button press event
   useEffect(() => {
@@ -52,39 +50,28 @@ const NestedViewLots = () => {
       {selectedLots ? (
         <View style={styles.upperSide}>
           <View style={styles.selectedIndicatorsTextAndButtons}>
-            <View style={styles.selectedIndicatorsLeftSide}>
+            <View style={styles.selectingStateLeftSideCounter}>
               <Appbar.BackAction
-                color={upperIndicatorsAndButtonsColor}
+                color={theme.colors.primary}
                 size={28}
                 onPress={handleDeselectLots}
               />
-              <Text style={styles.selectedIndicatorsText}>{selectedLots}</Text>
+              <Text style={styles.selectedIndicatorsText}>
+                {selectedLots}
+                {'   '}lotes
+              </Text>
             </View>
 
-            <View style={styles.selectedIndicatorsRightSide}>
-              <Appbar.Action
-                icon="check-circle-outline"
-                color={upperIndicatorsAndButtonsColor}
-                size={28}
-                onPress={handleMarkLotsCompleted}
-              />
-              <Appbar.Action
-                icon="account-arrow-left"
-                color={upperIndicatorsAndButtonsColor}
-                size={28}
-                onPress={() => {}}
-              />
-              <Appbar.Action
-                icon="dots-vertical"
-                color={upperIndicatorsAndButtonsColor}
-                size={28}
-                onPress={() => {}}
-              />
-            </View>
+            {/* Conditionally render right-side actions if provided */}
+            {selectingStateRightSideActions && (
+              <View style={styles.selectingStateRightSideActions}>
+                {selectingStateRightSideActions}
+              </View>
+            )}
           </View>
         </View>
       ) : (
-        <Text style={styles.title}>Mis lotes</Text>
+        <Text style={styles.title}>{title}</Text>
       )}
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -92,27 +79,31 @@ const NestedViewLots = () => {
           <CustomAccordion
             key={neighbourhoodIndex}
             id={neighbourhood.neighbourhoodId}
+            element={neighbourhood}
             title={neighbourhood.neighbourhoodLabel}
             level={0} // Neighbourhood level
-            thisWeeksNormalLotsToMow={neighbourhood.needMowing}
-            thisWeeksCriticalLotsToMow={neighbourhood.needMowingCritically}
+            renderRightSide={renderRightSideForAccordion}
             isSelected={neighbourhood.isSelected}
+            isSelectable={!onlyZonesAreSelectable}
+            startExpanded={expandNeighbourhood}
           >
             {neighbourhood.zones.map((zone, zoneIndex) => (
               <CustomAccordion
                 key={zoneIndex}
                 id={zone.zoneId}
-                title={`Zona ${zone.zoneLabel}`}
+                element={zone}
+                title={`Zona  ${zone.zoneLabel}`}
                 level={1} // Zone level
-                thisWeeksNormalLotsToMow={zone.needMowing}
-                thisWeeksCriticalLotsToMow={zone.needMowingCritically}
                 isSelected={zone.isSelected}
+                renderRightSide={renderRightSideForAccordion}
               >
                 {zone.lots.map((lot, lotIndex) => (
                   <OneLotForCustomAccordion
                     key={lotIndex}
                     lotId={lot.lotId}
                     isLastItem={lotIndex === zone.lots.length - 1}
+                    isSelectable={!onlyZonesAreSelectable}
+                    renderRightSide={renderRightSideForOneLot}
                   />
                 ))}
               </CustomAccordion>
@@ -160,11 +151,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: theme.colors.primary,
   },
-  selectedIndicatorsLeftSide: {
+  selectingStateLeftSideCounter: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  selectedIndicatorsRightSide: {
+  selectingStateRightSideActions: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 0,

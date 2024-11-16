@@ -1,7 +1,13 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from 'react-native';
 
 import { theme } from '../styles/styles';
 
@@ -18,13 +24,21 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
   value,
   onChange,
   isOptional = false,
-  trashAction,
+  trashAction, // Optional function to clear the date which must be in parent component to facilitate handling variables in one place. If not provided, the clear button will not be displayed.
 }) => {
-  const [showPicker, setShowPicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
-    setShowPicker(false);
-    onChange(selectedDate || null);
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+      if (event.type === 'set' && selectedDate) {
+        onChange(selectedDate || null);
+      }
+    } else {
+      if (selectedDate) {
+        onChange(selectedDate || null);
+      }
+    }
   };
 
   return (
@@ -42,7 +56,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
       {/* Date display and calendar icon */}
       <View style={styles.dateContainer}>
         <TouchableOpacity
-          onPress={() => setShowPicker(true)}
+          onPress={() => setShowDatePicker(true)}
           style={[
             styles.input,
             isOptional && styles.inputIsOptional,
@@ -57,7 +71,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
           >
             {value ? value.toDateString() : 'La última fecha de corte de pasto'}
           </Text>
-          <View style={styles.iconContainer}>
+          <View style={styles.calendarIconContainer}>
             <Icon name="calendar-range" size={22} color="#fff" />
           </View>
         </TouchableOpacity>
@@ -74,7 +88,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
       </View>
 
       {/* DateTimePicker modal */}
-      {showPicker && (
+      {showDatePicker && (
         <DateTimePicker
           value={value || new Date()}
           mode="date"
@@ -126,10 +140,6 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.input.optionalFieldBorder,
   },
   datePicker: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     padding: 0,
   },
   dateText: {
@@ -137,7 +147,7 @@ const styles = StyleSheet.create({
     padding: 8,
     paddingLeft: 10,
   },
-  iconContainer: {
+  calendarIconContainer: {
     backgroundColor: theme.colors.primary,
     height: 45,
     justifyContent: 'center',

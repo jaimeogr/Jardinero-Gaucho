@@ -272,7 +272,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             onValueChange={handleNeighbourhoodChange}
             placeholder="Seleccionar Barrio"
             isDisabled={false} // Neighbourhood picker is always enabled
-            style={styles.pickerContainer}
           />
 
           {/* Zone Picker */}
@@ -287,7 +286,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
                 : 'Selecciona un barrio primero'
             }
             isDisabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
-            style={styles.pickerContainer}
           />
 
           {/* Lot Label Input */}
@@ -483,13 +481,6 @@ const styles = StyleSheet.create({
   placeholderText: {
     color: theme.colors.placeholder, // Reusable placeholder color
     fontSize: 16,
-  },
-  pickerContainer: {
-    borderWidth: 1.2,
-    borderColor: theme.colors.input.requiredFieldBorder,
-    borderRadius: 10,
-    overflow: 'hidden',
-    marginBottom: 18,
   },
   modalOverlay: {
     flex: 1,

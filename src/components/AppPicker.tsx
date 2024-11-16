@@ -11,7 +11,6 @@ interface AppPickerProps {
   onValueChange: (value: string) => void;
   placeholder: string;
   isDisabled?: boolean;
-  style?: any;
 }
 
 const AppPicker: React.FC<AppPickerProps> = ({
@@ -21,10 +20,9 @@ const AppPicker: React.FC<AppPickerProps> = ({
   onValueChange,
   placeholder,
   isDisabled = false,
-  style = {},
 }) => {
   return (
-    <View style={style.container}>
+    <View>
       <Text style={styles.label}>{label}</Text>
       <View
         style={[

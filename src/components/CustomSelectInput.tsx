@@ -13,7 +13,7 @@ interface AppPickerProps {
   isDisabled?: boolean;
 }
 
-const AppPicker: React.FC<AppPickerProps> = ({
+const CustomSelectInput: React.FC<AppPickerProps> = ({
   label,
   value,
   items,
@@ -97,4 +97,4 @@ const pickerSelectStyles = StyleSheet.create({
   },
 });
 
-export default AppPicker;
+export default CustomSelectInput;

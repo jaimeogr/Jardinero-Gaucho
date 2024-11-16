@@ -20,8 +20,9 @@ import {
 import RNPickerSelect from 'react-native-picker-select';
 import { v4 as uuidv4 } from 'uuid';
 
-import AppPicker from '../components/AppPicker';
-import DatePickerField from '../components/DatePickerField';
+import CustomDatePickerInput from '../components/CustomDatePickerInput';
+import CustomSelectInput from '../components/CustomSelectInput';
+import CustomTextInput from '../components/CustomTextInput';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 import { LotInterface, NeighbourhoodData, ZoneData } from '../types/types';
@@ -265,7 +266,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.formContainer}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Neighbourhood Picker */}
-          <AppPicker
+          <CustomSelectInput
             label="Barrio"
             value={lotData.neighbourhoodId}
             items={neighbourhoodItems}
@@ -275,7 +276,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           />
 
           {/* Zone Picker */}
-          <AppPicker
+          <CustomSelectInput
             label="Zona"
             value={lotData.zoneId}
             items={zoneItems}
@@ -289,17 +290,15 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           />
 
           {/* Lot Label Input */}
-          <Text style={styles.label}>Casa</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ingresá la casa"
-            placeholderTextColor={theme.colors.placeholder}
+          <CustomTextInput
+            label="Casa"
             value={lotData.lotLabel}
             onChangeText={(text) => handleInputChange('lotLabel', text)}
+            placeholder="Ingresá la casa"
           />
 
           {/* Last Mowing Date - Date Picker */}
-          <DatePickerField
+          <CustomDatePickerInput
             label="Última Fecha de Corte de Pasto"
             value={lotData.lastMowingDate}
             onChange={(date) => handleInputChange('lastMowingDate', date)}
@@ -308,19 +307,13 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           />
 
           {/* Extra Notes */}
-          <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={[styles.label, styles.labelIsOptional]}>
-              Notas Adicionales
-            </Text>
-            <Text style={styles.optionalInParentheses}>(opcional)</Text>
-          </View>
-          <TextInput
-            style={[styles.input, styles.inputIsOptional, { height: 80 }]}
-            placeholder="Ingresá notas adicionales.."
-            placeholderTextColor={theme.colors.placeholder}
+          <CustomTextInput
+            label="Notas Adicionales"
             value={lotData.extraNotes}
             onChangeText={(text) => handleInputChange('extraNotes', text)}
-            multiline
+            placeholder="Ingresá notas adicionales.."
+            isOptional={true}
+            multiline={true}
           />
         </ScrollView>
         {/* Linear Gradient Effect */}

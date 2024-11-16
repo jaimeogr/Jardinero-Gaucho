@@ -19,7 +19,7 @@ interface DatePickerFieldProps {
   trashAction?: () => void;
 }
 
-const DatePickerField: React.FC<DatePickerFieldProps> = ({
+const CustomDatePickerInput: React.FC<DatePickerFieldProps> = ({
   label,
   value,
   onChange,
@@ -48,7 +48,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
         <Text style={[styles.label, isOptional && styles.labelIsOptional]}>
           {label}
         </Text>
-        {isOptional && (
+        {isOptional && ( // if input is optional then this is rendered for the user to know
           <Text style={styles.optionalInParentheses}>(opcional)</Text>
         )}
       </View>
@@ -164,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DatePickerField;
+export default CustomDatePickerInput;

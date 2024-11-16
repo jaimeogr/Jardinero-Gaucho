@@ -56,7 +56,7 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
           Icon={() => (
             <Icon
               name="chevron-down" // Chevron icon
-              size={28}
+              size={26}
               color={
                 isDisabled ? theme.colors.placeholder : theme.colors.primary
               }

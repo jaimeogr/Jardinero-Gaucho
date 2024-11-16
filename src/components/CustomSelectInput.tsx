@@ -30,10 +30,6 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
           styles.pickerContainer,
           isDisabled ? styles.disabledPickerContainer : {},
         ]}
-        onLayout={(event) => {
-          const { height } = event.nativeEvent.layout;
-          console.log('Picker Container Height:', height); // Logs the container height
-        }}
       >
         <RNPickerSelect
           onValueChange={onValueChange}
@@ -44,14 +40,14 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
             ...pickerSelectStyles,
             inputAndroid: {
               ...pickerSelectStyles.inputAndroid,
-              color: isDisabled ? '#6E6E6E' : 'black',
+              color: isDisabled ? theme.colors.placeholder : 'black',
             },
             inputIOS: {
               ...pickerSelectStyles.inputIOS,
-              color: isDisabled ? '#6E6E6E' : 'black',
+              color: isDisabled ? theme.colors.placeholder : 'black',
             },
             placeholder: {
-              color: '#6E6E6E',
+              color: theme.colors.placeholder,
             },
             iconContainer: styles.iconContainer,
           }}
@@ -61,7 +57,9 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
             <Icon
               name="chevron-down" // Chevron icon
               size={28}
-              color={isDisabled ? '#6E6E6E' : theme.colors.primary}
+              color={
+                isDisabled ? theme.colors.placeholder : theme.colors.primary
+              }
             />
           )}
         />

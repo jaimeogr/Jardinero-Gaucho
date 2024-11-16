@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -29,6 +30,10 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
           styles.pickerContainer,
           isDisabled ? styles.disabledPickerContainer : {},
         ]}
+        onLayout={(event) => {
+          const { height } = event.nativeEvent.layout;
+          console.log('Picker Container Height:', height); // Logs the container height
+        }}
       >
         <RNPickerSelect
           onValueChange={onValueChange}
@@ -48,9 +53,17 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
             placeholder: {
               color: '#6E6E6E',
             },
+            iconContainer: styles.iconContainer,
           }}
           useNativeAndroidPickerStyle={false}
           disabled={isDisabled}
+          Icon={() => (
+            <Icon
+              name="chevron-down" // Chevron icon
+              size={28}
+              color={isDisabled ? '#6E6E6E' : theme.colors.primary}
+            />
+          )}
         />
       </View>
     </View>
@@ -70,10 +83,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 18,
+    paddingRight: 10, // Add padding inside the container
   },
   disabledPickerContainer: {
     backgroundColor: '#E0E0E0',
     borderColor: '#E0E0E0',
+  },
+  iconContainer: {
+    justifyContent: 'center',
+    height: '100%', // Full height to match input
   },
 });
 

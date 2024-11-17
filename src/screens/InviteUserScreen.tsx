@@ -8,14 +8,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Modal,
-  FlatList,
   Alert,
   StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from 'react-native';
-import { Badge } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 
 import RolePicker from '../components/RolePicker';

@@ -125,7 +125,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
               value: false,
             },
           ]}
-          value={accessToAllLots}
+          value={isPickerDisabled ? true : accessToAllLots}
           style={{
             ...pickerSelectStyles,
             inputIOS: {

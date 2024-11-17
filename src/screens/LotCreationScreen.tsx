@@ -1,6 +1,5 @@
 // LotCreationScreen.tsx
 
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,17 +13,14 @@ import {
   Alert,
   TouchableOpacity,
   Modal,
-  Platform,
 } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
-import { v4 as uuidv4 } from 'uuid';
 
 import CustomDatePickerInput from '../components/CustomDatePickerInput';
 import CustomSelectInput from '../components/CustomSelectInput';
 import CustomTextInput from '../components/CustomTextInput';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { LotInterface, NeighbourhoodData, ZoneData } from '../types/types';
+import { LotInterface } from '../types/types';
 
 type RootStackParamList = {
   LotCreation: undefined;
@@ -63,8 +59,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const { neighbourhoods } = getNeighbourhoodsAndZones();
 
   const [lotData, setLotData] = useState(initialLotData);
-
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [showNeighbourhoodModal, setShowNeighbourhoodModal] = useState(false);
   const [newNeighbourhoodLabel, setNewNeighbourhoodLabel] = useState('');
@@ -174,20 +168,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     // Close modal
     setShowZoneModal(false);
     setNewZoneLabel('');
-  };
-
-  // Handle date change
-  const onDateChange = (event, selectedDate?: Date) => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
-      if (event.type === 'set' && selectedDate) {
-        handleInputChange('lastMowingDate', selectedDate);
-      }
-    } else {
-      if (selectedDate) {
-        handleInputChange('lastMowingDate', selectedDate);
-      }
-    }
   };
 
   // Clear selected date

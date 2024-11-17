@@ -18,6 +18,7 @@ import {
 import { Badge } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 
+import RolePicker from '../components/RolePicker';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 import { UserRole } from '../types/types';
@@ -76,9 +77,8 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
   const isPickerDisabled =
     selectedRole === 'Owner' || selectedRole === 'Manager';
 
-  const handleRoleSelect = (role: string) => {
+  const handleRolePick = (role: string) => {
     setSelectedRole(role);
-    setModalVisible(false); // Close the modal after selection
     if (isPickerDisabled) {
       setAccessToAllLots(true);
     }
@@ -158,20 +158,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       />
 
       {/* Role Picker */}
-      <Text style={styles.inputTitle}>Rol</Text>
-      <TouchableOpacity
-        style={styles.picker}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text
-          style={[styles.pickerText, selectedRole ? null : styles.placeholder]}
-        >
-          {selectedRole
-            ? roles.find((r) => r.role === selectedRole)?.title
-            : 'Seleccionar Rol'}
-        </Text>
-        <Icon name="chevron-down" size={24} color={theme.colors.primary} />
-      </TouchableOpacity>
+      <RolePicker selectedRole={selectedRole} onSelect={handleRolePick} />
 
       {/* Access to All Lots Picker */}
       <Text style={styles.inputTitle}>Acceso a zonas</Text>
@@ -267,7 +254,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
                             theme.colors.roles[item.role] || '#1976D2',
                         },
                       ]}
-                      onPress={() => handleRoleSelect(item.role)}
+                      onPress={() => handleRolePick(item.role)}
                     >
                       <Badge
                         style={[
@@ -452,12 +439,6 @@ const pickerSelectStyles = StyleSheet.create({
   iconContainer: {
     top: 12, // Adjust the position
   },
-});
-
-const pickerSelectDisabledStyles = StyleSheet.create({
-  inputIOS: {},
-  inputAndroid: {},
-  iconContainer: {},
 });
 
 export default InviteUserScreen;

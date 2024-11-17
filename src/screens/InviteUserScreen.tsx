@@ -23,37 +23,6 @@ import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 import { UserRole } from '../types/types';
 
-const RoleDescriptionForRoleCard: React.FC<{ items: string[] }> = ({
-  items,
-}) => (
-  <View>
-    {items.map((item, index) => (
-      <View key={index} style={styles.bulletItem}>
-        <Text style={styles.bullet}>•</Text>
-        <Text style={styles.bulletText}>{item}</Text>
-      </View>
-    ))}
-  </View>
-);
-
-const roles = [
-  {
-    role: 'Owner',
-    title: 'Socio',
-    description: 'Gestión total del equipo.',
-  },
-  {
-    role: 'Manager',
-    title: 'Administrador',
-    description: 'Asigna tareas y supervisa lotes.',
-  },
-  {
-    role: 'Member',
-    title: 'Jardinero',
-    description: 'Realiza tareas asignadas.',
-  },
-];
-
 type RootStackParamList = {
   InviteUser: undefined;
   // other routes...
@@ -72,7 +41,6 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [accessToAllLots, setAccessToAllLots] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
 
   const isPickerDisabled =
     selectedRole === 'Owner' || selectedRole === 'Manager';
@@ -118,30 +86,6 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
 
       // Navigate to zone assignment screen
       navigation.navigate('ZoneAssignment', { newUser });
-    }
-  };
-
-  // Helper function to get descriptions based on role
-  const getRoleDescriptionArray = (role: string): string[] => {
-    switch (role) {
-      case 'Owner':
-        return [
-          'Acceso completo a la plataforma y a la información de pagos.',
-          'Control sobre el equipo (excepto sobre el socio principal).',
-        ];
-      case 'Manager':
-        return [
-          'Gestión y supervisión de lotes.',
-          'Capacidad para invitar a nuevos administradores y jardineros.',
-          'Sin otros derechos.',
-        ];
-      case 'Member':
-        return [
-          'Registra tareas realizadas en las zonas asignados.',
-          'Sin accesos adicionales.',
-        ];
-      default:
-        return ['Descripción no disponible.'];
     }
   };
 
@@ -231,54 +175,6 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
             : 'Invitar Integrante y Seleccionar sus Zonas'}
         </Text>
       </TouchableOpacity>
-
-      {/* Role Selection Modal */}
-
-      <Modal visible={modalVisible} transparent={true} animationType="fade">
-        <TouchableWithoutFeedback
-          onPress={() => setModalVisible(false)} // Close the modal on outside press
-        >
-          <View style={styles.centeredOverlay}>
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-              <View style={styles.centeredModal}>
-                <Text style={styles.rolesModalTitle}>Seleccionar el Rol</Text>
-                <FlatList
-                  data={roles}
-                  keyExtractor={(item) => item.role}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={[
-                        styles.roleCard,
-                        {
-                          borderColor:
-                            theme.colors.roles[item.role] || '#1976D2',
-                        },
-                      ]}
-                      onPress={() => handleRolePick(item.role)}
-                    >
-                      <Badge
-                        style={[
-                          styles.roleBadge,
-                          {
-                            backgroundColor:
-                              theme.colors.roles[item.role] || '#1976D2',
-                          },
-                        ]}
-                        size={24}
-                      >
-                        {item.title}
-                      </Badge>
-                      <RoleDescriptionForRoleCard
-                        items={getRoleDescriptionArray(item.role)}
-                      />
-                    </TouchableOpacity>
-                  )}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
     </View>
   );
 };

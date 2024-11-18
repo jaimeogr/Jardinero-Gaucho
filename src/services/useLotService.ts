@@ -315,11 +315,9 @@ const getNumberOfAssignedLotsForUserInSpecificWorkgroup = (
   userId: string,
 ): number => {
   const { lots } = useLotStore.getState();
-  console.log('userID before:', userId);
   const assignedLots = lots.filter(
     (lot) => lot.workgroupId === WorkgroupId && lot.assignedTo.includes(userId),
   );
-  console.log('userID after:', userId);
   return assignedLots.length;
 };
 
@@ -328,13 +326,9 @@ const getNumberOfAssignedZonesForUserInSpecificWorkgroup = (
   userId: string,
 ): number => {
   const { neighbourhoodZoneData } = useLotStore.getState();
-  console.log('neighbourhoodZonedata:');
-  console.log(neighbourhoodZoneData);
   const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
     (n) => n.workgroupId === WorkgroupId,
   );
-  console.log('neighbourhoods:');
-  console.log(neighbourhoods.length);
   let assignedZones = 0;
   if (!neighbourhoods) {
     // if there are no neighbourhoods found
@@ -346,7 +340,6 @@ const getNumberOfAssignedZonesForUserInSpecificWorkgroup = (
         // this type check helps prevent crashes
         assignedZones++;
       }
-      console.log('zone:\n', zone);
     });
   });
   return assignedZones;

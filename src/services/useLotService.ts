@@ -336,6 +336,25 @@ const getNumberOfAssignedLotsForUserInSpecificWorkgroup = (
   return assignedLots.length;
 };
 
+const getNumberOfAssignedZonesForUserInSpecificWorkgroup = (
+  WorkgroupId: string,
+  userId: string,
+): number => {
+  const { neighbourhoodZoneData } = useLotStore.getState();
+  const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
+    (n) => n.workgroupId === WorkgroupId,
+  );
+  let assignedZones = 0;
+  neighbourhoods.forEach((neighbourhood) => {
+    neighbourhood.zones.forEach((zone) => {
+      if (zone.assignedTo.includes(userId)) {
+        assignedZones++;
+      }
+    });
+  });
+  return assignedZones;
+};
+
 export default {
   initializeStore,
   getLotById,
@@ -352,4 +371,5 @@ export default {
   deselectAllLots,
   assignMemberToSelection,
   getNumberOfAssignedLotsForUserInSpecificWorkgroup,
+  getNumberOfAssignedZonesForUserInSpecificWorkgroup,
 };

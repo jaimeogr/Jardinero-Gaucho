@@ -8,6 +8,7 @@ import {
   LotInterface,
   ZoneData,
   UserInterface,
+  UserInActiveWorkgroupWithRole,
 } from './../types/types';
 import useLotService from './useLotService';
 import useUserService from './useUserService';
@@ -159,6 +160,42 @@ const updateUserAccessToAllLots = (userId: string, access: boolean) => {
   useUserService.updateUser(userId, user);
 };
 
+const getUserInActiveWorkgroupWithRole = (
+  userId: string,
+): UserInActiveWorkgroupWithRole | null => {
+  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroupId) return null;
+
+  const user = useUserService.getUserById(userId);
+  if (!user) return null;
+
+  const assignment = user.workgroupAssignments.find(
+    (wa) => wa.workgroupId === activeWorkgroupId,
+  );
+  if (assignment) {
+    // the user is in the active workgroup
+    console.log('email:', user.email);
+    console.log('ID:', user.userId);
+    const assignedZonesCount =
+      useLotService.getNumberOfAssignedZonesForUserInSpecificWorkgroup(
+        activeWorkgroupId,
+        user.userId,
+      );
+    const assignedLotsCount =
+      useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
+        activeWorkgroupId,
+        user.userId,
+      );
+    return {
+      ...user,
+      ...assignment,
+      assignedZonesCount: assignedZonesCount,
+      assignedLotsCount: assignedLotsCount,
+    };
+  }
+  return null;
+};
+
 const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
   role: UserRole;
   accessToAllLots: boolean;
@@ -245,6 +282,7 @@ export default {
   inviteUserToActiveWorkgroup,
   updateUserRoleInActiveWorkgroup,
   updateUserAccessToAllLots,
+  getUserInActiveWorkgroupWithRole,
   getUsersInActiveWorkgroupWithRoles,
   toggleLotSelection,
   toggleZoneSelection,

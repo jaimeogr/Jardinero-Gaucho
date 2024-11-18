@@ -8,13 +8,12 @@ import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import CustomSelectInput from '../components/CustomSelectInput';
 import ReadOnlyField from '../components/ReadOnlyField'; // Import ReadOnlyField
 import RolePicker from '../components/RolePicker';
-import ControllerService from '../services/useControllerService';
+import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { User, UserRole } from '../types/types';
+import { UserRole } from '../types/types';
 
 type RootStackParamList = {
-  EditUser: { user: User };
-  ZoneAssignment: { user: User };
+  EditUser: { userId: string };
   // other routes...
 };
 
@@ -31,7 +30,8 @@ interface Props {
 }
 
 const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
-  const { user } = route.params;
+  const { userId } = route.params;
+  const user = useControllerService.getUserInActiveWorkgroupWithRole(userId);
 
   const [selectedRole, setSelectedRole] = useState<string | null>(user.role);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(
@@ -61,7 +61,6 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
     console.log('Updating user...');
     const success = ControllerService.updateUser(
       user.id,
-      user.email, // Email remains unchanged
       selectedRole as UserRole,
       accessToAllLots,
     );
@@ -74,7 +73,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
       }
     } else {
       // Navigate to zone assignment screen
-      navigation.navigate('ZoneAssignment', { user });
+      navigation.navigate('ZoneAssignment', { user: userId });
     }
   };
 

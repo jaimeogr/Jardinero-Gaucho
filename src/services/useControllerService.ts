@@ -176,11 +176,11 @@ const getUserInActiveWorkgroupWithRole = (
     // the user is in the active workgroup
     console.log('email:', user.email);
     console.log('ID:', user.userId);
-    const assignedZonesCount =
-      useLotService.getNumberOfAssignedZonesForUserInSpecificWorkgroup(
-        activeWorkgroupId,
-        user.userId,
-      );
+    // const assignedZonesCount =
+    //   useLotService.getNumberOfAssignedZonesForUserInSpecificWorkgroup(
+    //     activeWorkgroupId,
+    //     user.userId,
+    //   );
     const assignedLotsCount =
       useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
         activeWorkgroupId,
@@ -189,7 +189,7 @@ const getUserInActiveWorkgroupWithRole = (
     return {
       ...user,
       ...assignment,
-      assignedZonesCount: assignedZonesCount,
+      // assignedZonesCount: assignedZonesCount,
       assignedLotsCount: assignedLotsCount,
     };
   }
@@ -204,27 +204,7 @@ const getUsersInActiveWorkgroupWithRoles =
     const allUsers = useUserService.useAllUsers();
     const usersInWorkgroup = allUsers
       .map((user) => {
-        const assignment = user.workgroupAssignments.find(
-          (wa) => wa.workgroupId === activeWorkgroupId,
-        );
-        if (assignment) {
-          console.log('email:', user.email);
-          console.log('ID:', user.userId);
-          const assignedLotsCount =
-            useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
-              activeWorkgroupId,
-              user.userId,
-            );
-          return {
-            ...user,
-            role: assignment.role,
-            accessToAllLots: assignment.accessToAllLots,
-            hasAcceptedPresenceInWorkgroup:
-              assignment.hasAcceptedPresenceInWorkgroup,
-            assignedLotsCount: assignedLotsCount,
-          };
-        }
-        return null;
+        return getUserInActiveWorkgroupWithRole(user.userId);
       })
       .filter((user) => user !== null) as UserInActiveWorkgroupWithRole[];
 

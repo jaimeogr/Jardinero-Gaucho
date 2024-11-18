@@ -109,8 +109,8 @@ export interface UserInterface {
 
 export type UserInActiveWorkgroupWithRole = UserInterface &
   WorkgroupAssignment & {
-    // This is a combination of UserInterface and WorkgroupAssignment plus some assigned zones
-    assignedZonesCount: number;
+    // This is a combination of UserInterface and WorkgroupAssignment plus some assigned zones and lots
+    // assignedZonesCount: number;
     assignedLotsCount: number;
   };
 

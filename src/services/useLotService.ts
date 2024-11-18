@@ -62,7 +62,9 @@ const addNeighbourhood = (
     workgroupId: workgroupId,
     neighbourhoodId: uuidv4(),
     neighbourhoodLabel: neighbourhoodLabel,
-    zones: [],
+    isSelected: false, // Initialize isSelected
+    assignedTo: [], // Initialize assignedTo as an empty array
+    zones: [], // Initialize zones as an empty array
   };
   return useLotStore.getState().addNeighbourhood(newNeighbourhood);
 };
@@ -74,6 +76,8 @@ const addZoneToNeighbourhood = (
   const zone: ZoneData = {
     zoneId: uuidv4(),
     zoneLabel: zoneLabel,
+    isSelected: false, // Initialize isSelected
+    assignedTo: [], // Initialize assignedTo as an empty array
   };
   return useLotStore.getState().addZoneToNeighbourhood(neighbourhoodId, zone);
 };
@@ -136,23 +140,6 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
   console.log(`${selectedLots.length} lots marked as completed`);
   return true;
 };
-
-// Function to reassign a lot (stub for further implementation)
-// export const reassignLot = (lotId: string, newUserId: number) => {
-//   const lot = useLotStore.getState().lots.find((lot) => lot.lotId === lotId);
-//   if (!lot) {
-//     throw new Error('Lot not found');
-//   }
-
-//   // Check if the user is allowed to reassign tasks
-//   checkUserAuthentication(lot.workgroupId, 'Manager'); // Only Managers and Owners can reassign tasks
-
-//   // Update the lot assignment in the store
-//   useLotStore.getState().updateLot(lotId, { assignedTo: [newUserId] });
-
-//   // Sync with the database (replace with actual API call)
-//   syncLotWithDatabase(lotId, { assignedTo: [newUserId] });
-// };
 
 export const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
   const lots = useLotStore((state) => state.lots);
@@ -341,15 +328,25 @@ const getNumberOfAssignedZonesForUserInSpecificWorkgroup = (
   userId: string,
 ): number => {
   const { neighbourhoodZoneData } = useLotStore.getState();
+  console.log('neighbourhoodZonedata:');
+  console.log(neighbourhoodZoneData);
   const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
     (n) => n.workgroupId === WorkgroupId,
   );
+  console.log('neighbourhoods:');
+  console.log(neighbourhoods.length);
   let assignedZones = 0;
+  if (!neighbourhoods) {
+    // if there are no neighbourhoods found
+    return 0;
+  }
   neighbourhoods.forEach((neighbourhood) => {
     neighbourhood.zones.forEach((zone) => {
-      if (zone.assignedTo.includes(userId)) {
+      if (Array.isArray(zone.assignedTo) && zone.assignedTo.includes(userId)) {
+        // this type check helps prevent crashes
         assignedZones++;
       }
+      console.log('zone:\n', zone);
     });
   });
   return assignedZones;

@@ -174,13 +174,11 @@ const getUserInActiveWorkgroupWithRole = (
   );
   if (assignment) {
     // the user is in the active workgroup
-    console.log('email:', user.email);
-    console.log('ID:', user.userId);
-    // const assignedZonesCount =
-    //   useLotService.getNumberOfAssignedZonesForUserInSpecificWorkgroup(
-    //     activeWorkgroupId,
-    //     user.userId,
-    //   );
+    const assignedZonesCount =
+      useLotService.getNumberOfAssignedZonesForUserInSpecificWorkgroup(
+        activeWorkgroupId,
+        user.userId,
+      );
     const assignedLotsCount =
       useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
         activeWorkgroupId,
@@ -189,7 +187,7 @@ const getUserInActiveWorkgroupWithRole = (
     return {
       ...user,
       ...assignment,
-      // assignedZonesCount: assignedZonesCount,
+      assignedZonesCount: assignedZonesCount,
       assignedLotsCount: assignedLotsCount,
     };
   }

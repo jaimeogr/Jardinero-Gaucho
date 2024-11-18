@@ -11,9 +11,9 @@ import {
   Alert,
   StyleSheet,
 } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
 
 import CustomSelectInput from '../components/CustomSelectInput';
+import CustomTextInput from '../components/CustomTextInput';
 import RolePicker from '../components/RolePicker';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
@@ -89,11 +89,9 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* Email Input */}
-      <Text style={styles.inputTitle}>Email</Text>
-      <TextInput
-        style={styles.input}
+      <CustomTextInput
+        label="Email"
         placeholder="Ingresá el email del integrante"
-        placeholderTextColor={theme.colors.placeholder}
         value={email}
         onChangeText={setEmail}
       />

@@ -96,7 +96,7 @@ const RolePicker: React.FC<RolePickerProps> = ({ selectedRole, onSelect }) => {
             ? roles.find((r) => r.role === selectedRole)?.title
             : 'Seleccionar Rol'}
         </Text>
-        <Icon name="chevron-down" size={24} color={theme.colors.primary} />
+        <Icon name="chevron-down" size={26} color={theme.colors.primary} />
       </TouchableOpacity>
 
       {/* Role Selection Modal */}
@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.input.requiredFieldBorder,
     borderRadius: 10,
     padding: 8,
+    paddingRight: 10,
     marginBottom: 18,
   },
   pickerText: {

@@ -7,9 +7,9 @@ import { theme } from '../styles/styles';
 
 interface AppPickerProps {
   label: string;
-  value: string;
-  items: Array<{ label: string; value: string }>;
-  onValueChange: (value: string) => void;
+  value: string | boolean;
+  items: Array<{ label: string; value: string | boolean }>;
+  onValueChange: (value: string | boolean) => void;
   placeholder: string;
   isDisabled?: boolean;
 }
@@ -70,7 +70,7 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: 'bold',
     marginBottom: 8,
     color: theme.colors.input.requiredLabelText,

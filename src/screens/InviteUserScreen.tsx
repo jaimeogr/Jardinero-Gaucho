@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
+import CustomSelectInput from '../components/CustomSelectInput';
 import RolePicker from '../components/RolePicker';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
@@ -43,6 +44,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
   const handleRolePick = (role: string) => {
     setSelectedRole(role);
     if (isPickerDisabled) {
+      // Owner and Manager roles have access to all lots by default
       setAccessToAllLots(true);
     }
   };
@@ -100,59 +102,31 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       <RolePicker selectedRole={selectedRole} onSelect={handleRolePick} />
 
       {/* Access to All Lots Picker */}
-      <Text style={styles.inputTitle}>Acceso a zonas</Text>
-      <View
-        style={[
-          styles.pickerContainer,
-          isPickerDisabled ? styles.pickerContainerDisabled : null,
+      <CustomSelectInput
+        label="Acceso a zonas"
+        placeholder="Seleccioná una opción"
+        value={isPickerDisabled ? true : accessToAllLots}
+        isDisabled={isPickerDisabled}
+        onValueChange={(value) => {
+          if (typeof value === 'boolean') {
+            setAccessToAllLots(value); // Handle only boolean values
+          } else {
+            console.warn('Invalid value type passed:', value); // Debugging fallback
+          }
+        }}
+        items={[
+          {
+            label: isPickerDisabled
+              ? 'Todas las zonas'
+              : 'Todas las zonas (Ideal para empezar)',
+            value: true,
+          },
+          {
+            label: 'Solo las seleccionadas (Mayor control)',
+            value: false,
+          },
         ]}
-      >
-        <RNPickerSelect
-          onValueChange={(value) => setAccessToAllLots(value)}
-          placeholder={{
-            label: 'Seleccioná una opción...',
-            value: null,
-          }}
-          items={[
-            {
-              label: isPickerDisabled
-                ? 'Todas las zonas'
-                : 'Todas las zonas (Ideal para empezar)',
-              value: true,
-            },
-            {
-              label: 'Solo las seleccionadas (Mayor control)',
-              value: false,
-            },
-          ]}
-          value={isPickerDisabled ? true : accessToAllLots}
-          style={{
-            ...pickerSelectStyles,
-            inputIOS: {
-              ...pickerSelectStyles.inputIOS,
-              opacity: isPickerDisabled ? 0.5 : 1, // Apply opacity directly based on disabled state
-            },
-            inputAndroid: {
-              ...pickerSelectStyles.inputAndroid,
-              opacity: isPickerDisabled ? 0.5 : 1, // Apply opacity directly based on disabled state
-            },
-          }}
-          useNativeAndroidPickerStyle={false}
-          Icon={() => (
-            <Icon
-              name="chevron-down"
-              size={24}
-              color={
-                isPickerDisabled
-                  ? theme.colors.disabledText
-                  : theme.colors.primary
-              } // Adjust icon color
-              style={{ marginRight: 12 }} // Adjust margin if needed
-            />
-          )}
-          disabled={isPickerDisabled}
-        />
-      </View>
+      />
 
       {/* Dynamic CTA Button - Call to Action */}
       <TouchableOpacity

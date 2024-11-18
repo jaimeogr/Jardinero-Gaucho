@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   label: {
-    fontSize: 16,
+    fontSize: 17,
     marginBottom: 8,
     fontWeight: 'bold',
     color: theme.colors.input.requiredLabelText,

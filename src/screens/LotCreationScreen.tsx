@@ -249,7 +249,13 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             label="Barrio"
             value={lotData.neighbourhoodId}
             items={neighbourhoodItems}
-            onValueChange={handleNeighbourhoodChange}
+            onValueChange={(value) => {
+              if (typeof value === 'string') {
+                handleNeighbourhoodChange(value); // Handle only boolean values
+              } else {
+                console.warn('Invalid value type passed:', value); // Debugging fallback
+              }
+            }}
             placeholder="Seleccionar Barrio"
             isDisabled={false} // Neighbourhood picker is always enabled
           />
@@ -259,7 +265,13 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             label="Zona"
             value={lotData.zoneId}
             items={zoneItems}
-            onValueChange={handleZoneChange}
+            onValueChange={(value) => {
+              if (typeof value === 'string') {
+                handleZoneChange(value); // Handle only boolean values
+              } else {
+                console.warn('Invalid value type passed:', value); // Debugging fallback
+              }
+            }}
             placeholder={
               lotData.neighbourhoodId
                 ? 'Seleccionar Zona'

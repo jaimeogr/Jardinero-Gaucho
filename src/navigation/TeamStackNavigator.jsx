@@ -14,7 +14,7 @@ const TeamStackNavigator = () => {
   return (
     <Stack.Navigator
       style={styles.TeamStackNavigator}
-      initialRouteName="HomeMain"
+      initialRouteName="MyTeam"
     >
       <Stack.Screen
         name="MyTeam"

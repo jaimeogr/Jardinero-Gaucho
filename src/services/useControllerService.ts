@@ -196,55 +196,46 @@ const getUserInActiveWorkgroupWithRole = (
   return null;
 };
 
-const getUsersInActiveWorkgroupWithRoles = (): (UserInterface & {
-  role: UserRole;
-  accessToAllLots: boolean;
-  hasAcceptedPresenceInWorkgroup: boolean;
-  assignedLotsCount: number;
-})[] => {
-  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-  if (!activeWorkgroupId) return [];
+const getUsersInActiveWorkgroupWithRoles =
+  (): UserInActiveWorkgroupWithRole[] => {
+    const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+    if (!activeWorkgroupId) return [];
 
-  const allUsers = useUserService.useAllUsers();
-  const usersInWorkgroup = allUsers
-    .map((user) => {
-      const assignment = user.workgroupAssignments.find(
-        (wa) => wa.workgroupId === activeWorkgroupId,
-      );
-      if (assignment) {
-        console.log('email:', user.email);
-        console.log('ID:', user.userId);
-        const assignedLotsCount =
-          useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
-            activeWorkgroupId,
-            user.userId,
-          );
-        return {
-          ...user,
-          role: assignment.role,
-          accessToAllLots: assignment.accessToAllLots,
-          hasAcceptedPresenceInWorkgroup:
-            assignment.hasAcceptedPresenceInWorkgroup,
-          assignedLotsCount: assignedLotsCount,
-        };
-      }
-      return null;
-    })
-    .filter((user) => user !== null) as (UserInterface & {
-    role: UserRole;
-    accessToAllLots: boolean;
-    hasAcceptedPresenceInWorkgroup: boolean;
-    assignedLotsCount: number;
-  })[];
+    const allUsers = useUserService.useAllUsers();
+    const usersInWorkgroup = allUsers
+      .map((user) => {
+        const assignment = user.workgroupAssignments.find(
+          (wa) => wa.workgroupId === activeWorkgroupId,
+        );
+        if (assignment) {
+          console.log('email:', user.email);
+          console.log('ID:', user.userId);
+          const assignedLotsCount =
+            useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
+              activeWorkgroupId,
+              user.userId,
+            );
+          return {
+            ...user,
+            role: assignment.role,
+            accessToAllLots: assignment.accessToAllLots,
+            hasAcceptedPresenceInWorkgroup:
+              assignment.hasAcceptedPresenceInWorkgroup,
+            assignedLotsCount: assignedLotsCount,
+          };
+        }
+        return null;
+      })
+      .filter((user) => user !== null) as UserInActiveWorkgroupWithRole[];
 
-  // Sort by role priority: PrimaryOwner > Owner > Manager > Member
-  const usersSortedByRole = usersInWorkgroup.sort((a, b) => {
-    const rolePriority = { PrimaryOwner: 1, Owner: 2, Manager: 3, Member: 4 };
-    return rolePriority[a.role] - rolePriority[b.role];
-  });
+    // Sort by role priority: PrimaryOwner > Owner > Manager > Member
+    const usersSortedByRole = usersInWorkgroup.sort((a, b) => {
+      const rolePriority = { PrimaryOwner: 1, Owner: 2, Manager: 3, Member: 4 };
+      return rolePriority[a.role] - rolePriority[b.role];
+    });
 
-  return usersSortedByRole;
-};
+    return usersSortedByRole;
+  };
 
 const toggleLotSelection = (lotId: string, newState: boolean) => {
   useLotService.toggleLotSelection(lotId, newState);

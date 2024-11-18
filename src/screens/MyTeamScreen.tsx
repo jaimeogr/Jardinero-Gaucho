@@ -15,7 +15,11 @@ import { Surface, Badge } from 'react-native-paper';
 import ControllerService from '../services/useControllerService';
 import useUserStore from '../stores/useUserStore';
 import { theme } from '../styles/styles';
-import { UserInterface, UserRole } from '../types/types';
+import {
+  UserInterface,
+  UserRole,
+  UserInActiveWorkgroupWithRole,
+} from '../types/types';
 
 type RootStackParamList = {
   MyTeam: undefined;
@@ -37,14 +41,7 @@ const useUsersWithRoles = () => {
 };
 
 const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
-  const users: Array<
-    UserInterface & {
-      role: UserRole;
-      accessToAllLots: boolean;
-      hasAcceptedPresenceInWorkgroup: boolean;
-      assignedLotsCount: number;
-    }
-  > = useUsersWithRoles();
+  const users: Array<UserInActiveWorkgroupWithRole> = useUsersWithRoles();
 
   const integrantesCount = users.length;
 

@@ -1,16 +1,8 @@
 // src/screens/InviteUserScreen.tsx
 
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 
 import CustomSelectInput from '../components/CustomSelectInput';
 import CustomTextInput from '../components/CustomTextInput';
@@ -152,42 +144,6 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  inputTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 16,
-    fontSize: 16,
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-    marginBottom: 16,
-  },
-  pickerContainerDisabled: {
-    borderColor: theme.colors.disabled,
-    backgroundColor: theme.colors.disabled,
-  },
-  picker: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 16,
-  },
-  pickerText: {
-    fontSize: 16,
-  },
   button: {
     backgroundColor: theme.colors.primary,
     borderRadius: 50,
@@ -210,97 +166,6 @@ const styles = StyleSheet.create({
   },
   secondaryText: {
     color: theme.colors.primary,
-  },
-  centeredOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Transparent black background
-    justifyContent: 'center', // Center the content
-    alignItems: 'center', // Align horizontally
-  },
-  centeredModal: {
-    width: '80%', // Width of the modal
-    backgroundColor: '#fff',
-    paddingVertical: 16,
-    paddingHorizontal: 4,
-    borderRadius: 10,
-    elevation: 5, // Shadow effect for Android
-  },
-  rolesModalTitle: {
-    paddingLeft: 16,
-    marginBottom: 10,
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  roleCard: {
-    backgroundColor: '#fff',
-    borderWidth: 3,
-    borderColor: 'lightgray',
-    // paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginVertical: 10,
-    marginHorizontal: 16,
-    borderRadius: 12,
-    elevation: 1,
-  },
-  roleTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  roleBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginLeft: 6,
-    marginBottom: 6,
-  },
-  roleDescription: {
-    fontSize: 14,
-    marginTop: 8,
-    color: 'gray',
-  },
-  bulletItem: {
-    flexDirection: 'row', // Align bullet and text side by side
-    alignItems: 'flex-start', // Align text with top of bullet
-    marginBottom: 6, // Space between items
-    marginHorizontal: 12, // Space from left and right
-  },
-  bullet: {
-    fontSize: 22, // Slightly larger bullet size
-    lineHeight: 16, // Align bullet with text vertically
-    marginRight: 6, // Space between bullet and text
-    marginTop: 4, // Adjust vertical alignment
-    color: '#16423C',
-  },
-  bulletText: {
-    flex: 1, // Allow text to take the remaining space
-    fontSize: 16,
-    lineHeight: 16, // Ensure proper spacing between lines
-    color: '#16423C',
-  },
-  placeholder: {
-    color: theme.colors.placeholder,
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    color: 'black',
-    paddingRight: 30,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    color: 'black',
-    paddingRight: 30,
-  },
-  iconContainer: {
-    top: 12, // Adjust the position
   },
 });
 

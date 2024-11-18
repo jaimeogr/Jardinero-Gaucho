@@ -59,7 +59,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
 
     // Proceed with updating the user
     console.log('Updating user...');
-    const success = ControllerService.updateUser(
+    const success = useControllerService.updateUser(
       user.id,
       selectedRole as UserRole,
       accessToAllLots,

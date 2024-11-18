@@ -8,22 +8,18 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { Surface, Badge } from 'react-native-paper';
 
 import ControllerService from '../services/useControllerService';
 import useUserStore from '../stores/useUserStore';
 import { theme } from '../styles/styles';
-import {
-  UserInterface,
-  UserRole,
-  UserInActiveWorkgroupWithRole,
-} from '../types/types';
+import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
 
 type RootStackParamList = {
   MyTeam: undefined;
   InviteUser: undefined;
+  EditUser: { userId: string };
 };
 
 type MyTeamScreenNavigationProp = StackNavigationProp<
@@ -130,7 +126,12 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
                 <Text style={styles.accessText}>Acceso: {accessText}</Text>
               </View>
 
-              <TouchableOpacity style={styles.editButton}>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() =>
+                  navigation.navigate('EditUser', { userId: item.userId })
+                }
+              >
                 <Icon name="pencil" size={20} color="#1976D2" />
                 <Text style={styles.editButtonText}>Editar</Text>
               </TouchableOpacity>

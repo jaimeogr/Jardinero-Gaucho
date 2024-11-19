@@ -106,7 +106,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
       {/* Access to All Lots Picker */}
       <CustomSelectInput
         label="Acceso a zonas"
-        placeholder="Seleccioná una opción"
+        // placeholder="Seleccioná una opción"
         value={isPickerDisabled ? true : accessToAllLots}
         isDisabled={isPickerDisabled}
         onValueChange={(value) => {

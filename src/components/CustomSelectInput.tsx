@@ -10,7 +10,7 @@ interface AppPickerProps {
   value: string | boolean;
   items: Array<{ label: string; value: string | boolean }>;
   onValueChange: (value: string | boolean) => void;
-  placeholder: string;
+  placeholder?: string;
   isDisabled?: boolean;
 }
 
@@ -35,7 +35,7 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
           onValueChange={onValueChange}
           items={items}
           value={value}
-          placeholder={{ label: placeholder, value: '' }}
+          placeholder={placeholder ? { label: placeholder, value: '' } : {}} // placeholder is optional with this setup
           style={{
             ...pickerSelectStyles,
             inputAndroid: {

@@ -28,7 +28,7 @@ interface Props {
 const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
-  const [accessToAllLots, setAccessToAllLots] = useState(true);
+  const [accessToAllLots, setAccessToAllLots] = useState<boolean>(true);
 
   const isPickerDisabled =
     selectedRole === 'Owner' || selectedRole === 'Manager';
@@ -54,14 +54,14 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
-    // Proceed with inviting the user
-    console.log('Inviting user...');
-    const success = ControllerService.inviteUserToActiveWorkgroup(
-      email,
-      selectedRole as UserRole,
-      accessToAllLots,
-    );
-    if (accessToAllLots) {
+    if (accessToAllLots === true) {
+      // Proceed with inviting the user
+      console.log('Inviting user...');
+      const success = ControllerService.inviteUserToActiveWorkgroup(
+        email,
+        selectedRole as UserRole,
+        accessToAllLots,
+      );
       if (success) {
         Alert.alert('Éxito', 'El integrante ha sido invitado.');
         navigation.goBack();
@@ -94,7 +94,6 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       {/* Access to All Lots Picker */}
       <CustomSelectInput
         label="Acceso a zonas"
-        placeholder="Seleccioná una opción"
         value={isPickerDisabled ? true : accessToAllLots}
         isDisabled={isPickerDisabled}
         onValueChange={(value) => {

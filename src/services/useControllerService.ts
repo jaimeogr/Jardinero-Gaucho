@@ -111,7 +111,7 @@ const inviteUserToActiveWorkgroup = (
   return newUser;
 };
 
-const updateUserRoleInActiveWorkgroup = (userId: string, newRole: UserRole) => {
+const updateUserInActiveWorkgroup = (userId: string, newRole: UserRole) => {
   const user = useUserService.getUserById(userId);
   if (!user) return false;
 
@@ -134,30 +134,6 @@ const updateUserRoleInActiveWorkgroup = (userId: string, newRole: UserRole) => {
 
   useUserService.updateUser(userId, user);
   return true;
-};
-
-const updateUserAccessToAllLots = (userId: string, access: boolean) => {
-  const user = useUserService.getUserById(userId);
-  if (!user) return;
-
-  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-  if (!activeWorkgroupId) return;
-
-  const assignmentIndex = user.workgroupAssignments.findIndex(
-    (assignment) => assignment.workgroupId === activeWorkgroupId,
-  );
-  if (assignmentIndex >= 0) {
-    user.workgroupAssignments[assignmentIndex].accessToAllLots = access;
-  } else {
-    // If assignment doesn't exist, create one
-    user.workgroupAssignments.push({
-      workgroupId: activeWorkgroupId,
-      role: 'Member', // Default role or you can set it accordingly
-      accessToAllLots: access,
-    });
-  }
-
-  useUserService.updateUser(userId, user);
 };
 
 const getUserInActiveWorkgroupWithRole = (
@@ -249,8 +225,7 @@ export default {
   addZoneToNeighbourhood,
   addNeighbourhood,
   inviteUserToActiveWorkgroup,
-  updateUserRoleInActiveWorkgroup,
-  updateUserAccessToAllLots,
+  updateUserInActiveWorkgroup,
   getUserInActiveWorkgroupWithRole,
   getUsersInActiveWorkgroupWithRoles,
   toggleLotSelection,

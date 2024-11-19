@@ -2,7 +2,6 @@
 
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
@@ -11,20 +10,12 @@ import {
   Alert,
   TouchableOpacity,
   ScrollView,
-  FlatList,
-  Modal,
 } from 'react-native';
 
-import CustomAccordion from '../components/NestedViewLots/CustomAccordion';
 import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
-import OneLotForCustomAccordion from '../components/NestedViewLots/OneLotForCustomAccordion';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import {
-  UserInterface,
-  UserInvitedPendingAcceptanceInterface,
-  UserRole,
-} from '../types/types';
+import { UserRole } from '../types/types';
 
 type RootStackParamList = {
   ZoneAssignment: undefined;

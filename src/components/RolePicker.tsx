@@ -92,6 +92,7 @@ const RolePicker: React.FC<RolePickerProps> = ({ selectedRole, onSelect }) => {
         <Text
           style={[styles.pickerText, selectedRole ? null : styles.placeholder]}
         >
+          {/* The selected role is displayed, or the placeholder */}
           {selectedRole
             ? roles.find((r) => r.role === selectedRole)?.title
             : 'Seleccionar Rol'}

@@ -10,7 +10,7 @@ import ReadOnlyField from '../components/ReadOnlyField'; // Import ReadOnlyField
 import RolePicker from '../components/RolePicker';
 import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { UserRole } from '../types/types';
+import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
 
 type RootStackParamList = {
   EditUser: { userId: string };
@@ -31,7 +31,8 @@ interface Props {
 
 const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
   const { userId } = route.params;
-  const user = useControllerService.getUserInActiveWorkgroupWithRole(userId);
+  const user: UserInActiveWorkgroupWithRole | null =
+    useControllerService.getUserInActiveWorkgroupWithRole(userId);
 
   const [selectedRole, setSelectedRole] = useState<string | null>(user.role);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(
@@ -43,7 +44,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
 
   const handleRolePick = (role: string) => {
     setSelectedRole(role);
-    if (role === 'Owner' || role === 'Manager') {
+    if (isPickerDisabled) {
       setAccessToAllLots(true);
     }
   };
@@ -77,8 +78,21 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
     }
   };
 
+  const getFullName = () => {
+    const firstName = user?.firstName || '';
+    const lastName = user?.lastName || '';
+    return `${firstName} ${lastName}`.trim(); // Trim to avoid extra spaces
+  };
+
   return (
     <View style={styles.container}>
+      {/* Email Display */}
+      <ReadOnlyField
+        label="Nombre y Apellido"
+        text={getFullName()}
+        placeholder="Nombre y apellido no disponible"
+      />
+
       {/* Email Display */}
       <ReadOnlyField
         label="Email"

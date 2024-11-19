@@ -29,7 +29,7 @@ const ReadOnlyField: React.FC<ReadOnlyFieldProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
+    marginBottom: 18,
   },
   label: {
     fontSize: 17,
@@ -38,8 +38,7 @@ const styles = StyleSheet.create({
     color: theme.colors.input.requiredLabelText,
   },
   text: {
-    fontSize: 16,
-    paddingVertical: 8,
+    fontSize: 17,
     paddingHorizontal: 10,
     backgroundColor: 'transparent',
   },

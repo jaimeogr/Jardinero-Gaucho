@@ -1,4 +1,4 @@
-// src/screens/LotAssignmentScreen.tsx
+// src/screens/ZoneAssignmentScreen.tsx
 
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -34,12 +34,12 @@ interface Props {
 
 const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const {
-    assignMemberToSelectedLots,
+    assignMemberToSelectedZones,
     deselectAllLots,
     getUsersInActiveWorkgroupWithRoles,
   } = ControllerService;
 
-  const { newUser } = route.params;
+  const { newUser, existingUserId } = route.params;
 
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
@@ -66,7 +66,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       );
       return;
     }
-    assignMemberToSelectedLots(selectedUserId);
+    assignMemberToSelectedZones(selectedUserId);
     setSelectedUserId(null);
     deselectAllLots();
     Alert.alert('Asignación exitosa', 'Los lotes han sido asignados.');
@@ -86,23 +86,13 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       false,
     );
     if (success) {
-      assignMemberToSelectedLots(newUser.userId);
+      assignMemberToSelectedZones(newUser.userId);
       setSelectedUserId(null);
       deselectAllLots();
       Alert.alert('Asignación exitosa', 'Los lotes han sido asignados.');
     }
     navigation.navigate('MyTeam');
   };
-
-  // Render right-side for one lot
-  const renderRightSideForOneLot = useCallback(() => {
-    return null; // No right-side icon for lots in assignment screen
-  }, []);
-
-  // Render right-side for accordion (zones and neighborhoods)
-  const renderRightSideForAccordion = useCallback(() => {
-    return null; // No right-side icon for accordions in assignment screen
-  }, []);
 
   // Get team members for the dropdown
   const teamMembers = getUsersInActiveWorkgroupWithRoles();
@@ -180,8 +170,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       {/* Render the nested lots */}
       <NestedViewLots
         handleDeselectLots={handleDeselectLots}
-        renderRightSideForAccordion={renderRightSideForAccordion}
-        renderRightSideForOneLot={renderRightSideForOneLot}
         title="seleccionar zonas:"
         onlyZonesAreSelectable={true}
         expandNeighbourhood={true}

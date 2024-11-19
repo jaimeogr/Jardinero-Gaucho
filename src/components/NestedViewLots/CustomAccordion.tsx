@@ -50,7 +50,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   isSelected,
   isSelectable = true,
   startExpanded = false,
-  renderRightSide,
+  renderRightSide = null,
 }) => {
   const { toggleZoneSelection, toggleNeighbourhoodSelection } =
     useControllerService;

@@ -210,8 +210,8 @@ const deselectAllLots = () => {
   useLotService.deselectAllLots();
 };
 
-const assignMemberToSelectedLots = (userId: string) => {
-  useLotService.assignMemberToSelection(userId);
+const updateZoneAssignmentsForMember = (userId: string) => {
+  useLotService.updateZoneAssignmentsForMember(userId);
 };
 
 export default {
@@ -232,5 +232,5 @@ export default {
   toggleZoneSelection,
   toggleNeighbourhoodSelection,
   deselectAllLots,
-  assignMemberToSelectedLots,
+  assignMemberToSelectedZones: updateZoneAssignmentsForMember,
 };

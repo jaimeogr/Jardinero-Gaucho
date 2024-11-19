@@ -11,8 +11,8 @@ import { theme } from '../../styles/styles';
 interface NestedViewLotsProps {
   selectingStateRightSideActions?: React.ReactNode;
   handleDeselectLots: () => void;
-  renderRightSideForAccordion: Function;
-  renderRightSideForOneLot: Function;
+  renderRightSideForAccordion?: Function;
+  renderRightSideForOneLot?: Function;
   title?: string;
   onlyZonesAreSelectable?: boolean;
   expandNeighbourhood?: boolean;
@@ -21,8 +21,8 @@ interface NestedViewLotsProps {
 const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   selectingStateRightSideActions = null,
   handleDeselectLots,
-  renderRightSideForAccordion,
-  renderRightSideForOneLot,
+  renderRightSideForAccordion = null,
+  renderRightSideForOneLot = null,
   title = 'Mis lotes',
   onlyZonesAreSelectable = false,
   expandNeighbourhood = false,
@@ -76,6 +76,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {nestedLots.map((neighbourhood, neighbourhoodIndex) => (
+          // neighbourhood level
           <CustomAccordion
             key={neighbourhoodIndex}
             id={neighbourhood.neighbourhoodId}
@@ -88,6 +89,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
             startExpanded={expandNeighbourhood}
           >
             {neighbourhood.zones.map((zone, zoneIndex) => (
+              // Zone level
               <CustomAccordion
                 key={zoneIndex}
                 id={zone.zoneId}
@@ -98,6 +100,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
                 renderRightSide={renderRightSideForAccordion}
               >
                 {zone.lots.map((lot, lotIndex) => (
+                  // Lot level
                   <OneLotForCustomAccordion
                     key={lotIndex}
                     lotId={lot.lotId}

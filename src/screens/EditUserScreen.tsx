@@ -30,9 +30,9 @@ interface Props {
 }
 
 const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
-  const { userId } = route.params;
+  const { userId: existingUserId } = route.params;
   const user: UserInActiveWorkgroupWithRole | null =
-    useControllerService.getUserInActiveWorkgroupWithRole(userId);
+    useControllerService.getUserInActiveWorkgroupWithRole(existingUserId);
 
   const [selectedRole, setSelectedRole] = useState<string | null>(user.role);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(
@@ -74,7 +74,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
       }
     } else {
       // Navigate to zone assignment screen
-      navigation.navigate('ZoneAssignment', { user: userId });
+      navigation.navigate('ZoneAssignment', { existingUserId });
     }
   };
 

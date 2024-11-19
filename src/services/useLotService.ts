@@ -279,7 +279,7 @@ const deselectAllLots = () => {
   useLotStore.getState().deselectAllLots();
 };
 
-const assignMemberToSelection = (userId: string) => {
+const updateZoneAssignmentsForMember = (userId: string) => {
   const { neighbourhoodZoneData } = useLotStore.getState();
 
   // Clone the neighbourhoodZoneData to avoid direct mutation
@@ -298,7 +298,7 @@ const assignMemberToSelection = (userId: string) => {
                 zone.assignedTo.includes(userId)
                 ? zone.assignedTo
                 : [...zone.assignedTo, userId]
-              : // Remove userId if it exists in the array
+              : // Remove userId if it exists in the array because the zone is not selected for the userId
                 zone.assignedTo.filter((id) => id !== userId),
           };
         }),
@@ -359,7 +359,7 @@ export default {
   toggleZoneSelection,
   toggleNeighbourhoodSelection,
   deselectAllLots,
-  assignMemberToSelection,
+  updateZoneAssignmentsForMember,
   getNumberOfAssignedLotsForUserInSpecificWorkgroup,
   getNumberOfAssignedZonesForUserInSpecificWorkgroup,
 };

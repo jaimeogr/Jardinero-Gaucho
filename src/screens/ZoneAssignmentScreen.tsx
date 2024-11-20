@@ -41,6 +41,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     selectAllZones,
     preselectAssignedZonesInWorkgroupForUser,
     getUserInActiveWorkgroupWithRole,
+    useNeighbourhoodsAndZones,
   } = useControllerService;
 
   const { userId, isNewUser } = route.params;
@@ -50,10 +51,37 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     string | boolean | null
   >(null);
 
+  // Get neighbourhoods and zones
+  const { neighbourhoods } = useNeighbourhoodsAndZones();
+
+  // Compute totalZones and selectedZones
+  const { totalZones, selectedZones } = React.useMemo(() => {
+    let total = 0;
+    let selected = 0;
+
+    neighbourhoods.forEach((neighbourhood) => {
+      neighbourhood.zones.forEach((zone) => {
+        total += 1;
+        if (zone.isSelected) {
+          selected += 1;
+        }
+      });
+    });
+
+    return { totalZones: total, selectedZones: selected };
+  }, [neighbourhoods]);
+
+  // Update accessToAllLots based on zones selection
+  useEffect(() => {
+    const allSelected = totalZones > 0 && totalZones === selectedZones;
+    if (accessToAllLots !== allSelected) {
+      setAccessToAllLots(allSelected);
+    }
+  }, [totalZones, selectedZones, accessToAllLots]);
+
   // Clear selections when the screen is focused
   useEffect(() => {
     deselectAllLots();
-
     const existingUser = getUserInActiveWorkgroupWithRole(userId);
     if (existingUser) {
       setUser(existingUser);
@@ -83,7 +111,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       Alert.alert('Error', 'Usuario no válido.');
       return;
     }
-
     updateZoneAssignmentsForMember(user.userId);
     deselectAllLots();
     Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');

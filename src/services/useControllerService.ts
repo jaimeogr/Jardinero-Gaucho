@@ -52,7 +52,8 @@ const addZoneToNeighbourhood = (
   return useLotService.addZoneToNeighbourhood(neighbourhoodId, zoneLabel);
 };
 
-const getNeighbourhoodsAndZones = () => {
+const useNeighbourhoodsAndZones = () => {
+  // returns all neighbourhoods and zones for the active workgroup
   const activeWorkgroup = getActiveWorkgroup()?.workgroupId;
   if (!activeWorkgroup) {
     console.error('No active workgroup found.');
@@ -247,7 +248,7 @@ export default {
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
   useCheckUserHasPermission,
-  getNeighbourhoodsAndZones,
+  useNeighbourhoodsAndZones,
   addZoneToNeighbourhood,
   addNeighbourhood,
   inviteUserToActiveWorkgroup,

@@ -52,7 +52,7 @@ const initialLotData = {
 const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const {
     createLot,
-    getNeighbourhoodsAndZones,
+    useNeighbourhoodsAndZones: getNeighbourhoodsAndZones,
     addNeighbourhood,
     addZoneToNeighbourhood,
   } = ControllerService;

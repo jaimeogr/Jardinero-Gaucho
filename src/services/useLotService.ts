@@ -16,6 +16,7 @@ import {
   NeighbourhoodData,
   ZoneData,
   WorkgroupAssignment,
+  NeighbourhoodZoneData,
 } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 import { userHasPermission } from '../utils/permissionUtils';
@@ -84,7 +85,9 @@ const addZoneToNeighbourhood = (
   return useLotStore.getState().addZoneToNeighbourhood(neighbourhoodId, zone);
 };
 
-const useNeighbourhoodsAndZones = (workgroupId: string) => {
+const useNeighbourhoodsAndZones = (
+  workgroupId: string,
+): NeighbourhoodZoneData => {
   const neighbourhoodZoneData = useLotStore(
     (state) => state.neighbourhoodZoneData,
   );

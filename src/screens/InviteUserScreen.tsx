@@ -106,7 +106,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
           {
             label: isPickerDisabled
               ? 'Todas las zonas'
-              : 'Todas las zonas (Ideal para empezar)',
+              : 'Todas las zonas (Más simple)',
             value: true,
           },
           {

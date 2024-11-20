@@ -234,6 +234,12 @@ const updateZoneAssignmentsForMember = (userId: string) => {
   );
 };
 
+const selectAllZones = (): boolean => {
+  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroupId) return false;
+  return useLotService.selectAllZones(activeWorkgroupId);
+};
+
 export default {
   initializeServices,
   getLotById,
@@ -254,4 +260,5 @@ export default {
   deselectAllLots,
   preselectAssignedZonesInWorkgroupForUser,
   updateZoneAssignmentsForMember,
+  selectAllZones,
 };

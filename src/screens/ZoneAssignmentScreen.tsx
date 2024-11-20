@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
+import CustomSelectInput from '../components/CustomSelectInput';
 import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
 import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
@@ -37,6 +38,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const {
     updateZoneAssignmentsForMember,
     deselectAllLots,
+    selectAllZones,
     preselectAssignedZonesInWorkgroupForUser,
     getUserInActiveWorkgroupWithRole,
   } = useControllerService;
@@ -44,6 +46,9 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const { userId, isNewUser } = route.params;
 
   const [user, setUser] = useState<UserInterface | null>(null);
+  const [accessToAllLots, setAccessToAllLots] = useState<
+    string | boolean | null
+  >(null);
 
   // Clear selections when the screen is focused
   useEffect(() => {
@@ -52,6 +57,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     const existingUser = getUserInActiveWorkgroupWithRole(userId);
     if (existingUser) {
       setUser(existingUser);
+      setAccessToAllLots(existingUser.accessToAllLots);
       // Pre-select zones assigned to the user
       preselectAssignedZonesInWorkgroupForUser(userId);
     } else {
@@ -91,6 +97,19 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     return fullName === '' ? null : fullName; // Return null if fullName is empty
   };
 
+  const handleAccessToAllLotsChange = (value: string | boolean | null) => {
+    if (typeof value === 'boolean') {
+      setAccessToAllLots(value);
+      if (value === true) {
+        selectAllZones();
+      } else {
+        deselectAllLots();
+      }
+    } else {
+      console.warn('Invalid value type passed:', value);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {/* Render the user name and email */}
@@ -100,6 +119,24 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         )}
         <Text style={styles.userEmail}>{user?.email}</Text>
       </View>
+
+      {/* Access to All Lots Zones */}
+      <CustomSelectInput
+        label="Acceso a zonas"
+        value={accessToAllLots}
+        onValueChange={handleAccessToAllLotsChange}
+        customStyle={styles.accessToAllZonesPickerContainer}
+        items={[
+          {
+            label: 'Solo las seleccionadas (Mayor control)',
+            value: false,
+          },
+          {
+            label: 'Todas las zonas (Más simple)',
+            value: true,
+          },
+        ]}
+      />
 
       {/* Render the nested lots */}
       <NestedViewLots
@@ -112,7 +149,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       {/* Button to assign the selected lots */}
       <TouchableOpacity style={styles.button} onPress={handleAssignZones}>
         <Text style={styles.buttonText}>
-          {isNewUser ? 'Asignar Zonas' : 'Editar Zonas Asignadas'}
+          {isNewUser ? 'Asignar Zonas' : 'Guardar Cambios'}
         </Text>
       </TouchableOpacity>
     </View>
@@ -135,6 +172,9 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 16,
     fontWeight: 'normal',
+  },
+  accessToAllZonesPickerContainer: {
+    paddingHorizontal: 16,
   },
   button: {
     backgroundColor: theme.colors.primary,

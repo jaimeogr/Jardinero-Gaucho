@@ -9,9 +9,10 @@ interface AppPickerProps {
   label: string;
   value: string | boolean | null;
   items: Array<{ label: string; value: string | boolean }>;
-  onValueChange: (value: string | boolean) => void;
+  onValueChange: (value: string | boolean | null) => void;
   placeholder?: string;
   isDisabled?: boolean;
+  customStyle?: any;
 }
 
 const CustomSelectInput: React.FC<AppPickerProps> = ({
@@ -21,9 +22,10 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
   onValueChange,
   placeholder,
   isDisabled = false,
+  customStyle = null,
 }) => {
   return (
-    <View>
+    <View style={customStyle}>
       <Text style={styles.label}>{label}</Text>
       <View
         style={[

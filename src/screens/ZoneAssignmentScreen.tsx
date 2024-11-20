@@ -122,7 +122,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
 
       {/* Access to All Lots Zones */}
       <CustomSelectInput
-        label="Acceso a zonas"
+        // label="Acceso a zonas"
         value={accessToAllLots}
         onValueChange={handleAccessToAllLotsChange}
         customStyle={styles.accessToAllZonesPickerContainer}
@@ -144,6 +144,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         title="seleccionar zonas:"
         onlyZonesAreSelectable={true}
         expandNeighbourhood={true}
+        hideLotsCounterAndTitle={true}
       />
 
       {/* Button to assign the selected lots */}
@@ -162,7 +163,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   userInfoContainer: {
-    padding: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 16,
     backgroundColor: 'white',
   },
   userFullName: {
@@ -172,9 +174,10 @@ const styles = StyleSheet.create({
   userEmail: {
     fontSize: 16,
     fontWeight: 'normal',
+    color: theme.colors.placeholder,
   },
   accessToAllZonesPickerContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 24,
   },
   button: {
     backgroundColor: theme.colors.primary,

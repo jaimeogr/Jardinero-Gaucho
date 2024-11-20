@@ -13,6 +13,7 @@ interface NestedViewLotsProps {
   handleDeselectLots: () => void;
   renderRightSideForAccordion?: Function;
   renderRightSideForOneLot?: Function;
+  hideLotsCounterAndTitle?: boolean;
   title?: string;
   onlyZonesAreSelectable?: boolean;
   expandNeighbourhood?: boolean;
@@ -23,6 +24,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   handleDeselectLots,
   renderRightSideForAccordion = null,
   renderRightSideForOneLot = null,
+  hideLotsCounterAndTitle = null,
   title = 'Mis lotes',
   onlyZonesAreSelectable = false,
   expandNeighbourhood = false,
@@ -45,9 +47,9 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   return (
     <View style={styles.container}>
       {/* when there are selected lots, it renders the buttons to interact with the selected lots
-      otherwise, it renders the title
+      otherwise, it renders the title. Except if hideLotsCounterAndTitle is true.
       */}
-      {selectedLots ? (
+      {hideLotsCounterAndTitle ? null : selectedLots ? (
         <View style={styles.upperSide}>
           <View style={styles.selectedIndicatorsTextAndButtons}>
             <View style={styles.selectingStateLeftSideCounter}>
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     alignSelf: 'flex-start',
-    paddingTop: 12,
+    paddingTop: 16,
     marginLeft: 24,
     marginBottom: 12,
   },

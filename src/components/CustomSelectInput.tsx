@@ -6,7 +6,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { theme } from '../styles/styles';
 
 interface AppPickerProps {
-  label: string;
+  label?: string;
   value: string | boolean | null;
   items: Array<{ label: string; value: string | boolean }>;
   onValueChange: (value: string | boolean | null) => void;
@@ -16,7 +16,7 @@ interface AppPickerProps {
 }
 
 const CustomSelectInput: React.FC<AppPickerProps> = ({
-  label,
+  label = null,
   value,
   items,
   onValueChange,
@@ -26,7 +26,7 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
 }) => {
   return (
     <View style={customStyle}>
-      <Text style={styles.label}>{label}</Text>
+      {label && <Text style={styles.label}>{label}</Text>}
       <View
         style={[
           styles.pickerContainer,

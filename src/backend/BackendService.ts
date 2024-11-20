@@ -30,6 +30,8 @@ const getNeighbourhoodZoneData = (
         workgroupId,
         neighbourhoodId,
         neighbourhoodLabel,
+        isSelected: false,
+        assignedTo: [],
         zones: [],
       };
     }
@@ -43,7 +45,12 @@ const getNeighbourhoodZoneData = (
 
     // Add the zone if it doesn't exist
     if (!zoneExists) {
-      neighbourhood.zones.push({ zoneId, zoneLabel });
+      neighbourhood.zones.push({
+        zoneId,
+        zoneLabel,
+        isSelected: false,
+        assignedTo: [],
+      });
     }
   });
 

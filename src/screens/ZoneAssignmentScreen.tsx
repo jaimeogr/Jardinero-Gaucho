@@ -11,11 +11,12 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
 
 import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
-import ControllerService from '../services/useControllerService';
+import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { UserRole } from '../types/types';
+import { UserInterface, UserRole } from '../types/types';
 
 type RootStackParamList = {
   ZoneAssignment: undefined;
@@ -34,138 +35,71 @@ interface Props {
 
 const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const {
-    assignMemberToSelectedZones,
+    updateZoneAssignmentsForMember,
     deselectAllLots,
-    getUsersInActiveWorkgroupWithRoles,
-  } = ControllerService;
+    preselectAssignedZonesInWorkgroupForUser,
+    getUserInActiveWorkgroupWithRole,
+  } = useControllerService;
 
-  const { newUser, existingUserId } = route.params;
+  const { userId, isNewUser } = route.params;
 
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
+  const [user, setUser] = useState<UserInterface | null>(null);
 
   // Clear selections when the screen is focused
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      deselectAllLots();
-    });
-    return unsubscribe;
-  }, [navigation, deselectAllLots]);
+    deselectAllLots();
+
+    const existingUser = getUserInActiveWorkgroupWithRole(userId);
+    if (existingUser) {
+      setUser(existingUser);
+      // Pre-select zones assigned to the user
+      preselectAssignedZonesInWorkgroupForUser(userId);
+    } else {
+      Alert.alert('Error', 'Usuario no encontrado.');
+      navigation.goBack();
+    }
+  }, [
+    navigation,
+    deselectAllLots,
+    userId,
+    getUserInActiveWorkgroupWithRole,
+    preselectAssignedZonesInWorkgroupForUser,
+  ]);
 
   // Handler for deselecting lots
   const handleDeselectLots = useCallback(() => {
     deselectAllLots();
   }, [deselectAllLots]);
 
-  // Handler for assigning member
-  const handleAssignMember = () => {
-    if (!selectedUserId) {
-      Alert.alert(
-        'Selecciona un integrante',
-        'Debes seleccionar un integrante.',
-      );
+  // Handler for assigning zones
+  const handleAssignZones = () => {
+    if (!user) {
+      Alert.alert('Error', 'Usuario no válido.');
       return;
     }
-    assignMemberToSelectedZones(selectedUserId);
-    setSelectedUserId(null);
-    deselectAllLots();
-    Alert.alert('Asignación exitosa', 'Los lotes han sido asignados.');
-  };
 
-  // Handler for assigning to a new user
-  const handleInviteAndAssignToNewUser = () => {
-    if (!newUser) {
-      Alert.alert('Selecciona un usuario', 'Debes seleccionar un usuario.');
-      return;
-    }
-    // Proceed with inviting the user
-    console.log('Inviting user...');
-    const success = ControllerService.inviteUserToActiveWorkgroup(
-      newUser.email,
-      newUser.selectedRole as UserRole,
-      false,
-    );
-    if (success) {
-      assignMemberToSelectedZones(newUser.userId);
-      setSelectedUserId(null);
-      deselectAllLots();
-      Alert.alert('Asignación exitosa', 'Los lotes han sido asignados.');
-    }
+    updateZoneAssignmentsForMember(user.userId);
+    deselectAllLots();
+    Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');
     navigation.navigate('MyTeam');
   };
 
-  // Get team members for the dropdown
-  const teamMembers = getUsersInActiveWorkgroupWithRoles();
-
-  // Function to render the badge or dropdown
-  const renderUserSelection = () => {
-    const selectedUser = teamMembers.find(
-      (user) => user.userId === selectedUserId,
-    );
-
-    return (
-      <View>
-        <TouchableOpacity
-          style={styles.userSelectionTouchable}
-          onPress={() => setDropdownVisible(!dropdownVisible)}
-        >
-          {selectedUser || newUser ? (
-            <View style={styles.badgeContainer}>
-              <Text style={styles.badgeText}>
-                {/* if zones are being selected for a new user or for a selecteduser */}
-                {newUser ? newUser.email : null}
-                {selectedUser
-                  ? `${selectedUser.firstName} ${selectedUser.lastName}`
-                  : null}
-              </Text>
-            </View>
-          ) : (
-            <Text style={styles.dropdownPlaceholderText}>
-              Seleccionar integrante
-            </Text>
-          )}
-          {/* if its a newUser creation then it will not render the icon */}
-          {!newUser && (
-            <Icon
-              name={dropdownVisible ? 'chevron-up' : 'chevron-down'}
-              size={24}
-              color="#000"
-            />
-          )}
-        </TouchableOpacity>
-
-        {/* if there is a newUser then it will not be able to select another option */}
-        {dropdownVisible && !newUser && (
-          <View style={styles.dropdownMenu}>
-            <ScrollView>
-              {teamMembers.map((user) => (
-                <TouchableOpacity
-                  key={user.userId}
-                  style={styles.dropdownItem}
-                  onPress={() => {
-                    setSelectedUserId(user.userId);
-                    setDropdownVisible(false);
-                  }}
-                >
-                  <Text style={styles.dropdownItemText}>
-                    {user.firstName} {user.lastName}
-                  </Text>
-                  {selectedUserId === user.userId && (
-                    <Icon name="check" size={20} color={theme.colors.primary} />
-                  )}
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        )}
-      </View>
-    );
+  const getFullName = () => {
+    const firstName = user?.firstName || '';
+    const lastName = user?.lastName || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+    return fullName === '' ? null : fullName; // Return null if fullName is empty
   };
 
   return (
     <View style={styles.container}>
-      {/* Render the user selection dropdown */}
-      <View style={styles.userSelectionContainer}>{renderUserSelection()}</View>
+      {/* Render the user name and email */}
+      <View style={styles.userInfoContainer}>
+        {getFullName() && (
+          <Text style={styles.userFullName}>{getFullName()}</Text>
+        )}
+        <Text style={styles.userEmail}>{user?.email}</Text>
+      </View>
 
       {/* Render the nested lots */}
       <NestedViewLots
@@ -176,11 +110,10 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       />
 
       {/* Button to assign the selected lots */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={newUser ? handleInviteAndAssignToNewUser : handleAssignMember}
-      >
-        <Text style={styles.buttonText}>Asignar Zonas</Text>
+      <TouchableOpacity style={styles.button} onPress={handleAssignZones}>
+        <Text style={styles.buttonText}>
+          {isNewUser ? 'Asignar Zonas' : 'Editar Zonas Asignadas'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -191,51 +124,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  userSelectionContainer: {
+  userInfoContainer: {
     padding: 16,
     backgroundColor: 'white',
   },
-  userSelectionTouchable: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  badgeContainer: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: 12,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-  },
-  badgeText: {
-    color: 'white',
+  userFullName: {
+    fontSize: 24,
     fontWeight: 'bold',
   },
-  dropdownPlaceholderText: {
-    color: '#999',
+  userEmail: {
     fontSize: 16,
-  },
-  dropdownMenu: {
-    marginTop: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    backgroundColor: 'white',
-    maxHeight: 200, // Limit height if you have many team members
-  },
-  dropdownItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  dropdownItemText: {
-    fontSize: 16,
+    fontWeight: 'normal',
   },
   button: {
     backgroundColor: theme.colors.primary,

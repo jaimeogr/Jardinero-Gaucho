@@ -111,7 +111,11 @@ const inviteUserToActiveWorkgroup = (
   return newUser;
 };
 
-const updateUserInActiveWorkgroup = (userId: string, newRole: UserRole) => {
+const updateUserInActiveWorkgroup = (
+  userId: string,
+  newRole: UserRole,
+  accessToAllLots: boolean,
+) => {
   const user = useUserService.getUserById(userId);
   if (!user) return false;
 
@@ -123,13 +127,15 @@ const updateUserInActiveWorkgroup = (userId: string, newRole: UserRole) => {
   );
   if (assignmentIndex >= 0) {
     user.workgroupAssignments[assignmentIndex].role = newRole;
+    user.workgroupAssignments[assignmentIndex].accessToAllLots =
+      accessToAllLots;
   } else {
-    // If assignment doesn't exist, create one
-    user.workgroupAssignments.push({
-      workgroupId: activeWorkgroupId,
-      role: newRole,
-      accessToAllLots: false, // Default value or you can set it accordingly
-    });
+    // Since the user doesn't have an assignment in the active workgroup,
+    // we should not proceed with the update.
+    console.error(
+      `Cannot update user ${userId}: No assignment found in active workgroup ${activeWorkgroupId}.`,
+    );
+    return false;
   }
 
   useUserService.updateUser(userId, user);
@@ -210,8 +216,22 @@ const deselectAllLots = () => {
   useLotService.deselectAllLots();
 };
 
+const preselectAssignedZonesInWorkgroupForUser = (userId: string) => {
+  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroupId) return null;
+  useLotService.preselectAssignedZonesInWorkgroupForUser(
+    userId,
+    activeWorkgroupId,
+  );
+};
+
 const updateZoneAssignmentsForMember = (userId: string) => {
-  useLotService.updateZoneAssignmentsForMember(userId);
+  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroupId) return null;
+  useLotService.updateZoneAssignmentsForMemberInWorkgroup(
+    userId,
+    activeWorkgroupId,
+  );
 };
 
 export default {
@@ -232,5 +252,6 @@ export default {
   toggleZoneSelection,
   toggleNeighbourhoodSelection,
   deselectAllLots,
-  assignMemberToSelectedZones: updateZoneAssignmentsForMember,
+  preselectAssignedZonesInWorkgroupForUser,
+  updateZoneAssignmentsForMember,
 };

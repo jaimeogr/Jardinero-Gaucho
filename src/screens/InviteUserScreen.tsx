@@ -54,27 +54,26 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
+    // Proceed with inviting the user
+    console.log('Inviting user...');
+    const newUser = ControllerService.inviteUserToActiveWorkgroup(
+      email,
+      selectedRole as UserRole,
+      accessToAllLots,
+    );
     if (accessToAllLots === true) {
-      // Proceed with inviting the user
-      console.log('Inviting user...');
-      const success = ControllerService.inviteUserToActiveWorkgroup(
-        email,
-        selectedRole as UserRole,
-        accessToAllLots,
-      );
-      if (success) {
+      if (newUser) {
         Alert.alert('Éxito', 'El integrante ha sido invitado.');
         navigation.goBack();
       }
     } else {
-      // Prepare temporary user data
-      const newUser = {
-        email,
-        role: selectedRole,
-      };
-
       // Navigate to zone assignment screen
-      navigation.navigate('ZoneAssignment', { newUser });
+      if (newUser) {
+        navigation.navigate('ZoneAssignment', {
+          userId: newUser.userId,
+          isNewUser: true,
+        });
+      }
     }
   };
 

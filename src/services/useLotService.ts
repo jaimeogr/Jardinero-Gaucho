@@ -1,3 +1,5 @@
+// useLotService.ts
+
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
@@ -262,8 +264,39 @@ const toggleLotSelection = (lotId: string, newState: boolean) => {
   useLotStore.getState().toggleLotSelection(lotId, newState);
 };
 
+const getZonesAssignedToUserInWorkgroup = (
+  userId: string,
+  workgroupId: string,
+): string[] => {
+  // Implement logic to return an array of zone IDs assigned to the user
+  // For example:
+  const assignedZones: string[] = [];
+  useLotStore
+    .getState()
+    .neighbourhoodZoneData.neighbourhoods.filter(
+      (n) => n.workgroupId === workgroupId,
+    ) // Filter neighbourhoods by workgroup, this could be not necessary depending on which neighbourhoods are on the store.
+    .forEach((n) =>
+      n.zones
+        .filter((zone) => zone.assignedTo.includes(userId))
+        .forEach((zone) => assignedZones.push(zone.zoneId)),
+    );
+  return assignedZones;
+};
+
 const toggleZoneSelection = (zoneId: string, newState: boolean) => {
   useLotStore.getState().toggleZoneSelection(zoneId, newState);
+};
+
+const preselectAssignedZonesInWorkgroupForUser = (
+  userId: string,
+  workgroupId: string,
+) => {
+  deselectAllLots();
+  const assignedZones = getZonesAssignedToUserInWorkgroup(userId, workgroupId);
+  assignedZones.forEach((zoneId) => {
+    toggleZoneSelection(zoneId, true);
+  });
 };
 
 const toggleNeighbourhoodSelection = (
@@ -279,14 +312,18 @@ const deselectAllLots = () => {
   useLotStore.getState().deselectAllLots();
 };
 
-const updateZoneAssignmentsForMember = (userId: string) => {
+const updateZoneAssignmentsForMemberInWorkgroup = (
+  userId: string,
+  activeWorkgroupId: string,
+) => {
   const { neighbourhoodZoneData } = useLotStore.getState();
 
   // Clone the neighbourhoodZoneData to avoid direct mutation
   const updatedNeighbourhoodZoneData = {
     ...neighbourhoodZoneData,
-    neighbourhoods: neighbourhoodZoneData.neighbourhoods.map(
-      (neighbourhood) => ({
+    neighbourhoods: neighbourhoodZoneData.neighbourhoods
+      .filter((n) => n.workgroupId === activeWorkgroupId)
+      .map((neighbourhood) => ({
         ...neighbourhood,
         zones: neighbourhood.zones.map((zone) => {
           const isZoneSelected = zone.isSelected;
@@ -302,8 +339,7 @@ const updateZoneAssignmentsForMember = (userId: string) => {
                 zone.assignedTo.filter((id) => id !== userId),
           };
         }),
-      }),
-    ),
+      })),
   };
 
   // Update the store with the modified neighbourhoodZoneData
@@ -358,8 +394,9 @@ export default {
   toggleLotSelection,
   toggleZoneSelection,
   toggleNeighbourhoodSelection,
+  preselectAssignedZonesInWorkgroupForUser,
   deselectAllLots,
-  updateZoneAssignmentsForMember,
+  updateZoneAssignmentsForMemberInWorkgroup,
   getNumberOfAssignedLotsForUserInSpecificWorkgroup,
   getNumberOfAssignedZonesForUserInSpecificWorkgroup,
 };

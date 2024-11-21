@@ -32,7 +32,7 @@ interface Props {
 }
 
 const useUsersWithRoles = () => {
-  const users = useUserStore((state) => state.users); // Subscribes to Zustand store
+  const users = useUserStore((state) => state.users); // This does 'nothing', but without it, it doesnt work. It subscribes to the Zustand store
   return ControllerService.getUsersInActiveWorkgroupWithRoles();
 };
 
@@ -81,7 +81,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
             !item.hasAcceptedPresenceInWorkgroup;
           const accessText = item.accessToAllLots
             ? 'Todas las zonas'
-            : `${item.assignedLotsCount} lotes`;
+            : `${item.assignedZonesCount} zonas`;
 
           const roleColor = theme.colors.roles[item.role] || '#1976D2';
 

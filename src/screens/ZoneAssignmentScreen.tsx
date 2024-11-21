@@ -133,7 +133,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       {/* Render the user name and email */}
-      <View style={styles.userInfoContainer}>
+      <View style={styles.userInfoAndPickerContainer}>
         {getFullName() && (
           <Text style={styles.userFullName}>{getFullName()}</Text>
         )}
@@ -145,25 +145,25 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         >
           {user?.email}
         </Text>
-      </View>
 
-      {/* Access to All Lots Zones */}
-      <CustomSelectInput
-        // label="Acceso a zonas"
-        value={accessToAllLots}
-        onValueChange={handleAccessToAllLotsChange}
-        customStyle={styles.accessToAllZonesPickerContainer}
-        items={[
-          {
-            label: 'Solo las seleccionadas (Mayor control)',
-            value: false,
-          },
-          {
-            label: 'Todas las zonas (Más simple)',
-            value: true,
-          },
-        ]}
-      />
+        {/* Access to All Lots Zones */}
+        <CustomSelectInput
+          // label="Acceso a zonas"
+          value={accessToAllLots}
+          onValueChange={handleAccessToAllLotsChange}
+          customStyle={styles.accessToAllZonesPickerContainer}
+          items={[
+            {
+              label: 'Solo las seleccionadas (Mayor control)',
+              value: false,
+            },
+            {
+              label: 'Todas las zonas (Más simple)',
+              value: true,
+            },
+          ]}
+        />
+      </View>
 
       {/* Conditionally render NestedViewLots based on accessToAllLots */}
       {/* This way, when accessToAllLots is true, the user won't see the list of zones, emphasizing that they have access to all zones. */}
@@ -177,11 +177,13 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       )}
 
       {/* Button to assign the selected lots */}
-      <TouchableOpacity style={styles.button} onPress={handleAssignZones}>
-        <Text style={styles.buttonText}>
-          {isNewUser ? 'Asignar Zonas' : 'Guardar Cambios'}
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleAssignZones}>
+          <Text style={styles.buttonText}>
+            {isNewUser ? 'Asignar Zonas' : 'Guardar Cambios'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -189,11 +191,13 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexGrow: 1,
     backgroundColor: 'white',
+    justifyContent: 'space-between',
   },
-  userInfoContainer: {
+  userInfoAndPickerContainer: {
     paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingTop: 16,
     backgroundColor: 'white',
   },
   userFullName: {
@@ -210,7 +214,11 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   accessToAllZonesPickerContainer: {
-    paddingHorizontal: 24,
+    paddingTop: 16,
+  },
+  buttonContainer: {
+    // flexGrow: 1,
+    justifyContent: 'flex-end',
   },
   button: {
     backgroundColor: theme.colors.primary,

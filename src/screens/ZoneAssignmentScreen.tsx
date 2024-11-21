@@ -3,21 +3,13 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useState, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
-import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 
 import CustomSelectInput from '../components/CustomSelectInput';
 import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
 import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { UserInterface, UserRole } from '../types/types';
+import { UserInterface } from '../types/types';
 
 type RootStackParamList = {
   ZoneAssignment: undefined;
@@ -47,12 +39,9 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const { userId, isNewUser } = route.params;
 
   const [user, setUser] = useState<UserInterface | null>(null);
-  const [accessToAllLots, setAccessToAllLots] = useState<
-    string | boolean | null
-  >(null);
 
   // Get neighbourhoods and zones
-  const { neighbourhoods } = useNeighbourhoodsAndZones();
+  const neighbourhoods = useNeighbourhoodsAndZones();
 
   // Compute totalZones and selectedZones
   const { totalZones, selectedZones } = React.useMemo(() => {
@@ -71,13 +60,10 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     return { totalZones: total, selectedZones: selected };
   }, [neighbourhoods]);
 
-  // Update accessToAllLots based on zones selection
-  useEffect(() => {
-    const allSelected = totalZones > 0 && totalZones === selectedZones;
-    if (accessToAllLots !== allSelected) {
-      setAccessToAllLots(allSelected);
-    }
-  }, [totalZones, selectedZones, accessToAllLots]);
+  // This value is dynamically calculated every time totalZones or selectedZones changes because accessToAllLots is being recalculated during each re-render of the component.
+  // React ensures that the component is re-rendered whenever the dependencies of the useMemo or useState hooks change,
+  // so the accessToAllLots variable will always reflect the latest values of totalZones and selectedZones.
+  const accessToAllLots = totalZones > 0 && totalZones === selectedZones;
 
   // Clear selections when the screen is focused
   useEffect(() => {
@@ -85,7 +71,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     const existingUser = getUserInActiveWorkgroupWithRole(userId);
     if (existingUser) {
       setUser(existingUser);
-      setAccessToAllLots(existingUser.accessToAllLots);
       // Pre-select zones assigned to the user
       preselectAssignedZonesInWorkgroupForUser(userId);
     } else {
@@ -99,11 +84,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     getUserInActiveWorkgroupWithRole,
     preselectAssignedZonesInWorkgroupForUser,
   ]);
-
-  // Handler for deselecting lots
-  const handleDeselectLots = useCallback(() => {
-    deselectAllLots();
-  }, [deselectAllLots]);
 
   // Handler for assigning zones
   const handleAssignZones = () => {
@@ -126,7 +106,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
 
   const handleAccessToAllLotsChange = (value: string | boolean | null) => {
     if (typeof value === 'boolean') {
-      setAccessToAllLots(value);
       if (value === true) {
         selectAllZones();
       } else {
@@ -144,7 +123,14 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         {getFullName() && (
           <Text style={styles.userFullName}>{getFullName()}</Text>
         )}
-        <Text style={styles.userEmail}>{user?.email}</Text>
+        <Text
+          style={[
+            styles.userEmail,
+            getFullName() ? null : styles.userEmailIsLarge,
+          ]}
+        >
+          {user?.email}
+        </Text>
       </View>
 
       {/* Access to All Lots Zones */}
@@ -167,8 +153,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
 
       {/* Render the nested lots */}
       <NestedViewLots
-        handleDeselectLots={handleDeselectLots}
-        title="seleccionar zonas:"
+        handleDeselectLots={() => null} // since this part of the code is not even rendered, i pass null to avoid turning this prop as optional just to keep it easier to maintain and implement
         onlyZonesAreSelectable={true}
         expandNeighbourhood={true}
         hideLotsCounterAndTitle={true}
@@ -202,6 +187,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'normal',
     color: theme.colors.placeholder,
+  },
+  userEmailIsLarge: {
+    fontSize: 20,
+    color: 'black',
   },
   accessToAllZonesPickerContainer: {
     paddingHorizontal: 24,

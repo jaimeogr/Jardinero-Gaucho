@@ -18,7 +18,7 @@ import {
 import CustomDatePickerInput from '../components/CustomDatePickerInput';
 import CustomSelectInput from '../components/CustomSelectInput';
 import CustomTextInput from '../components/CustomTextInput';
-import ControllerService from '../services/useControllerService';
+import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 import { LotInterface } from '../types/types';
 
@@ -52,11 +52,11 @@ const initialLotData = {
 const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const {
     createLot,
-    useNeighbourhoodsAndZones: getNeighbourhoodsAndZones,
+    useNeighbourhoodsAndZones,
     addNeighbourhood,
     addZoneToNeighbourhood,
-  } = ControllerService;
-  const { neighbourhoods } = getNeighbourhoodsAndZones();
+  } = useControllerService;
+  const neighbourhoods = useNeighbourhoodsAndZones();
 
   const [lotData, setLotData] = useState(initialLotData);
 

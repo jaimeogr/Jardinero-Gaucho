@@ -87,7 +87,7 @@ const addZoneToNeighbourhood = (
 
 const useNeighbourhoodsAndZones = (
   workgroupId: string,
-): NeighbourhoodZoneData => {
+): NeighbourhoodData[] => {
   const neighbourhoodZoneData = useLotStore(
     (state) => state.neighbourhoodZoneData,
   );
@@ -95,7 +95,7 @@ const useNeighbourhoodsAndZones = (
     const filteredNeighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
       (n) => n.workgroupId === workgroupId,
     );
-    return { neighbourhoods: filteredNeighbourhoods };
+    return filteredNeighbourhoods;
   }, [neighbourhoodZoneData, workgroupId]);
 };
 

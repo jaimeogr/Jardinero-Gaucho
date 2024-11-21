@@ -52,12 +52,12 @@ const addZoneToNeighbourhood = (
   return useLotService.addZoneToNeighbourhood(neighbourhoodId, zoneLabel);
 };
 
-const useNeighbourhoodsAndZones = () => {
+const useNeighbourhoodsAndZones = (): NeighbourhoodData[] => {
   // returns all neighbourhoods and zones for the active workgroup
   const activeWorkgroup = getActiveWorkgroup()?.workgroupId;
   if (!activeWorkgroup) {
     console.error('No active workgroup found.');
-    return { neighbourhoods: [] };
+    return [];
   }
   return useLotService.useNeighbourhoodsAndZones(activeWorkgroup);
 };

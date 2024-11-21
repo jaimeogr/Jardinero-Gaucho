@@ -54,6 +54,23 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
+  const getAccessText = (user: UserInActiveWorkgroupWithRole): string => {
+    const { accessToAllLots, assignedZonesCount } = user;
+
+    if (accessToAllLots) {
+      return 'Todas las zonas';
+    }
+    if (typeof assignedZonesCount !== 'number' || assignedZonesCount < 0) {
+      return 'Datos de acceso inválidos';
+    }
+    if (assignedZonesCount === 0) {
+      return 'Sin acceso';
+    }
+    const zoneWord =
+      assignedZonesCount === 1 ? 'zona asignada' : 'zonas asignadas';
+    return `${assignedZonesCount} ${zoneWord}`;
+  };
+
   return (
     <View style={styles.container}>
       {/* Header Section */}
@@ -77,19 +94,14 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
         data={users}
         keyExtractor={(item) => item.userId}
         renderItem={({ item }) => {
-          const hasAcceptedPresenceInWorkgroup =
-            !item.hasAcceptedPresenceInWorkgroup;
-          const accessText = item.accessToAllLots
-            ? 'Todas las zonas'
-            : `${item.assignedZonesCount} zonas`;
-
           const roleColor = theme.colors.roles[item.role] || '#1976D2';
 
           return (
             <Surface style={styles.userItem}>
               <View style={styles.userHeader}>
                 <View style={styles.userInfo}>
-                  {hasAcceptedPresenceInWorkgroup ? (
+                  {!item.hasAcceptedPresenceInWorkgroup ? (
+                    // if user has not accepter the invitation yet
                     <>
                       <Text style={styles.userWaitingText}>
                         Esperando que acepte la invitación
@@ -123,7 +135,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
               </View>
 
               <View style={styles.userAccess}>
-                <Text style={styles.accessText}>Acceso: {accessText}</Text>
+                <Text style={styles.accessText}>{getAccessText(item)}</Text>
               </View>
 
               <TouchableOpacity
@@ -240,7 +252,7 @@ const styles = StyleSheet.create({
     marginTop: -12,
   },
   userAccess: {
-    marginTop: 28,
+    marginTop: 32,
   },
   accessText: {
     fontSize: 16,
@@ -249,7 +261,7 @@ const styles = StyleSheet.create({
   editButton: {
     position: 'absolute',
     bottom: 12,
-    right: 12,
+    right: 14,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#E3F2FD',

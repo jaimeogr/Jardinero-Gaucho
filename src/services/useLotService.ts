@@ -328,7 +328,33 @@ const selectAllZones = (activeWorkgroupId: string) => {
   return true;
 };
 
-const updateZoneAssignmentsForMemberInWorkgroup = (
+const clearZoneAssignmentsForMemberInWorkgroup = (
+  userId: string,
+  activeWorkgroupId: string,
+) => {
+  const { neighbourhoodZoneData } = useLotStore.getState();
+
+  // Clone the neighbourhoodZoneData to avoid direct mutation
+  const updatedNeighbourhoodZoneData = {
+    ...neighbourhoodZoneData,
+    neighbourhoods: neighbourhoodZoneData.neighbourhoods
+      .filter((n) => n.workgroupId === activeWorkgroupId)
+      .map((neighbourhood) => ({
+        ...neighbourhood,
+        zones: neighbourhood.zones.map((zone) => {
+          return {
+            ...zone,
+            assignedTo: zone.assignedTo.filter((id) => id !== userId),
+          };
+        }),
+      })),
+  };
+
+  // Update the store with the modified neighbourhoodZoneData
+  useLotStore.setState({ neighbourhoodZoneData: updatedNeighbourhoodZoneData });
+};
+
+const updateZoneAssignmentsForMemberInWorkgroupUsingSelection = (
   userId: string,
   activeWorkgroupId: string,
 ) => {
@@ -413,7 +439,8 @@ export default {
   preselectAssignedZonesInWorkgroupForUser,
   deselectAllLots,
   selectAllZones,
-  updateZoneAssignmentsForMemberInWorkgroup,
+  clearZoneAssignmentsForMemberInWorkgroup,
+  updateZoneAssignmentsForMemberInWorkgroupUsingSelection,
   getNumberOfAssignedLotsForUserInSpecificWorkgroup,
   getNumberOfAssignedZonesForUserInSpecificWorkgroup,
 };

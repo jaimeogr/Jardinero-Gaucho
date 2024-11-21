@@ -226,11 +226,33 @@ const preselectAssignedZonesInWorkgroupForUser = (userId: string) => {
   );
 };
 
+const deleteZoneAssignmentsForMember = (userId: string) => {
+  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroupId) return null;
+  useLotService.clearZoneAssignmentsForMemberInWorkgroup(
+    userId,
+    activeWorkgroupId,
+  );
+};
+
 const updateZoneAssignmentsForMember = (userId: string) => {
   const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
   if (!activeWorkgroupId) return null;
-  useLotService.updateZoneAssignmentsForMemberInWorkgroup(
+  useLotService.updateZoneAssignmentsForMemberInWorkgroupUsingSelection(
     userId,
+    activeWorkgroupId,
+  );
+};
+
+const updateUserAccessToAllLots = (
+  userId: string,
+  accessToAllLots: boolean,
+) => {
+  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroupId) return null;
+  useUserService.updateUserAccessToAllLots(
+    userId,
+    accessToAllLots,
     activeWorkgroupId,
   );
 };
@@ -260,6 +282,8 @@ export default {
   toggleNeighbourhoodSelection,
   deselectAllLots,
   preselectAssignedZonesInWorkgroupForUser,
+  deleteZoneAssignmentsForMember,
   updateZoneAssignmentsForMember,
+  updateUserAccessToAllLots,
   selectAllZones,
 };

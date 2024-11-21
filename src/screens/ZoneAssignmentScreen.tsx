@@ -34,14 +34,41 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     preselectAssignedZonesInWorkgroupForUser,
     getUserInActiveWorkgroupWithRole,
     useNeighbourhoodsAndZones,
+    updateUserAccessToAllLots,
+    deleteZoneAssignmentsForMember,
   } = useControllerService;
 
   const { userId, isNewUser } = route.params;
 
   const [user, setUser] = useState<UserInterface | null>(null);
+  const [accessToAllLots, setAccessToAllLots] = useState<boolean>(false);
 
   // Get neighbourhoods and zones
   const neighbourhoods = useNeighbourhoodsAndZones();
+
+  // Clear selections when the screen is focused and initialize the user
+  useEffect(() => {
+    deselectAllLots();
+    const existingUser = getUserInActiveWorkgroupWithRole(userId);
+    if (existingUser) {
+      setUser(existingUser);
+      setAccessToAllLots(existingUser.accessToAllLots);
+      // Pre-select zones assigned to the user
+      if (!existingUser.accessToAllLots) {
+        preselectAssignedZonesInWorkgroupForUser(userId);
+      }
+    } else {
+      Alert.alert('Error', 'Usuario no encontrado.');
+      navigation.goBack();
+    }
+  }, [
+    navigation,
+    deselectAllLots,
+    userId,
+    selectAllZones,
+    getUserInActiveWorkgroupWithRole,
+    preselectAssignedZonesInWorkgroupForUser,
+  ]);
 
   // Compute totalZones and selectedZones
   const { totalZones, selectedZones } = React.useMemo(() => {
@@ -60,30 +87,19 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     return { totalZones: total, selectedZones: selected };
   }, [neighbourhoods]);
 
-  // This value is dynamically calculated every time totalZones or selectedZones changes because accessToAllLots is being recalculated during each re-render of the component.
-  // React ensures that the component is re-rendered whenever the dependencies of the useMemo or useState hooks change,
-  // so the accessToAllLots variable will always reflect the latest values of totalZones and selectedZones.
-  const accessToAllLots = totalZones > 0 && totalZones === selectedZones;
-
-  // Clear selections when the screen is focused
-  useEffect(() => {
-    deselectAllLots();
-    const existingUser = getUserInActiveWorkgroupWithRole(userId);
-    if (existingUser) {
-      setUser(existingUser);
-      // Pre-select zones assigned to the user
-      preselectAssignedZonesInWorkgroupForUser(userId);
+  const handleAccessToAllLotsChange = (value: string | boolean | null) => {
+    if (typeof value === 'boolean') {
+      setAccessToAllLots(value);
+      if (value === true) {
+        // No need to select zones; user has access to all
+      } else {
+        // select zones assigned to the user
+        preselectAssignedZonesInWorkgroupForUser(userId);
+      }
     } else {
-      Alert.alert('Error', 'Usuario no encontrado.');
-      navigation.goBack();
+      console.warn('Invalid value type passed:', value);
     }
-  }, [
-    navigation,
-    deselectAllLots,
-    userId,
-    getUserInActiveWorkgroupWithRole,
-    preselectAssignedZonesInWorkgroupForUser,
-  ]);
+  };
 
   // Handler for assigning zones
   const handleAssignZones = () => {
@@ -91,7 +107,17 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       Alert.alert('Error', 'Usuario no válido.');
       return;
     }
-    updateZoneAssignmentsForMember(user.userId);
+    // Update the user's accessToAllLots setting
+    updateUserAccessToAllLots(user.userId, accessToAllLots);
+
+    if (accessToAllLots) {
+      // Clear any existing zone assignments since the user now has access to all zones
+      deleteZoneAssignmentsForMember(user.userId);
+    } else {
+      // Only update zone assignments if accessToAllLots is false
+      updateZoneAssignmentsForMember(user.userId);
+    }
+
     deselectAllLots();
     Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');
     navigation.navigate('MyTeam');
@@ -102,18 +128,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     const lastName = user?.lastName || '';
     const fullName = `${firstName} ${lastName}`.trim();
     return fullName === '' ? null : fullName; // Return null if fullName is empty
-  };
-
-  const handleAccessToAllLotsChange = (value: string | boolean | null) => {
-    if (typeof value === 'boolean') {
-      if (value === true) {
-        selectAllZones();
-      } else {
-        deselectAllLots();
-      }
-    } else {
-      console.warn('Invalid value type passed:', value);
-    }
   };
 
   return (
@@ -151,13 +165,16 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         ]}
       />
 
-      {/* Render the nested lots */}
-      <NestedViewLots
-        handleDeselectLots={() => null} // since this part of the code is not even rendered, i pass null to avoid turning this prop as optional just to keep it easier to maintain and implement
-        onlyZonesAreSelectable={true}
-        expandNeighbourhood={true}
-        hideLotsCounterAndTitle={true}
-      />
+      {/* Conditionally render NestedViewLots based on accessToAllLots */}
+      {/* This way, when accessToAllLots is true, the user won't see the list of zones, emphasizing that they have access to all zones. */}
+      {!accessToAllLots && (
+        <NestedViewLots
+          handleDeselectLots={() => null} // since this part of the code is not even rendered, i pass null to avoid turning this prop as optional just to keep it easier to maintain and implement
+          onlyZonesAreSelectable={true}
+          expandNeighbourhood={true}
+          hideLotsCounterAndTitle={true}
+        />
+      )}
 
       {/* Button to assign the selected lots */}
       <TouchableOpacity style={styles.button} onPress={handleAssignZones}>

@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useState, useMemo } from 'react';
+import React from 'react';
 import {
   View,
   Text,

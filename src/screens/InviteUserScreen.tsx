@@ -1,5 +1,6 @@
 // src/screens/InviteUserScreen.tsx
 
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
@@ -12,9 +13,15 @@ import { theme } from '../styles/styles';
 import { UserRole } from '../types/types';
 
 type RootStackParamList = {
-  InviteUser: undefined;
+  InviteUser: {
+    email?: string;
+    role?: UserRole;
+    accessToAllLots?: boolean;
+  };
   // other routes...
 };
+
+type InviteUserScreenRouteProp = RouteProp<RootStackParamList, 'InviteUser'>;
 
 type InviteUserScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -23,12 +30,35 @@ type InviteUserScreenNavigationProp = StackNavigationProp<
 
 interface Props {
   navigation: InviteUserScreenNavigationProp;
+  route: InviteUserScreenRouteProp;
 }
 
-const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
+const InviteUserScreen: React.FC<Props> = ({ navigation, route }) => {
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(true);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Restore parameters when navigating back
+      if (route.params?.email) {
+        setEmail(route.params.email);
+      }
+      if (route.params?.role) {
+        setSelectedRole(route.params.role);
+      }
+      if (route.params?.accessToAllLots !== undefined) {
+        setAccessToAllLots(route.params.accessToAllLots);
+      }
+
+      // Clear parameters to prevent unintended reuse
+      navigation.setParams({
+        email: undefined,
+        role: undefined,
+        accessToAllLots: undefined,
+      });
+    }, [navigation]), // ESLint will warn about `navigation`, but it can be safely ignored
+  );
 
   const isPickerDisabled =
     selectedRole === 'Owner' || selectedRole === 'Manager';
@@ -54,26 +84,28 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
-    // Proceed with inviting the user
-    console.log('Inviting user...');
-    const newUser = ControllerService.inviteUserToActiveWorkgroup(
-      email,
-      selectedRole as UserRole,
-      accessToAllLots,
-    );
     if (accessToAllLots === true) {
+      // Proceed with inviting the user
+      console.log('Inviting user...');
+      const newUser = ControllerService.inviteUserToActiveWorkgroup(
+        email,
+        selectedRole as UserRole,
+        accessToAllLots,
+      );
       if (newUser) {
         Alert.alert('Éxito', 'El integrante ha sido invitado.');
         navigation.goBack();
       }
     } else {
-      // Navigate to zone assignment screen
-      if (newUser) {
-        navigation.navigate('ZoneAssignment', {
-          userId: newUser.userId,
-          isNewUser: true,
-        });
-      }
+      // Navigate to zone assignment screen, passing the new user data to create a new user in the next screen
+      navigation.navigate('ZoneAssignment', {
+        isNewUser: true,
+        newUserData: {
+          email: email,
+          role: selectedRole as UserRole,
+          accessToAllLots: accessToAllLots,
+        },
+      });
     }
   };
 

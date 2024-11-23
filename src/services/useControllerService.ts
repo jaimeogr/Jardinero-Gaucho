@@ -226,35 +226,32 @@ const preselectAssignedZonesInWorkgroupForUser = (userId: string) => {
   );
 };
 
-const deleteZoneAssignmentsForMember = (userId: string) => {
-  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-  if (!activeWorkgroupId) return null;
-  useLotService.clearZoneAssignmentsForMemberInWorkgroup(
-    userId,
-    activeWorkgroupId,
-  );
-};
-
-const updateZoneAssignmentsForMember = (userId: string) => {
-  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-  if (!activeWorkgroupId) return null;
-  useLotService.updateZoneAssignmentsForMemberInWorkgroupUsingSelection(
-    userId,
-    activeWorkgroupId,
-  );
-};
-
-const updateUserAccessToAllLots = (
+const updateZoneAssignmentsForMember = (
   userId: string,
   accessToAllLots: boolean,
 ) => {
   const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
   if (!activeWorkgroupId) return null;
-  useUserService.updateUserAccessToAllLots(
-    userId,
-    accessToAllLots,
-    activeWorkgroupId,
-  );
+
+  if (accessToAllLots) {
+    // Update the user's accessToAllLots setting
+    useUserService.updateUserAccessToAllLots(
+      userId,
+      accessToAllLots,
+      activeWorkgroupId,
+    );
+    // Clear any existing zone assignments since the user now has access to all zones
+    useLotService.clearZoneAssignmentsForMemberInWorkgroup(
+      userId,
+      activeWorkgroupId,
+    );
+  } else {
+    useLotService.updateZoneAssignmentsForMemberInWorkgroupUsingSelection(
+      userId,
+      activeWorkgroupId,
+    );
+  }
+  deselectAllLots();
 };
 
 const selectAllZones = (): boolean => {
@@ -282,8 +279,6 @@ export default {
   toggleNeighbourhoodSelection,
   deselectAllLots,
   preselectAssignedZonesInWorkgroupForUser,
-  deleteZoneAssignmentsForMember,
   updateZoneAssignmentsForMember,
-  updateUserAccessToAllLots,
   selectAllZones,
 };

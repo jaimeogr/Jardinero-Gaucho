@@ -1,29 +1,43 @@
 // src/screens/ZoneAssignmentScreen.tsx
 
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 
 import CustomSelectInput from '../components/CustomSelectInput';
 import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
 import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { UserInterface } from '../types/types';
+import { UserInterface, UserRole } from '../types/types';
 
 type RootStackParamList = {
-  ZoneAssignment: undefined;
-  // Other routes...
+  ZoneAssignment: {
+    newUserData?: {
+      email: string;
+      role: UserRole;
+      accessToAllLots: boolean;
+    };
+    userId?: string;
+    isNewUser: boolean;
+  };
+  InviteUser: {
+    email?: string;
+    role?: UserRole;
+    accessToAllLots?: boolean;
+  };
 };
 
 type LotAssignmentScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'ZoneAssignment'
+  // 'InviteUser' // commenting 'inviteuser' breaks the code?
 >;
 
 interface Props {
   navigation: LotAssignmentScreenNavigationProp;
-  route: any;
+  route: RouteProp<RootStackParamList, 'ZoneAssignment'>;
 }
 
 const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
@@ -34,11 +48,10 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     preselectAssignedZonesInWorkgroupForUser,
     getUserInActiveWorkgroupWithRole,
     useNeighbourhoodsAndZones,
-    updateUserAccessToAllLots,
-    deleteZoneAssignmentsForMember,
+    inviteUserToActiveWorkgroup,
   } = useControllerService;
 
-  const { userId, isNewUser } = route.params;
+  const { newUserData, userId, isNewUser } = route.params;
 
   const [user, setUser] = useState<UserInterface | null>(null);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(false);
@@ -46,25 +59,72 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   // Get neighbourhoods and zones
   const neighbourhoods = useNeighbourhoodsAndZones();
 
+  useEffect(() => {
+    const handleBackPress = () => {
+      if (isNewUser && newUserData) {
+        // Pass user input back to InviteUserScreen
+        navigation.navigate('InviteUser', {
+          email: newUserData.email,
+          role: newUserData.role,
+          accessToAllLots,
+        });
+      } else {
+        navigation.goBack();
+      }
+    };
+
+    if (isNewUser && newUserData) {
+      navigation.setOptions({
+        headerLeft: () => (
+          <TouchableOpacity
+            onPress={handleBackPress}
+            style={{ marginRight: 10 }}
+          >
+            <Icon name="arrow-left" size={26} color="black" />
+          </TouchableOpacity>
+        ),
+      });
+    }
+  }, [navigation, isNewUser, newUserData, accessToAllLots]);
+
   // Clear selections when the screen is focused and initialize the user
   useEffect(() => {
     deselectAllLots();
-    const existingUser = getUserInActiveWorkgroupWithRole(userId);
-    if (existingUser) {
-      setUser(existingUser);
-      setAccessToAllLots(existingUser.accessToAllLots);
-      // Pre-select zones assigned to the user
-      if (!existingUser.accessToAllLots) {
-        preselectAssignedZonesInWorkgroupForUser(userId);
+
+    if (isNewUser && newUserData) {
+      // New user case
+      setUser({
+        userId: '', // Will be set upon creation
+        email: newUserData.email,
+        firstName: '',
+        lastName: '',
+        workgroupAssignments: [],
+      });
+      setAccessToAllLots(newUserData.accessToAllLots);
+    } else if (userId) {
+      // Existing user case
+      const existingUser = getUserInActiveWorkgroupWithRole(userId);
+      if (existingUser) {
+        setUser(existingUser);
+        setAccessToAllLots(existingUser.accessToAllLots);
+        // Pre-select zones assigned to the user when it doesnt have access to all zones
+        if (!existingUser.accessToAllLots) {
+          preselectAssignedZonesInWorkgroupForUser(userId);
+        }
+      } else {
+        Alert.alert('Error', 'Usuario no encontrado.');
+        navigation.goBack();
       }
     } else {
-      Alert.alert('Error', 'Usuario no encontrado.');
+      Alert.alert('Error', 'Datos inválidos.');
       navigation.goBack();
     }
   }, [
     navigation,
     deselectAllLots,
     userId,
+    isNewUser,
+    newUserData,
     selectAllZones,
     getUserInActiveWorkgroupWithRole,
     preselectAssignedZonesInWorkgroupForUser,
@@ -107,19 +167,37 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       Alert.alert('Error', 'Usuario no válido.');
       return;
     }
-    // Update the user's accessToAllLots setting
-    updateUserAccessToAllLots(user.userId, accessToAllLots);
 
-    if (accessToAllLots) {
-      // Clear any existing zone assignments since the user now has access to all zones
-      deleteZoneAssignmentsForMember(user.userId);
+    if (isNewUser && newUserData) {
+      // Create the new user now
+      const newUser = inviteUserToActiveWorkgroup(
+        newUserData.email,
+        newUserData.selectedRole,
+        accessToAllLots,
+      );
+
+      if (newUser) {
+        if (accessToAllLots) {
+          Alert.alert('Éxito', 'El integrante ha sido invitado.');
+        } else {
+          // Assign zones to the new user using the selection in the store
+          updateZoneAssignmentsForMember(newUser.userId, accessToAllLots);
+          Alert.alert(
+            'Asignación exitosa',
+            'El integrante ha sido invitado y las zonas han sido asignadas.',
+          );
+        }
+      } else {
+        Alert.alert('Error', 'No se pudo crear el usuario.');
+      }
+    } else if (userId) {
+      // Existing user case
+      updateZoneAssignmentsForMember(user.userId, accessToAllLots);
+
+      Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');
     } else {
-      // Only update zone assignments if accessToAllLots is false
-      updateZoneAssignmentsForMember(user.userId);
+      Alert.alert('Error', 'Operación inválida.');
     }
-
-    deselectAllLots();
-    Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');
     navigation.navigate('MyTeam');
   };
 

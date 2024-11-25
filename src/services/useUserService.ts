@@ -1,7 +1,9 @@
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 // useUserService.ts
 import BackendService from '../backend/BackendService';
 import useUserStore from '../stores/useUserStore';
-import { UserInterface } from '../types/types';
+import { UserInterface, TemporaryUserData } from '../types/types';
 
 const initializeUsers = () => {
   const currentUser = BackendService.getMyUser();
@@ -53,6 +55,15 @@ const updateUserAccessToAllLots = (
   }
 };
 
+const getTemporaryUserData = (): {
+  temporaryUserData: TemporaryUserData | null;
+  temporaryisNewUser: boolean;
+} => {
+  const temporaryUserData = useUserStore.getState().TemporaryUserData;
+  const temporaryisNewUser = useUserStore.getState().TemporaryisNewUser;
+  return { temporaryUserData, temporaryisNewUser };
+};
+
 export default {
   initializeUsers,
   useGetCurrentUser,
@@ -61,4 +72,5 @@ export default {
   addUser,
   updateUser,
   updateUserAccessToAllLots,
+  getTemporaryUserData,
 };

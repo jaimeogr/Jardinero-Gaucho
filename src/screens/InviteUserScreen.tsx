@@ -57,7 +57,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation, route }) => {
         role: undefined,
         accessToAllLots: undefined,
       });
-    }, [navigation]), // ESLint will warn about `navigation`, but it can be safely ignored
+    }, [route.params, navigation]), // ESLint will warn about `navigation`, but it can be safely ignored
   );
 
   const isPickerDisabled =

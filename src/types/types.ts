@@ -69,16 +69,6 @@ export interface NeighbourhoodZoneData {
   neighbourhoods: NeighbourhoodData[];
 }
 
-// export interface zoneIsSelectedInterface {
-//   zoneId: string;
-//   isSelected: boolean;
-// }
-
-// export interface neighbourhoodIsSelectedInterface {
-//   NeighbourhoodId: string;
-//   isSelected: boolean;
-// }
-
 // USERS / WORKGROUPS
 export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
 
@@ -97,6 +87,12 @@ export interface WorkgroupAssignment {
   role: UserRole;
   accessToAllLots: boolean;
   hasAcceptedPresenceInWorkgroup: boolean;
+}
+
+export interface TemporaryUserData {
+  email: string;
+  role: UserRole;
+  accessToAllLots: boolean;
 }
 
 export interface UserInterface {

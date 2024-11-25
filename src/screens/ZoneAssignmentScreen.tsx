@@ -59,33 +59,33 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   // Get neighbourhoods and zones
   const neighbourhoods = useNeighbourhoodsAndZones();
 
-  useEffect(() => {
-    const handleBackPress = () => {
-      if (isNewUser && newUserData) {
-        // Pass user input back to InviteUserScreen
-        navigation.navigate('InviteUser', {
-          email: newUserData.email,
-          role: newUserData.role,
-          accessToAllLots,
-        });
-      } else {
-        navigation.goBack();
-      }
-    };
+  // useEffect(() => {
+  //   if (isNewUser && newUserData) {
+  //     navigation.setOptions({
+  //       headerLeft: () => (
+  //         <TouchableOpacity
+  //           onPress={handleIntercept}
+  //           style={{ marginRight: 10 }}
+  //         >
+  //           <Icon name="arrow-left" size={26} color="black" />
+  //         </TouchableOpacity>
+  //       ),
+  //     });
+  //   }
+  // }, [navigation, isNewUser, newUserData, accessToAllLots]);
 
+  const handleIntercept = () => {
     if (isNewUser && newUserData) {
-      navigation.setOptions({
-        headerLeft: () => (
-          <TouchableOpacity
-            onPress={handleBackPress}
-            style={{ marginRight: 10 }}
-          >
-            <Icon name="arrow-left" size={26} color="black" />
-          </TouchableOpacity>
-        ),
+      // Pass user input back to InviteUserScreen
+      navigation.replace('InviteUser', {
+        email: newUserData.email,
+        role: newUserData.role,
+        accessToAllLots,
       });
+    } else {
+      navigation.goBack();
     }
-  }, [navigation, isNewUser, newUserData, accessToAllLots]);
+  };
 
   // Clear selections when the screen is focused and initialize the user
   useEffect(() => {

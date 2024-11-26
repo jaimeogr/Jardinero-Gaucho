@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   },
   usersList: {
     paddingTop: 8,
-    paddingBottom: 60,
+    paddingBottom: 40,
   },
   userItem: {
     margin: 14,
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   accessTextCaution: {
-    color: '#FF6600',
+    color: theme.colors.caution,
   },
   editButton: {
     position: 'absolute',

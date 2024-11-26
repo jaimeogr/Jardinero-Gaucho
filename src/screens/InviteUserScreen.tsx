@@ -13,11 +13,7 @@ import { theme } from '../styles/styles';
 import { UserRole } from '../types/types';
 
 type RootStackParamList = {
-  InviteUser: {
-    email?: string;
-    role?: UserRole;
-    accessToAllLots?: boolean;
-  };
+  InviteUser: {};
   // other routes...
 };
 
@@ -33,22 +29,27 @@ interface Props {
   route: InviteUserScreenRouteProp;
 }
 
-const InviteUserScreen: React.FC<Props> = ({ navigation, route }) => {
+const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
+  const { getTemporaryUserData, setTemporaryUserData } = ControllerService;
+
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(true);
 
+  // Get temporary user data if available
+  const { temporaryUserData } = getTemporaryUserData();
+
   useFocusEffect(
     React.useCallback(() => {
       // Restore parameters when navigating back
-      if (route.params?.email) {
-        setEmail(route.params.email);
+      if (temporaryUserData?.email) {
+        setEmail(temporaryUserData?.email);
       }
-      if (route.params?.role) {
-        setSelectedRole(route.params.role);
+      if (temporaryUserData?.role) {
+        setSelectedRole(temporaryUserData?.role);
       }
-      if (route.params?.accessToAllLots !== undefined) {
-        setAccessToAllLots(route.params.accessToAllLots);
+      if (temporaryUserData?.accessToAllLots !== undefined) {
+        setAccessToAllLots(temporaryUserData?.accessToAllLots);
       }
 
       // Clear parameters to prevent unintended reuse
@@ -57,7 +58,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation, route }) => {
         role: undefined,
         accessToAllLots: undefined,
       });
-    }, [route.params, navigation]), // ESLint will warn about `navigation`, but it can be safely ignored
+    }, [navigation, temporaryUserData]), // ESLint will warn about `navigation`, but it can be safely ignored
   );
 
   const isPickerDisabled =
@@ -94,18 +95,20 @@ const InviteUserScreen: React.FC<Props> = ({ navigation, route }) => {
       );
       if (newUser) {
         Alert.alert('Éxito', 'El integrante ha sido invitado.');
+        setTemporaryUserData(null, false); // Clear temporary user data
         navigation.goBack();
       }
     } else {
+      // Save the temporary user data to be used in the next screen
+      const temporaryUserData = {
+        email,
+        role: selectedRole as UserRole,
+        accessToAllLots,
+      };
+      setTemporaryUserData(temporaryUserData, true);
+
       // Navigate to zone assignment screen, passing the new user data to create a new user in the next screen
-      navigation.navigate('ZoneAssignment', {
-        isNewUser: true,
-        newUserData: {
-          email: email,
-          role: selectedRole as UserRole,
-          accessToAllLots: accessToAllLots,
-        },
-      });
+      navigation.navigate('ZoneAssignment');
     }
   };
 

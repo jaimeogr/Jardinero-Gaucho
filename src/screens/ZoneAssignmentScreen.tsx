@@ -3,7 +3,7 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 
 import CustomSelectInput from '../components/CustomSelectInput';
@@ -14,18 +14,7 @@ import { UserInterface, UserRole } from '../types/types';
 
 type RootStackParamList = {
   ZoneAssignment: {
-    newUserData?: {
-      email: string;
-      role: UserRole;
-      accessToAllLots: boolean;
-    };
     userId?: string;
-    isNewUser: boolean;
-  };
-  InviteUser: {
-    email?: string;
-    role?: UserRole;
-    accessToAllLots?: boolean;
   };
 };
 
@@ -49,9 +38,11 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     getUserInActiveWorkgroupWithRole,
     useNeighbourhoodsAndZones,
     inviteUserToActiveWorkgroup,
+    getTemporaryUserData,
+    setTemporaryUserData,
   } = useControllerService;
 
-  const { newUserData, userId, isNewUser } = route.params;
+  const userId = route.params?.userId;
 
   const [user, setUser] = useState<UserInterface | null>(null);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(false);
@@ -59,48 +50,38 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   // Get neighbourhoods and zones
   const neighbourhoods = useNeighbourhoodsAndZones();
 
-  // useEffect(() => {
-  //   if (isNewUser && newUserData) {
-  //     navigation.setOptions({
-  //       headerLeft: () => (
-  //         <TouchableOpacity
-  //           onPress={handleIntercept}
-  //           style={{ marginRight: 10 }}
-  //         >
-  //           <Icon name="arrow-left" size={26} color="black" />
-  //         </TouchableOpacity>
-  //       ),
-  //     });
-  //   }
-  // }, [navigation, isNewUser, newUserData, accessToAllLots]);
+  // Get temporary user data
+  const { temporaryUserData, temporaryisNewUser } = getTemporaryUserData();
 
-  const handleIntercept = () => {
-    if (isNewUser && newUserData) {
-      // Pass user input back to InviteUserScreen
-      navigation.replace('InviteUser', {
-        email: newUserData.email,
-        role: newUserData.role,
-        accessToAllLots,
-      });
-    } else {
-      navigation.goBack();
-    }
-  };
+  const clearTemporaryState = useCallback(() => {
+    setTemporaryUserData(null, false);
+  }, [setTemporaryUserData]);
 
   // Clear selections when the screen is focused and initialize the user
   useEffect(() => {
-    deselectAllLots();
+    const hasNoTemporaryData = !temporaryisNewUser && !temporaryUserData;
+    const hasNoUserId = !userId;
 
-    if (isNewUser && newUserData) {
+    if (hasNoTemporaryData && hasNoUserId) {
+      Alert.alert('Error', 'No user data provided.');
+      navigation.goBack();
+      return;
+    }
+
+    deselectAllLots();
+    console.log('temporaryisNewUser:', temporaryisNewUser);
+    console.log('temporaryUserData:', temporaryUserData);
+
+    if (temporaryisNewUser && temporaryUserData) {
       // New user case
       setUser({
         userId: '', // Will be set upon creation
-        email: newUserData.email,
+        email: temporaryUserData.email,
         firstName: '',
         lastName: '',
         workgroupAssignments: [],
       });
-      setAccessToAllLots(newUserData.accessToAllLots);
+      setAccessToAllLots(temporaryUserData.accessToAllLots);
     } else if (userId) {
       // Existing user case
       const existingUser = getUserInActiveWorkgroupWithRole(userId);
@@ -119,15 +100,34 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       Alert.alert('Error', 'Datos inválidos.');
       navigation.goBack();
     }
+
+    // Add `beforeRemove` listener
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      // Detect if navigation is a back action, POP can happen on gestures that indicate navigating back
+      if (e.data.action.type === 'GO_BACK' || e.data.action.type === 'POP') {
+        // Do NOT clear temporary data when navigating back
+        return;
+      }
+
+      // For other actions (e.g., unmount), clear the temporary data
+      clearTemporaryState();
+    });
+
+    return () => {
+      // Cleanup listener when component unmounts
+      unsubscribe();
+    };
   }, [
+    userId,
+    temporaryUserData,
+    temporaryisNewUser,
     navigation,
     deselectAllLots,
-    userId,
-    isNewUser,
-    newUserData,
     selectAllZones,
     getUserInActiveWorkgroupWithRole,
     preselectAssignedZonesInWorkgroupForUser,
+    setTemporaryUserData,
+    clearTemporaryState,
   ]);
 
   // Compute totalZones and selectedZones
@@ -152,9 +152,11 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       setAccessToAllLots(value);
       if (value === true) {
         // No need to select zones; user has access to all
-      } else {
-        // select zones assigned to the user
+      } else if (userId) {
+        // select zones assigned to the user if there is an existant userId
         preselectAssignedZonesInWorkgroupForUser(userId);
+      } else {
+        deselectAllLots();
       }
     } else {
       console.warn('Invalid value type passed:', value);
@@ -168,11 +170,11 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       return;
     }
 
-    if (isNewUser && newUserData) {
+    if (temporaryisNewUser && temporaryUserData) {
       // Create the new user now
       const newUser = inviteUserToActiveWorkgroup(
-        newUserData.email,
-        newUserData.selectedRole,
+        temporaryUserData.email,
+        temporaryUserData.role,
         accessToAllLots,
       );
 
@@ -258,7 +260,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleAssignZones}>
           <Text style={styles.buttonText}>
-            {isNewUser ? 'Asignar Zonas' : 'Guardar Cambios'}
+            {temporaryisNewUser ? 'Asignar Zonas' : 'Guardar Cambios'}
           </Text>
         </TouchableOpacity>
       </View>

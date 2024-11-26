@@ -53,10 +53,11 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const getAccessText = (user: UserInActiveWorkgroupWithRole): string => {
-    const { accessToAllLots, assignedZonesCount, assignedLotsCount } = user;
+    // im currently not using the assignedLotsCount because it feels visually overwhelming and it may not bring enough leverage
+    const { accessToAllLots, assignedZonesCount } = user;
 
     if (accessToAllLots) {
-      return 'Todas las zonas\nTodos los lotes';
+      return 'Todas las zonas';
     }
     if (typeof assignedZonesCount !== 'number' || assignedZonesCount < 0) {
       return 'Datos de acceso inválidos';
@@ -66,9 +67,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
     }
     const zoneWord =
       assignedZonesCount === 1 ? 'zona asignada' : 'zonas asignadas';
-    const lotWord =
-      assignedLotsCount === 1 ? 'lote asignado' : 'lotes asignados';
-    return `${assignedZonesCount} ${zoneWord}\n${assignedLotsCount} ${lotWord}`;
+    return `${assignedZonesCount} ${zoneWord}`;
   };
 
   return (

@@ -12,7 +12,6 @@ import {
 import { Surface, Badge } from 'react-native-paper';
 
 import ControllerService from '../services/useControllerService';
-import useUserStore from '../stores/useUserStore';
 import { theme } from '../styles/styles';
 import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
 
@@ -32,8 +31,7 @@ interface Props {
 }
 
 const useUsersWithRoles = () => {
-  const users = useUserStore((state) => state.users); // This does 'nothing', but without it, it doesnt work. It subscribes to the Zustand store
-  return ControllerService.getUsersInActiveWorkgroupWithRoles();
+  return ControllerService.useUsersInActiveWorkgroupWithRoles();
 };
 
 const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
@@ -55,10 +53,10 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const getAccessText = (user: UserInActiveWorkgroupWithRole): string => {
-    const { accessToAllLots, assignedZonesCount } = user;
+    const { accessToAllLots, assignedZonesCount, assignedLotsCount } = user;
 
     if (accessToAllLots) {
-      return 'Todas las zonas';
+      return 'Todas las zonas\nTodos los lotes';
     }
     if (typeof assignedZonesCount !== 'number' || assignedZonesCount < 0) {
       return 'Datos de acceso inválidos';
@@ -68,7 +66,9 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
     }
     const zoneWord =
       assignedZonesCount === 1 ? 'zona asignada' : 'zonas asignadas';
-    return `${assignedZonesCount} ${zoneWord}`;
+    const lotWord =
+      assignedLotsCount === 1 ? 'lote asignado' : 'lotes asignados';
+    return `${assignedZonesCount} ${zoneWord}\n${assignedLotsCount} ${lotWord}`;
   };
 
   return (

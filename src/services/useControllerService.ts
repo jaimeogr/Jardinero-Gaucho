@@ -1,5 +1,6 @@
 // src/services/useControllerService.ts
 
+import React from 'react';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
 import {
@@ -199,6 +200,61 @@ const getUsersInActiveWorkgroupWithRoles =
     return usersSortedByRole;
   };
 
+const useUsersInActiveWorkgroupWithRoles =
+  (): UserInActiveWorkgroupWithRole[] => {
+    const activeWorkgroup = getActiveWorkgroup();
+    const activeWorkgroupId = activeWorkgroup?.workgroupId;
+
+    // Subscribe to users
+    const allUsers = useUserService.useAllUsers();
+
+    // Get assigned counts per user from useLotService
+    const assignedZonesByUser =
+      useLotService.useAssignedZonesCountPerUserInWorkgroup(activeWorkgroupId);
+    const assignedLotsByUser =
+      useLotService.useAssignedLotsCountPerUserInWorkgroup(activeWorkgroupId);
+
+    return React.useMemo(() => {
+      if (!activeWorkgroupId) {
+        // Handle the case when activeWorkgroupId is undefined
+        return [];
+      }
+
+      const usersInWorkgroup = allUsers
+        .map((user) => {
+          const assignment = user.workgroupAssignments.find(
+            (wa) => wa.workgroupId === activeWorkgroupId,
+          );
+          if (assignment) {
+            const assignedZonesCount = assignedZonesByUser[user.userId] || 0;
+            const assignedLotsCount = assignedLotsByUser[user.userId] || 0;
+
+            return {
+              ...user,
+              ...assignment,
+              assignedZonesCount,
+              assignedLotsCount,
+            };
+          }
+          return null;
+        })
+        .filter((user) => user !== null) as UserInActiveWorkgroupWithRole[];
+
+      // Sort users by role priority
+      const usersSortedByRole = usersInWorkgroup.sort((a, b) => {
+        const rolePriority = {
+          PrimaryOwner: 1,
+          Owner: 2,
+          Manager: 3,
+          Member: 4,
+        };
+        return rolePriority[a.role] - rolePriority[b.role];
+      });
+
+      return usersSortedByRole;
+    }, [activeWorkgroupId, allUsers, assignedZonesByUser, assignedLotsByUser]);
+  };
+
 const toggleLotSelection = (lotId: string, newState: boolean) => {
   useLotService.toggleLotSelection(lotId, newState);
 };
@@ -289,6 +345,7 @@ export default {
   updateUserInActiveWorkgroup,
   getUserInActiveWorkgroupWithRole,
   getUsersInActiveWorkgroupWithRoles,
+  useUsersInActiveWorkgroupWithRoles,
   toggleLotSelection,
   toggleZoneSelection,
   toggleNeighbourhoodSelection,

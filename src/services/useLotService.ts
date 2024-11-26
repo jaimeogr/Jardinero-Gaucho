@@ -147,6 +147,7 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
 };
 
 export const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
+  // This function would change if i change the data structures into having lots as nested objects inside NeighbourhoodZoneData on the store.
   const lots = useLotStore((state) => state.lots);
 
   return React.useMemo<NestedLotsWithIndicatorsInterface>(() => {
@@ -399,6 +400,103 @@ const getNumberOfAssignedLotsForUserInSpecificWorkgroup = (
   return assignedLots.length;
 };
 
+const useAssignedZonesCountPerUserInWorkgroup = (
+  workgroupId: string | undefined,
+) => {
+  const neighbourhoodZoneData = useLotStore(
+    (state) => state.neighbourhoodZoneData,
+  );
+
+  return React.useMemo(() => {
+    const assignedZonesByUser: Record<string, number> = {};
+
+    if (!workgroupId) {
+      // Return an empty object if workgroupId is undefined
+      return assignedZonesByUser;
+    }
+
+    // Filter neighbourhoods by workgroupId
+    const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
+      (n) => n.workgroupId === workgroupId,
+    );
+
+    neighbourhoods.forEach((neighbourhood) => {
+      neighbourhood.zones.forEach((zone) => {
+        zone.assignedTo.forEach((userId) => {
+          if (!assignedZonesByUser[userId]) {
+            assignedZonesByUser[userId] = 0;
+          }
+          assignedZonesByUser[userId] += 1;
+        });
+      });
+    });
+
+    return assignedZonesByUser;
+  }, [neighbourhoodZoneData, workgroupId]);
+};
+
+const useAssignedLotsCountPerUserInWorkgroup = (
+  workgroupId: string | undefined,
+) => {
+  // This function would change if i change the data structures into having lots as nested objects inside NeighbourhoodZoneData on the store.
+  // Subscribe to the necessary data from the store
+  const neighbourhoodZoneData = useLotStore(
+    (state) => state.neighbourhoodZoneData,
+  );
+  const lots = useLotStore((state) => state.lots);
+
+  return React.useMemo(() => {
+    // Initialize an object to store the lots count per user
+    const assignedLotsByUser: Record<string, number> = {};
+
+    if (!workgroupId) {
+      return assignedLotsByUser;
+    }
+
+    // Filter neighbourhoods that belong to the specified workgroup
+    const neighbourhoodsInWorkgroup =
+      neighbourhoodZoneData.neighbourhoods.filter(
+        (neighbourhood) => neighbourhood.workgroupId === workgroupId,
+      );
+
+    // Build a map of zone assignments (zoneId to array of userIds)
+    const zoneAssignments: Record<string, string[]> = {};
+
+    neighbourhoodsInWorkgroup.forEach((neighbourhood) => {
+      neighbourhood.zones.forEach((zone) => {
+        zoneAssignments[zone.zoneId] = zone.assignedTo;
+      });
+    });
+
+    // Build a map of lots grouped by their zoneId
+    const lotsGroupedByZone: Record<string, LotInterface[]> = {};
+
+    lots.forEach((lot) => {
+      if (lot.workgroupId === workgroupId) {
+        if (!lotsGroupedByZone[lot.zoneId]) {
+          lotsGroupedByZone[lot.zoneId] = [];
+        }
+        lotsGroupedByZone[lot.zoneId].push(lot);
+      }
+    });
+
+    // Calculate the lots assigned to each user
+    for (const zoneId in zoneAssignments) {
+      const userIds = zoneAssignments[zoneId];
+      const lotsInZone = lotsGroupedByZone[zoneId] || [];
+
+      userIds.forEach((userId) => {
+        if (!assignedLotsByUser[userId]) {
+          assignedLotsByUser[userId] = 0;
+        }
+        assignedLotsByUser[userId] += lotsInZone.length;
+      });
+    }
+
+    return assignedLotsByUser;
+  }, [neighbourhoodZoneData, lots, workgroupId]);
+};
+
 const getNumberOfAssignedZonesForUserInSpecificWorkgroup = (
   WorkgroupId: string,
   userId: string,
@@ -443,4 +541,6 @@ export default {
   updateZoneAssignmentsForMemberInWorkgroupUsingSelection,
   getNumberOfAssignedLotsForUserInSpecificWorkgroup,
   getNumberOfAssignedZonesForUserInSpecificWorkgroup,
+  useAssignedZonesCountPerUserInWorkgroup,
+  useAssignedLotsCountPerUserInWorkgroup,
 };

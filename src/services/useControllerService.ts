@@ -179,27 +179,6 @@ const getUserInActiveWorkgroupWithRole = (
   return null;
 };
 
-const getUsersInActiveWorkgroupWithRoles =
-  (): UserInActiveWorkgroupWithRole[] => {
-    const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-    if (!activeWorkgroupId) return [];
-
-    const allUsers = useUserService.useAllUsers();
-    const usersInWorkgroup = allUsers
-      .map((user) => {
-        return getUserInActiveWorkgroupWithRole(user.userId);
-      })
-      .filter((user) => user !== null) as UserInActiveWorkgroupWithRole[];
-
-    // Sort by role priority: PrimaryOwner > Owner > Manager > Member
-    const usersSortedByRole = usersInWorkgroup.sort((a, b) => {
-      const rolePriority = { PrimaryOwner: 1, Owner: 2, Manager: 3, Member: 4 };
-      return rolePriority[a.role] - rolePriority[b.role];
-    });
-
-    return usersSortedByRole;
-  };
-
 const useUsersInActiveWorkgroupWithRoles =
   (): UserInActiveWorkgroupWithRole[] => {
     const activeWorkgroup = getActiveWorkgroup();
@@ -344,7 +323,6 @@ export default {
   inviteUserToActiveWorkgroup,
   updateUserInActiveWorkgroup,
   getUserInActiveWorkgroupWithRole,
-  getUsersInActiveWorkgroupWithRoles,
   useUsersInActiveWorkgroupWithRoles,
   toggleLotSelection,
   toggleZoneSelection,

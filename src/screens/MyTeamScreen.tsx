@@ -63,11 +63,28 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
       return 'Datos de acceso inválidos';
     }
     if (assignedZonesCount === 0) {
-      return 'Sin acceso';
+      return 'Sin zonas asignadas';
     }
     const zoneWord =
       assignedZonesCount === 1 ? 'zona asignada' : 'zonas asignadas';
     return `${assignedZonesCount} ${zoneWord}`;
+  };
+
+  const accessTextCautionColor = (
+    user: UserInActiveWorkgroupWithRole,
+  ): boolean => {
+    const { accessToAllLots, assignedZonesCount } = user;
+
+    if (accessToAllLots) {
+      return false;
+    }
+    if (typeof assignedZonesCount !== 'number' || assignedZonesCount < 0) {
+      return true;
+    }
+    if (assignedZonesCount === 0) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -134,7 +151,14 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
               </View>
 
               <View style={styles.userAccess}>
-                <Text style={styles.accessText}>{getAccessText(item)}</Text>
+                <Text
+                  style={[
+                    styles.accessText,
+                    accessTextCautionColor(item) && styles.accessTextCaution,
+                  ]}
+                >
+                  {getAccessText(item)}
+                </Text>
               </View>
 
               <TouchableOpacity
@@ -256,6 +280,9 @@ const styles = StyleSheet.create({
   accessText: {
     fontSize: 16,
     color: 'gray',
+  },
+  accessTextCaution: {
+    color: '#FF6600',
   },
   editButton: {
     position: 'absolute',

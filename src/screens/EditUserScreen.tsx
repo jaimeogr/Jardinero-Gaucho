@@ -117,7 +117,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
           <ReadOnlyField
             label="Nombre y Apellido"
             text={getFullName()}
-            placeholder="Nombre y apellido no disponible"
+            placeholder="Nombre y apellido no disponibles"
           />
 
           {/* Email Display */}

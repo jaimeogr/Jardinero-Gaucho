@@ -13,7 +13,8 @@ import { theme } from '../styles/styles';
 import { UserRole } from '../types/types';
 
 type RootStackParamList = {
-  InviteUser: {};
+  InviteUser: undefined;
+  ZoneAssignment: { userId?: string };
   // other routes...
 };
 
@@ -51,14 +52,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       if (temporaryUserData?.accessToAllLots !== undefined) {
         setAccessToAllLots(temporaryUserData?.accessToAllLots);
       }
-
-      // Clear parameters to prevent unintended reuse
-      navigation.setParams({
-        email: undefined,
-        role: undefined,
-        accessToAllLots: undefined,
-      });
-    }, [navigation, temporaryUserData]), // ESLint will warn about `navigation`, but it can be safely ignored
+    }, [temporaryUserData]), // ESLint will warn about `navigation`, but it can be safely ignored
   );
 
   const isPickerDisabled =
@@ -108,7 +102,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       setTemporaryUserData(temporaryUserData, true);
 
       // Navigate to zone assignment screen, passing the new user data to create a new user in the next screen
-      navigation.navigate('ZoneAssignment');
+      navigation.navigate('ZoneAssignment', {});
     }
   };
 

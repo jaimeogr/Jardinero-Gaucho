@@ -1,208 +1,271 @@
-// src/screens/LotAssignmentScreen.tsx
+// src/screens/ZoneAssignmentScreen.tsx
 
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-  TouchableOpacity,
-  ScrollView,
-  FlatList,
-  Modal,
-} from 'react-native';
+import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 
-import CustomAccordion from '../components/NestedViewLots/CustomAccordion';
+import CustomSelectInput from '../components/CustomSelectInput';
 import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
-import OneLotForCustomAccordion from '../components/NestedViewLots/OneLotForCustomAccordion';
-import ControllerService from '../services/useControllerService';
+import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import {
-  UserInterface,
-  UserInvitedPendingAcceptanceInterface,
-  UserRole,
-} from '../types/types';
+import { UserInterface } from '../types/types';
 
 type RootStackParamList = {
-  ZoneAssignment: undefined;
-  // Other routes...
+  ZoneAssignment: {
+    userId?: string;
+  };
 };
 
 type LotAssignmentScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
   'ZoneAssignment'
+  // 'InviteUser' // commenting 'inviteuser' breaks the code?
 >;
 
 interface Props {
   navigation: LotAssignmentScreenNavigationProp;
-  route: any;
+  route: {
+    params?: {
+      userId?: string;
+    };
+  };
 }
 
 const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const {
-    assignMemberToSelectedLots,
+    updateZoneAssignmentsForMember,
     deselectAllLots,
-    getUsersInActiveWorkgroupWithRoles,
-  } = ControllerService;
+    selectAllZones,
+    preselectAssignedZonesInWorkgroupForUser,
+    getUserInActiveWorkgroupWithRole,
+    useNeighbourhoodsAndZones,
+    inviteUserToActiveWorkgroup,
+    getTemporaryUserData,
+    setTemporaryUserData,
+  } = useControllerService;
 
-  const { newUser } = route.params;
+  const userId = route.params?.userId;
 
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
+  const [user, setUser] = useState<Partial<UserInterface> | null>(null);
+  const [accessToAllLots, setAccessToAllLots] = useState<boolean>(false);
 
-  // Clear selections when the screen is focused
+  // Get neighbourhoods and zones
+  const neighbourhoods = useNeighbourhoodsAndZones();
+
+  // Get temporary user data
+  const { temporaryUserData, temporaryisNewUser } = getTemporaryUserData();
+
+  const clearTemporaryState = useCallback(() => {
+    setTemporaryUserData(null, false);
+  }, [setTemporaryUserData]);
+
+  // Clear selections when the screen is focused and initialize the user
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      deselectAllLots();
-    });
-    return unsubscribe;
-  }, [navigation, deselectAllLots]);
+    const hasNoTemporaryData = !temporaryisNewUser && !temporaryUserData;
+    const hasNoUserId = !userId;
 
-  // Handler for deselecting lots
-  const handleDeselectLots = useCallback(() => {
-    deselectAllLots();
-  }, [deselectAllLots]);
-
-  // Handler for assigning member
-  const handleAssignMember = () => {
-    if (!selectedUserId) {
-      Alert.alert(
-        'Selecciona un integrante',
-        'Debes seleccionar un integrante.',
-      );
+    if (hasNoTemporaryData && hasNoUserId) {
+      Alert.alert('Error', 'No user data provided.');
+      navigation.goBack();
       return;
     }
-    assignMemberToSelectedLots(selectedUserId);
-    setSelectedUserId(null);
+
     deselectAllLots();
-    Alert.alert('Asignación exitosa', 'Los lotes han sido asignados.');
+    console.log('temporaryisNewUser:', temporaryisNewUser);
+    console.log('temporaryUserData:', temporaryUserData);
+
+    if (temporaryisNewUser && temporaryUserData) {
+      // New user case
+      setUser({
+        userId: undefined, // Will be set upon creation
+        email: temporaryUserData.email,
+        firstName: '',
+        lastName: '',
+        workgroupAssignments: [],
+      });
+      setAccessToAllLots(temporaryUserData.accessToAllLots);
+    } else if (userId) {
+      // Existing user case
+      const existingUser = getUserInActiveWorkgroupWithRole(userId);
+      if (existingUser) {
+        setUser(existingUser);
+        setAccessToAllLots(existingUser.accessToAllLots);
+        // Pre-select zones assigned to the user when it doesnt have access to all zones
+        if (!existingUser.accessToAllLots) {
+          preselectAssignedZonesInWorkgroupForUser(userId);
+        }
+      } else {
+        Alert.alert('Error', 'Usuario no encontrado.');
+        navigation.goBack();
+      }
+    } else {
+      Alert.alert('Error', 'Datos inválidos.');
+      navigation.goBack();
+    }
+
+    // Add `beforeRemove` listener
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      // Detect if navigation is a back action, POP can happen on gestures that indicate navigating back
+      if (e.data.action.type === 'GO_BACK' || e.data.action.type === 'POP') {
+        // Do NOT clear temporary data when navigating back
+        return;
+      }
+
+      // For other actions (e.g., unmount), clear the temporary data
+      clearTemporaryState();
+    });
+
+    return () => {
+      // Cleanup listener when component unmounts
+      unsubscribe();
+    };
+  }, [
+    userId,
+    temporaryUserData,
+    temporaryisNewUser,
+    navigation,
+    deselectAllLots,
+    selectAllZones,
+    getUserInActiveWorkgroupWithRole,
+    preselectAssignedZonesInWorkgroupForUser,
+    setTemporaryUserData,
+    clearTemporaryState,
+  ]);
+
+  // Compute totalZones and selectedZones
+  const { totalZones, selectedZones } = React.useMemo(() => {
+    let total = 0;
+    let selected = 0;
+
+    neighbourhoods.forEach((neighbourhood) => {
+      neighbourhood.zones.forEach((zone) => {
+        total += 1;
+        if (zone.isSelected) {
+          selected += 1;
+        }
+      });
+    });
+
+    return { totalZones: total, selectedZones: selected };
+  }, [neighbourhoods]);
+
+  const handleAccessToAllLotsChange = (value: string | boolean | null) => {
+    if (typeof value === 'boolean') {
+      setAccessToAllLots(value);
+      if (value === true) {
+        // No need to select zones; user has access to all
+      } else if (userId) {
+        // select zones assigned to the user if there is an existant userId
+        preselectAssignedZonesInWorkgroupForUser(userId);
+      } else {
+        deselectAllLots();
+      }
+    } else {
+      console.warn('Invalid value type passed:', value);
+    }
   };
 
-  // Handler for assigning to a new user
-  const handleInviteAndAssignToNewUser = () => {
-    if (!newUser) {
-      Alert.alert('Selecciona un usuario', 'Debes seleccionar un usuario.');
+  // Handler for assigning zones
+  const handleAssignZones = () => {
+    if (!user) {
+      Alert.alert('Error', 'Usuario no válido.');
       return;
     }
-    // Proceed with inviting the user
-    console.log('Inviting user...');
-    const success = ControllerService.inviteUserToActiveWorkgroup(
-      newUser.email,
-      newUser.selectedRole as UserRole,
-      false,
-    );
-    if (success) {
-      assignMemberToSelectedLots(newUser.userId);
-      setSelectedUserId(null);
-      deselectAllLots();
-      Alert.alert('Asignación exitosa', 'Los lotes han sido asignados.');
+
+    if (temporaryisNewUser && temporaryUserData) {
+      // Create the new user now
+      const newUser = inviteUserToActiveWorkgroup(
+        temporaryUserData.email,
+        temporaryUserData.role,
+        accessToAllLots,
+      );
+
+      if (newUser) {
+        if (accessToAllLots) {
+          Alert.alert('Éxito', 'El integrante ha sido invitado.');
+        } else {
+          // Assign zones to the new user using the selection in the store
+          updateZoneAssignmentsForMember(newUser.userId, accessToAllLots);
+          Alert.alert(
+            'Asignación exitosa',
+            'El integrante ha sido invitado y las zonas han sido asignadas.',
+          );
+        }
+      } else {
+        Alert.alert('Error', 'No se pudo crear el usuario.');
+      }
+    } else if (userId) {
+      // Existing user case
+      updateZoneAssignmentsForMember(userId, accessToAllLots);
+
+      Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');
+    } else {
+      Alert.alert('Error', 'Operación inválida.');
     }
     navigation.navigate('MyTeam');
   };
 
-  // Render right-side for one lot
-  const renderRightSideForOneLot = useCallback(() => {
-    return null; // No right-side icon for lots in assignment screen
-  }, []);
-
-  // Render right-side for accordion (zones and neighborhoods)
-  const renderRightSideForAccordion = useCallback(() => {
-    return null; // No right-side icon for accordions in assignment screen
-  }, []);
-
-  // Get team members for the dropdown
-  const teamMembers = getUsersInActiveWorkgroupWithRoles();
-
-  // Function to render the badge or dropdown
-  const renderUserSelection = () => {
-    const selectedUser = teamMembers.find(
-      (user) => user.userId === selectedUserId,
-    );
-
-    return (
-      <View>
-        <TouchableOpacity
-          style={styles.userSelectionTouchable}
-          onPress={() => setDropdownVisible(!dropdownVisible)}
-        >
-          {selectedUser || newUser ? (
-            <View style={styles.badgeContainer}>
-              <Text style={styles.badgeText}>
-                {/* if zones are being selected for a new user or for a selecteduser */}
-                {newUser ? newUser.email : null}
-                {selectedUser
-                  ? `${selectedUser.firstName} ${selectedUser.lastName}`
-                  : null}
-              </Text>
-            </View>
-          ) : (
-            <Text style={styles.dropdownPlaceholderText}>
-              Seleccionar integrante
-            </Text>
-          )}
-          {/* if its a newUser creation then it will not render the icon */}
-          {!newUser && (
-            <Icon
-              name={dropdownVisible ? 'chevron-up' : 'chevron-down'}
-              size={24}
-              color="#000"
-            />
-          )}
-        </TouchableOpacity>
-
-        {/* if there is a newUser then it will not be able to select another option */}
-        {dropdownVisible && !newUser && (
-          <View style={styles.dropdownMenu}>
-            <ScrollView>
-              {teamMembers.map((user) => (
-                <TouchableOpacity
-                  key={user.userId}
-                  style={styles.dropdownItem}
-                  onPress={() => {
-                    setSelectedUserId(user.userId);
-                    setDropdownVisible(false);
-                  }}
-                >
-                  <Text style={styles.dropdownItemText}>
-                    {user.firstName} {user.lastName}
-                  </Text>
-                  {selectedUserId === user.userId && (
-                    <Icon name="check" size={20} color={theme.colors.primary} />
-                  )}
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        )}
-      </View>
-    );
+  const getFullName = () => {
+    const firstName = user?.firstName || '';
+    const lastName = user?.lastName || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+    return fullName === '' ? null : fullName; // Return null if fullName is empty
   };
 
   return (
     <View style={styles.container}>
-      {/* Render the user selection dropdown */}
-      <View style={styles.userSelectionContainer}>{renderUserSelection()}</View>
+      {/* Render the user name and email */}
+      <View style={styles.userInfoAndPickerContainer}>
+        {getFullName() && (
+          <Text style={styles.userFullName}>{getFullName()}</Text>
+        )}
+        <Text
+          style={[
+            styles.userEmail,
+            getFullName() ? null : styles.userEmailIsLarge,
+          ]}
+        >
+          {user?.email}
+        </Text>
 
-      {/* Render the nested lots */}
-      <NestedViewLots
-        handleDeselectLots={handleDeselectLots}
-        renderRightSideForAccordion={renderRightSideForAccordion}
-        renderRightSideForOneLot={renderRightSideForOneLot}
-        title="seleccionar zonas:"
-        onlyZonesAreSelectable={true}
-        expandNeighbourhood={true}
-      />
+        {/* Access to All Lots Zones */}
+        <CustomSelectInput
+          // label="Acceso a zonas"
+          value={accessToAllLots}
+          onValueChange={handleAccessToAllLotsChange}
+          customStyle={styles.accessToAllZonesPickerContainer}
+          items={[
+            {
+              label: 'Solo las seleccionadas (Mayor control)',
+              value: false,
+            },
+            {
+              label: 'Todas las zonas (Más simple)',
+              value: true,
+            },
+          ]}
+        />
+      </View>
+
+      {/* Conditionally render NestedViewLots based on accessToAllLots */}
+      {/* This way, when accessToAllLots is true, the user won't see the list of zones, emphasizing that they have access to all zones. */}
+      {!accessToAllLots && (
+        <NestedViewLots
+          handleDeselectLots={() => null} // since this part of the code is not even rendered, i pass null to avoid turning this prop as optional just to keep it easier to maintain and implement
+          onlyZonesAreSelectable={true}
+          expandNeighbourhood={true}
+          hideLotsCounterAndTitle={true}
+        />
+      )}
 
       {/* Button to assign the selected lots */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={newUser ? handleInviteAndAssignToNewUser : handleAssignMember}
-      >
-        <Text style={styles.buttonText}>Asignar Zonas</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleAssignZones}>
+          <Text style={styles.buttonText}>
+            {temporaryisNewUser ? 'Asignar Zonas' : 'Guardar Cambios'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -210,53 +273,34 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexGrow: 1,
     backgroundColor: 'white',
-  },
-  userSelectionContainer: {
-    padding: 16,
-    backgroundColor: 'white',
-  },
-  userSelectionTouchable: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
   },
-  badgeContainer: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: 12,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
+  userInfoAndPickerContainer: {
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    backgroundColor: 'white',
   },
-  badgeText: {
-    color: 'white',
+  userFullName: {
+    fontSize: 24,
     fontWeight: 'bold',
   },
-  dropdownPlaceholderText: {
-    color: '#999',
+  userEmail: {
     fontSize: 16,
+    fontWeight: 'normal',
+    color: theme.colors.placeholder,
   },
-  dropdownMenu: {
-    marginTop: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    backgroundColor: 'white',
-    maxHeight: 200, // Limit height if you have many team members
+  userEmailIsLarge: {
+    fontSize: 20,
+    color: 'black',
   },
-  dropdownItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  accessToAllZonesPickerContainer: {
+    paddingTop: 16,
   },
-  dropdownItemText: {
-    fontSize: 16,
+  buttonContainer: {
+    // flexGrow: 1,
+    justifyContent: 'flex-end',
   },
   button: {
     backgroundColor: theme.colors.primary,

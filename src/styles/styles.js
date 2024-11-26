@@ -4,21 +4,30 @@ export const theme = {
     primary: '#155E63', //155E63
     secondary: '#059212',
     tertiary: 'green',
+
     green: 'green',
     additional: '#5BB318',
+
     accent: '#00AF91', // 347928
     accent2: '#4D96FF',
     accent3: '#A0E418',
+
     gray: '#515661',
     darkGray: '#16423C',
+
+    // A0A0A0 505050 787878 709090 8B8B8B
+    lightBrown: '#B0A695',
+
+    placeholder: '#606060',
+    disabled: '#f0f0f0',
+    disabledText: '#aaa',
+
+    caution: '#FF6600',
+
     background: '#155E63', // 155E63 36AE7C
     background2: '#EAE7E7',
     background3: '#F5EFE3', // 6BCB77 C1F8CF
     ripple: '#EAE7E7',
-    placeholder: '#606060', // A0A0A0 505050 787878 709090 8B8B8B
-    lightBrown: '#B0A695',
-    disabled: '#f0f0f0',
-    disabledText: '#aaa',
 
     input: {
       requiredLabelText: '#333333', // 606060

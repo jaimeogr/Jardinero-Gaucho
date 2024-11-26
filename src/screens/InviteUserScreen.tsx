@@ -1,62 +1,24 @@
 // src/screens/InviteUserScreen.tsx
 
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Modal,
-  FlatList,
-  Alert,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
-import { Badge } from 'react-native-paper';
-import RNPickerSelect from 'react-native-picker-select';
+import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 
+import CustomSelectInput from '../components/CustomSelectInput';
+import CustomTextInput from '../components/CustomTextInput';
+import RolePicker from '../components/RolePicker';
 import ControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 import { UserRole } from '../types/types';
 
-const RoleDescriptionForRoleCard: React.FC<{ items: string[] }> = ({
-  items,
-}) => (
-  <View>
-    {items.map((item, index) => (
-      <View key={index} style={styles.bulletItem}>
-        <Text style={styles.bullet}>•</Text>
-        <Text style={styles.bulletText}>{item}</Text>
-      </View>
-    ))}
-  </View>
-);
-
-const roles = [
-  {
-    role: 'Owner',
-    title: 'Socio',
-    description: 'Gestión total del equipo.',
-  },
-  {
-    role: 'Manager',
-    title: 'Administrador',
-    description: 'Asigna tareas y supervisa lotes.',
-  },
-  {
-    role: 'Member',
-    title: 'Jardinero',
-    description: 'Realiza tareas asignadas.',
-  },
-];
-
 type RootStackParamList = {
   InviteUser: undefined;
+  ZoneAssignment: { userId?: string };
   // other routes...
 };
+
+type InviteUserScreenRouteProp = RouteProp<RootStackParamList, 'InviteUser'>;
 
 type InviteUserScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -65,21 +27,41 @@ type InviteUserScreenNavigationProp = StackNavigationProp<
 
 interface Props {
   navigation: InviteUserScreenNavigationProp;
+  route: InviteUserScreenRouteProp;
 }
 
 const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
+  const { getTemporaryUserData, setTemporaryUserData } = ControllerService;
+
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
-  const [accessToAllLots, setAccessToAllLots] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [accessToAllLots, setAccessToAllLots] = useState<boolean>(true);
+
+  // Get temporary user data if available
+  const { temporaryUserData } = getTemporaryUserData();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Restore parameters when navigating back
+      if (temporaryUserData?.email) {
+        setEmail(temporaryUserData?.email);
+      }
+      if (temporaryUserData?.role) {
+        setSelectedRole(temporaryUserData?.role);
+      }
+      if (temporaryUserData?.accessToAllLots !== undefined) {
+        setAccessToAllLots(temporaryUserData?.accessToAllLots);
+      }
+    }, [temporaryUserData]), // ESLint will warn about `navigation`, but it can be safely ignored
+  );
 
   const isPickerDisabled =
     selectedRole === 'Owner' || selectedRole === 'Manager';
 
-  const handleRoleSelect = (role: string) => {
+  const handleRolePick = (role: string) => {
     setSelectedRole(role);
-    setModalVisible(false); // Close the modal after selection
     if (isPickerDisabled) {
+      // Owner and Manager roles have access to all lots by default
       setAccessToAllLots(true);
     }
   };
@@ -97,136 +79,71 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
-    // Proceed with inviting the user
-    console.log('Inviting user...');
-    const success = ControllerService.inviteUserToActiveWorkgroup(
-      email,
-      selectedRole as UserRole,
-      accessToAllLots,
-    );
-    if (accessToAllLots) {
-      if (success) {
+    if (accessToAllLots === true) {
+      // Proceed with inviting the user
+      console.log('Inviting user...');
+      const newUser = ControllerService.inviteUserToActiveWorkgroup(
+        email,
+        selectedRole as UserRole,
+        accessToAllLots,
+      );
+      if (newUser) {
         Alert.alert('Éxito', 'El integrante ha sido invitado.');
+        setTemporaryUserData(null, false); // Clear temporary user data
         navigation.goBack();
       }
     } else {
-      // Prepare temporary user data
-      const newUser = {
+      // Save the temporary user data to be used in the next screen
+      const temporaryUserData = {
         email,
-        role: selectedRole,
+        role: selectedRole as UserRole,
+        accessToAllLots,
       };
+      setTemporaryUserData(temporaryUserData, true);
 
-      // Navigate to zone assignment screen
-      navigation.navigate('ZoneAssignment', { newUser });
-    }
-  };
-
-  // Helper function to get descriptions based on role
-  const getRoleDescriptionArray = (role: string): string[] => {
-    switch (role) {
-      case 'Owner':
-        return [
-          'Acceso completo a la plataforma y a la información de pagos.',
-          'Control sobre el equipo (excepto sobre el socio principal).',
-        ];
-      case 'Manager':
-        return [
-          'Gestión y supervisión de lotes.',
-          'Capacidad para invitar a nuevos administradores y jardineros.',
-          'Sin otros derechos.',
-        ];
-      case 'Member':
-        return [
-          'Registra tareas realizadas en las zonas asignados.',
-          'Sin accesos adicionales.',
-        ];
-      default:
-        return ['Descripción no disponible.'];
+      // Navigate to zone assignment screen, passing the new user data to create a new user in the next screen
+      navigation.navigate('ZoneAssignment', {});
     }
   };
 
   return (
     <View style={styles.container}>
       {/* Email Input */}
-      <Text style={styles.inputTitle}>Email</Text>
-      <TextInput
-        style={styles.input}
+      <CustomTextInput
+        label="Email"
         placeholder="Ingresá el email del integrante"
-        placeholderTextColor={theme.colors.placeholder}
         value={email}
         onChangeText={setEmail}
       />
 
       {/* Role Picker */}
-      <Text style={styles.inputTitle}>Rol</Text>
-      <TouchableOpacity
-        style={styles.picker}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text
-          style={[styles.pickerText, selectedRole ? null : styles.placeholder]}
-        >
-          {selectedRole
-            ? roles.find((r) => r.role === selectedRole)?.title
-            : 'Seleccionar Rol'}
-        </Text>
-        <Icon name="chevron-down" size={24} color={theme.colors.primary} />
-      </TouchableOpacity>
+      <RolePicker selectedRole={selectedRole} onSelect={handleRolePick} />
 
       {/* Access to All Lots Picker */}
-      <Text style={styles.inputTitle}>Acceso a zonas</Text>
-      <View
-        style={[
-          styles.pickerContainer,
-          isPickerDisabled ? styles.pickerContainerDisabled : null,
+      <CustomSelectInput
+        label="Acceso a zonas"
+        value={isPickerDisabled ? true : accessToAllLots}
+        isDisabled={isPickerDisabled}
+        onValueChange={(value) => {
+          if (typeof value === 'boolean') {
+            setAccessToAllLots(value); // Handle only boolean values
+          } else {
+            console.warn('Invalid value type passed:', value); // Debugging fallback
+          }
+        }}
+        items={[
+          {
+            label: isPickerDisabled
+              ? 'Todas las zonas'
+              : 'Todas las zonas (Más simple)',
+            value: true,
+          },
+          {
+            label: 'Solo las seleccionadas (Mayor control)',
+            value: false,
+          },
         ]}
-      >
-        <RNPickerSelect
-          onValueChange={(value) => setAccessToAllLots(value)}
-          placeholder={{
-            label: 'Seleccioná una opción...',
-            value: null,
-          }}
-          items={[
-            {
-              label: isPickerDisabled
-                ? 'Todas las zonas'
-                : 'Todas las zonas (Ideal para empezar)',
-              value: true,
-            },
-            {
-              label: 'Solo las seleccionadas (Mayor control)',
-              value: false,
-            },
-          ]}
-          value={accessToAllLots}
-          style={{
-            ...pickerSelectStyles,
-            inputIOS: {
-              ...pickerSelectStyles.inputIOS,
-              opacity: isPickerDisabled ? 0.5 : 1, // Apply opacity directly based on disabled state
-            },
-            inputAndroid: {
-              ...pickerSelectStyles.inputAndroid,
-              opacity: isPickerDisabled ? 0.5 : 1, // Apply opacity directly based on disabled state
-            },
-          }}
-          useNativeAndroidPickerStyle={false}
-          Icon={() => (
-            <Icon
-              name="chevron-down"
-              size={24}
-              color={
-                isPickerDisabled
-                  ? theme.colors.disabledText
-                  : theme.colors.primary
-              } // Adjust icon color
-              style={{ marginRight: 12 }} // Adjust margin if needed
-            />
-          )}
-          disabled={isPickerDisabled}
-        />
-      </View>
+      />
 
       {/* Dynamic CTA Button - Call to Action */}
       <TouchableOpacity
@@ -244,54 +161,6 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
             : 'Invitar Integrante y Seleccionar sus Zonas'}
         </Text>
       </TouchableOpacity>
-
-      {/* Role Selection Modal */}
-
-      <Modal visible={modalVisible} transparent={true} animationType="fade">
-        <TouchableWithoutFeedback
-          onPress={() => setModalVisible(false)} // Close the modal on outside press
-        >
-          <View style={styles.centeredOverlay}>
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-              <View style={styles.centeredModal}>
-                <Text style={styles.rolesModalTitle}>Seleccionar el Rol</Text>
-                <FlatList
-                  data={roles}
-                  keyExtractor={(item) => item.role}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={[
-                        styles.roleCard,
-                        {
-                          borderColor:
-                            theme.colors.roles[item.role] || '#1976D2',
-                        },
-                      ]}
-                      onPress={() => handleRoleSelect(item.role)}
-                    >
-                      <Badge
-                        style={[
-                          styles.roleBadge,
-                          {
-                            backgroundColor:
-                              theme.colors.roles[item.role] || '#1976D2',
-                          },
-                        ]}
-                        size={24}
-                      >
-                        {item.title}
-                      </Badge>
-                      <RoleDescriptionForRoleCard
-                        items={getRoleDescriptionArray(item.role)}
-                      />
-                    </TouchableOpacity>
-                  )}
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
     </View>
   );
 };
@@ -301,42 +170,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',
-  },
-  inputTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 16,
-    fontSize: 16,
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-    marginBottom: 16,
-  },
-  pickerContainerDisabled: {
-    borderColor: theme.colors.disabled,
-    backgroundColor: theme.colors.disabled,
-  },
-  picker: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 16,
-  },
-  pickerText: {
-    fontSize: 16,
   },
   button: {
     backgroundColor: theme.colors.primary,
@@ -361,103 +194,6 @@ const styles = StyleSheet.create({
   secondaryText: {
     color: theme.colors.primary,
   },
-  centeredOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Transparent black background
-    justifyContent: 'center', // Center the content
-    alignItems: 'center', // Align horizontally
-  },
-  centeredModal: {
-    width: '80%', // Width of the modal
-    backgroundColor: '#fff',
-    paddingVertical: 16,
-    paddingHorizontal: 4,
-    borderRadius: 10,
-    elevation: 5, // Shadow effect for Android
-  },
-  rolesModalTitle: {
-    paddingLeft: 16,
-    marginBottom: 10,
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  roleCard: {
-    backgroundColor: '#fff',
-    borderWidth: 3,
-    borderColor: 'lightgray',
-    // paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginVertical: 10,
-    marginHorizontal: 16,
-    borderRadius: 12,
-    elevation: 1,
-  },
-  roleTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  roleBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginLeft: 6,
-    marginBottom: 6,
-  },
-  roleDescription: {
-    fontSize: 14,
-    marginTop: 8,
-    color: 'gray',
-  },
-  bulletItem: {
-    flexDirection: 'row', // Align bullet and text side by side
-    alignItems: 'flex-start', // Align text with top of bullet
-    marginBottom: 6, // Space between items
-    marginHorizontal: 12, // Space from left and right
-  },
-  bullet: {
-    fontSize: 22, // Slightly larger bullet size
-    lineHeight: 16, // Align bullet with text vertically
-    marginRight: 6, // Space between bullet and text
-    marginTop: 4, // Adjust vertical alignment
-    color: '#16423C',
-  },
-  bulletText: {
-    flex: 1, // Allow text to take the remaining space
-    fontSize: 16,
-    lineHeight: 16, // Ensure proper spacing between lines
-    color: '#16423C',
-  },
-  placeholder: {
-    color: theme.colors.placeholder,
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    color: 'black',
-    paddingRight: 30,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    color: 'black',
-    paddingRight: 30,
-  },
-  iconContainer: {
-    top: 12, // Adjust the position
-  },
-});
-
-const pickerSelectDisabledStyles = StyleSheet.create({
-  inputIOS: {},
-  inputAndroid: {},
-  iconContainer: {},
 });
 
 export default InviteUserScreen;

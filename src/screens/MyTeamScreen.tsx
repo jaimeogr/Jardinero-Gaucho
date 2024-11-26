@@ -1,25 +1,24 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useEffect, useState, useMemo } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { Surface, Badge } from 'react-native-paper';
 
 import ControllerService from '../services/useControllerService';
-import useUserStore from '../stores/useUserStore';
 import { theme } from '../styles/styles';
-import { UserInterface, UserRole } from '../types/types';
+import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
 
 type RootStackParamList = {
   MyTeam: undefined;
   InviteUser: undefined;
+  EditUser: { userId: string };
 };
 
 type MyTeamScreenNavigationProp = StackNavigationProp<
@@ -32,19 +31,11 @@ interface Props {
 }
 
 const useUsersWithRoles = () => {
-  const users = useUserStore((state) => state.users); // Subscribes to Zustand store
-  return ControllerService.getUsersInActiveWorkgroupWithRoles();
+  return ControllerService.useUsersInActiveWorkgroupWithRoles();
 };
 
 const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
-  const users: Array<
-    UserInterface & {
-      role: UserRole;
-      accessToAllLots: boolean;
-      hasAcceptedPresenceInWorkgroup: boolean;
-      assignedLotsCount: number;
-    }
-  > = useUsersWithRoles();
+  const users: Array<UserInActiveWorkgroupWithRole> = useUsersWithRoles();
 
   const integrantesCount = users.length;
 
@@ -59,6 +50,41 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
       default:
         return 'Jardinero';
     }
+  };
+
+  const getAccessText = (user: UserInActiveWorkgroupWithRole): string => {
+    // im currently not using the assignedLotsCount because it feels visually overwhelming and it may not bring enough leverage
+    const { accessToAllLots, assignedZonesCount } = user;
+
+    if (accessToAllLots) {
+      return 'Todas las zonas';
+    }
+    if (typeof assignedZonesCount !== 'number' || assignedZonesCount < 0) {
+      return 'Datos de acceso inválidos';
+    }
+    if (assignedZonesCount === 0) {
+      return 'Sin zonas asignadas';
+    }
+    const zoneWord =
+      assignedZonesCount === 1 ? 'zona asignada' : 'zonas asignadas';
+    return `${assignedZonesCount} ${zoneWord}`;
+  };
+
+  const accessTextCautionColor = (
+    user: UserInActiveWorkgroupWithRole,
+  ): boolean => {
+    const { accessToAllLots, assignedZonesCount } = user;
+
+    if (accessToAllLots) {
+      return false;
+    }
+    if (typeof assignedZonesCount !== 'number' || assignedZonesCount < 0) {
+      return true;
+    }
+    if (assignedZonesCount === 0) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -84,19 +110,14 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
         data={users}
         keyExtractor={(item) => item.userId}
         renderItem={({ item }) => {
-          const hasAcceptedPresenceInWorkgroup =
-            !item.hasAcceptedPresenceInWorkgroup;
-          const accessText = item.accessToAllLots
-            ? 'Todas las zonas'
-            : `${item.assignedLotsCount} lotes`;
-
           const roleColor = theme.colors.roles[item.role] || '#1976D2';
 
           return (
             <Surface style={styles.userItem}>
               <View style={styles.userHeader}>
                 <View style={styles.userInfo}>
-                  {hasAcceptedPresenceInWorkgroup ? (
+                  {!item.hasAcceptedPresenceInWorkgroup ? (
+                    // if user has not accepter the invitation yet
                     <>
                       <Text style={styles.userWaitingText}>
                         Esperando que acepte la invitación
@@ -130,10 +151,22 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
               </View>
 
               <View style={styles.userAccess}>
-                <Text style={styles.accessText}>Acceso: {accessText}</Text>
+                <Text
+                  style={[
+                    styles.accessText,
+                    accessTextCautionColor(item) && styles.accessTextCaution,
+                  ]}
+                >
+                  {getAccessText(item)}
+                </Text>
               </View>
 
-              <TouchableOpacity style={styles.editButton}>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() =>
+                  navigation.navigate('EditUser', { userId: item.userId })
+                }
+              >
                 <Icon name="pencil" size={20} color="#1976D2" />
                 <Text style={styles.editButtonText}>Editar</Text>
               </TouchableOpacity>
@@ -196,7 +229,7 @@ const styles = StyleSheet.create({
   },
   usersList: {
     paddingTop: 8,
-    paddingBottom: 60,
+    paddingBottom: 40,
   },
   userItem: {
     margin: 14,
@@ -242,16 +275,19 @@ const styles = StyleSheet.create({
     marginTop: -12,
   },
   userAccess: {
-    marginTop: 28,
+    marginTop: 32,
   },
   accessText: {
     fontSize: 16,
     color: 'gray',
   },
+  accessTextCaution: {
+    color: theme.colors.caution,
+  },
   editButton: {
     position: 'absolute',
     bottom: 12,
-    right: 12,
+    right: 14,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#E3F2FD',

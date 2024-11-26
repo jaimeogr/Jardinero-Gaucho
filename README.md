@@ -24,3 +24,5 @@ Its probably better to code in Ubuntu to have access to Flipper and debug and an
 
 Icons:
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+when debugging, remember you can use 'react-devtools' command on the console to open the HTML inspector.

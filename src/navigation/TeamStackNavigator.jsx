@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 
 // Import your screen components
+import EditUserScreen from '../screens/EditUserScreen';
 import InviteUserScreen from '../screens/InviteUserScreen';
 import MyTeamScreen from '../screens/MyTeamScreen';
 import ZoneAssignmentScreen from '../screens/ZoneAssignmentScreen';
@@ -13,7 +14,7 @@ const TeamStackNavigator = () => {
   return (
     <Stack.Navigator
       style={styles.TeamStackNavigator}
-      initialRouteName="HomeMain"
+      initialRouteName="MyTeam"
     >
       <Stack.Screen
         name="MyTeam"
@@ -29,6 +30,11 @@ const TeamStackNavigator = () => {
         name="ZoneAssignment"
         component={ZoneAssignmentScreen}
         options={{ title: 'Asignar Zonas' }}
+      />
+      <Stack.Screen
+        name="EditUser"
+        component={EditUserScreen}
+        options={{ title: 'Editar Usuario' }}
       />
     </Stack.Navigator>
   );

@@ -11,8 +11,9 @@ import { theme } from '../../styles/styles';
 interface NestedViewLotsProps {
   selectingStateRightSideActions?: React.ReactNode;
   handleDeselectLots: () => void;
-  renderRightSideForAccordion: Function;
-  renderRightSideForOneLot: Function;
+  renderRightSideForAccordion?: Function;
+  renderRightSideForOneLot?: Function;
+  hideLotsCounterAndTitle?: boolean;
   title?: string;
   onlyZonesAreSelectable?: boolean;
   expandNeighbourhood?: boolean;
@@ -21,8 +22,9 @@ interface NestedViewLotsProps {
 const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   selectingStateRightSideActions = null,
   handleDeselectLots,
-  renderRightSideForAccordion,
-  renderRightSideForOneLot,
+  renderRightSideForAccordion = null,
+  renderRightSideForOneLot = null,
+  hideLotsCounterAndTitle = null,
   title = 'Mis lotes',
   onlyZonesAreSelectable = false,
   expandNeighbourhood = false,
@@ -45,9 +47,9 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   return (
     <View style={styles.container}>
       {/* when there are selected lots, it renders the buttons to interact with the selected lots
-      otherwise, it renders the title
+      otherwise, it renders the title. Except if hideLotsCounterAndTitle is true.
       */}
-      {selectedLots ? (
+      {hideLotsCounterAndTitle ? null : selectedLots ? (
         <View style={styles.upperSide}>
           <View style={styles.selectedIndicatorsTextAndButtons}>
             <View style={styles.selectingStateLeftSideCounter}>
@@ -76,6 +78,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {nestedLots.map((neighbourhood, neighbourhoodIndex) => (
+          // neighbourhood level
           <CustomAccordion
             key={neighbourhoodIndex}
             id={neighbourhood.neighbourhoodId}
@@ -88,6 +91,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
             startExpanded={expandNeighbourhood}
           >
             {neighbourhood.zones.map((zone, zoneIndex) => (
+              // Zone level
               <CustomAccordion
                 key={zoneIndex}
                 id={zone.zoneId}
@@ -98,6 +102,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
                 renderRightSide={renderRightSideForAccordion}
               >
                 {zone.lots.map((lot, lotIndex) => (
+                  // Lot level
                   <OneLotForCustomAccordion
                     key={lotIndex}
                     lotId={lot.lotId}
@@ -133,7 +138,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     alignSelf: 'flex-start',
-    paddingTop: 12,
+    paddingTop: 16,
     marginLeft: 24,
     marginBottom: 12,
   },

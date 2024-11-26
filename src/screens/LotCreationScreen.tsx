@@ -1,7 +1,5 @@
 // LotCreationScreen.tsx
 
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,14 +13,14 @@ import {
   Alert,
   TouchableOpacity,
   Modal,
-  Platform,
 } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
-import { v4 as uuidv4 } from 'uuid';
 
-import ControllerService from '../services/useControllerService';
+import CustomDatePickerInput from '../components/CustomDatePickerInput';
+import CustomSelectInput from '../components/CustomSelectInput';
+import CustomTextInput from '../components/CustomTextInput';
+import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { LotInterface, NeighbourhoodData, ZoneData } from '../types/types';
+import { LotInterface } from '../types/types';
 
 type RootStackParamList = {
   LotCreation: undefined;
@@ -54,15 +52,13 @@ const initialLotData = {
 const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const {
     createLot,
-    getNeighbourhoodsAndZones,
+    useNeighbourhoodsAndZones,
     addNeighbourhood,
     addZoneToNeighbourhood,
-  } = ControllerService;
-  const { neighbourhoods } = getNeighbourhoodsAndZones();
+  } = useControllerService;
+  const neighbourhoods = useNeighbourhoodsAndZones();
 
   const [lotData, setLotData] = useState(initialLotData);
-
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [showNeighbourhoodModal, setShowNeighbourhoodModal] = useState(false);
   const [newNeighbourhoodLabel, setNewNeighbourhoodLabel] = useState('');
@@ -174,20 +170,6 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     setNewZoneLabel('');
   };
 
-  // Handle date change
-  const onDateChange = (event, selectedDate?: Date) => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
-      if (event.type === 'set' && selectedDate) {
-        handleInputChange('lastMowingDate', selectedDate);
-      }
-    } else {
-      if (selectedDate) {
-        handleInputChange('lastMowingDate', selectedDate);
-      }
-    }
-  };
-
   // Clear selected date
   const clearDate = () => {
     handleInputChange('lastMowingDate', null);
@@ -263,136 +245,66 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.formContainer}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Neighbourhood Picker */}
-          <Text style={styles.label}>Barrio</Text>
-          <View style={styles.pickerContainer}>
-            <RNPickerSelect
-              onValueChange={handleNeighbourhoodChange}
-              items={neighbourhoodItems}
-              value={lotData.neighbourhoodId}
-              placeholder={{ label: 'Seleccionar Barrio', value: '' }}
-              style={pickerSelectStyles}
-              useNativeAndroidPickerStyle={false}
-            />
-          </View>
+          <CustomSelectInput
+            label="Barrio"
+            value={lotData.neighbourhoodId}
+            items={neighbourhoodItems}
+            onValueChange={(value) => {
+              if (typeof value === 'string') {
+                handleNeighbourhoodChange(value); // Handle only boolean values
+              } else {
+                console.warn('Invalid value type passed:', value); // Debugging fallback
+              }
+            }}
+            placeholder="Seleccionar Barrio"
+            isDisabled={false} // Neighbourhood picker is always enabled
+          />
 
           {/* Zone Picker */}
-          <Text style={styles.label}>Zona</Text>
-          <View
-            style={[
-              styles.pickerContainer,
-              lotData.neighbourhoodId ? {} : styles.disabledPickerContainer,
-            ]}
-          >
-            <RNPickerSelect
-              onValueChange={handleZoneChange}
-              items={zoneItems}
-              value={lotData.zoneId}
-              placeholder={{
-                label: lotData.neighbourhoodId
-                  ? 'Seleccionar Zona'
-                  : 'Selecciona un barrio primero', // Dynamic placeholder
-                value: '',
-              }}
-              style={{
-                ...pickerSelectStyles,
-                inputAndroid: {
-                  ...pickerSelectStyles.inputAndroid,
-                  color: lotData.neighbourhoodId ? 'black' : '#6E6E6E', // Conditional color
-                },
-                inputIOS: {
-                  ...pickerSelectStyles.inputIOS,
-                  color: lotData.neighbourhoodId ? 'black' : '#6E6E6E', // Conditional color for iOS
-                },
-                placeholder: {
-                  color: '#6E6E6E', // Color for placeholder text
-                },
-              }}
-              useNativeAndroidPickerStyle={false}
-              disabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
-            />
-          </View>
+          <CustomSelectInput
+            label="Zona"
+            value={lotData.zoneId}
+            items={zoneItems}
+            onValueChange={(value) => {
+              if (typeof value === 'string') {
+                handleZoneChange(value); // Handle only boolean values
+              } else {
+                console.warn('Invalid value type passed:', value); // Debugging fallback
+              }
+            }}
+            placeholder={
+              lotData.neighbourhoodId
+                ? 'Seleccionar Zona'
+                : 'Selecciona un barrio primero'
+            }
+            isDisabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
+          />
 
           {/* Lot Label Input */}
-          <Text style={styles.label}>Casa</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ingresá la casa"
-            placeholderTextColor={theme.colors.placeholder}
+          <CustomTextInput
+            label="Casa"
             value={lotData.lotLabel}
             onChangeText={(text) => handleInputChange('lotLabel', text)}
+            placeholder="Ingresá la casa"
           />
 
           {/* Last Mowing Date - Date Picker */}
-          <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={[styles.label, styles.labelIsOptional]}>
-              Última Fecha de Corte de Pasto
-            </Text>
-            <Text style={styles.optionalInParentheses}>(opcional)</Text>
-          </View>
-          <View style={styles.dateContainer}>
-            <View style={styles.dateFirstRow}>
-              <TouchableOpacity
-                onPress={() => setShowDatePicker(true)}
-                style={[
-                  styles.input,
-                  styles.inputIsOptional,
-                  styles.datePicker,
-                ]}
-              >
-                <Text
-                  style={[
-                    {
-                      color: lotData.lastMowingDate
-                        ? 'black'
-                        : theme.colors.placeholder,
-                    },
-                    styles.datePickerText,
-                  ]}
-                >
-                  {lotData.lastMowingDate
-                    ? lotData.lastMowingDate.toDateString()
-                    : 'La última fecha de corte de pasto'}
-                </Text>
-                <View style={styles.iconContainer}>
-                  <Icon
-                    name="calendar-range"
-                    size={22}
-                    color="#fff" // White icon color
-                  />
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={clearDate}
-                style={styles.trashIcon}
-                hitSlop={{ top: 5, left: 5, right: 5, bottom: 5 }}
-              >
-                <Icon name="delete" size={28} color="gray" />
-              </TouchableOpacity>
-            </View>
-          </View>
-          {showDatePicker && (
-            <DateTimePicker
-              value={lotData.lastMowingDate || new Date()}
-              mode="date"
-              display="default"
-              onChange={onDateChange}
-            />
-          )}
+          <CustomDatePickerInput
+            label="Última Fecha de Corte de Pasto"
+            value={lotData.lastMowingDate}
+            onChange={(date) => handleInputChange('lastMowingDate', date)}
+            trashAction={clearDate}
+            isOptional={true}
+          />
 
           {/* Extra Notes */}
-          <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={[styles.label, styles.labelIsOptional]}>
-              Notas Adicionales
-            </Text>
-            <Text style={styles.optionalInParentheses}>(opcional)</Text>
-          </View>
-          <TextInput
-            style={[styles.input, styles.inputIsOptional, { height: 80 }]}
-            placeholder="Ingresá notas adicionales.."
-            placeholderTextColor={theme.colors.placeholder}
+          <CustomTextInput
+            label="Notas Adicionales"
             value={lotData.extraNotes}
             onChangeText={(text) => handleInputChange('extraNotes', text)}
-            multiline
+            placeholder="Ingresá notas adicionales.."
+            isOptional={true}
+            multiline={true}
           />
         </ScrollView>
         {/* Linear Gradient Effect */}
@@ -549,73 +461,10 @@ const styles = StyleSheet.create({
   inputIsOptional: {
     borderWidth: 1,
     borderColor: theme.colors.input.optionalFieldBorder,
-    color: theme.colors.placeholder,
   },
   placeholderText: {
     color: theme.colors.placeholder, // Reusable placeholder color
     fontSize: 16,
-  },
-  pickerContainer: {
-    borderWidth: 1.2,
-    borderColor: theme.colors.input.requiredFieldBorder,
-    borderRadius: 10,
-    overflow: 'hidden',
-    marginBottom: 18,
-  },
-  disabledPickerContainer: {
-    backgroundColor: '#E0E0E0', // E0E0E0 f0f0f0
-    borderColor: '#E0E0E0',
-  },
-  dateContainer: {
-    // marginBottom: 20,
-  },
-  dateFirstRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  datePicker: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 0,
-  },
-  datePickerText: {
-    fontSize: 16,
-    padding: 8,
-  },
-  iconContainer: {
-    backgroundColor: '#709090',
-    height: 45,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 8,
-    borderBottomRightRadius: 8,
-    borderTopRightRadius: 8,
-    paddingHorizontal: 14,
-    marginRight: -1,
-  },
-  trashIcon: {
-    marginLeft: 12,
-    padding: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  clearDateButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    // borderWidth: 1,
-    borderColor: '#ffe6e6',
-    borderRadius: 8,
-    backgroundColor: '#f0f0f0',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  clearDateButtonText: {
-    color: 'red',
-    fontSize: 14,
   },
   modalOverlay: {
     flex: 1,
@@ -710,26 +559,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    color: 'black',
-    paddingRight: 30,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    color: 'black',
-    paddingRight: 30,
-  },
-  placeholder: {
-    color: theme.colors.placeholder,
   },
 });
 

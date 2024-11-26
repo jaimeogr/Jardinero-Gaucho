@@ -9,6 +9,7 @@ import {
   ZoneData,
   UserInterface,
   UserInActiveWorkgroupWithRole,
+  TemporaryUserData,
 } from './../types/types';
 import useLotService from './useLotService';
 import useUserService from './useUserService';
@@ -260,6 +261,20 @@ const selectAllZones = (): boolean => {
   return useLotService.selectAllZones(activeWorkgroupId);
 };
 
+const getTemporaryUserData = (): {
+  temporaryUserData: TemporaryUserData | null;
+  temporaryisNewUser: boolean;
+} => {
+  return useUserService.getTemporaryUserData();
+};
+
+const setTemporaryUserData = (
+  userData: TemporaryUserData | null,
+  isNewUser: boolean,
+) => {
+  useUserService.setTemporaryUserData(userData, isNewUser);
+};
+
 export default {
   initializeServices,
   getLotById,
@@ -281,4 +296,6 @@ export default {
   preselectAssignedZonesInWorkgroupForUser,
   updateZoneAssignmentsForMember,
   selectAllZones,
+  getTemporaryUserData,
+  setTemporaryUserData,
 };

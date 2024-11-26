@@ -64,6 +64,14 @@ const getTemporaryUserData = (): {
   return { temporaryUserData, temporaryisNewUser };
 };
 
+const setTemporaryUserData = (
+  userData: TemporaryUserData | null,
+  isNewUser: boolean,
+) => {
+  useUserStore.getState().setTemporaryUserData(userData);
+  useUserStore.getState().setTemporaryIsNewUser(isNewUser);
+};
+
 export default {
   initializeUsers,
   useGetCurrentUser,
@@ -73,4 +81,5 @@ export default {
   updateUser,
   updateUserAccessToAllLots,
   getTemporaryUserData,
+  setTemporaryUserData,
 };

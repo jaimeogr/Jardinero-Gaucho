@@ -1,7 +1,5 @@
 // src/screens/ZoneAssignmentScreen.tsx
 
-import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
-import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
@@ -10,7 +8,7 @@ import CustomSelectInput from '../components/CustomSelectInput';
 import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
 import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
-import { UserInterface, UserRole } from '../types/types';
+import { UserInterface } from '../types/types';
 
 type RootStackParamList = {
   ZoneAssignment: {
@@ -26,7 +24,11 @@ type LotAssignmentScreenNavigationProp = StackNavigationProp<
 
 interface Props {
   navigation: LotAssignmentScreenNavigationProp;
-  route: RouteProp<RootStackParamList, 'ZoneAssignment'>;
+  route: {
+    params?: {
+      userId?: string;
+    };
+  };
 }
 
 const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
@@ -44,7 +46,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
 
   const userId = route.params?.userId;
 
-  const [user, setUser] = useState<UserInterface | null>(null);
+  const [user, setUser] = useState<Partial<UserInterface> | null>(null);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(false);
 
   // Get neighbourhoods and zones
@@ -75,7 +77,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     if (temporaryisNewUser && temporaryUserData) {
       // New user case
       setUser({
-        userId: '', // Will be set upon creation
+        userId: undefined, // Will be set upon creation
         email: temporaryUserData.email,
         firstName: '',
         lastName: '',
@@ -194,7 +196,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       }
     } else if (userId) {
       // Existing user case
-      updateZoneAssignmentsForMember(user.userId, accessToAllLots);
+      updateZoneAssignmentsForMember(userId, accessToAllLots);
 
       Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');
     } else {

@@ -230,6 +230,8 @@ const useUsersInActiveWorkgroupWithRoles =
         return rolePriority[a.role] - rolePriority[b.role];
       });
 
+      console.log(JSON.stringify(usersSortedByRole, null, 2));
+
       return usersSortedByRole;
     }, [activeWorkgroupId, allUsers, assignedZonesByUser, assignedLotsByUser]);
   };

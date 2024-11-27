@@ -57,7 +57,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
     const { accessToAllLots, assignedZonesCount } = user;
 
     if (accessToAllLots) {
-      return 'Todas las zonas';
+      return 'Todas las zonas asignadas';
     }
     if (typeof assignedZonesCount !== 'number' || assignedZonesCount < 0) {
       return 'Datos de acceso inválidos';

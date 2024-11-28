@@ -35,7 +35,7 @@ interface CustomAccordionProps {
   level: number; // Pass the level of accordion (neighbourhood or zone)
   isSelected: boolean;
   isSelectable?: boolean;
-  startExpanded?: boolean;
+  isExpanded?: boolean;
   renderRightSide?: (
     element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface,
   ) => JSX.Element;
@@ -49,14 +49,25 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   level,
   isSelected,
   isSelectable = true,
-  startExpanded = false,
+  isExpanded = false,
   renderRightSide = null,
 }) => {
-  const { toggleZoneSelection, toggleNeighbourhoodSelection } =
-    useControllerService;
-  const [expanded, setExpanded] = useState(startExpanded);
+  const {
+    toggleZoneSelection,
+    toggleNeighbourhoodSelection,
+    toggleNeighbourhoodExpansion,
+    toggleZoneExpansion,
+  } = useControllerService;
 
-  const handleToggle = useCallback(() => {
+  const handleToggleIsExpanded = useCallback(() => {
+    if (level === 0) {
+      toggleNeighbourhoodExpansion(id);
+    } else {
+      toggleZoneExpansion(id);
+    }
+  }, [id, level, toggleNeighbourhoodExpansion, toggleZoneExpansion]);
+
+  const handleToggleIsSelected = useCallback(() => {
     const newState = !isSelected;
     if (level === 0) {
       toggleNeighbourhoodSelection(id, newState);
@@ -86,13 +97,13 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
       ]}
     >
       <TouchableOpacity
-        onPress={() => setExpanded(!expanded)}
+        onPress={() => handleToggleIsExpanded()}
         style={styles.accordionHeader}
       >
         <View style={styles.accordionHeaderLeftSide}>
           {isSelectable && (
             <TouchableOpacity
-              onPress={handleToggle}
+              onPress={handleToggleIsSelected}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
               <MaterialCommunityIcons
@@ -115,13 +126,13 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
         <View style={styles.accordionHeaderRightSide}>
           {renderRightSide && <View>{renderRightSide(element)}</View>}
           <IconButton
-            icon={expanded ? 'chevron-up' : 'chevron-down'}
+            icon={isExpanded ? 'chevron-up' : 'chevron-down'}
             size={28}
           />
         </View>
       </TouchableOpacity>
 
-      {expanded && <View style={styles.accordionContent}>{children}</View>}
+      {isExpanded && <View style={styles.accordionContent}>{children}</View>}
     </View>
   );
 };

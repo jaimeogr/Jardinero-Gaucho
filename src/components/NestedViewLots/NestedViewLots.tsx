@@ -1,12 +1,20 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useCallback, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Text, BackHandler } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  BackHandler,
+  FlatList,
+} from 'react-native';
 import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
 import { useNestedLots } from '../../services/useLotService';
 import { theme } from '../../styles/styles';
+import { NeighbourhoodData, ZoneData } from '../../types/types';
 
 interface NestedViewLotsProps {
   selectingStateRightSideActions?: React.ReactNode;
@@ -44,6 +52,54 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
     return () => backHandler.remove(); // Cleanup the listener when the component unmounts
   }, [handleDeselectLots]);
 
+  const renderNeighbourhood = useCallback(
+    ({ item: neighbourhood }) => {
+      return (
+        <CustomAccordion
+          id={neighbourhood.neighbourhoodId}
+          element={neighbourhood}
+          level={0}
+          title={neighbourhood.neighbourhoodLabel}
+          isSelected={neighbourhood.isSelected}
+          isSelectable={!onlyZonesAreSelectable}
+          isExpanded={neighbourhood.isExpanded}
+          renderRightSide={renderRightSideForAccordion}
+        >
+          {/* Zones */}
+          {neighbourhood.zones.map((zone) => (
+            <CustomAccordion
+              id={zone.zoneId}
+              key={zone.zoneId}
+              level={1}
+              element={zone}
+              title={`Zona ${zone.zoneLabel}`}
+              isSelected={zone.isSelected}
+              isExpanded={zone.isExpanded}
+              renderRightSide={renderRightSideForAccordion}
+            >
+              {/* Lots */}
+              {zone.lots.map((lot) => (
+                <OneLotForCustomAccordion
+                  key={lot.lotId}
+                  lotId={lot.lotId}
+                  isLastItem={false}
+                  isSelectable={!onlyZonesAreSelectable}
+                  renderRightSide={renderRightSideForOneLot}
+                />
+              ))}
+            </CustomAccordion>
+          ))}
+        </CustomAccordion>
+      );
+    },
+    [
+      nestedLots,
+      renderRightSideForAccordion,
+      renderRightSideForOneLot,
+      onlyZonesAreSelectable,
+    ],
+  );
+
   return (
     <View style={styles.container}>
       {/* when there are selected lots, it renders the buttons to interact with the selected lots
@@ -76,46 +132,12 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
         <Text style={styles.title}>{title}</Text>
       )}
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {nestedLots.map((neighbourhood, neighbourhoodIndex) => (
-          // neighbourhood level
-          <CustomAccordion
-            key={neighbourhoodIndex}
-            id={neighbourhood.neighbourhoodId}
-            element={neighbourhood}
-            title={neighbourhood.neighbourhoodLabel}
-            level={0} // Neighbourhood level
-            renderRightSide={renderRightSideForAccordion}
-            isSelected={neighbourhood.isSelected}
-            isSelectable={!onlyZonesAreSelectable}
-            startExpanded={expandNeighbourhood}
-          >
-            {neighbourhood.zones.map((zone, zoneIndex) => (
-              // Zone level
-              <CustomAccordion
-                key={zoneIndex}
-                id={zone.zoneId}
-                element={zone}
-                title={`Zona  ${zone.zoneLabel}`}
-                level={1} // Zone level
-                isSelected={zone.isSelected}
-                renderRightSide={renderRightSideForAccordion}
-              >
-                {zone.lots.map((lot, lotIndex) => (
-                  // Lot level
-                  <OneLotForCustomAccordion
-                    key={lotIndex}
-                    lotId={lot.lotId}
-                    isLastItem={lotIndex === zone.lots.length - 1}
-                    isSelectable={!onlyZonesAreSelectable}
-                    renderRightSide={renderRightSideForOneLot}
-                  />
-                ))}
-              </CustomAccordion>
-            ))}
-          </CustomAccordion>
-        ))}
-      </ScrollView>
+      <FlatList
+        data={nestedLots}
+        keyExtractor={(item) => item.neighbourhoodId}
+        renderItem={renderNeighbourhood}
+        contentContainerStyle={styles.scrollContent}
+      />
       <LinearGradient
         colors={['transparent', 'rgba(255, 255, 255, 0.8)']}
         style={styles.fadeEffect}

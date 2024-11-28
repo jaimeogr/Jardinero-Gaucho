@@ -230,8 +230,6 @@ const useUsersInActiveWorkgroupWithRoles =
         return rolePriority[a.role] - rolePriority[b.role];
       });
 
-      console.log(JSON.stringify(usersSortedByRole, null, 2));
-
       return usersSortedByRole;
     }, [activeWorkgroupId, allUsers, assignedZonesByUser, assignedLotsByUser]);
   };
@@ -312,8 +310,18 @@ const setTemporaryUserData = (
   useUserService.setTemporaryUserData(userData, isNewUser);
 };
 
+const toggleNeighbourhoodExpansion = (neighbourhoodId: string) => {
+  useLotService.toggleNeighbourhoodExpansion(neighbourhoodId);
+};
+
+const toggleZoneExpansion = (zoneId: string) => {
+  useLotService.toggleZoneExpansion(zoneId);
+};
+
 export default {
   initializeServices,
+
+  // Lots, zones, neighbourhoods
   getLotById,
   createLot,
   markLotCompletedForSpecificDate,
@@ -322,17 +330,30 @@ export default {
   useNeighbourhoodsAndZones,
   addZoneToNeighbourhood,
   addNeighbourhood,
+
+  // users, workgroups and zone assignments
   inviteUserToActiveWorkgroup,
   updateUserInActiveWorkgroup,
   getUserInActiveWorkgroupWithRole,
   useUsersInActiveWorkgroupWithRoles,
+  updateZoneAssignmentsForMember,
+
+  // selections
+  deselectAllLots,
+  selectAllZones,
   toggleLotSelection,
   toggleZoneSelection,
   toggleNeighbourhoodSelection,
-  deselectAllLots,
   preselectAssignedZonesInWorkgroupForUser,
-  updateZoneAssignmentsForMember,
-  selectAllZones,
+
+  // temporary user data for navigation purposes
   getTemporaryUserData,
   setTemporaryUserData,
+
+  // Expanded and collapsed accordions
+  toggleZoneExpansion,
+  toggleNeighbourhoodExpansion,
+  collapseAllZones: useLotService.collapseAllZones,
+  expandAllNeighbourhoods: useLotService.expandAllNeighbourhoods,
+  collapseAllNeighbourhoods: useLotService.collapseAllNeighbourhoods,
 };

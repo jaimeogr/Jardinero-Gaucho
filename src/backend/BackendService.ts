@@ -31,6 +31,7 @@ const getNeighbourhoodZoneData = (
         neighbourhoodId,
         neighbourhoodLabel,
         isSelected: false,
+        isExpanded: false,
         assignedTo: [],
         zones: [],
       };
@@ -49,6 +50,7 @@ const getNeighbourhoodZoneData = (
         zoneId,
         zoneLabel,
         isSelected: false,
+        isExpanded: false,
         assignedTo: [],
       });
     }

@@ -210,9 +210,14 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     navigation.navigate('MyTeam');
   };
 
+  const capitalizeFirstLetter = (string: string) => {
+    if (!string) return '';
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   const getFullName = () => {
-    const firstName = user?.firstName || '';
-    const lastName = user?.lastName || '';
+    const firstName = capitalizeFirstLetter(user?.firstName || '');
+    const lastName = capitalizeFirstLetter(user?.lastName || '');
     const fullName = `${firstName} ${lastName}`.trim();
     return fullName === '' ? null : fullName; // Return null if fullName is empty
   };

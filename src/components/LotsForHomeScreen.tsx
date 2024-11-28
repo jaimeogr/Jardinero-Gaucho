@@ -13,8 +13,17 @@ import {
 } from '../types/types';
 
 const LotsForHomeScreen = () => {
-  const { markSelectedLotsCompletedForSpecificDate, deselectAllLots } =
-    useControllerService;
+  const {
+    markSelectedLotsCompletedForSpecificDate,
+    deselectAllLots,
+    collapseAllNeighbourhoods,
+    collapseAllZones,
+  } = useControllerService;
+
+  useEffect(() => {
+    collapseAllNeighbourhoods();
+    collapseAllZones();
+  }, [collapseAllNeighbourhoods, collapseAllZones]);
 
   const handleDeselectLots = useCallback(() => {
     deselectAllLots();

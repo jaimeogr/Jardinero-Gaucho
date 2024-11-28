@@ -42,6 +42,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     inviteUserToActiveWorkgroup,
     getTemporaryUserData,
     setTemporaryUserData,
+    expandAllNeighbourhoods,
   } = useControllerService;
 
   const userId = route.params?.userId;
@@ -59,10 +60,16 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     setTemporaryUserData(null, false);
   }, [setTemporaryUserData]);
 
-  // Clear selections when the screen is focused and initialize the user
   useEffect(() => {
-    const hasNoTemporaryData = !temporaryisNewUser && !temporaryUserData;
-    const hasNoUserId = !userId;
+    // Expand the neighbourhood accordions
+    expandAllNeighbourhoods();
+
+    // Clear selections
+    deselectAllLots();
+
+    // Initialize the user
+    const hasNoTemporaryData = !temporaryisNewUser && !temporaryUserData; // use case 1
+    const hasNoUserId = !userId; // use case 2
 
     if (hasNoTemporaryData && hasNoUserId) {
       Alert.alert('Error', 'No user data provided.');
@@ -70,10 +77,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       return;
     }
 
-    deselectAllLots();
-    console.log('temporaryisNewUser:', temporaryisNewUser);
-    console.log('temporaryUserData:', temporaryUserData);
-
+    // Initialize the user based on the provided data
     if (temporaryisNewUser && temporaryUserData) {
       // New user case
       setUser({
@@ -105,13 +109,13 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
 
     // Add `beforeRemove` listener
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-      // Detect if navigation is a back action, POP can happen on gestures that indicate navigating back
+      // Detect if navigation is a back action or POP, this last one can happen on gestures that indicate navigating back
       if (e.data.action.type === 'GO_BACK' || e.data.action.type === 'POP') {
         // Do NOT clear temporary data when navigating back
         return;
       }
 
-      // For other actions (e.g., unmount), clear the temporary data
+      // clear the temporary data when the component unmounts
       clearTemporaryState();
     });
 
@@ -130,6 +134,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     preselectAssignedZonesInWorkgroupForUser,
     setTemporaryUserData,
     clearTemporaryState,
+    expandAllNeighbourhoods,
   ]);
 
   // Compute totalZones and selectedZones
@@ -253,7 +258,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         <NestedViewLots
           handleDeselectLots={() => null} // since this part of the code is not even rendered, i pass null to avoid turning this prop as optional just to keep it easier to maintain and implement
           onlyZonesAreSelectable={true}
-          expandNeighbourhood={true}
           blockZoneExpansion={true}
           hideLotsCounterAndTitle={true}
         />

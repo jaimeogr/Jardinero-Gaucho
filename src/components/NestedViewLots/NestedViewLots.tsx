@@ -24,7 +24,6 @@ interface NestedViewLotsProps {
   hideLotsCounterAndTitle?: boolean;
   title?: string;
   onlyZonesAreSelectable?: boolean;
-  expandNeighbourhood?: boolean;
   blockZoneExpansion?: boolean;
 }
 
@@ -36,7 +35,6 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   hideLotsCounterAndTitle = null,
   title = 'Mis lotes',
   onlyZonesAreSelectable = false,
-  expandNeighbourhood = false,
   blockZoneExpansion = false,
 }) => {
   const { nestedLots, selectedLots } = useNestedLots();
@@ -100,6 +98,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
       renderRightSideForAccordion,
       renderRightSideForOneLot,
       onlyZonesAreSelectable,
+      blockZoneExpansion,
     ],
   );
 

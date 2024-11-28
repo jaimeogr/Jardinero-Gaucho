@@ -25,6 +25,7 @@ interface NestedViewLotsProps {
   title?: string;
   onlyZonesAreSelectable?: boolean;
   expandNeighbourhood?: boolean;
+  blockZoneExpansion?: boolean;
 }
 
 const NestedViewLots: React.FC<NestedViewLotsProps> = ({
@@ -36,6 +37,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   title = 'Mis lotes',
   onlyZonesAreSelectable = false,
   expandNeighbourhood = false,
+  blockZoneExpansion = false,
 }) => {
   const { nestedLots, selectedLots } = useNestedLots();
 
@@ -75,6 +77,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
               title={`Zona ${zone.zoneLabel}`}
               isSelected={zone.isSelected}
               isExpanded={zone.isExpanded}
+              blockExpansion={blockZoneExpansion}
               renderRightSide={renderRightSideForAccordion}
             >
               {/* Lots */}
@@ -139,7 +142,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
         contentContainerStyle={styles.scrollContent}
       />
       <LinearGradient
-        colors={['transparent', 'rgba(255, 255, 255, 0.8)']}
+        colors={['transparent', 'rgba(255, 255, 255, 0.9)']}
         style={styles.fadeEffect}
       />
     </View>
@@ -195,7 +198,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: 20,
+    height: 36,
     marginRight: 4,
   },
 });

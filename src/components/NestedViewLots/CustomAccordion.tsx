@@ -36,6 +36,7 @@ interface CustomAccordionProps {
   isSelected: boolean;
   isSelectable?: boolean;
   isExpanded?: boolean;
+  blockExpansion?: boolean;
   renderRightSide?: (
     element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface,
   ) => JSX.Element;
@@ -50,6 +51,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   isSelected,
   isSelectable = true,
   isExpanded = false,
+  blockExpansion = false,
   renderRightSide = null,
 }) => {
   const {
@@ -126,13 +128,15 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
         <View style={styles.accordionHeaderRightSide}>
           {renderRightSide && <View>{renderRightSide(element)}</View>}
           <IconButton
-            icon={isExpanded ? 'chevron-up' : 'chevron-down'}
+            icon={isExpanded && !blockExpansion ? 'chevron-up' : 'chevron-down'}
             size={28}
           />
         </View>
       </TouchableOpacity>
 
-      {isExpanded && <View style={styles.accordionContent}>{children}</View>}
+      {isExpanded && !blockExpansion && (
+        <View style={styles.accordionContent}>{children}</View>
+      )}
     </View>
   );
 };

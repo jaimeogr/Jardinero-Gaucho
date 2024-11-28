@@ -254,6 +254,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
           handleDeselectLots={() => null} // since this part of the code is not even rendered, i pass null to avoid turning this prop as optional just to keep it easier to maintain and implement
           onlyZonesAreSelectable={true}
           expandNeighbourhood={true}
+          blockZoneExpansion={true}
           hideLotsCounterAndTitle={true}
         />
       )}

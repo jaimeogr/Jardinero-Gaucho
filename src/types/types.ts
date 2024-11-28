@@ -30,6 +30,7 @@ export interface ZoneWithIndicatorsInterface {
   needMowingCritically: number;
   doesntNeedMowing: number;
   isSelected: boolean;
+  isExpanded: boolean;
   lots: LotWithNeedMowingInterface[];
 }
 
@@ -40,6 +41,7 @@ export interface NeighbourhoodWithIndicatorsInterface {
   needMowingCritically: number;
   doesntNeedMowing: number;
   isSelected: boolean;
+  isExpanded: boolean;
   zones: ZoneWithIndicatorsInterface[];
 }
 
@@ -53,6 +55,7 @@ export interface ZoneData {
   zoneId: string;
   zoneLabel: string;
   isSelected: boolean;
+  isExpanded: boolean;
   assignedTo: string[]; // Users assigned
 }
 
@@ -62,6 +65,7 @@ export interface NeighbourhoodData {
   neighbourhoodLabel: string;
   zones: ZoneData[];
   isSelected: boolean;
+  isExpanded: boolean;
   assignedTo: string[]; // Users assigned
 }
 

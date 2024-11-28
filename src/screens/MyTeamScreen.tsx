@@ -57,7 +57,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
     const { accessToAllLots, assignedZonesCount } = user;
 
     if (accessToAllLots) {
-      return 'Todas las zonas';
+      return 'Todas las zonas asignadas';
     }
     if (typeof assignedZonesCount !== 'number' || assignedZonesCount < 0) {
       return 'Datos de acceso inválidos';
@@ -85,6 +85,18 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
       return true;
     }
     return false;
+  };
+
+  const capitalizeFirstLetter = (string: string) => {
+    if (!string) return '';
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const getFullName = (user: UserInActiveWorkgroupWithRole) => {
+    const firstName = capitalizeFirstLetter(user?.firstName || '');
+    const lastName = capitalizeFirstLetter(user?.lastName || '');
+    const fullName = `${firstName} ${lastName}`.trim();
+    return fullName === '' ? null : fullName; // Return null if fullName is empty
   };
 
   return (
@@ -116,37 +128,41 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
             <Surface style={styles.userItem}>
               <View style={styles.userHeader}>
                 <View style={styles.userInfo}>
-                  {!item.hasAcceptedPresenceInWorkgroup ? (
-                    // if user has not accepter the invitation yet
-                    <>
-                      <Text style={styles.userWaitingText}>
-                        Esperando que acepte la invitación
+                  <View style={styles.userNameAndBadge}>
+                    {item.hasAcceptedPresenceInWorkgroup ? (
+                      <Text
+                        style={styles.userName}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {getFullName(item)}
                       </Text>
-                      <Text style={styles.userEmail}>{item.email}</Text>
-                    </>
-                  ) : (
-                    <>
-                      <View style={styles.userNameAndBadge}>
-                        <Text style={styles.userName}>
-                          {item.firstName.charAt(0).toUpperCase() +
-                            item.firstName.slice(1)}{' '}
-                          {item.lastName.charAt(0).toUpperCase() +
-                            item.lastName.slice(1)}
-                        </Text>
-                        <Badge
-                          style={[
-                            styles.roleBadge,
-                            { backgroundColor: roleColor },
-                          ]}
-                          size={24}
-                        >
-                          {getRoleBadgeText(item.role)}
-                        </Badge>
-                      </View>
+                    ) : (
+                      // if user has not accepted the invitation yet
+                      <Text
+                        style={styles.userWaitingText}
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                      >
+                        Invitación enviada al mail
+                      </Text>
+                    )}
 
-                      <Text style={styles.userEmail}>{item.email}</Text>
-                    </>
-                  )}
+                    <Badge
+                      style={[styles.roleBadge, { backgroundColor: roleColor }]}
+                      size={24}
+                    >
+                      {getRoleBadgeText(item.role)}
+                    </Badge>
+                  </View>
+
+                  <Text
+                    style={styles.userEmail}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {item.email}
+                  </Text>
                 </View>
               </View>
 
@@ -250,15 +266,18 @@ const styles = StyleSheet.create({
   },
   userNameAndBadge: {
     flexDirection: 'row',
-    // alignItems: 'flex-start',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    // justifyContent: 'space-between',
   },
   userName: {
+    flex: 1,
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 4,
+    marginRight: 8,
   },
   userWaitingText: {
+    flex: 1,
     fontSize: 18,
     color: 'gray',
     fontWeight: 'bold',

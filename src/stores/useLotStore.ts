@@ -11,11 +11,16 @@ import {
 interface LotStoreState {
   lots: LotInterface[];
   neighbourhoodZoneData: NeighbourhoodZoneData;
+
   initializeLots: (lots: LotInterface[]) => void;
   initializeNeighbourhoodsAndZones: (data: NeighbourhoodZoneData) => void;
+
   addLot: (newLot: LotInterface) => void;
   addNeighbourhood: (neighbourhood: NeighbourhoodData) => NeighbourhoodData;
   addZoneToNeighbourhood: (neighbourhoodId: string, zone: ZoneData) => ZoneData;
+  updateLotLastMowingDate: (lotId: string, date: Date) => void;
+  updateLot: (lotId: string, updatedInfo: Partial<LotInterface>) => void;
+
   deselectAllLots: () => void;
   toggleLotSelection: (lotId: string, newState: boolean) => void;
   toggleZoneSelection: (zoneId: string, newState: boolean) => void;
@@ -23,8 +28,12 @@ interface LotStoreState {
     neighbourhoodId: string,
     newState: boolean,
   ) => void;
-  updateLotLastMowingDate: (lotId: string, date: Date) => void;
-  updateLot: (lotId: string, updatedInfo: Partial<LotInterface>) => void;
+
+  toggleNeighbourhoodExpansion: (neighbourhoodId: string) => void;
+  expandAllNeighbourhoods: () => void;
+  collapseAllNeighbourhoods: () => void;
+  toggleZoneExpansion: (zoneId: string) => void;
+  collapseAllZones: () => void;
 }
 
 // I believe my code would be much simpler if instead of having objects of zonedata and neighbourhoodData, i just had them as separate arrays. but its almost working perfectly so i can do with that for now.
@@ -160,6 +169,77 @@ const useLotStore = create<LotStoreState>((set, get) => ({
       lots: state.lots.map((lot) =>
         lot.lotId === lotId ? { ...lot, ...updatedInfo } : lot,
       ),
+    }));
+  },
+
+  // Toggle neighbourhood expansion
+  toggleNeighbourhoodExpansion: (neighbourhoodId: string) => {
+    set((state) => ({
+      neighbourhoodZoneData: {
+        ...state.neighbourhoodZoneData,
+        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) =>
+          n.neighbourhoodId === neighbourhoodId
+            ? { ...n, isExpanded: !n.isExpanded }
+            : n,
+        ),
+      },
+    }));
+  },
+
+  // Expand all neighbourhoods
+  expandAllNeighbourhoods: () => {
+    set((state) => ({
+      neighbourhoodZoneData: {
+        ...state.neighbourhoodZoneData,
+        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
+          ...n,
+          isExpanded: true,
+        })),
+      },
+    }));
+  },
+
+  // Collapse all neighbourhoods
+  collapseAllNeighbourhoods: () => {
+    set((state) => ({
+      neighbourhoodZoneData: {
+        ...state.neighbourhoodZoneData,
+        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
+          ...n,
+          isExpanded: false,
+        })),
+      },
+    }));
+  },
+
+  // Toggle zone expansion
+  toggleZoneExpansion: (zoneId: string) => {
+    set((state) => ({
+      neighbourhoodZoneData: {
+        ...state.neighbourhoodZoneData,
+        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
+          ...n,
+          zones: n.zones.map((z) =>
+            z.zoneId === zoneId ? { ...z, isExpanded: !z.isExpanded } : z,
+          ),
+        })),
+      },
+    }));
+  },
+
+  // Collapse all zones
+  collapseAllZones: () => {
+    set((state) => ({
+      neighbourhoodZoneData: {
+        ...state.neighbourhoodZoneData,
+        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
+          ...n,
+          zones: n.zones.map((z) => ({
+            ...z,
+            isExpanded: false,
+          })),
+        })),
+      },
     }));
   },
 }));

@@ -31,6 +31,7 @@ const getNeighbourhoodZoneData = (
         neighbourhoodId,
         neighbourhoodLabel,
         isSelected: false,
+        isExpanded: false,
         assignedTo: [],
         zones: [],
       };
@@ -49,6 +50,7 @@ const getNeighbourhoodZoneData = (
         zoneId,
         zoneLabel,
         isSelected: false,
+        isExpanded: false,
         assignedTo: [],
       });
     }
@@ -332,9 +334,9 @@ const currentUser: UserInterface = {
 const usersFromAllMyWorkgroups: UserInterface[] = [
   {
     userId: '1',
-    firstName: 'jefe',
-    lastName: 'jefe',
-    email: 'cajardineria@gmail.com',
+    firstName: 'Don',
+    lastName: 'Corleoneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+    email: 'cajardineria@gmail.commmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
     workgroupAssignments: [
       {
         workgroupId: '1',

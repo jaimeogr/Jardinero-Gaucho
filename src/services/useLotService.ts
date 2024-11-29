@@ -149,7 +149,7 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
   return true;
 };
 
-export const useNestedLots = (
+const useNestedLots = (
   screen: string,
   workgroupId: string,
 ): NestedLotsWithIndicatorsInterface => {

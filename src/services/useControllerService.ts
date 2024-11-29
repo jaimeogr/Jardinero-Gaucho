@@ -326,10 +326,18 @@ const toggleZoneExpansion = (zoneId: string) => {
   useLotService.toggleZoneExpansion(zoneId);
 };
 
+const useNestedLots = (screen: string) => {
+  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
+  if (!activeWorkgroupId) return null;
+
+  return useLotService.useNestedLots(screen, activeWorkgroupId);
+};
+
 export default {
   initializeServices,
 
   // Lots, zones, neighbourhoods
+  useNestedLots,
   getLotById,
   createLot,
   markLotCompletedForSpecificDate,

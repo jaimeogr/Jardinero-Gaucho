@@ -35,7 +35,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const {
     updateZoneAssignmentsForMember,
     deselectAllLots,
-    selectAllZones,
     preselectAssignedZonesInWorkgroupForUser,
     getUserInActiveWorkgroupWithRole,
     useNeighbourhoodsAndZones,
@@ -129,7 +128,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     temporaryisNewUser,
     navigation,
     deselectAllLots,
-    selectAllZones,
     getUserInActiveWorkgroupWithRole,
     preselectAssignedZonesInWorkgroupForUser,
     setTemporaryUserData,

@@ -234,35 +234,49 @@ const useUsersInActiveWorkgroupWithRoles =
     }, [activeWorkgroupId, allUsers, assignedZonesByUser, assignedLotsByUser]);
   };
 
-const toggleLotSelection = (lotId: string, newState: boolean) => {
-  useLotService.toggleLotSelection(lotId, newState);
+const toggleLotSelection = (
+  screen: string,
+  lotId: string,
+  newState: boolean,
+) => {
+  useLotService.toggleLotSelection(screen, lotId, newState);
 };
 
-const toggleZoneSelection = (zoneId: string, newState: boolean) => {
-  useLotService.toggleZoneSelection(zoneId, newState);
+const toggleZoneSelection = (
+  screen: string,
+  zoneId: string,
+  newState: boolean,
+) => {
+  useLotService.toggleZoneSelection(screen, zoneId, newState);
 };
 
 const toggleNeighbourhoodSelection = (
+  screen: string,
   neighbourhoodId: string,
   newState: boolean,
 ) => {
-  useLotService.toggleNeighbourhoodSelection(neighbourhoodId, newState);
+  useLotService.toggleNeighbourhoodSelection(screen, neighbourhoodId, newState);
 };
 
-const deselectAllLots = () => {
-  useLotService.deselectAllLots();
+const deselectAllLots = (screen: string) => {
+  useLotService.deselectAllLots(screen);
 };
 
-const preselectAssignedZonesInWorkgroupForUser = (userId: string) => {
+const preselectAssignedZonesInWorkgroupForUser = (
+  screen: string,
+  userId: string,
+) => {
   const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
   if (!activeWorkgroupId) return null;
   useLotService.preselectAssignedZonesInWorkgroupForUser(
+    screen,
     userId,
     activeWorkgroupId,
   );
 };
 
 const updateZoneAssignmentsForMember = (
+  screen: string,
   userId: string,
   accessToAllLots: boolean,
 ) => {
@@ -287,13 +301,7 @@ const updateZoneAssignmentsForMember = (
       activeWorkgroupId,
     );
   }
-  deselectAllLots();
-};
-
-const selectAllZones = (): boolean => {
-  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-  if (!activeWorkgroupId) return false;
-  return useLotService.selectAllZones(activeWorkgroupId);
+  deselectAllLots(screen);
 };
 
 const getTemporaryUserData = (): {
@@ -340,7 +348,6 @@ export default {
 
   // selections
   deselectAllLots,
-  selectAllZones,
   toggleLotSelection,
   toggleZoneSelection,
   toggleNeighbourhoodSelection,

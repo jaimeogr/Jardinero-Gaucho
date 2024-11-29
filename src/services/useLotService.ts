@@ -149,7 +149,10 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
   return true;
 };
 
-export const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
+export const useNestedLots = (
+  screen: string,
+  workgroupId: string,
+): NestedLotsWithIndicatorsInterface => {
   // This function would change if i change the data structures into having lots as nested objects inside NeighbourhoodZoneData on the store.
   const lots = useLotStore((state) => state.lots);
   const neighbourhoodZoneData = useLotStore(
@@ -161,39 +164,41 @@ export const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
       nestedLots: [],
       selectedLots: 0,
     };
-    let selectedLotsCounter = 0;
 
-    // Group lots by neighbourhood and zone
-    const lotsByNeighbourhoodAndZone = lots.reduce(
-      (acc, lot) => {
-        const { neighbourhoodId, zoneId } = lot;
+    let workgroupSelectedLotsCounter = 0;
 
-        if (!acc[neighbourhoodId]) {
-          acc[neighbourhoodId] = {};
-        }
+    // Filter lots by workgroup and Group lots by neighbourhood and zone
+    const lotsByNeighbourhoodAndZone = lots
+      .filter((lot) => lot.workgroupId === workgroupId)
+      .reduce(
+        (acc, lot) => {
+          const { neighbourhoodId, zoneId } = lot;
 
-        if (!acc[neighbourhoodId][zoneId]) {
-          acc[neighbourhoodId][zoneId] = [];
-        }
+          if (!acc[neighbourhoodId]) {
+            acc[neighbourhoodId] = {};
+          }
 
-        acc[neighbourhoodId][zoneId].push(lot);
-        return acc;
-      },
-      {} as Record<string, Record<string, LotInterface[]>>,
-    );
+          if (!acc[neighbourhoodId][zoneId]) {
+            acc[neighbourhoodId][zoneId] = [];
+          }
+
+          acc[neighbourhoodId][zoneId].push(lot);
+          return acc;
+        },
+        {} as Record<string, Record<string, LotInterface[]>>,
+      );
 
     // Iterate over each neighbourhood
     for (const neighbourhoodId in lotsByNeighbourhoodAndZone) {
-      // Get neighbourhood data from neighbourhoodZoneData to check if the neighbourhood is expanded, and later to check if the zone is expanded
-      const neighbourhoodData = neighbourhoodZoneData.neighbourhoods.find(
-        (n) => n.neighbourhoodId === neighbourhoodId,
-      );
-      const neighbourhoodIsExpanded = neighbourhoodData?.isExpanded || false;
+      // Get neighbourhoodData from neighbourhoodZoneData to get this variables: isNeighbouhoodExpanded, isZoneExpanded, zoneData
+      const neighbourhoodData = neighbourhoodZoneData.neighbourhoods
+        .filter((neighbourhood) => neighbourhood.workgroupId === workgroupId)
+        .find((n) => n.neighbourhoodId === neighbourhoodId);
 
+      // Initialize counters to assess mowing requirements
       let neighbourhoodNeedMowingCritically = 0;
       let neighbourhoodNeedMowing = 0;
       let neighbourhoodDoesntNeedMowing = 0;
-      const neighbourhoodLabel = neighbourhoodData?.neighbourhoodLabel || '';
       let neighbourhoodSelectedLotsCounter = 0;
       let neighbourhoodAllLotsCounter = 0;
 
@@ -203,12 +208,10 @@ export const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
       for (const zoneId in lotsByNeighbourhoodAndZone[neighbourhoodId]) {
         const lotsInZone = lotsByNeighbourhoodAndZone[neighbourhoodId][zoneId];
 
+        // Initialize counters to assess mowing requirements
         let zoneNeedMowingCritically = 0;
         let zoneNeedMowing = 0;
         let zoneDoesntNeedMowing = 0;
-        const zoneLabel =
-          neighbourhoodData?.zones.find((z) => z.zoneId === zoneId)
-            ?.zoneLabel || '';
         let zoneSelectedLotsCounter = 0;
 
         // Iterate over each lot within the zone
@@ -246,7 +249,13 @@ export const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
         const zoneData = neighbourhoodData?.zones.find(
           (z) => z.zoneId === zoneId,
         );
-        const zoneIsExpanded = zoneData?.isExpanded || false;
+
+        // Check if all lots in the zone are selected, then toggle the zone accordingly (selected or not)
+        const isZoneSelected = zoneSelectedLotsCounter == lotsInZone.length;
+        toggleZoneSelection(screen, zoneId, isZoneSelected);
+
+        const zoneLabel = zoneData?.zoneLabel || '';
+        const isZoneExpanded = zoneData?.isExpanded || false;
 
         const zoneOption: ZoneWithIndicatorsInterface = {
           zoneId: zoneId,
@@ -254,13 +263,25 @@ export const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
           needMowing: zoneNeedMowing,
           needMowingCritically: zoneNeedMowingCritically,
           doesntNeedMowing: zoneDoesntNeedMowing,
-          isSelected: zoneSelectedLotsCounter == lotsInZone.length, // If all lots for the zone are selected, the zone is selected
-          isExpanded: zoneIsExpanded,
+          isSelected: isZoneSelected, // If all lots for the zone are selected, the zone is selected
+          isExpanded: isZoneExpanded,
           lots,
         };
 
         zones.push(zoneOption);
       }
+
+      // Check if all lots in the neighbourhood are selected, then toggle the neighbourhood accordingly (selected or not)
+      const isNeighbourhoodSelected =
+        neighbourhoodSelectedLotsCounter == neighbourhoodAllLotsCounter;
+      toggleNeighbourhoodSelection(
+        screen,
+        neighbourhoodId,
+        isNeighbourhoodSelected,
+      );
+
+      const neighbourhoodLabel = neighbourhoodData?.neighbourhoodLabel || '';
+      const isNeighbourhoodExpanded = neighbourhoodData?.isExpanded || false;
 
       const neighbourhoodOption: NeighbourhoodWithIndicatorsInterface = {
         neighbourhoodId: neighbourhoodId,
@@ -268,23 +289,26 @@ export const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
         needMowing: neighbourhoodNeedMowing,
         needMowingCritically: neighbourhoodNeedMowingCritically,
         doesntNeedMowing: neighbourhoodDoesntNeedMowing,
-        isSelected:
-          neighbourhoodSelectedLotsCounter == neighbourhoodAllLotsCounter, // if all lots in a neighbourhood are selected, then the neighbourhood is selected
-        isExpanded: neighbourhoodIsExpanded,
+        isSelected: isNeighbourhoodSelected, // if all lots in a neighbourhood are selected, then the neighbourhood is selected
+        isExpanded: isNeighbourhoodExpanded,
         zones,
       };
 
-      selectedLotsCounter += neighbourhoodSelectedLotsCounter;
+      workgroupSelectedLotsCounter += neighbourhoodSelectedLotsCounter;
 
       result.nestedLots.push(neighbourhoodOption);
     }
-    result.selectedLots = selectedLotsCounter;
+    result.selectedLots = workgroupSelectedLotsCounter;
     return result;
-  }, [lots, neighbourhoodZoneData]);
+  }, [screen, workgroupId, lots, neighbourhoodZoneData]);
 };
 
-const toggleLotSelection = (lotId: string, newState: boolean) => {
-  useLotStore.getState().toggleLotSelection(lotId, newState);
+const toggleLotSelection = (
+  screen: string,
+  lotId: string,
+  newState: boolean,
+) => {
+  useLotStore.getState().toggleLotSelection(screen, lotId, newState);
 };
 
 const getZonesAssignedToUserInWorkgroup = (
@@ -307,45 +331,38 @@ const getZonesAssignedToUserInWorkgroup = (
   return assignedZones;
 };
 
-const toggleZoneSelection = (zoneId: string, newState: boolean) => {
-  useLotStore.getState().toggleZoneSelection(zoneId, newState);
+const toggleZoneSelection = (
+  screen: string,
+  zoneId: string,
+  newState: boolean,
+) => {
+  useLotStore.getState().toggleZoneSelection(screen, zoneId, newState);
 };
 
 const preselectAssignedZonesInWorkgroupForUser = (
+  screen: string,
   userId: string,
   workgroupId: string,
 ) => {
-  deselectAllLots();
+  deselectAllLots(screen);
   const assignedZones = getZonesAssignedToUserInWorkgroup(userId, workgroupId);
   assignedZones.forEach((zoneId) => {
-    toggleZoneSelection(zoneId, true);
+    toggleZoneSelection(screen, zoneId, true);
   });
 };
 
 const toggleNeighbourhoodSelection = (
+  screen: string,
   neighbourhoodId: string,
   newState: boolean,
 ) => {
   useLotStore
     .getState()
-    .toggleNeighbourhoodSelection(neighbourhoodId, newState);
+    .toggleNeighbourhoodSelection(screen, neighbourhoodId, newState);
 };
 
-const deselectAllLots = () => {
-  useLotStore.getState().deselectAllLots();
-};
-
-const selectAllZones = (activeWorkgroupId: string) => {
-  const { neighbourhoodZoneData } = useLotStore.getState();
-  const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
-    (n) => n.workgroupId === activeWorkgroupId,
-  );
-  neighbourhoods.forEach((neighbourhood) => {
-    neighbourhood.zones.forEach((zone) => {
-      toggleZoneSelection(zone.zoneId, true);
-    });
-  });
-  return true;
+const deselectAllLots = (screen: string) => {
+  useLotStore.getState().deselectAllLots(screen);
 };
 
 const clearZoneAssignmentsForMemberInWorkgroup = (
@@ -567,7 +584,6 @@ export default {
   toggleNeighbourhoodSelection,
   preselectAssignedZonesInWorkgroupForUser,
   deselectAllLots,
-  selectAllZones,
 
   // zone assignments
   clearZoneAssignmentsForMemberInWorkgroup,

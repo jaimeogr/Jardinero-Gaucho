@@ -12,6 +12,8 @@ import {
   NeighbourhoodWithIndicatorsInterface,
 } from '../types/types';
 
+const screenCodeForGlobalState = 'HomeScreen';
+
 const LotsForHomeScreen = () => {
   const {
     markSelectedLotsCompletedForSpecificDate,
@@ -26,7 +28,7 @@ const LotsForHomeScreen = () => {
   }, [collapseAllNeighbourhoods, collapseAllZones]);
 
   const handleDeselectLots = useCallback(() => {
-    deselectAllLots();
+    deselectAllLots(screenCodeForGlobalState);
   }, [deselectAllLots]);
 
   const handleMarkLotsCompleted = () => {
@@ -123,6 +125,7 @@ const LotsForHomeScreen = () => {
     <Surface style={styles.surface}>
       <View style={styles.content}>
         <NestedViewLots
+          screen={screenCodeForGlobalState}
           selectingStateRightSideActions={selectingStateRightSideActions}
           handleDeselectLots={handleDeselectLots}
           renderRightSideForAccordion={renderRightSideForAccordion}

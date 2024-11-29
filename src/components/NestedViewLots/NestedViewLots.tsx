@@ -12,32 +12,44 @@ import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import { useNestedLots } from '../../services/useLotService';
+import useControllerService from '../../services/useControllerService';
 import { theme } from '../../styles/styles';
-import { NeighbourhoodData, ZoneData } from '../../types/types';
+import {
+  NeighbourhoodData,
+  ZoneData,
+  NestedLotsWithIndicatorsInterface,
+} from '../../types/types';
 
 interface NestedViewLotsProps {
-  selectingStateRightSideActions?: React.ReactNode;
+  title?: string;
+  screen: string;
   handleDeselectLots: () => void;
+  selectingStateRightSideActions?: React.ReactNode;
   renderRightSideForAccordion?: Function;
   renderRightSideForOneLot?: Function;
   hideLotsCounterAndTitle?: boolean;
-  title?: string;
   onlyZonesAreSelectable?: boolean;
   blockZoneExpansion?: boolean;
 }
 
 const NestedViewLots: React.FC<NestedViewLotsProps> = ({
-  selectingStateRightSideActions = null,
+  screen,
+  title = 'Mis lotes',
   handleDeselectLots,
+  selectingStateRightSideActions = null,
   renderRightSideForAccordion = null,
   renderRightSideForOneLot = null,
   hideLotsCounterAndTitle = null,
-  title = 'Mis lotes',
   onlyZonesAreSelectable = false,
   blockZoneExpansion = false,
 }) => {
-  const { nestedLots, selectedLots } = useNestedLots();
+  const nestedLotsWithIndicatorsInterface: NestedLotsWithIndicatorsInterface | null =
+    useControllerService.useNestedLots(screen);
+
+  const { nestedLots, selectedLots } = nestedLotsWithIndicatorsInterface ?? {
+    nestedLots: [],
+    selectedLots: 0,
+  };
 
   // this will handle the Native OS back button press event
   useEffect(() => {
@@ -94,13 +106,21 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
       );
     },
     [
-      nestedLots,
+      nestedLotsWithIndicatorsInterface,
       renderRightSideForAccordion,
       renderRightSideForOneLot,
       onlyZonesAreSelectable,
       blockZoneExpansion,
     ],
   );
+
+  if (nestedLotsWithIndicatorsInterface === null) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Contenido no disponible</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

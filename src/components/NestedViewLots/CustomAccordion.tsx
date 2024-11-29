@@ -36,6 +36,7 @@ interface CustomAccordionProps {
   isSelected: boolean;
   isSelectable?: boolean;
   isExpanded?: boolean;
+  screen: string;
   blockExpansion?: boolean;
   renderRightSide?: (
     element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface,
@@ -51,6 +52,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   isSelected,
   isSelectable = true,
   isExpanded = false,
+  screen,
   blockExpansion = false,
   renderRightSide = null,
 }) => {
@@ -72,13 +74,14 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   const handleToggleIsSelected = useCallback(() => {
     const newState = !isSelected;
     if (level === 0) {
-      toggleNeighbourhoodSelection(id, newState);
+      toggleNeighbourhoodSelection(screen, id, newState);
     } else {
-      toggleZoneSelection(id, newState);
+      toggleZoneSelection(screen, id, newState);
     }
   }, [
     id,
     isSelected,
+    screen,
     level,
     toggleZoneSelection,
     toggleNeighbourhoodSelection,

@@ -10,6 +10,8 @@ import useControllerService from '../services/useControllerService';
 import { theme } from '../styles/styles';
 import { UserInterface } from '../types/types';
 
+const screenCodeForGlobalState = 'zoneAssignmentScreen';
+
 type RootStackParamList = {
   ZoneAssignment: {
     userId?: string;
@@ -64,7 +66,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     expandAllNeighbourhoods();
 
     // Clear selections
-    deselectAllLots();
+    deselectAllLots(screenCodeForGlobalState);
 
     // Initialize the user
     const hasNoTemporaryData = !temporaryisNewUser && !temporaryUserData; // use case 1
@@ -95,7 +97,10 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         setAccessToAllLots(existingUser.accessToAllLots);
         // Pre-select zones assigned to the user when it doesnt have access to all zones
         if (!existingUser.accessToAllLots) {
-          preselectAssignedZonesInWorkgroupForUser(userId);
+          preselectAssignedZonesInWorkgroupForUser(
+            screenCodeForGlobalState,
+            userId,
+          );
         }
       } else {
         Alert.alert('Error', 'Usuario no encontrado.');
@@ -159,9 +164,12 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         // No need to select zones; user has access to all
       } else if (userId) {
         // select zones assigned to the user if there is an existant userId
-        preselectAssignedZonesInWorkgroupForUser(userId);
+        preselectAssignedZonesInWorkgroupForUser(
+          screenCodeForGlobalState,
+          userId,
+        );
       } else {
-        deselectAllLots();
+        deselectAllLots(screenCodeForGlobalState);
       }
     } else {
       console.warn('Invalid value type passed:', value);
@@ -188,7 +196,11 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
           Alert.alert('Éxito', 'El integrante ha sido invitado.');
         } else {
           // Assign zones to the new user using the selection in the store
-          updateZoneAssignmentsForMember(newUser.userId, accessToAllLots);
+          updateZoneAssignmentsForMember(
+            screenCodeForGlobalState,
+            newUser.userId,
+            accessToAllLots,
+          );
           Alert.alert(
             'Asignación exitosa',
             'El integrante ha sido invitado y las zonas han sido asignadas.',
@@ -199,7 +211,11 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       }
     } else if (userId) {
       // Existing user case
-      updateZoneAssignmentsForMember(userId, accessToAllLots);
+      updateZoneAssignmentsForMember(
+        screenCodeForGlobalState,
+        userId,
+        accessToAllLots,
+      );
 
       Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');
     } else {
@@ -259,6 +275,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       {/* This way, when accessToAllLots is true, the user won't see the list of zones, emphasizing that they have access to all zones. */}
       {!accessToAllLots && (
         <NestedViewLots
+          screen={screenCodeForGlobalState}
           handleDeselectLots={() => null} // since this part of the code is not even rendered, i pass null to avoid turning this prop as optional just to keep it easier to maintain and implement
           onlyZonesAreSelectable={true}
           blockZoneExpansion={true}

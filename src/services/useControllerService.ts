@@ -11,6 +11,7 @@ import {
   UserInterface,
   UserInActiveWorkgroupWithRole,
   TemporaryUserData,
+  NestedLotsWithIndicatorsInterface,
 } from './../types/types';
 import useLotService from './useLotService';
 import useUserService from './useUserService';
@@ -326,10 +327,13 @@ const toggleZoneExpansion = (zoneId: string) => {
   useLotService.toggleZoneExpansion(zoneId);
 };
 
-const useNestedLots = (screen: string) => {
+const useNestedLots = (
+  screen: string,
+): NestedLotsWithIndicatorsInterface | null => {
   const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
   if (!activeWorkgroupId) return null;
 
+  console.log('useNestedLots', screen, activeWorkgroupId);
   return useLotService.useNestedLots(screen, activeWorkgroupId);
 };
 

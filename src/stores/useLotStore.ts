@@ -8,9 +8,18 @@ import {
   ZoneData,
 } from '../types/types';
 
+interface SelectionState {
+  selectedLots: string[];
+  selectedZones: string[];
+  selectedNeighbourhoods: string[];
+}
+
 interface LotStoreState {
   lots: LotInterface[];
   neighbourhoodZoneData: NeighbourhoodZoneData;
+  selectionState: {
+    [screen: string]: SelectionState;
+  };
 
   initializeLots: (lots: LotInterface[]) => void;
   initializeNeighbourhoodsAndZones: (data: NeighbourhoodZoneData) => void;
@@ -21,10 +30,19 @@ interface LotStoreState {
   updateLotLastMowingDate: (lotId: string, date: Date) => void;
   updateLot: (lotId: string, updatedInfo: Partial<LotInterface>) => void;
 
-  deselectAllLots: () => void;
-  toggleLotSelection: (lotId: string, newState: boolean) => void;
-  toggleZoneSelection: (zoneId: string, newState: boolean) => void;
+  deselectAllLots: (screen: string) => void;
+  toggleLotSelection: (
+    screen: string,
+    lotId: string,
+    newState: boolean,
+  ) => void;
+  toggleZoneSelection: (
+    screen: string,
+    zoneId: string,
+    newState: boolean,
+  ) => void;
   toggleNeighbourhoodSelection: (
+    screen: string,
     neighbourhoodId: string,
     newState: boolean,
   ) => void;
@@ -40,6 +58,21 @@ interface LotStoreState {
 const useLotStore = create<LotStoreState>((set, get) => ({
   lots: [],
   neighbourhoodZoneData: { neighbourhoods: [] },
+
+  // selected lots and zones for each screen
+  selectionState: {
+    homeScreen: {
+      selectedLots: [],
+      selectedZones: [],
+      selectedNeighbourhoods: [],
+    },
+    zoneAssignmentScreen: {
+      selectedLots: [],
+      selectedZones: [],
+      selectedNeighbourhoods: [],
+    },
+    // Add more screens as needed
+  },
 
   initializeLots: (lots: LotInterface[]) => {
     set({ lots });
@@ -82,78 +115,6 @@ const useLotStore = create<LotStoreState>((set, get) => ({
       },
     }));
     return zone;
-  },
-
-  deselectAllLots: () => {
-    const { neighbourhoodZoneData } = get();
-    neighbourhoodZoneData.neighbourhoods.forEach((neighbourhood) => {
-      get().toggleNeighbourhoodSelection(neighbourhood.neighbourhoodId, false);
-    });
-
-    set((state) => ({
-      lots: state.lots.map((lot) => ({
-        ...lot,
-        lotIsSelected: false,
-      })),
-    }));
-  },
-
-  toggleLotSelection: (lotId: string, newState: boolean) => {
-    set((state) => ({
-      lots: state.lots.map((lot) =>
-        lot.lotId === lotId ? { ...lot, lotIsSelected: newState } : lot,
-      ),
-    }));
-  },
-
-  toggleZoneSelection: (zoneId: string, newState: boolean) => {
-    set((state) => ({
-      lots: state.lots.map((lot) =>
-        lot.zoneId === zoneId ? { ...lot, lotIsSelected: newState } : lot,
-      ),
-      neighbourhoodZoneData: {
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map(
-          (neighbourhood) => ({
-            ...neighbourhood,
-            zones: neighbourhood.zones.map((zone) =>
-              zone.zoneId === zoneId ? { ...zone, isSelected: newState } : zone,
-            ),
-          }),
-        ),
-      },
-    }));
-  },
-
-  toggleNeighbourhoodSelection: (
-    neighbourhoodId: string,
-    newState: boolean,
-  ) => {
-    const { neighbourhoodZoneData } = get();
-
-    const neighbourhood = neighbourhoodZoneData.neighbourhoods.find(
-      (n) => n.neighbourhoodId === neighbourhoodId,
-    );
-
-    if (neighbourhood) {
-      neighbourhood.zones.forEach((zone) =>
-        get().toggleZoneSelection(zone.zoneId, newState),
-      );
-    }
-
-    set((state) => ({
-      lots: state.lots.map((lot) =>
-        lot.neighbourhoodId === neighbourhoodId
-          ? { ...lot, lotIsSelected: newState }
-          : lot,
-      ),
-      neighbourhoodZoneData: {
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) =>
-          n.neighbourhoodId === neighbourhoodId
-            ? { ...n, isSelected: newState }
-            : n,
-        ),
-      },
-    }));
   },
 
   updateLotLastMowingDate: (lotId: string, date: Date) => {
@@ -241,6 +202,115 @@ const useLotStore = create<LotStoreState>((set, get) => ({
         })),
       },
     }));
+  },
+
+  deselectAllLots: (screen: string) => {
+    set((state) => ({
+      selectionState: {
+        ...state.selectionState,
+        [screen]: {
+          selectedLots: [],
+          selectedZones: [],
+          selectedNeighbourhoods: [],
+        },
+      },
+    }));
+  },
+
+  // Actions to update selection state per screen
+  toggleLotSelection: (screen: string, lotId: string, newState: boolean) => {
+    set((state) => {
+      const currentSelection = state.selectionState[screen] || {
+        selectedLots: [],
+        selectedZones: [],
+        selectedNeighbourhoods: [],
+      };
+
+      const selectedLots = newState
+        ? [...currentSelection.selectedLots, lotId]
+        : currentSelection.selectedLots.filter((id) => id !== lotId);
+
+      return {
+        selectionState: {
+          ...state.selectionState,
+          [screen]: {
+            ...currentSelection,
+            selectedLots,
+          },
+        },
+      };
+    });
+  },
+
+  toggleZoneSelection: (screen: string, zoneId: string, newState: boolean) => {
+    set((state) => {
+      const currentSelection = state.selectionState[screen] || {
+        selectedLots: [],
+        selectedZones: [],
+        selectedNeighbourhoods: [],
+      };
+
+      const selectedZones = newState
+        ? [...currentSelection.selectedZones, zoneId]
+        : currentSelection.selectedZones.filter((id) => id !== zoneId);
+
+      return {
+        selectionState: {
+          ...state.selectionState,
+          [screen]: {
+            ...currentSelection,
+            selectedZones,
+          },
+        },
+      };
+    });
+
+    // toggle all lots in the zone
+    const lotsIdsForSpecificZone = get()
+      .lots.filter((lot) => lot.zoneId === zoneId)
+      .map((lot) => lot.lotId);
+
+    for (const lotId of lotsIdsForSpecificZone) {
+      get().toggleLotSelection(screen, lotId, newState);
+    }
+  },
+
+  toggleNeighbourhoodSelection: (
+    screen: string,
+    neighbourhoodId: string,
+    newState: boolean,
+  ) => {
+    set((state) => {
+      const currentSelection = state.selectionState[screen] || {
+        selectedLots: [],
+        selectedZones: [],
+        selectedNeighbourhoods: [],
+      };
+
+      const selectedNeighbourhoods = newState
+        ? [...currentSelection.selectedNeighbourhoods, neighbourhoodId]
+        : currentSelection.selectedNeighbourhoods.filter(
+            (id) => id !== neighbourhoodId,
+          );
+
+      return {
+        selectionState: {
+          ...state.selectionState,
+          [screen]: {
+            ...currentSelection,
+            selectedNeighbourhoods,
+          },
+        },
+      };
+    });
+
+    // toggle all zones in the neighbourhood
+    const neighbourhood = get().neighbourhoodZoneData.neighbourhoods.find(
+      (n) => n.neighbourhoodId === neighbourhoodId,
+    );
+    for (const zone of neighbourhood?.zones || []) {
+      get().toggleZoneSelection(screen, zone.zoneId, newState);
+    }
   },
 }));
 

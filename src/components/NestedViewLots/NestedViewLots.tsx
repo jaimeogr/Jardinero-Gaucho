@@ -110,14 +110,6 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
     ],
   );
 
-  if (nestedLotsWithIndicatorsInterface === null) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Contenido no disponible</Text>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       {/* when there are selected lots, it renders the buttons to interact with the selected lots

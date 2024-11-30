@@ -43,13 +43,10 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   onlyZonesAreSelectable = false,
   blockZoneExpansion = false,
 }) => {
-  const nestedLotsWithIndicatorsInterface: NestedLotsWithIndicatorsInterface | null =
+  const nestedLotsWithIndicatorsInterface: NestedLotsWithIndicatorsInterface =
     useControllerService.useNestedLots(screen);
 
-  const { nestedLots, selectedLots } = nestedLotsWithIndicatorsInterface ?? {
-    nestedLots: [],
-    selectedLots: 0,
-  };
+  const { nestedLots, selectedLots } = nestedLotsWithIndicatorsInterface;
 
   // this will handle the Native OS back button press event
   useEffect(() => {
@@ -106,7 +103,6 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
       );
     },
     [
-      nestedLotsWithIndicatorsInterface,
       renderRightSideForAccordion,
       renderRightSideForOneLot,
       onlyZonesAreSelectable,

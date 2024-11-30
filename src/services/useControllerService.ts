@@ -65,8 +65,14 @@ const useNeighbourhoodsAndZones = (): NeighbourhoodData[] => {
   return useLotService.useNeighbourhoodsAndZones(activeWorkgroup);
 };
 
+const setActiveWorkgroup = (workgroupId: string) => {
+  useWorkgroupService.setActiveWorkgroup(workgroupId);
+};
+
 const getActiveWorkgroup = () => {
-  const activeWorkgroup = useWorkgroupService.getOrSetActiveWorkgroup();
+  setActiveWorkgroup('1');
+  const activeWorkgroup = useWorkgroupService.getActiveWorkgroup();
+  console.log('Active Workgroup:', activeWorkgroup);
   return activeWorkgroup;
 };
 
@@ -327,13 +333,13 @@ const toggleZoneExpansion = (zoneId: string) => {
   useLotService.toggleZoneExpansion(zoneId);
 };
 
-const useNestedLots = (
-  screen: string,
-): NestedLotsWithIndicatorsInterface | null => {
+const useNestedLots = (screen: string): NestedLotsWithIndicatorsInterface => {
+  console.log('inside useNestedLots');
+
   const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-  if (!activeWorkgroupId) return null;
 
   console.log('useNestedLots', screen, activeWorkgroupId);
+
   return useLotService.useNestedLots(screen, activeWorkgroupId);
 };
 

@@ -151,7 +151,7 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
 
 const useNestedLots = (
   screen: string,
-  workgroupId: string,
+  workgroupId?: string,
 ): NestedLotsWithIndicatorsInterface => {
   // This function would change if i change the data structures into having lots as nested objects inside NeighbourhoodZoneData on the store.
   const lots = useLotStore((state) => state.lots);
@@ -164,6 +164,10 @@ const useNestedLots = (
       nestedLots: [],
       selectedLots: 0,
     };
+
+    if (!workgroupId) {
+      return result;
+    }
 
     let workgroupSelectedLotsCounter = 0;
 

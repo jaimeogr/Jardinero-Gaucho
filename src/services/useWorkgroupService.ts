@@ -1,3 +1,5 @@
+// useWorkgroupService.ts
+
 import BackendService from '../backend/BackendService';
 import LocalStorageService from '../localStorage/LocalStorageService';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
@@ -6,15 +8,6 @@ import { WorkgroupInterface, UserRole } from '../types/types';
 const initializeWorkgroups = () => {
   const workgroups = BackendService.getMyWorgroups();
   useWorkgroupStore.getState().initializeWorkgroups(workgroups);
-};
-
-const getOrSetActiveWorkgroup = () => {
-  let activeWorkgroup = getActiveWorkgroup();
-  if (!activeWorkgroup) {
-    setActiveWorkgroup();
-    activeWorkgroup = getActiveWorkgroup();
-  }
-  return activeWorkgroup;
 };
 
 const getActiveWorkgroup = () => {
@@ -124,5 +117,6 @@ export default {
   removeUserFromWorkgroup,
   updateWorkgroupRoles,
   useGetWorkgroupById,
-  getOrSetActiveWorkgroup,
+  getActiveWorkgroup,
+  setActiveWorkgroup,
 };

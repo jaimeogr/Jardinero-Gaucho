@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Surface, Appbar } from 'react-native-paper';
 
 import NestedViewLots from './NestedViewLots/NestedViewLots';
-import useControllerService from '../services/useControllerService';
+import useControllerService from '../controllers/useHomeScreenController';
 import { theme } from '../styles/styles';
 import {
   LotWithNeedMowingInterface,

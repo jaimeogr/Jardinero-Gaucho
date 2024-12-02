@@ -8,7 +8,7 @@ import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import CustomSelectInput from '../components/CustomSelectInput';
 import CustomTextInput from '../components/CustomTextInput';
 import RolePicker from '../components/RolePicker';
-import ControllerService from '../services/useControllerService';
+import ControllerService from '../controllers/useHomeScreenController';
 import { theme } from '../styles/styles';
 import { UserRole } from '../types/types';
 

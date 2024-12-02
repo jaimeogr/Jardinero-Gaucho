@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import useControllerService from '../../services/useControllerService';
+import useControllerService from '../../controllers/useHomeScreenController';
 import { theme } from '../../styles/styles';
 
 const {

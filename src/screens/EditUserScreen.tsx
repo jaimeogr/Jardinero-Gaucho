@@ -15,7 +15,7 @@ import {
 import CustomSelectInput from '../components/CustomSelectInput';
 import ReadOnlyField from '../components/ReadOnlyField'; // Import ReadOnlyField
 import RolePicker from '../components/RolePicker';
-import useControllerService from '../services/useControllerService';
+import useControllerService from '../controllers/useHomeScreenController';
 import { theme } from '../styles/styles';
 import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
 

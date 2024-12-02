@@ -12,7 +12,7 @@ import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import useControllerService from '../../services/useControllerService';
+import useControllerService from '../../controllers/useHomeScreenController';
 import { theme } from '../../styles/styles';
 import {
   NeighbourhoodData,

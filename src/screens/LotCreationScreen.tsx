@@ -18,7 +18,7 @@ import {
 import CustomDatePickerInput from '../components/CustomDatePickerInput';
 import CustomSelectInput from '../components/CustomSelectInput';
 import CustomTextInput from '../components/CustomTextInput';
-import useControllerService from '../services/useControllerService';
+import useControllerService from '../controllers/useHomeScreenController';
 import { theme } from '../styles/styles';
 import { LotInterface } from '../types/types';
 

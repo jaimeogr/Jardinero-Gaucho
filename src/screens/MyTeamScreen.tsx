@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Surface, Badge } from 'react-native-paper';
 
-import ControllerService from '../services/useControllerService';
+import ControllerService from '../controllers/useHomeScreenController';
 import { theme } from '../styles/styles';
 import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
 

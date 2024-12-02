@@ -4,8 +4,8 @@ import React, { useEffect } from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
+import useControllerService from './src/controllers/useHomeScreenController';
 import BottomTabNavigator from './src/navigation/BottonTabNavigator';
-import useControllerService from './src/services/useControllerService';
 
 if (__DEV__) {
   console.log('The app is running in development mode');

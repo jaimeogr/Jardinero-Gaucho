@@ -12,7 +12,7 @@ import {
   NeighbourhoodWithIndicatorsInterface,
 } from '../types/types';
 
-const screenCodeForGlobalState = 'HomeScreen';
+const screenCodeForGlobalState = 'homeScreen';
 
 const LotsForHomeScreen = () => {
   const {

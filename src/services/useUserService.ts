@@ -40,8 +40,13 @@ const updateUser = (userId: string, updatedInfo: Partial<UserInterface>) => {
 const updateUserAccessToAllLots = (
   userId: string,
   accessToAllLots: boolean,
-  activeWorkgroupId: string,
+  activeWorkgroupId: string | null,
 ) => {
+  if (!activeWorkgroupId) {
+    console.log('No active workgroup selected');
+    return;
+  }
+
   const user = getUserById(userId);
   if (user) {
     const assignmentIndex = user.workgroupAssignments.findIndex(

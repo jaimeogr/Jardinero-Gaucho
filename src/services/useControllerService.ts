@@ -23,6 +23,7 @@ const initializeServices = () => {
   useLotService.initializeStore();
   useUserService.initializeUsers();
   useWorkgroupService.initializeWorkgroups();
+  setActiveWorkgroup('1');
 };
 
 const getLotById = (lotId: string) => {
@@ -70,7 +71,6 @@ const setActiveWorkgroup = (workgroupId: string) => {
 };
 
 const getActiveWorkgroup = () => {
-  setActiveWorkgroup('1');
   const activeWorkgroup = useWorkgroupService.getActiveWorkgroup();
   console.log('Active Workgroup:', activeWorkgroup);
   return activeWorkgroup;
@@ -88,37 +88,6 @@ const useCheckUserHasPermission = (requiredRole: UserRole) => {
     return false;
   }
   return userHasPermission(workgroup, currentUserId, requiredRole);
-};
-
-const inviteUserToActiveWorkgroup = (
-  email: string,
-  role: UserRole,
-  accessToAllLots: boolean,
-): UserInterface | null => {
-  const userId = uuidv4();
-  const activeWorkgroup = getActiveWorkgroup();
-  if (!activeWorkgroup) {
-    console.error('No active workgroup found.');
-    return null;
-  }
-
-  const newUser: UserInterface = {
-    userId,
-    email,
-    firstName: '', // Since we only have the email at this point
-    lastName: '',
-    workgroupAssignments: [
-      {
-        workgroupId: activeWorkgroup.workgroupId,
-        role,
-        accessToAllLots,
-        hasAcceptedPresenceInWorkgroup: false,
-      },
-    ],
-  };
-  // Add user to user store
-  useUserService.addUser(newUser);
-  return newUser;
 };
 
 const updateUserInActiveWorkgroup = (
@@ -150,40 +119,6 @@ const updateUserInActiveWorkgroup = (
 
   useUserService.updateUser(userId, user);
   return true;
-};
-
-const getUserInActiveWorkgroupWithRole = (
-  userId: string,
-): UserInActiveWorkgroupWithRole | null => {
-  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-  if (!activeWorkgroupId) return null;
-
-  const user = useUserService.getUserById(userId);
-  if (!user) return null;
-
-  const assignment = user.workgroupAssignments.find(
-    (wa) => wa.workgroupId === activeWorkgroupId,
-  );
-  if (assignment) {
-    // the user is in the active workgroup
-    const assignedZonesCount =
-      useLotService.getNumberOfAssignedZonesForUserInSpecificWorkgroup(
-        activeWorkgroupId,
-        user.userId,
-      );
-    const assignedLotsCount =
-      useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
-        activeWorkgroupId,
-        user.userId,
-      );
-    return {
-      ...user,
-      ...assignment,
-      assignedZonesCount: assignedZonesCount,
-      assignedLotsCount: assignedLotsCount,
-    };
-  }
-  return null;
 };
 
 const useUsersInActiveWorkgroupWithRoles =
@@ -269,19 +204,6 @@ const deselectAllLots = (screen: string) => {
   useLotService.deselectAllLots(screen);
 };
 
-const preselectAssignedZonesInWorkgroupForUser = (
-  screen: string,
-  userId: string,
-) => {
-  const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-  if (!activeWorkgroupId) return null;
-  useLotService.preselectAssignedZonesInWorkgroupForUser(
-    screen,
-    userId,
-    activeWorkgroupId,
-  );
-};
-
 const updateZoneAssignmentsForMember = (
   screen: string,
   userId: string,
@@ -309,20 +231,6 @@ const updateZoneAssignmentsForMember = (
     );
   }
   deselectAllLots(screen);
-};
-
-const getTemporaryUserData = (): {
-  temporaryUserData: TemporaryUserData | null;
-  temporaryisNewUser: boolean;
-} => {
-  return useUserService.getTemporaryUserData();
-};
-
-const setTemporaryUserData = (
-  userData: TemporaryUserData | null,
-  isNewUser: boolean,
-) => {
-  useUserService.setTemporaryUserData(userData, isNewUser);
 };
 
 const toggleNeighbourhoodExpansion = (neighbourhoodId: string) => {
@@ -358,9 +266,7 @@ export default {
   addNeighbourhood,
 
   // users, workgroups and zone assignments
-  inviteUserToActiveWorkgroup,
   updateUserInActiveWorkgroup,
-  getUserInActiveWorkgroupWithRole,
   useUsersInActiveWorkgroupWithRoles,
   updateZoneAssignmentsForMember,
 
@@ -369,11 +275,6 @@ export default {
   toggleLotSelection,
   toggleZoneSelection,
   toggleNeighbourhoodSelection,
-  preselectAssignedZonesInWorkgroupForUser,
-
-  // temporary user data for navigation purposes
-  getTemporaryUserData,
-  setTemporaryUserData,
 
   // Expanded and collapsed accordions
   toggleZoneExpansion,

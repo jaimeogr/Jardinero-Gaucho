@@ -6,7 +6,7 @@ import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 
 import CustomSelectInput from '../components/CustomSelectInput';
 import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
-import useControllerService from '../services/useControllerService';
+import useTeamManagementController from '../controllers/useTeamManagementController';
 import { theme } from '../styles/styles';
 import { UserInterface } from '../types/types';
 
@@ -35,16 +35,19 @@ interface Props {
 
 const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const {
-    updateZoneAssignmentsForMember,
+    useNestedLots,
+    toggleLotSelection,
+    toggleZoneSelection,
+    toggleNeighbourhoodSelection,
     deselectAllLots,
-    preselectAssignedZonesInWorkgroupForUser,
+    updateZoneAssignmentsForMember,
+    selectAssignedZonesForUser,
     getUserInActiveWorkgroupWithRole,
-    useNeighbourhoodsAndZones,
     inviteUserToActiveWorkgroup,
     getTemporaryUserData,
     setTemporaryUserData,
     expandAllNeighbourhoods,
-  } = useControllerService;
+  } = useTeamManagementController();
 
   const userId = route.params?.userId;
 
@@ -52,7 +55,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(false);
 
   // Get neighbourhoods and zones
-  const neighbourhoods = useNeighbourhoodsAndZones();
 
   // Get temporary user data
   const { temporaryUserData, temporaryisNewUser } = getTemporaryUserData();
@@ -97,10 +99,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         setAccessToAllLots(existingUser.accessToAllLots);
         // Pre-select zones assigned to the user when it doesnt have access to all zones
         if (!existingUser.accessToAllLots) {
-          preselectAssignedZonesInWorkgroupForUser(
-            screenCodeForGlobalState,
-            userId,
-          );
+          selectAssignedZonesForUser(screenCodeForGlobalState, userId);
         }
       } else {
         Alert.alert('Error', 'Usuario no encontrado.');
@@ -134,28 +133,11 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     navigation,
     deselectAllLots,
     getUserInActiveWorkgroupWithRole,
-    preselectAssignedZonesInWorkgroupForUser,
+    selectAssignedZonesForUser,
     setTemporaryUserData,
     clearTemporaryState,
     expandAllNeighbourhoods,
   ]);
-
-  // Compute totalZones and selectedZones
-  const { totalZones, selectedZones } = React.useMemo(() => {
-    let total = 0;
-    let selected = 0;
-
-    neighbourhoods.forEach((neighbourhood) => {
-      neighbourhood.zones.forEach((zone) => {
-        total += 1;
-        if (zone.isSelected) {
-          selected += 1;
-        }
-      });
-    });
-
-    return { totalZones: total, selectedZones: selected };
-  }, [neighbourhoods]);
 
   const handleAccessToAllLotsChange = (value: string | boolean | null) => {
     if (typeof value === 'boolean') {
@@ -164,10 +146,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         // No need to select zones; user has access to all
       } else if (userId) {
         // select zones assigned to the user if there is an existant userId
-        preselectAssignedZonesInWorkgroupForUser(
-          screenCodeForGlobalState,
-          userId,
-        );
+        selectAssignedZonesForUser(screenCodeForGlobalState, userId);
       } else {
         deselectAllLots(screenCodeForGlobalState);
       }

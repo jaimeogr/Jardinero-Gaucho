@@ -153,7 +153,7 @@ const useNestedLots = (
   selectedLots: Set<string>,
   expandedZones: Set<string>, // This could be a Set<string> instead of an array
   expandedNeighbourhoods: Set<string>, // This could be a Set<string> instead of an array
-  workgroupId?: string,
+  workgroupId?: string | null,
 ): NestedLotsWithIndicatorsInterface => {
   // This function would change if i change the data structures into having lots as nested objects inside NeighbourhoodZoneData on the store.
   const lots = useLotStore((state) => state.lots);

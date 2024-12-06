@@ -5,8 +5,6 @@ import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
 import BackendService from '../backend/BackendService';
 import useLotStore from '../stores/useLotStore';
-import useUserStore from '../stores/useUserStore';
-import useWorkgroupStore from '../stores/useWorkgroupStore';
 import {
   LotComputedForDisplay,
   LotWithNeedMowingInterface,
@@ -21,11 +19,6 @@ import {
 } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 import { userHasPermission } from '../utils/permissionUtils';
-
-const { getWorkgroupById } = useWorkgroupStore.getState();
-const { updateLotLastMowingDate } = useLotStore.getState();
-
-const { currentUser } = useUserStore.getState();
 
 const initializeStore = () => {
   const lots = BackendService.getMyLots();
@@ -296,6 +289,30 @@ const clearZoneAssignmentsForMemberInWorkgroup = (
   );
 };
 
+const computeAssignedZonesCountPerUserInWorkgroup = (
+  neighbourhoodZoneData: { neighbourhoods: NeighbourhoodData[] },
+  workgroupId: string,
+): Record<string, number> => {
+  const assignedZonesByUser: Record<string, number> = {};
+
+  const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
+    (n) => n.workgroupId === workgroupId,
+  );
+
+  neighbourhoods.forEach((neighbourhood) => {
+    neighbourhood.zones.forEach((zone) => {
+      zone.assignedTo.forEach((userId) => {
+        if (!assignedZonesByUser[userId]) {
+          assignedZonesByUser[userId] = 0;
+        }
+        assignedZonesByUser[userId] += 1;
+      });
+    });
+  });
+
+  return assignedZonesByUser;
+};
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////// NEW FUNCTIONS END HERE ///////////////////////////////////////////////////////
 
@@ -326,14 +343,6 @@ const clearZoneAssignmentsForMemberInWorkgroup = (
 //     return filteredNeighbourhoods;
 //   }, [neighbourhoodZoneData, workgroupId]);
 // };
-
-const getLotById = (lotId: string): LotComputedForDisplay => {
-  const lot = useLotStore.getState().lots.find((lot) => lot.lotId === lotId);
-  if (!lot) {
-    throw new Error('Lot not found');
-  }
-  return lot;
-};
 
 // const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
 //   const { lots } = useLotStore.getState();
@@ -383,266 +392,37 @@ const getLotById = (lotId: string): LotComputedForDisplay => {
 //   return true;
 // };
 
-const toggleLotSelection = (
-  screen: string,
-  lotId: string,
-  newState: boolean,
-) => {
-  useLotStore.getState().toggleLotSelection(screen, lotId, newState);
-};
-
-const getZonesAssignedToUserInWorkgroup = (
-  userId: string,
-  workgroupId: string,
-): string[] => {
-  // Implement logic to return an array of zone IDs assigned to the user
-  // For example:
-  const assignedZones: string[] = [];
-  useLotStore
-    .getState()
-    .neighbourhoodZoneData.neighbourhoods.filter(
-      (n) => n.workgroupId === workgroupId,
-    ) // Filter neighbourhoods by workgroup, this could be not necessary depending on which neighbourhoods are on the store.
-    .forEach((n) =>
-      n.zones
-        .filter((zone) => zone.assignedTo.includes(userId))
-        .forEach((zone) => assignedZones.push(zone.zoneId)),
-    );
-  return assignedZones;
-};
-
-const toggleZoneSelection = (
-  screen: string,
-  zoneId: string,
-  newState: boolean,
-) => {
-  useLotStore.getState().toggleZoneSelection(screen, zoneId, newState);
-};
-
-const preselectAssignedZonesInWorkgroupForUser = (
-  screen: string,
-  userId: string,
-  workgroupId: string,
-) => {
-  deselectAllLots(screen);
-  const assignedZones = getZonesAssignedToUserInWorkgroup(userId, workgroupId);
-  assignedZones.forEach((zoneId) => {
-    toggleZoneSelection(screen, zoneId, true);
-  });
-};
-
-const toggleNeighbourhoodSelection = (
-  screen: string,
-  neighbourhoodId: string,
-  newState: boolean,
-) => {
-  useLotStore
-    .getState()
-    .toggleNeighbourhoodSelection(screen, neighbourhoodId, newState);
-};
-
-const deselectAllLots = (screen: string) => {
-  useLotStore.getState().deselectAllLots(screen);
-};
-
-// const clearZoneAssignmentsForMemberInWorkgroup = (
-//   userId: string,
-//   activeWorkgroupId: string,
-// ) => {
-//   const { neighbourhoodZoneData } = useLotStore.getState();
-
-//   // Clone the neighbourhoodZoneData to avoid direct mutation
-//   const updatedNeighbourhoodZoneData = {
-//     ...neighbourhoodZoneData,
-//     neighbourhoods: neighbourhoodZoneData.neighbourhoods
-//       .filter((n) => n.workgroupId === activeWorkgroupId)
-//       .map((neighbourhood) => ({
-//         ...neighbourhood,
-//         zones: neighbourhood.zones.map((zone) => {
-//           return {
-//             ...zone,
-//             assignedTo: zone.assignedTo.filter((id) => id !== userId),
-//           };
-//         }),
-//       })),
-//   };
-
-//   // Update the store with the modified neighbourhoodZoneData
-//   useLotStore.setState({ neighbourhoodZoneData: updatedNeighbourhoodZoneData });
-// };
-
 const updateZoneAssignmentsForMemberInWorkgroupUsingSelection = (
   userId: string,
   activeWorkgroupId: string,
+  neighbourhoods: NeighbourhoodData[],
+  nestedLots: NestedLotsWithIndicatorsInterface,
 ) => {
-  const { neighbourhoodZoneData } = useLotStore.getState();
+  //should i implement nestedLots so that it is used to check if zones are selected? information is there and moemoized but is there a better practice? maybe i should already implement that to avoid future problems.
 
   // Clone the neighbourhoodZoneData to avoid direct mutation
-  const updatedNeighbourhoodZoneData = {
-    ...neighbourhoodZoneData,
-    neighbourhoods: neighbourhoodZoneData.neighbourhoods
-      .filter((n) => n.workgroupId === activeWorkgroupId)
-      .map((neighbourhood) => ({
-        ...neighbourhood,
-        zones: neighbourhood.zones.map((zone) => {
-          const isZoneSelected = zone.isSelected;
+  const neighbourhoodsUpdated = neighbourhoods
+    .filter((n) => n.workgroupId === activeWorkgroupId)
+    .map((neighbourhood) => ({
+      ...neighbourhood,
+      zones: neighbourhood.zones.map((zone) => {
+        const isZoneSelected = zone.isSelected;
 
-          return {
-            ...zone,
-            assignedTo: isZoneSelected
-              ? // Add userId if it's not already in the assignedTo array
-                zone.assignedTo.includes(userId)
-                ? zone.assignedTo
-                : [...zone.assignedTo, userId]
-              : // Remove userId if it exists in the array because the zone is not selected for the userId
-                zone.assignedTo.filter((id) => id !== userId),
-          };
-        }),
-      })),
-  };
+        return {
+          ...zone,
+          assignedTo: isZoneSelected
+            ? // Add userId if it's not already in the assignedTo array
+              zone.assignedTo.includes(userId)
+              ? zone.assignedTo
+              : [...zone.assignedTo, userId]
+            : // Remove userId if it exists in the array because the zone is not selected for the userId
+              zone.assignedTo.filter((id) => id !== userId),
+        };
+      }),
+    }));
 
   // Update the store with the modified neighbourhoodZoneData
-  useLotStore.setState({ neighbourhoodZoneData: updatedNeighbourhoodZoneData });
-};
-
-const getNumberOfAssignedLotsForUserInSpecificWorkgroup = (
-  WorkgroupId: string,
-  userId: string,
-): number => {
-  const { lots } = useLotStore.getState();
-  const assignedLots = lots.filter(
-    (lot) => lot.workgroupId === WorkgroupId && lot.assignedTo.includes(userId),
-  );
-  return assignedLots.length;
-};
-
-const useAssignedZonesCountPerUserInWorkgroup = (
-  workgroupId: string | undefined,
-) => {
-  const neighbourhoodZoneData = useLotStore(
-    (state) => state.neighbourhoodZoneData,
-  );
-
-  return React.useMemo(() => {
-    const assignedZonesByUser: Record<string, number> = {};
-
-    if (!workgroupId) {
-      // Return an empty object if workgroupId is undefined
-      return assignedZonesByUser;
-    }
-
-    // Filter neighbourhoods by workgroupId
-    const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
-      (n) => n.workgroupId === workgroupId,
-    );
-
-    neighbourhoods.forEach((neighbourhood) => {
-      neighbourhood.zones.forEach((zone) => {
-        zone.assignedTo.forEach((userId) => {
-          if (!assignedZonesByUser[userId]) {
-            assignedZonesByUser[userId] = 0;
-          }
-          assignedZonesByUser[userId] += 1;
-        });
-      });
-    });
-
-    return assignedZonesByUser;
-  }, [neighbourhoodZoneData, workgroupId]);
-};
-
-const useAssignedLotsCountPerUserInWorkgroup = (
-  workgroupId: string | undefined,
-) => {
-  // This function would change if i change the data structures into having lots as nested objects inside NeighbourhoodZoneData on the store.
-  // Subscribe to the necessary data from the store
-  const neighbourhoodZoneData = useLotStore(
-    (state) => state.neighbourhoodZoneData,
-  );
-  const lots = useLotStore((state) => state.lots);
-
-  return React.useMemo(() => {
-    // Initialize an object to store the lots count per user
-    const assignedLotsByUser: Record<string, number> = {};
-
-    if (!workgroupId) {
-      return assignedLotsByUser;
-    }
-
-    // Filter neighbourhoods that belong to the specified workgroup
-    const neighbourhoodsInWorkgroup =
-      neighbourhoodZoneData.neighbourhoods.filter(
-        (neighbourhood) => neighbourhood.workgroupId === workgroupId,
-      );
-
-    // Build a map of zone assignments (zoneId to array of userIds)
-    const zoneAssignments: Record<string, string[]> = {};
-
-    neighbourhoodsInWorkgroup.forEach((neighbourhood) => {
-      neighbourhood.zones.forEach((zone) => {
-        zoneAssignments[zone.zoneId] = zone.assignedTo;
-      });
-    });
-
-    // Build a map of lots grouped by their zoneId
-    const lotsGroupedByZone: Record<string, LotComputedForDisplay[]> = {};
-
-    lots.forEach((lot) => {
-      if (lot.workgroupId === workgroupId) {
-        if (!lotsGroupedByZone[lot.zoneId]) {
-          lotsGroupedByZone[lot.zoneId] = [];
-        }
-        lotsGroupedByZone[lot.zoneId].push(lot);
-      }
-    });
-
-    // Calculate the lots assigned to each user
-    for (const zoneId in zoneAssignments) {
-      const userIds = zoneAssignments[zoneId];
-      const lotsInZone = lotsGroupedByZone[zoneId] || [];
-
-      userIds.forEach((userId) => {
-        if (!assignedLotsByUser[userId]) {
-          assignedLotsByUser[userId] = 0;
-        }
-        assignedLotsByUser[userId] += lotsInZone.length;
-      });
-    }
-
-    return assignedLotsByUser;
-  }, [neighbourhoodZoneData, lots, workgroupId]);
-};
-
-const getNumberOfAssignedZonesForUserInSpecificWorkgroup = (
-  WorkgroupId: string,
-  userId: string,
-): number => {
-  const { neighbourhoodZoneData } = useLotStore.getState();
-  const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
-    (n) => n.workgroupId === WorkgroupId,
-  );
-  let assignedZones = 0;
-  if (!neighbourhoods) {
-    // if there are no neighbourhoods found
-    return 0;
-  }
-  neighbourhoods.forEach((neighbourhood) => {
-    neighbourhood.zones.forEach((zone) => {
-      if (Array.isArray(zone.assignedTo) && zone.assignedTo.includes(userId)) {
-        // this type check helps prevent crashes
-        assignedZones++;
-      }
-    });
-  });
-  return assignedZones;
-};
-
-const toggleNeighbourhoodExpansion = (neighbourhoodId: string) => {
-  useLotStore.getState().toggleNeighbourhoodExpansion(neighbourhoodId);
-};
-
-const toggleZoneExpansion = (zoneId: string) => {
-  useLotStore.getState().toggleZoneExpansion(zoneId);
+  return neighbourhoodsUpdated;
 };
 
 const assignZoneToUser = (
@@ -674,34 +454,17 @@ export default {
 
   // Lots, zones, neighbourhoods
   createLot,
-  getLotById,
   computeNestedLots,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
   addZoneToNeighbourhood,
   addNeighbourhood,
 
-  // selections
-  toggleLotSelection,
-  toggleZoneSelection,
-  toggleNeighbourhoodSelection,
-  preselectAssignedZonesInWorkgroupForUser,
-  deselectAllLots,
-
   // zone assignments
   clearZoneAssignmentsForMemberInWorkgroup,
   updateZoneAssignmentsForMemberInWorkgroupUsingSelection,
-  getNumberOfAssignedLotsForUserInSpecificWorkgroup,
-  getNumberOfAssignedZonesForUserInSpecificWorkgroup,
-  useAssignedZonesCountPerUserInWorkgroup,
-  useAssignedLotsCountPerUserInWorkgroup,
+  computeAssignedZonesCountPerUserInWorkgroup,
+
   assignZoneToUser,
   unassignZoneFromUser,
-
-  // Expanded and collapsed accordions
-  toggleZoneExpansion,
-  toggleNeighbourhoodExpansion,
-  collapseAllZones: useLotStore.getState().collapseAllZones,
-  expandAllNeighbourhoods: useLotStore.getState().expandAllNeighbourhoods,
-  collapseAllNeighbourhoods: useLotStore.getState().collapseAllNeighbourhoods,
 };

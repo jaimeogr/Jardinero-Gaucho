@@ -11,7 +11,6 @@ import useHomeScreenStore from '../stores/useHomeScreenStore';
 import useLotStore from '../stores/useLotStore';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
 import {
-  NeighbourhoodData,
   UserRole,
   LotComputedForDisplay,
   ZoneData,
@@ -21,12 +20,13 @@ import {
   NestedLotsWithIndicatorsInterface,
   NeighbourhoodZoneData,
   NeighbourhoodData,
+  LotInStore,
 } from '../types/types';
 import { userHasPermission } from '../utils/permissionUtils';
 
 const useHomeScreenController = () => {
   const workgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
-  const lots: LotComputedForDisplay[] = useLotStore((state) => state.lots);
+  const lots: LotInStore[] = useLotStore((state) => state.lots);
   const neighbourhoodsWithZones: NeighbourhoodData[] = useLotStore(
     (state) => state.neighbourhoodZoneData.neighbourhoods,
   );
@@ -77,16 +77,6 @@ const useHomeScreenController = () => {
     return useLotService.addZoneToNeighbourhood(neighbourhoodId, zoneLabel);
   };
 
-  const useNeighbourhoodsAndZones = (): NeighbourhoodData[] => {
-    // returns all neighbourhoods and zones for the active workgroup
-    const activeWorkgroup = getActiveWorkgroup()?.workgroupId;
-    if (!activeWorkgroup) {
-      console.error('No active workgroup found.');
-      return [];
-    }
-    return useLotService.useNeighbourhoodsAndZones(activeWorkgroup);
-  };
-
   const setActiveWorkgroup = (workgroupId: string) => {
     useWorkgroupService.setActiveWorkgroup(workgroupId);
   };
@@ -110,99 +100,6 @@ const useHomeScreenController = () => {
     }
     return userHasPermission(workgroup, currentUserId, requiredRole);
   };
-
-  const updateUserInActiveWorkgroup = (
-    userId: string,
-    newRole: UserRole,
-    accessToAllLots: boolean,
-  ) => {
-    const user = useUserService.getUserById(userId);
-    if (!user) return false;
-
-    const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-    if (!activeWorkgroupId) return false;
-
-    const assignmentIndex = user.workgroupAssignments.findIndex(
-      (assignment) => assignment.workgroupId === activeWorkgroupId,
-    );
-    if (assignmentIndex >= 0) {
-      user.workgroupAssignments[assignmentIndex].role = newRole;
-      user.workgroupAssignments[assignmentIndex].accessToAllLots =
-        accessToAllLots;
-    } else {
-      // Since the user doesn't have an assignment in the active workgroup,
-      // we should not proceed with the update.
-      console.error(
-        `Cannot update user ${userId}: No assignment found in active workgroup ${activeWorkgroupId}.`,
-      );
-      return false;
-    }
-
-    useUserService.updateUser(userId, user);
-    return true;
-  };
-
-  const useUsersInActiveWorkgroupWithRoles =
-    (): UserInActiveWorkgroupWithRole[] => {
-      const activeWorkgroup = getActiveWorkgroup();
-      const activeWorkgroupId = activeWorkgroup?.workgroupId;
-
-      // Subscribe to users
-      const allUsers = useUserService.useAllUsers();
-
-      // Get assigned counts per user from useLotService
-      const assignedZonesByUser =
-        useLotService.useAssignedZonesCountPerUserInWorkgroup(
-          activeWorkgroupId,
-        );
-      const assignedLotsByUser =
-        useLotService.useAssignedLotsCountPerUserInWorkgroup(activeWorkgroupId);
-
-      return React.useMemo(() => {
-        if (!activeWorkgroupId) {
-          // Handle the case when activeWorkgroupId is undefined
-          return [];
-        }
-
-        const usersInWorkgroup = allUsers
-          .map((user) => {
-            const assignment = user.workgroupAssignments.find(
-              (wa) => wa.workgroupId === activeWorkgroupId,
-            );
-            if (assignment) {
-              const assignedZonesCount = assignedZonesByUser[user.userId] || 0;
-              const assignedLotsCount = assignedLotsByUser[user.userId] || 0;
-
-              return {
-                ...user,
-                ...assignment,
-                assignedZonesCount,
-                assignedLotsCount,
-              };
-            }
-            return null;
-          })
-          .filter((user) => user !== null) as UserInActiveWorkgroupWithRole[];
-
-        // Sort users by role priority
-        const usersSortedByRole = usersInWorkgroup.sort((a, b) => {
-          const rolePriority = {
-            PrimaryOwner: 1,
-            Owner: 2,
-            Manager: 3,
-            Member: 4,
-          };
-          return rolePriority[a.role] - rolePriority[b.role];
-        });
-
-        return usersSortedByRole;
-      }, [
-        activeWorkgroupId,
-        allUsers,
-        assignedZonesByUser,
-        assignedLotsByUser,
-      ]);
-    };
 
   const toggleLotSelection = (
     screen: string,
@@ -236,42 +133,9 @@ const useHomeScreenController = () => {
     useLotService.deselectAllLots(screen);
   };
 
-  const updateZoneAssignmentsForMember = (
-    screen: string,
-    userId: string,
-    accessToAllLots: boolean,
-  ) => {
-    const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-    if (!activeWorkgroupId) return null;
+  const toggleNeighbourhoodExpansion = (neighbourhoodId: string) => {};
 
-    if (accessToAllLots) {
-      // Update the user's accessToAllLots setting
-      useUserService.updateUserAccessToAllLots(
-        userId,
-        accessToAllLots,
-        activeWorkgroupId,
-      );
-      // Clear any existing zone assignments since the user now has access to all zones
-      useLotService.clearZoneAssignmentsForMemberInWorkgroup(
-        userId,
-        activeWorkgroupId,
-      );
-    } else {
-      useLotService.updateZoneAssignmentsForMemberInWorkgroupUsingSelection(
-        userId,
-        activeWorkgroupId,
-      );
-    }
-    deselectAllLots(screen);
-  };
-
-  const toggleNeighbourhoodExpansion = (neighbourhoodId: string) => {
-    useLotService.toggleNeighbourhoodExpansion(neighbourhoodId);
-  };
-
-  const toggleZoneExpansion = (zoneId: string) => {
-    useLotService.toggleZoneExpansion(zoneId);
-  };
+  const toggleZoneExpansion = (zoneId: string) => {};
 
   const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
     const nestedLots = React.useMemo<NestedLotsWithIndicatorsInterface>(() => {
@@ -305,14 +169,8 @@ const useHomeScreenController = () => {
     markLotCompletedForSpecificDate,
     markSelectedLotsCompletedForSpecificDate,
     useCheckUserHasPermission,
-    useNeighbourhoodsAndZones,
     addZoneToNeighbourhood,
     addNeighbourhood,
-
-    // users, workgroups and zone assignments
-    updateUserInActiveWorkgroup,
-    useUsersInActiveWorkgroupWithRoles,
-    updateZoneAssignmentsForMember,
 
     // selections
     deselectAllLots,

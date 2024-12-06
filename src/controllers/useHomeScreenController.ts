@@ -101,36 +101,23 @@ const useHomeScreenController = () => {
     return userHasPermission(workgroup, currentUserId, requiredRole);
   };
 
-  const toggleLotSelection = (
-    screen: string,
-    lotId: string,
-    newState: boolean,
-  ) => {
-    useLotService.toggleLotSelection(screen, lotId, newState);
+  const toggleLotSelection = (lotId: string, newState: boolean) => {
+    useLotService.toggleLotSelection(lotId, newState);
   };
 
-  const toggleZoneSelection = (
-    screen: string,
-    zoneId: string,
-    newState: boolean,
-  ) => {
-    useLotService.toggleZoneSelection(screen, zoneId, newState);
+  const toggleZoneSelection = (zoneId: string, newState: boolean) => {
+    useLotService.toggleZoneSelection(zoneId, newState);
   };
 
   const toggleNeighbourhoodSelection = (
-    screen: string,
     neighbourhoodId: string,
     newState: boolean,
   ) => {
-    useLotService.toggleNeighbourhoodSelection(
-      screen,
-      neighbourhoodId,
-      newState,
-    );
+    useLotService.toggleNeighbourhoodSelection(neighbourhoodId, newState);
   };
 
-  const deselectAllLots = (screen: string) => {
-    useLotService.deselectAllLots(screen);
+  const deselectAllLots = () => {
+    useLotService.deselectAllLots();
   };
 
   const toggleNeighbourhoodExpansion = (neighbourhoodId: string) => {};
@@ -181,9 +168,9 @@ const useHomeScreenController = () => {
     // Expanded and collapsed accordions
     toggleZoneExpansion,
     toggleNeighbourhoodExpansion,
-    collapseAllZones: useLotService.collapseAllZones,
-    expandAllNeighbourhoods: useLotService.expandAllNeighbourhoods,
-    collapseAllNeighbourhoods: useLotService.collapseAllNeighbourhoods,
+    collapseAllZones,
+    expandAllNeighbourhoods,
+    collapseAllNeighbourhoods,
   };
 };
 

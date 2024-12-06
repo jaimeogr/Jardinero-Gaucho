@@ -4,6 +4,11 @@ import useUserService from '../services/useUserService';
 import useLotStore from '../stores/useLotStore';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
 import useZoneAssignmentScreenStore from '../stores/useZoneAssignmentScreenStore';
+import {
+  LotComputedInDisplay,
+  NeighbourhoodData,
+  NeighbourhoodZoneData,
+} from '../types/types';
 
 const useTeamManagementController = () => {
   const {
@@ -20,27 +25,32 @@ const useTeamManagementController = () => {
     expandAllNeighbourhoods,
   } = useZoneAssignmentScreenStore();
 
-  const activeWorkgroupId = useWorkgroupStore(
-    (state) => state.activeWorkgroupId,
+  const workgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
+  const lots: LotComputedInDisplay[] = useLotStore((state) => state.lots);
+  const neighbourhoodZoneData: NeighbourhoodZoneData = useLotStore(
+    (state) => state.neighbourhoodZoneData,
   );
 
   const useNestedLots = () => {
-    const nestedLots = useLotService.useNestedLots(
+    const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
+      (n) => n.workgroupId === workgroupId,
+    );
+    return useLotService.useNestedLots(
+      lots,
+      neighbourhoods,
       selectedLots,
       expandedZones,
       expandedNeighbourhoods,
-      activeWorkgroupId,
+      workgroupId,
     );
-    return nestedLots;
   };
 
   const toggleZoneSelection = (zoneId: string, newState: boolean) => {
-    const lots = useLotStore
-      .getState()
-      .lots.filter(
-        (lot) => lot.zoneId === zoneId && lot.workgroupId === activeWorkgroupId,
-      );
-    const lotIds = lots.map((lot) => lot.lotId);
+    const lotsInZone = lots.filter(
+      (lot) => lot.zoneId === zoneId && lot.workgroupId === workgroupId,
+    );
+    const lotIds = lotsInZone.map((lot) => lot.lotId);
+
     if (newState) {
       selectLots(lotIds);
     } else {
@@ -48,23 +58,46 @@ const useTeamManagementController = () => {
     }
   };
 
-  const toggleNeighbourhoodSelection = (
-    neighbourhoodId: string,
-    newState: boolean,
-  ) => {
-    const lots = useLotStore
-      .getState()
-      .lots.filter(
-        (lot) =>
-          lot.neighbourhoodId === neighbourhoodId &&
-          lot.workgroupId === activeWorkgroupId,
-      );
-    const lotIds = lots.map((lot) => lot.lotId);
-    if (newState) {
-      selectLots(lotIds);
-    } else {
-      deselectLots(lotIds);
-    }
+  const assignZoneToUser = (zoneId: string, userId: string) => {
+    const zones = neighbourhoodZoneData.neighbourhoods.flatMap((n) => n.zones);
+    const updatedZones = useLotService.assignZoneToUser(zones, userId, zoneId);
+
+    // Update store with the new zones data
+    useLotStore.setState((state) => ({
+      neighbourhoodZoneData: {
+        ...state.neighbourhoodZoneData,
+        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
+          ...n,
+          zones: n.zones.map(
+            (zone) =>
+              updatedZones.find((z) => z.zoneId === zone.zoneId) || zone,
+          ),
+        })),
+      },
+    }));
+  };
+
+  const unassignZoneFromUser = (zoneId: string, userId: string) => {
+    const zones = neighbourhoodZoneData.neighbourhoods.flatMap((n) => n.zones);
+    const updatedZones = useLotService.unassignZoneFromUser(
+      zones,
+      userId,
+      zoneId,
+    );
+
+    // Update store with the new zones data
+    useLotStore.setState((state) => ({
+      neighbourhoodZoneData: {
+        ...state.neighbourhoodZoneData,
+        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
+          ...n,
+          zones: n.zones.map(
+            (zone) =>
+              updatedZones.find((z) => z.zoneId === zone.zoneId) || zone,
+          ),
+        })),
+      },
+    }));
   };
 
   const updateZoneAssignmentsForMember = (
@@ -179,7 +212,6 @@ const useTeamManagementController = () => {
     useNestedLots,
     toggleLotSelection,
     toggleZoneSelection,
-    toggleNeighbourhoodSelection,
     deselectAllLots,
     updateZoneAssignmentsForMember,
     selectAssignedZonesForUser,

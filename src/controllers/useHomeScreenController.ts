@@ -1,4 +1,4 @@
-// src/services/useHomeScreenController.ts
+// useHomeScreenController.ts
 
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
@@ -7,10 +7,12 @@ import BackendService from '../backend/BackendService';
 import useLotService from '../services/useLotService';
 import useUserService from '../services/useUserService';
 import useWorkgroupService from '../services/useWorkgroupService';
+import useHomeScreenStore from '../stores/useHomeScreenStore';
+import useLotStore from '../stores/useLotStore';
 import {
   NeighbourhoodData,
   UserRole,
-  LotInterface,
+  LotComputedInDisplay,
   ZoneData,
   UserInterface,
   UserInActiveWorkgroupWithRole,
@@ -38,7 +40,7 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
   return useLotService.markSelectedLotsCompletedForSpecificDate(date);
 };
 
-const createLot = (lot: Partial<LotInterface>) => {
+const createLot = (lot: Partial<LotComputedInDisplay>) => {
   const workgroupId = getActiveWorkgroup()?.workgroupId;
   useLotService.createLot(workgroupId, lot);
   return true;

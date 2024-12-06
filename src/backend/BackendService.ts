@@ -1,5 +1,5 @@
 import {
-  LotInterface,
+  LotComputedInDisplay,
   NeighbourhoodZoneData,
   NeighbourhoodData,
   WorkgroupInterface,
@@ -7,7 +7,7 @@ import {
 } from '../types/types';
 
 const getNeighbourhoodZoneData = (
-  lots?: LotInterface[],
+  lots?: LotComputedInDisplay[],
 ): NeighbourhoodZoneData => {
   const neighbourhoodMap: { [key: string]: NeighbourhoodData } = {};
 
@@ -60,7 +60,7 @@ const getNeighbourhoodZoneData = (
   return { neighbourhoods: Object.values(neighbourhoodMap) };
 };
 
-const hardCodedLots: LotInterface[] = [
+const hardCodedLots: LotComputedInDisplay[] = [
   // Neighbourhood: El Canton, Zone: 1
   {
     lotId: 'b1597fc2-cc63-4dd2-9f54-3fa5a19b8c37',

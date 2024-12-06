@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 
 import {
-  LotInterface,
+  LotComputedInDisplay,
   NeighbourhoodZoneData,
   NeighbourhoodData,
   ZoneData,
@@ -15,20 +15,23 @@ interface SelectionState {
 }
 
 interface LotStoreState {
-  lots: LotInterface[];
+  lots: LotComputedInDisplay[];
   neighbourhoodZoneData: NeighbourhoodZoneData;
   selectionState: {
     [screen: string]: SelectionState;
   };
 
-  initializeLots: (lots: LotInterface[]) => void;
+  initializeLots: (lots: LotComputedInDisplay[]) => void;
   initializeNeighbourhoodsAndZones: (data: NeighbourhoodZoneData) => void;
 
-  addLot: (newLot: LotInterface) => void;
+  addLot: (newLot: LotComputedInDisplay) => void;
   addNeighbourhood: (neighbourhood: NeighbourhoodData) => NeighbourhoodData;
   addZoneToNeighbourhood: (neighbourhoodId: string, zone: ZoneData) => ZoneData;
   updateLotLastMowingDate: (lotId: string, date: Date) => void;
-  updateLot: (lotId: string, updatedInfo: Partial<LotInterface>) => void;
+  updateLot: (
+    lotId: string,
+    updatedInfo: Partial<LotComputedInDisplay>,
+  ) => void;
 
   deselectAllLots: (screen: string) => void;
   toggleLotSelection: (
@@ -74,7 +77,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
     // Add more screens as needed
   },
 
-  initializeLots: (lots: LotInterface[]) => {
+  initializeLots: (lots: LotComputedInDisplay[]) => {
     set({ lots });
   },
 
@@ -82,7 +85,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
     set({ neighbourhoodZoneData: data });
   },
 
-  addLot: (newLot: LotInterface) => {
+  addLot: (newLot: LotComputedInDisplay) => {
     set((state) => ({
       lots: [...state.lots, newLot],
     }));
@@ -125,7 +128,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
     }));
   },
 
-  updateLot: (lotId: string, updatedInfo: Partial<LotInterface>) => {
+  updateLot: (lotId: string, updatedInfo: Partial<LotComputedInDisplay>) => {
     set((state) => ({
       lots: state.lots.map((lot) =>
         lot.lotId === lotId ? { ...lot, ...updatedInfo } : lot,

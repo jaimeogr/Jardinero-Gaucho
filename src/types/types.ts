@@ -1,25 +1,36 @@
 // types.ts or interfaces.ts
 
 // LOTS / ZONES / NEIGHBOURHOODS
-export interface LotInterface {
+export interface LotInStore {
+  lotId: string; // Unique identifier for the lot, now as a UUID
+  lotLabel: string; // Lot number or label
+  zoneId: string; // ID of the zone the lot belongs to, as a UUID
+  neighbourhoodId: string; // ID of the neighbourhood the lot belongs to, as a UUID
+  assignedTo: string[]; // Users assigned to the lot, can still be numbers if these are internal references
+  workgroupId: string;
+  lastMowingDate?: Date; // Last mowing date for the lot
+  extraNotes?: string; // Optional extra notes about the lot
+}
+
+export interface LotComputedInDisplay {
   lotId: string; // Unique identifier for the lot, now as a UUID
   lotLabel: string; // Lot number or label
   zoneId: string; // ID of the zone the lot belongs to, as a UUID
   zoneLabel: string; // Name of the zone
   neighbourhoodId: string; // ID of the neighbourhood the lot belongs to, as a UUID
   neighbourhoodLabel: string; // Name of the neighbourhood
-  lastMowingDate: Date; // Last mowing date for the lot
   lotIsSelected: boolean; // Selection state of the lot
-  extraNotes?: string; // Optional extra notes about the lot
   assignedTo: string[]; // Users assigned to the lot, can still be numbers if these are internal references
   workgroupId: string;
+  lastMowingDate?: Date; // Last mowing date for the lot
+  extraNotes?: string; // Optional extra notes about the lot
 }
 
 export interface GroupOfLotsInterface {
-  lots: LotInterface[]; // lots is an array of LotInterface
+  lots: LotComputedInDisplay[]; // lots is an array of LotInterface
 }
 
-export interface LotWithNeedMowingInterface extends LotInterface {
+export interface LotWithNeedMowingInterface extends LotComputedInDisplay {
   needMowing: number;
 }
 

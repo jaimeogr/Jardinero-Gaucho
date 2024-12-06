@@ -1,4 +1,9 @@
-export function lotNeedsMowing(dateToCheck: Date): number {
+export function lotNeedsMowing(dateToCheck?: Date): number {
+  if (!dateToCheck) {
+    // if date does not exist, it needs mowing
+    return 1;
+  }
+
   // Normalize dateToCheck to remove time components
   const date = new Date(dateToCheck);
   date.setHours(0, 0, 0, 0);

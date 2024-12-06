@@ -5,7 +5,7 @@ import useLotStore from '../stores/useLotStore';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
 import useZoneAssignmentScreenStore from '../stores/useZoneAssignmentScreenStore';
 import {
-  LotComputedInDisplay,
+  LotComputedForDisplay,
   NeighbourhoodData,
   NeighbourhoodZoneData,
 } from '../types/types';
@@ -26,7 +26,7 @@ const useTeamManagementController = () => {
   } = useZoneAssignmentScreenStore();
 
   const workgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
-  const lots: LotComputedInDisplay[] = useLotStore((state) => state.lots);
+  const lots: LotComputedForDisplay[] = useLotStore((state) => state.lots);
   const neighbourhoodZoneData: NeighbourhoodZoneData = useLotStore(
     (state) => state.neighbourhoodZoneData,
   );

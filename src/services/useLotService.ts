@@ -8,7 +8,7 @@ import useLotStore from '../stores/useLotStore';
 import useUserStore from '../stores/useUserStore';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
 import {
-  LotComputedInDisplay,
+  LotComputedForDisplay,
   LotWithNeedMowingInterface,
   ZoneWithIndicatorsInterface,
   NeighbourhoodWithIndicatorsInterface,
@@ -41,7 +41,7 @@ const initializeStore = () => {
 
 const createLot = (
   workgroupId: string,
-  newLot: Partial<LotComputedInDisplay>,
+  newLot: Partial<LotInStore>,
 ): LotInStore => {
   if (!newLot.lotLabel || !newLot.zoneId || !newLot.neighbourhoodId) {
     throw new Error('Missing required fields in new lot');
@@ -76,17 +76,19 @@ const markLotCompletedForSpecificDate = (
 };
 
 const markSelectedLotsCompletedForSpecificDate = (
-  lots: LotInStore,
+  allLots: LotInStore[],
+  selectedLots: LotComputedForDisplay[],
   date?: Date,
-): { lots: LotInStore; success: boolean } => {
-  const selectedLots = lots.filter((lot) => lot.lotIsSelected);
+): { lots: LotInStore[]; success: boolean } => {
   if (selectedLots.length === 0) {
     console.log('No lots selected');
-    return { lots, success: false };
+    return { lots: allLots, success: false };
   }
 
-  const updatedLots = lots.map((lot) =>
-    lot.lotIsSelected ? { ...lot, lastMowingDate: date || new Date() } : lot,
+  const updatedLots = allLots.map((lot) =>
+    selectedLots.some((selectedLot) => selectedLot.lotId === lot.lotId)
+      ? { ...lot, lastMowingDate: date || new Date() }
+      : lot,
   );
 
   console.log(`${selectedLots.length} lots marked as completed`);
@@ -124,7 +126,7 @@ const markSelectedLotsCompletedForSpecificDate = (
 //   }, [neighbourhoodZoneData, workgroupId]);
 // };
 
-const getLotById = (lotId: string): LotComputedInDisplay => {
+const getLotById = (lotId: string): LotComputedForDisplay => {
   const lot = useLotStore.getState().lots.find((lot) => lot.lotId === lotId);
   if (!lot) {
     throw new Error('Lot not found');
@@ -211,7 +213,7 @@ const addZoneToNeighbourhood = (
 // };
 
 const useNestedLots = (
-  lots: LotComputedInDisplay[],
+  lots: LotComputedForDisplay[],
   neighbourhoodZoneData: NeighbourhoodData[],
   selectedLots: Set<string>,
   expandedZones: Set<string>,
@@ -248,7 +250,7 @@ const useNestedLots = (
           acc[neighbourhoodId][zoneId].push(lot);
           return acc;
         },
-        {} as Record<string, Record<string, LotComputedInDisplay[]>>,
+        {} as Record<string, Record<string, LotComputedForDisplay[]>>,
       );
 
     // Iterate over each neighbourhood
@@ -575,7 +577,7 @@ const useAssignedLotsCountPerUserInWorkgroup = (
     });
 
     // Build a map of lots grouped by their zoneId
-    const lotsGroupedByZone: Record<string, LotComputedInDisplay[]> = {};
+    const lotsGroupedByZone: Record<string, LotComputedForDisplay[]> = {};
 
     lots.forEach((lot) => {
       if (lot.workgroupId === workgroupId) {

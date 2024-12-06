@@ -12,7 +12,7 @@ import useLotStore from '../stores/useLotStore';
 import {
   NeighbourhoodData,
   UserRole,
-  LotComputedInDisplay,
+  LotComputedForDisplay,
   ZoneData,
   UserInterface,
   UserInActiveWorkgroupWithRole,
@@ -40,7 +40,7 @@ const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
   return useLotService.markSelectedLotsCompletedForSpecificDate(date);
 };
 
-const createLot = (lot: Partial<LotComputedInDisplay>) => {
+const createLot = (lot: Partial<LotComputedForDisplay>) => {
   const workgroupId = getActiveWorkgroup()?.workgroupId;
   useLotService.createLot(workgroupId, lot);
   return true;

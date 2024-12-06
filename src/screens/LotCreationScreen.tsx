@@ -20,7 +20,7 @@ import CustomSelectInput from '../components/CustomSelectInput';
 import CustomTextInput from '../components/CustomTextInput';
 import useControllerService from '../controllers/useHomeScreenController';
 import { theme } from '../styles/styles';
-import { LotComputedInDisplay } from '../types/types';
+import { LotComputedForDisplay } from '../types/types';
 
 type RootStackParamList = {
   LotCreation: undefined;
@@ -188,7 +188,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       );
       return;
     }
-    const newLot: Partial<LotComputedInDisplay> = {
+    const newLot: Partial<LotComputedForDisplay> = {
       ...lotData,
       lotId: undefined,
       lotIsSelected: false,

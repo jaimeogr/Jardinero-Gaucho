@@ -12,7 +12,7 @@ export interface LotInStore {
   extraNotes?: string; // Optional extra notes about the lot
 }
 
-export interface LotComputedInDisplay {
+export interface LotComputedForDisplay {
   lotId: string; // Unique identifier for the lot, now as a UUID
   lotLabel: string; // Lot number or label
   zoneId: string; // ID of the zone the lot belongs to, as a UUID
@@ -27,10 +27,10 @@ export interface LotComputedInDisplay {
 }
 
 export interface GroupOfLotsInterface {
-  lots: LotComputedInDisplay[]; // lots is an array of LotInterface
+  lots: LotComputedForDisplay[]; // lots is an array of LotInterface
 }
 
-export interface LotWithNeedMowingInterface extends LotComputedInDisplay {
+export interface LotWithNeedMowingInterface extends LotComputedForDisplay {
   needMowing: number;
 }
 

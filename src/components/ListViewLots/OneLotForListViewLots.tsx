@@ -5,9 +5,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
 import { theme } from '../../styles/styles';
-import { LotComputedInDisplay } from '../../types/types';
+import { LotComputedForDisplay } from '../../types/types';
 
-const OneLotForTodaysLots: React.FC<LotComputedInDisplay> = ({
+const OneLotForTodaysLots: React.FC<LotComputedForDisplay> = ({
   lotLabel: number,
   zoneId: zone,
   neighbourhoodId: neighbourhood,

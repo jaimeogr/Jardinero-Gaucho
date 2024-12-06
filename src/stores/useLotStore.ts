@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 
 import {
-  LotComputedInDisplay,
+  LotComputedForDisplay,
   NeighbourhoodZoneData,
   NeighbourhoodData,
   ZoneData,
@@ -15,22 +15,22 @@ interface SelectionState {
 }
 
 interface LotStoreState {
-  lots: LotComputedInDisplay[];
+  lots: LotComputedForDisplay[];
   neighbourhoodZoneData: NeighbourhoodZoneData;
   selectionState: {
     [screen: string]: SelectionState;
   };
 
-  initializeLots: (lots: LotComputedInDisplay[]) => void;
+  initializeLots: (lots: LotComputedForDisplay[]) => void;
   initializeNeighbourhoodsAndZones: (data: NeighbourhoodZoneData) => void;
 
-  addLot: (newLot: LotComputedInDisplay) => void;
+  addLot: (newLot: LotComputedForDisplay) => void;
   addNeighbourhood: (neighbourhood: NeighbourhoodData) => NeighbourhoodData;
   addZoneToNeighbourhood: (neighbourhoodId: string, zone: ZoneData) => ZoneData;
   updateLotLastMowingDate: (lotId: string, date: Date) => void;
   updateLot: (
     lotId: string,
-    updatedInfo: Partial<LotComputedInDisplay>,
+    updatedInfo: Partial<LotComputedForDisplay>,
   ) => void;
 
   deselectAllLots: (screen: string) => void;
@@ -77,7 +77,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
     // Add more screens as needed
   },
 
-  initializeLots: (lots: LotComputedInDisplay[]) => {
+  initializeLots: (lots: LotComputedForDisplay[]) => {
     set({ lots });
   },
 
@@ -85,7 +85,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
     set({ neighbourhoodZoneData: data });
   },
 
-  addLot: (newLot: LotComputedInDisplay) => {
+  addLot: (newLot: LotComputedForDisplay) => {
     set((state) => ({
       lots: [...state.lots, newLot],
     }));
@@ -128,7 +128,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
     }));
   },
 
-  updateLot: (lotId: string, updatedInfo: Partial<LotComputedInDisplay>) => {
+  updateLot: (lotId: string, updatedInfo: Partial<LotComputedForDisplay>) => {
     set((state) => ({
       lots: state.lots.map((lot) =>
         lot.lotId === lotId ? { ...lot, ...updatedInfo } : lot,

@@ -97,128 +97,6 @@ const markSelectedLotsCompletedForSpecificDate = (
 
 const computeNestedLots = (
   lots: LotInStore[],
-  neighbourhoods: NeighbourhoodData[],
-  selectedLots: Set<string>,
-  expandedZones: Set<string>,
-  expandedNeighbourhoods: Set<string>,
-  workgroupId: string | null,
-): NestedLotsWithIndicatorsInterface => {
-  const result: NestedLotsWithIndicatorsInterface = {
-    nestedLots: [],
-    selectedLots: 0,
-  };
-
-  if (!workgroupId) {
-    return result;
-  }
-
-  // Group lots by neighbourhood and zone
-  const lotsByNeighbourhoodAndZone = lots
-    .filter((lot) => lot.workgroupId === workgroupId)
-    .reduce(
-      (acc, lot) => {
-        const { neighbourhoodId, zoneId } = lot;
-        acc[neighbourhoodId] = acc[neighbourhoodId] || {};
-        acc[neighbourhoodId][zoneId] = acc[neighbourhoodId][zoneId] || [];
-        acc[neighbourhoodId][zoneId].push(lot);
-        return acc;
-      },
-      {} as Record<string, Record<string, LotInStore[]>>,
-    );
-
-  for (const neighbourhoodId in lotsByNeighbourhoodAndZone) {
-    const neighbourhoodData = neighbourhoods.find(
-      (n) => n.neighbourhoodId === neighbourhoodId,
-    );
-    if (!neighbourhoodData) continue;
-
-    let neighbourhoodNeedMowingCritically = 0;
-    let neighbourhoodNeedMowing = 0;
-    let neighbourhoodDoesntNeedMowing = 0;
-    let neighbourhoodSelectedLotsCounter = 0;
-    let neighbourhoodAllLotsCounter = 0;
-
-    const zones: ZoneWithIndicatorsInterface[] = [];
-    const zonesInNeighbourhood = lotsByNeighbourhoodAndZone[neighbourhoodId];
-
-    for (const zoneId in zonesInNeighbourhood) {
-      const lotsInZone = zonesInNeighbourhood[zoneId];
-
-      let zoneNeedMowingCritically = 0;
-      let zoneNeedMowing = 0;
-      let zoneDoesntNeedMowing = 0;
-      let zoneSelectedLotsCounter = 0;
-
-      const lotsWithIndicators: LotWithNeedMowingInterface[] = lotsInZone.map(
-        (lot) => {
-          const lotIsSelected = selectedLots.has(lot.lotId);
-          if (lotIsSelected) zoneSelectedLotsCounter++;
-          neighbourhoodAllLotsCounter++;
-
-          const needsMowing = lotNeedsMowing(lot.lastMowingDate);
-          if (needsMowing === 2) zoneNeedMowingCritically++;
-          else if (needsMowing === 1) zoneNeedMowing++;
-          else zoneDoesntNeedMowing++;
-
-          return {
-            ...lot,
-            isSelected: lotIsSelected,
-            needMowing: needsMowing,
-          };
-        },
-      );
-
-      neighbourhoodNeedMowingCritically += zoneNeedMowingCritically;
-      neighbourhoodNeedMowing += zoneNeedMowing;
-      neighbourhoodDoesntNeedMowing += zoneDoesntNeedMowing;
-      neighbourhoodSelectedLotsCounter += zoneSelectedLotsCounter;
-
-      const zoneData = neighbourhoodData.zones.find((z) => z.zoneId === zoneId);
-      const zoneLabel = zoneData?.zoneLabel || '';
-      const isZoneSelected =
-        zoneSelectedLotsCounter === lotsInZone.length && lotsInZone.length > 0;
-      const isZoneExpanded = expandedZones.has(zoneId);
-
-      const zoneOption: ZoneWithIndicatorsInterface = {
-        zoneId,
-        zoneLabel,
-        needMowing: zoneNeedMowing,
-        needMowingCritically: zoneNeedMowingCritically,
-        doesntNeedMowing: zoneDoesntNeedMowing,
-        isSelected: isZoneSelected,
-        isExpanded: isZoneExpanded,
-        lots: lotsWithIndicators,
-      };
-
-      zones.push(zoneOption);
-    }
-
-    const isNeighbourhoodSelected =
-      neighbourhoodSelectedLotsCounter === neighbourhoodAllLotsCounter &&
-      neighbourhoodAllLotsCounter > 0;
-    const neighbourhoodLabel = neighbourhoodData.neighbourhoodLabel || '';
-    const isNeighbourhoodExpanded = expandedNeighbourhoods.has(neighbourhoodId);
-
-    const neighbourhoodOption: NeighbourhoodWithIndicatorsInterface = {
-      neighbourhoodId,
-      neighbourhoodLabel,
-      needMowing: neighbourhoodNeedMowing,
-      needMowingCritically: neighbourhoodNeedMowingCritically,
-      doesntNeedMowing: neighbourhoodDoesntNeedMowing,
-      isSelected: isNeighbourhoodSelected,
-      isExpanded: isNeighbourhoodExpanded,
-      zones,
-    };
-
-    result.nestedLots.push(neighbourhoodOption);
-    result.selectedLots += neighbourhoodSelectedLotsCounter;
-  }
-
-  return result;
-};
-
-const useNestedLots = (
-  lots: LotInStore[],
   allNeighbourhoods: NeighbourhoodData[],
   selectedLots: Set<string>,
   expandedZones: Set<string>,
@@ -789,9 +667,9 @@ export default {
   // Lots, zones, neighbourhoods
   createLot,
   getLotById,
+  computeNestedLots,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
-  useNestedLots,
   addZoneToNeighbourhood,
   addNeighbourhood,
 

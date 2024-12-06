@@ -250,7 +250,7 @@ const useNestedLots = (screen: string): NestedLotsWithIndicatorsInterface => {
 
   console.log('useNestedLots', screen, activeWorkgroupId);
 
-  return useLotService.useNestedLots(screen, activeWorkgroupId);
+  return useLotService.computeNestedLots(screen, activeWorkgroupId);
 };
 
 export default {

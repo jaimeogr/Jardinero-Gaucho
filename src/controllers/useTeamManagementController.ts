@@ -35,7 +35,7 @@ const useTeamManagementController = () => {
     const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
       (n) => n.workgroupId === workgroupId,
     );
-    return useLotService.useNestedLots(
+    return useLotService.computeNestedLots(
       lots,
       neighbourhoods,
       selectedLots,

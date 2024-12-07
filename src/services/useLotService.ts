@@ -70,21 +70,16 @@ const markLotCompletedForSpecificDate = (
 
 const markSelectedLotsCompletedForSpecificDate = (
   allLots: LotInStore[],
-  selectedLots: LotComputedForDisplay[],
+  selectedLots: Set<string>,
   date?: Date,
 ): { lots: LotInStore[]; success: boolean } => {
-  if (selectedLots.length === 0) {
-    console.log('No lots selected');
-    return { lots: allLots, success: false };
-  }
-
   const updatedLots = allLots.map((lot) =>
-    selectedLots.some((selectedLot) => selectedLot.lotId === lot.lotId)
+    selectedLots.has(lot.lotId)
       ? { ...lot, lastMowingDate: date || new Date() }
       : lot,
   );
 
-  console.log(`${selectedLots.length} lots marked as completed`);
+  console.log(`${selectedLots.size} lots marked as completed`);
   return { lots: updatedLots, success: true };
 };
 

@@ -47,16 +47,16 @@ const useHomeScreenController = () => {
     setActiveWorkgroup('1');
   };
 
-  const getLotById = (lotId: string) => {
-    return useLotService.getLotById(lotId);
-  };
-
   const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
-    useLotService.markLotCompletedForSpecificDate(lotId, date);
+    useLotService.markLotCompletedForSpecificDate(lots, lotId, date);
   };
 
   const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
-    return useLotService.markSelectedLotsCompletedForSpecificDate(date);
+    return useLotService.markSelectedLotsCompletedForSpecificDate(
+      lots,
+      selectedLots,
+      date,
+    );
   };
 
   const createLot = (lot: Partial<LotComputedForDisplay>) => {
@@ -151,7 +151,6 @@ const useHomeScreenController = () => {
 
     // Lots, zones, neighbourhoods
     useNestedLots,
-    getLotById,
     createLot,
     markLotCompletedForSpecificDate,
     markSelectedLotsCompletedForSpecificDate,

@@ -167,9 +167,9 @@ const useHomeScreenController = () => {
     // Expanded and collapsed accordions
     toggleZoneExpansion,
     toggleNeighbourhoodExpansion,
-    collapseAllZones,
-    expandAllNeighbourhoods,
-    collapseAllNeighbourhoods,
+    collapseAllZones: useLotStore.getState().collapseAllZones,
+    expandAllNeighbourhoods: useLotStore.getState().expandAllNeighbourhoods,
+    collapseAllNeighbourhoods: useLotStore.getState().collapseAllNeighbourhoods,
   };
 };
 

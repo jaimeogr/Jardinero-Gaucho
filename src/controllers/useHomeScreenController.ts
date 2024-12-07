@@ -48,15 +48,36 @@ const useHomeScreenController = () => {
   };
 
   const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
-    useLotService.markLotCompletedForSpecificDate(lots, lotId, date);
+    const updatedLots = useLotService.markLotCompletedForSpecificDate(
+      lots,
+      lotId,
+      date,
+    );
+    updatedLots.forEach((updatedLot) => {
+      if (updatedLot.lotId === lotId) {
+        useLotStore
+          .getState()
+          .updateLotLastMowingDate(updatedLot.lotId, updatedLot.lastMowingDate);
+        // updatedLot.lastMowingDate is never undefined because there is a default value inside markLotCompletedForSpecificDate
+      }
+    });
   };
 
   const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
-    return useLotService.markSelectedLotsCompletedForSpecificDate(
+    const updatedLots = useLotService.markSelectedLotsCompletedForSpecificDate(
       lots,
       selectedLots,
       date,
     );
+    updatedLots.forEach((updatedLot) => {
+      if (selectedLots.has(updatedLot.lotId)) {
+        useLotStore
+          .getState()
+          .updateLotLastMowingDate(updatedLot.lotId, updatedLot.lastMowingDate);
+        // updatedLot.lastMowingDate is never undefined because there is a default value inside markSelectedLotsCompletedForSpecificDate
+      }
+    });
+    return true;
   };
 
   const createLot = (lot: Partial<LotComputedForDisplay>) => {

@@ -57,7 +57,7 @@ const markLotCompletedForSpecificDate = (
   allLots: LotInStore[],
   lotId: string,
   date?: Date,
-): { lots: LotInStore[]; success: boolean } => {
+): LotInStore[] => {
   // In a real scenario, you'd verify permissions here before updating.
   // Assuming permission is handled at a higher level.
 
@@ -65,14 +65,14 @@ const markLotCompletedForSpecificDate = (
     lot.lotId === lotId ? { ...lot, lastMowingDate: date || new Date() } : lot,
   );
 
-  return { lots: updatedLots, success: true };
+  return updatedLots;
 };
 
 const markSelectedLotsCompletedForSpecificDate = (
   allLots: LotInStore[],
   selectedLots: Set<string>,
   date?: Date,
-): { lots: LotInStore[]; success: boolean } => {
+): LotInStore[] => {
   const updatedLots = allLots.map((lot) =>
     selectedLots.has(lot.lotId)
       ? { ...lot, lastMowingDate: date || new Date() }
@@ -80,7 +80,7 @@ const markSelectedLotsCompletedForSpecificDate = (
   );
 
   console.log(`${selectedLots.size} lots marked as completed`);
-  return { lots: updatedLots, success: true };
+  return updatedLots;
 };
 
 const computeNestedLots = (

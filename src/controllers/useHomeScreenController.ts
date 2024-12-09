@@ -80,22 +80,21 @@ const useHomeScreenController = () => {
     return true;
   };
 
-  const createLot = (lot: Partial<LotComputedForDisplay>) => {
+  const createLot = (lot: Partial<LotInStore>) => {
     const newLot = useLotService.createLot(lot, workgroupId);
     useLotStore.getState().addLot(newLot);
     return true;
   };
 
-  const addNeighbourhood = (neighbourhoodLabel: string): NeighbourhoodData => {
-    const activeWorkgroup = getActiveWorkgroup()?.workgroupId;
-    return useLotService.addNeighbourhood(activeWorkgroup, neighbourhoodLabel);
+  const createZone = (neighbourhoodId: string, zoneLabel: string): ZoneData => {
+    return useLotService.addZoneToNeighbourhood(neighbourhoodId, zoneLabel);
   };
 
-  const addZoneToNeighbourhood = (
-    neighbourhoodId: string,
-    zoneLabel: string,
-  ): ZoneData => {
-    return useLotService.addZoneToNeighbourhood(neighbourhoodId, zoneLabel);
+  const createNeighbourhood = (
+    neighbourhoodLabel: string,
+  ): NeighbourhoodData => {
+    const activeWorkgroup = getActiveWorkgroup()?.workgroupId;
+    return useLotService.addNeighbourhood(activeWorkgroup, neighbourhoodLabel);
   };
 
   const setActiveWorkgroup = (workgroupId: string) => {
@@ -123,28 +122,55 @@ const useHomeScreenController = () => {
   };
 
   const toggleLotSelection = (lotId: string, newState: boolean) => {
-    useLotService.toggleLotSelection(lotId, newState);
+    useHomeScreenStore.getState().toggleSelectionSingleLot(lotId, newState);
   };
 
   const toggleZoneSelection = (zoneId: string, newState: boolean) => {
-    useLotService.toggleZoneSelection(zoneId, newState);
+    const lotIdsForZone = lots
+      .filter((lot) => lot.zoneId === zoneId)
+      .map((lot) => lot.lotId);
+
+    useHomeScreenStore
+      .getState()
+      .toggleSelectionLotsArray(lotIdsForZone, newState);
   };
 
   const toggleNeighbourhoodSelection = (
     neighbourhoodId: string,
     newState: boolean,
   ) => {
-    useLotService.toggleNeighbourhoodSelection(neighbourhoodId, newState);
+    const lotIdsForNeighbourhood = lots
+      .filter((lot) => lot.neighbourhoodId === neighbourhoodId)
+      .map((lot) => lot.lotId);
+
+    useHomeScreenStore
+      .getState()
+      .toggleSelectionLotsArray(lotIdsForNeighbourhood, newState);
   };
 
   const deselectAllLots = () => {
-    useLotService.deselectAllLots();
+    useHomeScreenStore.getState().deselectAllLots();
   };
 
-  const toggleNeighbourhoodExpansion = (neighbourhoodId: string) => {};
+  const toggleZoneExpansion = (zoneId: string) => {
+    useHomeScreenStore.getState().toggleZoneExpansion(zoneId);
+  };
 
-  const toggleZoneExpansion = (zoneId: string) => {};
+  const collapseAllZones = () => {
+    useHomeScreenStore.getState().collapseAllZones();
+  };
 
+  const toggleNeighbourhoodExpansion = (neighbourhoodId: string) => {
+    useHomeScreenStore.getState().toggleNeighbourhoodExpansion(neighbourhoodId);
+  };
+
+  const collapseAllNeighbourhoods = () => {
+    useHomeScreenStore.getState().collapseAllNeighbourhoods();
+  };
+
+  const expandAllNeighbourhoods = (neighbourhoodIds: string[]) => {
+    useHomeScreenStore.getState().expandAllNeighbourhoods(neighbourhoodIds);
+  };
   const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
     const nestedLots = React.useMemo<NestedLotsWithIndicatorsInterface>(() => {
       return useLotService.computeNestedLots(
@@ -176,8 +202,8 @@ const useHomeScreenController = () => {
     markLotCompletedForSpecificDate,
     markSelectedLotsCompletedForSpecificDate,
     useCheckUserHasPermission,
-    addZoneToNeighbourhood,
-    addNeighbourhood,
+    addZoneToNeighbourhood: createZone,
+    addNeighbourhood: createNeighbourhood,
 
     // selections
     deselectAllLots,
@@ -188,9 +214,9 @@ const useHomeScreenController = () => {
     // Expanded and collapsed accordions
     toggleZoneExpansion,
     toggleNeighbourhoodExpansion,
-    collapseAllZones: useLotStore.getState().collapseAllZones,
-    expandAllNeighbourhoods: useLotStore.getState().expandAllNeighbourhoods,
-    collapseAllNeighbourhoods: useLotStore.getState().collapseAllNeighbourhoods,
+    collapseAllZones,
+    expandAllNeighbourhoods,
+    collapseAllNeighbourhoods,
   };
 };
 

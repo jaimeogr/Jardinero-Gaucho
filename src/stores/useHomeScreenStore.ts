@@ -7,8 +7,8 @@ interface HomeScreenState {
   expandedNeighbourhoods: Set<string>;
 
   // Actions for selections
-  toggleLotSelection: (lotId: string, newState: boolean) => void;
-  selectLots: (lotIds: string[]) => void;
+  toggleSelectionSingleLot: (lotId: string, newState: boolean) => void;
+  toggleSelectionLotsArray: (lotIds: string[], newState: boolean) => void;
   deselectLots: (lotIds: string[]) => void;
   deselectAllLots: () => void;
 
@@ -28,7 +28,7 @@ const useHomeScreenStore = create<HomeScreenState>((set, get) => ({
   expandedNeighbourhoods: new Set<string>(),
 
   // Actions for selections
-  toggleLotSelection: (lotId, newState) => {
+  toggleSelectionSingleLot: (lotId, newState) => {
     set((state) => {
       const selectedLots = new Set(state.selectedLots);
       if (newState) {
@@ -39,10 +39,16 @@ const useHomeScreenStore = create<HomeScreenState>((set, get) => ({
       return { selectedLots };
     });
   },
-  selectLots: (lotIds) => {
+  toggleSelectionLotsArray: (lotIds, newState) => {
     set((state) => {
       const selectedLots = new Set(state.selectedLots);
-      lotIds.forEach((id) => selectedLots.add(id));
+      lotIds.forEach((id) => {
+        if (newState) {
+          selectedLots.add(id);
+        } else {
+          selectedLots.delete(id);
+        }
+      });
       return { selectedLots };
     });
   },

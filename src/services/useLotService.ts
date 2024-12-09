@@ -33,9 +33,13 @@ const initializeStore = () => {
 //////////////////////////////////// NEW FUNCTIONS START HERE ///////////////////////////////////////////////////////
 
 const createLot = (
-  workgroupId: string,
   newLot: Partial<LotInStore>,
+  workgroupId: string | null,
 ): LotInStore => {
+  if (!workgroupId) {
+    throw new Error('Missing workgroupId in createLot');
+  }
+
   if (!newLot.lotLabel || !newLot.zoneId || !newLot.neighbourhoodId) {
     throw new Error('Missing required fields in new lot');
   }

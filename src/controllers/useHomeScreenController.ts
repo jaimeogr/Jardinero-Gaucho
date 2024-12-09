@@ -81,8 +81,8 @@ const useHomeScreenController = () => {
   };
 
   const createLot = (lot: Partial<LotComputedForDisplay>) => {
-    const workgroupId = getActiveWorkgroup()?.workgroupId;
-    useLotService.createLot(workgroupId, lot);
+    const newLot = useLotService.createLot(lot, workgroupId);
+    useLotStore.getState().addLot(newLot);
     return true;
   };
 

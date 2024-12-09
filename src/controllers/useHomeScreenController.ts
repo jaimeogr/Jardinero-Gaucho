@@ -86,25 +86,21 @@ const useHomeScreenController = () => {
     return true;
   };
 
-  const createZone = (neighbourhoodId: string, zoneLabel: string): ZoneData => {
+  const createZone = (
+    neighbourhoodId: string,
+    zoneLabel: string,
+  ): [string, ZoneData] => {
     return useLotService.addZoneToNeighbourhood(neighbourhoodId, zoneLabel);
   };
 
   const createNeighbourhood = (
     neighbourhoodLabel: string,
   ): NeighbourhoodData => {
-    const activeWorkgroup = getActiveWorkgroup()?.workgroupId;
-    return useLotService.addNeighbourhood(activeWorkgroup, neighbourhoodLabel);
+    return useLotService.addNeighbourhood(workgroupId, neighbourhoodLabel);
   };
 
   const setActiveWorkgroup = (workgroupId: string) => {
     useWorkgroupService.setActiveWorkgroup(workgroupId);
-  };
-
-  const getActiveWorkgroup = () => {
-    const activeWorkgroup = useWorkgroupService.getActiveWorkgroup();
-    console.log('Active Workgroup:', activeWorkgroup);
-    return activeWorkgroup;
   };
 
   const useCheckUserHasPermission = (requiredRole: UserRole) => {

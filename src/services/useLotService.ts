@@ -240,9 +240,13 @@ const computeNestedLots = (
 };
 
 const addNeighbourhood = (
-  workgroupId: string,
+  workgroupId: string | null,
   neighbourhoodLabel: string,
 ): NeighbourhoodData => {
+  if (!workgroupId) {
+    throw new Error('Missing workgroupId in addNeighbourhood');
+  }
+
   const newNeighbourhood: NeighbourhoodData = {
     workgroupId: workgroupId,
     neighbourhoodId: uuidv4(),

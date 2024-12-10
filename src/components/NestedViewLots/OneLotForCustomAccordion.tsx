@@ -1,10 +1,10 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Divider } from 'react-native-paper';
 
 import { theme } from '../../styles/styles';
 import { IAccordionController } from '../../types/controllerTypes';
+import { LotComputedForDisplay } from '../../types/types';
 
 const {
   lotBackgroundNotSelected,
@@ -15,27 +15,24 @@ const {
 
 interface OneLotForCustomAccordionProps {
   controller: IAccordionController;
-  lotId: string; // Use LotInterface to type the lot prop
-  isLastItem: boolean;
+  lot: LotComputedForDisplay;
   isSelectable?: boolean;
   renderRightSide?: (lot) => JSX.Element;
 }
 
 const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
   controller,
-  isLastItem,
-  lotId,
+  lot,
   isSelectable = true,
   renderRightSide,
 }) => {
-  const { getLotById, toggleLotSelection } = controller;
+  const { toggleLotSelection } = controller;
   // Use useLotStore with a state selector to get only the relevant data to avoid unnecessary re-renders
-  const lot = getLotById(lotId);
 
   // Wrap the toggle function with useCallback to avoid creating a new function on each render
   const handleToggle = useCallback(() => {
-    toggleLotSelection(lotId, !lot.lotIsSelected);
-  }, [toggleLotSelection, lotId, lot]);
+    toggleLotSelection(lot.lotId, !lot.lotIsSelected);
+  }, [toggleLotSelection, lot]);
 
   // Ensure that if the lot is not found, we don't trigger re-renders unnecessarily
   if (!lot) {
@@ -80,10 +77,6 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
           <View style={styles.lotRightSide}>{renderRightSide(lot)}</View>
         )}
       </TouchableOpacity>
-      {/* divider at the bottom of the item renders when the item is not selected and when its not the last item in the iteration. */}
-      {/* {lot.lotIsSelected || isLastItem ? null : (
-        <Divider style={styles.divider} bold={true} />
-      )} */}
     </View>
   );
 };

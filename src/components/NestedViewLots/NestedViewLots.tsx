@@ -73,6 +73,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
     ({ item: neighbourhood }) => {
       return (
         <CustomAccordion
+          controller={controller}
           id={neighbourhood.neighbourhoodId}
           element={neighbourhood}
           level={0}
@@ -81,11 +82,11 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
           isSelectable={!onlyZonesAreSelectable}
           isExpanded={neighbourhood.isExpanded}
           renderRightSide={renderRightSideForAccordion}
-          controller={controller}
         >
           {/* Zones */}
           {neighbourhood.zones.map((zone) => (
             <CustomAccordion
+              controller={controller}
               id={zone.zoneId}
               key={zone.zoneId}
               level={1}
@@ -95,13 +96,13 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
               isExpanded={zone.isExpanded}
               blockExpansion={blockZoneExpansion}
               renderRightSide={renderRightSideForAccordion}
-              controller={controller}
             >
               {/* Lots */}
               {zone.lots.map((lot) => (
                 <OneLotForCustomAccordion
+                  controller={controller}
                   key={lot.lotId}
-                  lotId={lot.lotId}
+                  lot={lot}
                   isLastItem={false}
                   isSelectable={!onlyZonesAreSelectable}
                   renderRightSide={renderRightSideForOneLot}

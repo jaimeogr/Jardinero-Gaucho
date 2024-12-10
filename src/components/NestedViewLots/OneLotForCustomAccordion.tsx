@@ -17,7 +17,7 @@ interface OneLotForCustomAccordionProps {
   controller: IAccordionController;
   lot: LotComputedForDisplay;
   isSelectable?: boolean;
-  renderRightSide?: (lot) => JSX.Element;
+  renderRightSide?: (lot: LotComputedForDisplay) => JSX.Element;
 }
 
 const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({

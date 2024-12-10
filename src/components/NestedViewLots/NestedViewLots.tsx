@@ -103,7 +103,6 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
                   controller={controller}
                   key={lot.lotId}
                   lot={lot}
-                  isLastItem={false}
                   isSelectable={!onlyZonesAreSelectable}
                   renderRightSide={renderRightSideForOneLot}
                 />

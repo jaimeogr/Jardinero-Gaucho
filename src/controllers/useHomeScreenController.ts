@@ -23,8 +23,9 @@ import {
   LotInStore,
 } from '../types/types';
 import { userHasPermission } from '../utils/permissionUtils';
+import { IHomeScreenController } from './../types/controllerTypes';
 
-const useHomeScreenController = () => {
+const useHomeScreenController = (): IHomeScreenController => {
   const workgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
   const lots: LotInStore[] = useLotStore((state) => state.lots);
   const neighbourhoodsWithZones: NeighbourhoodData[] = useLotStore(
@@ -80,10 +81,9 @@ const useHomeScreenController = () => {
     return true;
   };
 
-  const createLot = (lot: Partial<LotInStore>) => {
+  const createLot = (lot: Partial<LotInStore>): void => {
     const newLot = useLotService.createLot(lot, workgroupId);
     useLotStore.getState().addLot(newLot);
-    return true;
   };
 
   const createZone = (
@@ -101,20 +101,6 @@ const useHomeScreenController = () => {
 
   const setActiveWorkgroup = (workgroupId: string) => {
     useWorkgroupService.setActiveWorkgroup(workgroupId);
-  };
-
-  const useCheckUserHasPermission = (requiredRole: UserRole) => {
-    const currentUserId = useUserService.useGetCurrentUser()?.userId;
-    if (!currentUserId) {
-      console.error('Current user not found.');
-      return false;
-    }
-    const workgroup = useWorkgroupService.useGetWorkgroupById(currentUserId);
-    if (!workgroup) {
-      console.error('Workgroup not found for the current user.');
-      return false;
-    }
-    return userHasPermission(workgroup, currentUserId, requiredRole);
   };
 
   const toggleLotSelection = (lotId: string, newState: boolean) => {
@@ -195,11 +181,10 @@ const useHomeScreenController = () => {
     // Lots, zones, neighbourhoods
     useNestedLots,
     createLot,
+    createZone,
+    createNeighbourhood,
     markLotCompletedForSpecificDate,
     markSelectedLotsCompletedForSpecificDate,
-    useCheckUserHasPermission,
-    addZoneToNeighbourhood: createZone,
-    addNeighbourhood: createNeighbourhood,
 
     // selections
     deselectAllLots,

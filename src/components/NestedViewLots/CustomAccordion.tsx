@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
-import useControllerService from '../../controllers/useHomeScreenController';
+import useHomeScreenController from '../../controllers/useHomeScreenController';
 import { theme } from '../../styles/styles';
 import {
   ZoneWithIndicatorsInterface,
@@ -61,7 +61,7 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
     toggleNeighbourhoodSelection,
     toggleNeighbourhoodExpansion,
     toggleZoneExpansion,
-  } = useControllerService;
+  } = useHomeScreenController();
 
   const handleToggleIsExpanded = useCallback(() => {
     if (level === 0) {

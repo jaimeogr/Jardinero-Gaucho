@@ -16,8 +16,9 @@ import {
   UserRole,
   UserInterface,
 } from '../types/types';
+import { ITeamManagementController } from './../types/controllerTypes';
 
-const useTeamManagementController = () => {
+const useTeamManagementController = (): ITeamManagementController => {
   const {
     toggleLotSelection,
     selectLots,

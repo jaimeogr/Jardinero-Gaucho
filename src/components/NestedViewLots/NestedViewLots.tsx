@@ -12,8 +12,10 @@ import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import useControllerService from '../../controllers/useHomeScreenController';
+import useHomeScreenController from '../../controllers/useHomeScreenController';
+import useTeamManagementController from '../../controllers/useTeamManagementController';
 import { theme } from '../../styles/styles';
+import { IAccordionController } from '../../types/controllerTypes';
 import {
   NeighbourhoodData,
   ZoneData,
@@ -43,8 +45,14 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   onlyZonesAreSelectable = false,
   blockZoneExpansion = false,
 }) => {
+  const homeController = useHomeScreenController();
+  const teamController = useTeamManagementController();
+
+  const controller: IAccordionController =
+    screen === 'homeScreen' ? homeController : teamController;
+
   const nestedLotsWithIndicatorsInterface: NestedLotsWithIndicatorsInterface =
-    useControllerService.useNestedLots(screen);
+    controller.useNestedLots();
 
   const { nestedLots, selectedLots } = nestedLotsWithIndicatorsInterface;
 
@@ -73,6 +81,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
           isSelectable={!onlyZonesAreSelectable}
           isExpanded={neighbourhood.isExpanded}
           renderRightSide={renderRightSideForAccordion}
+          controller={controller}
         >
           {/* Zones */}
           {neighbourhood.zones.map((zone) => (
@@ -86,6 +95,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
               isExpanded={zone.isExpanded}
               blockExpansion={blockZoneExpansion}
               renderRightSide={renderRightSideForAccordion}
+              controller={controller}
             >
               {/* Lots */}
               {zone.lots.map((lot) => (

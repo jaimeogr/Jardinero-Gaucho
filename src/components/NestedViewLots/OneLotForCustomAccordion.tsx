@@ -3,8 +3,8 @@ import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Divider } from 'react-native-paper';
 
-import useControllerService from '../../controllers/useHomeScreenController';
 import { theme } from '../../styles/styles';
+import { IAccordionController } from '../../types/controllerTypes';
 
 const {
   lotBackgroundNotSelected,
@@ -14,6 +14,7 @@ const {
 } = theme.colors.accordion;
 
 interface OneLotForCustomAccordionProps {
+  controller: IAccordionController;
   lotId: string; // Use LotInterface to type the lot prop
   isLastItem: boolean;
   isSelectable?: boolean;
@@ -21,12 +22,13 @@ interface OneLotForCustomAccordionProps {
 }
 
 const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
+  controller,
   isLastItem,
   lotId,
   isSelectable = true,
   renderRightSide,
 }) => {
-  const { getLotById, toggleLotSelection } = useControllerService;
+  const { getLotById, toggleLotSelection } = controller;
   // Use useLotStore with a state selector to get only the relevant data to avoid unnecessary re-renders
   const lot = getLotById(lotId);
 

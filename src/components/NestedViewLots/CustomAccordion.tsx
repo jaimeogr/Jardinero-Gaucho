@@ -3,8 +3,8 @@ import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
-import useHomeScreenController from '../../controllers/useHomeScreenController';
 import { theme } from '../../styles/styles';
+import { IAccordionController } from '../../types/controllerTypes';
 import {
   ZoneWithIndicatorsInterface,
   NeighbourhoodWithIndicatorsInterface,
@@ -36,11 +36,11 @@ interface CustomAccordionProps {
   isSelected: boolean;
   isSelectable?: boolean;
   isExpanded?: boolean;
-  screen: string;
   blockExpansion?: boolean;
   renderRightSide?: (
     element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface,
   ) => JSX.Element;
+  controller: IAccordionController;
 }
 
 const CustomAccordion: React.FC<CustomAccordionProps> = ({
@@ -52,16 +52,16 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   isSelected,
   isSelectable = true,
   isExpanded = false,
-  screen,
   blockExpansion = false,
   renderRightSide = null,
+  controller,
 }) => {
   const {
     toggleZoneSelection,
     toggleNeighbourhoodSelection,
     toggleNeighbourhoodExpansion,
     toggleZoneExpansion,
-  } = useHomeScreenController();
+  } = controller;
 
   const handleToggleIsExpanded = useCallback(() => {
     if (level === 0) {
@@ -74,14 +74,13 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   const handleToggleIsSelected = useCallback(() => {
     const newState = !isSelected;
     if (level === 0) {
-      toggleNeighbourhoodSelection(screen, id, newState);
+      toggleNeighbourhoodSelection(id, newState);
     } else {
-      toggleZoneSelection(screen, id, newState);
+      toggleZoneSelection(id, newState);
     }
   }, [
     id,
     isSelected,
-    screen,
     level,
     toggleZoneSelection,
     toggleNeighbourhoodSelection,

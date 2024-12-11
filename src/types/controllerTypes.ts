@@ -24,9 +24,10 @@ export interface IAccordionController {
 }
 
 export interface IHomeScreenController extends IAccordionController {
+  useNeighbourhoodsWithZones(): NeighbourhoodData[];
   initializeServices(): void;
   createLot(lot: Partial<LotInStore>): void;
-  createZone(neighbourhoodId: string, zoneLabel: string): [string, ZoneData];
+  createZone(neighbourhoodId: string, zoneLabel: string): ZoneData;
   createNeighbourhood(neighbourhoodLabel: string): NeighbourhoodData;
   markLotCompletedForSpecificDate(lotId: string, date?: Date): void;
   markSelectedLotsCompletedForSpecificDate(date?: Date): void;

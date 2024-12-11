@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Surface, Appbar } from 'react-native-paper';
 
 import NestedViewLots from './NestedViewLots/NestedViewLots';
-import useControllerService from '../controllers/useHomeScreenController';
+import useHomeScreenController from '../controllers/useHomeScreenController';
 import { theme } from '../styles/styles';
 import {
   LotWithNeedMowingInterface,
@@ -12,7 +12,7 @@ import {
   NeighbourhoodWithIndicatorsInterface,
 } from '../types/types';
 
-const screenCodeForGlobalState = 'homeScreen';
+const SCREEN_CODE_FOR_GLOBAL_STATE = 'homeScreen';
 
 const LotsForHomeScreen = () => {
   const {
@@ -20,7 +20,7 @@ const LotsForHomeScreen = () => {
     deselectAllLots,
     collapseAllNeighbourhoods,
     collapseAllZones,
-  } = useControllerService;
+  } = useHomeScreenController();
 
   useEffect(() => {
     collapseAllNeighbourhoods();
@@ -28,17 +28,12 @@ const LotsForHomeScreen = () => {
   }, [collapseAllNeighbourhoods, collapseAllZones]);
 
   const handleDeselectLots = useCallback(() => {
-    deselectAllLots(screenCodeForGlobalState);
+    deselectAllLots();
   }, [deselectAllLots]);
 
   const handleMarkLotsCompleted = () => {
-    const success = markSelectedLotsCompletedForSpecificDate();
-    if (success) {
-      console.log('Selected lots marked as completed');
-      handleDeselectLots();
-    } else {
-      console.error('No lots were selected to mark as completed');
-    }
+    markSelectedLotsCompletedForSpecificDate();
+    handleDeselectLots();
   };
 
   const renderRightSideForOneLot = useCallback(
@@ -125,7 +120,7 @@ const LotsForHomeScreen = () => {
     <Surface style={styles.surface}>
       <View style={styles.content}>
         <NestedViewLots
-          screen={screenCodeForGlobalState}
+          screen={SCREEN_CODE_FOR_GLOBAL_STATE}
           selectingStateRightSideActions={selectingStateRightSideActions}
           handleDeselectLots={handleDeselectLots}
           renderRightSideForAccordion={renderRightSideForAccordion}

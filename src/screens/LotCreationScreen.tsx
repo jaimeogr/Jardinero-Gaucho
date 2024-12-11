@@ -18,7 +18,7 @@ import {
 import CustomDatePickerInput from '../components/CustomDatePickerInput';
 import CustomSelectInput from '../components/CustomSelectInput';
 import CustomTextInput from '../components/CustomTextInput';
-import useControllerService from '../controllers/useHomeScreenController';
+import useHomeScreenController from '../controllers/useHomeScreenController';
 import { theme } from '../styles/styles';
 import { LotComputedForDisplay } from '../types/types';
 
@@ -52,17 +52,16 @@ const initialLotData = {
 const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   const {
     createLot,
-    useNeighbourhoodsAndZones,
-    addNeighbourhood,
-    addZoneToNeighbourhood,
-  } = useControllerService;
-  const neighbourhoods = useNeighbourhoodsAndZones();
+    useNeighbourhoodsWithZones,
+    createNeighbourhood,
+    createZone,
+  } = useHomeScreenController();
+
+  const neighbourhoods = useNeighbourhoodsWithZones();
 
   const [lotData, setLotData] = useState(initialLotData);
-
   const [showNeighbourhoodModal, setShowNeighbourhoodModal] = useState(false);
   const [newNeighbourhoodLabel, setNewNeighbourhoodLabel] = useState('');
-
   const [showZoneModal, setShowZoneModal] = useState(false);
   const [newZoneLabel, setNewZoneLabel] = useState('');
 
@@ -135,7 +134,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
-    const newNeighbourhood = addNeighbourhood(newNeighbourhoodLabel.trim());
+    const newNeighbourhood = createNeighbourhood(newNeighbourhoodLabel.trim());
     handleInputChange('neighbourhoodId', newNeighbourhood.neighbourhoodId);
     handleInputChange(
       'neighbourhoodLabel',
@@ -159,10 +158,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
-    const newZone = addZoneToNeighbourhood(
-      lotData.neighbourhoodId,
-      newZoneLabel.trim(),
-    );
+    const newZone = createZone(lotData.neighbourhoodId, newZoneLabel.trim());
     handleInputChange('zoneId', newZone.zoneId);
     handleInputChange('zoneLabel', newZone.zoneLabel);
     // Close modal

@@ -1,20 +1,16 @@
 // useLotService.ts
 
-import React from 'react';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
 import BackendService from '../backend/BackendService';
 import useLotStore from '../stores/useLotStore';
 import {
-  LotComputedForDisplay,
   LotWithNeedMowingInterface,
   ZoneWithIndicatorsInterface,
   NeighbourhoodWithIndicatorsInterface,
   NestedLotsWithIndicatorsInterface,
   NeighbourhoodData,
   ZoneData,
-  WorkgroupAssignment,
-  NeighbourhoodZoneData,
   LotInStore,
 } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
@@ -262,7 +258,7 @@ const addNeighbourhood = (
 const addZoneToNeighbourhood = (
   neighbourhoodId: string,
   zoneLabel: string,
-): [string, ZoneData] => {
+): ZoneData => {
   const zone: ZoneData = {
     zoneId: uuidv4(),
     zoneLabel: zoneLabel,
@@ -271,7 +267,7 @@ const addZoneToNeighbourhood = (
     assignedTo: [], // Initialize assignedTo as an empty array
   };
 
-  return [neighbourhoodId, zone];
+  return zone;
 };
 
 const clearZoneAssignmentsForMemberInWorkgroup = (
@@ -318,82 +314,6 @@ const computeAssignedZonesCountPerUserInWorkgroup = (
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////// NEW FUNCTIONS END HERE ///////////////////////////////////////////////////////
-
-// const createLot = (workgroupId: string, newLot: Partial<LotInterface>) => {
-//   if (!newLot.lotLabel || !newLot.zoneId || !newLot.neighbourhoodId) {
-//     throw new Error('Missing required fields in new lot');
-//   }
-
-//   const lot: LotInterface = {
-//     ...newLot,
-//     lotId: uuidv4(),
-//     workgroupId: workgroupId,
-//   };
-
-//   useLotStore.getState().addLot(lot);
-// };
-
-// const useNeighbourhoodsAndZones = (
-//   workgroupId: string,
-// ): NeighbourhoodData[] => {
-//   const neighbourhoodZoneData = useLotStore(
-//     (state) => state.neighbourhoodZoneData,
-//   );
-//   return React.useMemo(() => {
-//     const filteredNeighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
-//       (n) => n.workgroupId === workgroupId,
-//     );
-//     return filteredNeighbourhoods;
-//   }, [neighbourhoodZoneData, workgroupId]);
-// };
-
-// const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
-//   const { lots } = useLotStore.getState();
-//   const lot = lots.find((lot) => lot.lotId === lotId);
-//   if (!lot) {
-//     throw new Error('Lot not found');
-//   }
-//   if (!currentUser) {
-//     console.error('User not authenticated');
-//     return false;
-//   }
-//   const workgroup = getWorkgroupById(lot.workgroupId);
-//   if (!workgroup) {
-//     throw new Error('Workgroup not found');
-//   }
-//   // Check if the user has permission to complete the task
-//   const hasPermission = userHasPermission(
-//     workgroup,
-//     currentUser.userId,
-//     'Member',
-//   );
-//   if (!hasPermission) {
-//     console.error('User does not have permission to complete this task');
-//     return false;
-//   }
-//   // Complete the task and update the store
-//   updateLotLastMowingDate(lotId, date ? date : new Date());
-//   // Sync with the database (replace with actual API call)
-//   // syncLotWithDatabase(lotId, { lastMowingDate: new Date() });
-//   return true;
-// };
-
-// const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
-//   const { lots } = useLotStore.getState();
-
-//   // Filter out only the selected lots
-//   const selectedLots = lots.filter((lot) => lot.lotIsSelected);
-//   if (selectedLots.length === 0) {
-//     console.log('No lots selected');
-//     return false;
-//   }
-//   // Mark each selected lot as completed with the provided date or today's date
-//   selectedLots.forEach((lot) => {
-//     updateLotLastMowingDate(lot.lotId, date || new Date());
-//   });
-//   console.log(`${selectedLots.length} lots marked as completed`);
-//   return true;
-// };
 
 const updateZoneAssignmentsForMemberInWorkgroupUsingSelection = (
   userId: string,

@@ -11,7 +11,6 @@ import useHomeScreenStore from '../stores/useHomeScreenStore';
 import useLotStore from '../stores/useLotStore';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
 import {
-  UserRole,
   LotComputedForDisplay,
   ZoneData,
   UserInterface,
@@ -86,17 +85,28 @@ const useHomeScreenController = (): IHomeScreenController => {
     useLotStore.getState().addLot(newLot);
   };
 
-  const createZone = (
-    neighbourhoodId: string,
-    zoneLabel: string,
-  ): [string, ZoneData] => {
-    return useLotService.addZoneToNeighbourhood(neighbourhoodId, zoneLabel);
+  const createZone = (neighbourhoodId: string, zoneLabel: string): ZoneData => {
+    const zone = useLotService.addZoneToNeighbourhood(
+      neighbourhoodId,
+      zoneLabel,
+    );
+
+    useLotStore.getState().addZoneToNeighbourhood(neighbourhoodId, zone);
+
+    return zone;
   };
 
   const createNeighbourhood = (
     neighbourhoodLabel: string,
   ): NeighbourhoodData => {
-    return useLotService.addNeighbourhood(workgroupId, neighbourhoodLabel);
+    const neighbourhood = useLotService.addNeighbourhood(
+      workgroupId,
+      neighbourhoodLabel,
+    );
+
+    useLotStore.getState().addNeighbourhood(neighbourhood);
+
+    return neighbourhood;
   };
 
   const setActiveWorkgroup = (workgroupId: string) => {
@@ -153,6 +163,7 @@ const useHomeScreenController = (): IHomeScreenController => {
   const expandAllNeighbourhoods = (neighbourhoodIds: string[]) => {
     useHomeScreenStore.getState().expandAllNeighbourhoods(neighbourhoodIds);
   };
+
   const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
     const nestedLots = React.useMemo<NestedLotsWithIndicatorsInterface>(() => {
       return useLotService.computeNestedLots(
@@ -175,11 +186,16 @@ const useHomeScreenController = (): IHomeScreenController => {
     return nestedLots;
   };
 
+  const useNeighbourhoodsWithZones = (): NeighbourhoodData[] => {
+    return neighbourhoodsWithZones;
+  };
+
   return {
     initializeServices,
 
     // Lots, zones, neighbourhoods
     useNestedLots,
+    useNeighbourhoodsWithZones,
     createLot,
     createZone,
     createNeighbourhood,

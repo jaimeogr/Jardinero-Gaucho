@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { theme } from '../../styles/styles';
 import { IAccordionController } from '../../types/controllerTypes';
-import { LotComputedForDisplay } from '../../types/types';
+import { LotWithNeedMowingInterface } from '../../types/types';
 
 const {
   lotBackgroundNotSelected,
@@ -15,9 +15,9 @@ const {
 
 interface OneLotForCustomAccordionProps {
   controller: IAccordionController;
-  lot: LotComputedForDisplay;
+  lot: LotWithNeedMowingInterface;
   isSelectable?: boolean;
-  renderRightSide?: (lot: LotComputedForDisplay) => JSX.Element;
+  renderRightSide?: (lot: LotWithNeedMowingInterface) => JSX.Element;
 }
 
 const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({

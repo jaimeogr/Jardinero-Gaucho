@@ -1,13 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useCallback, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Text,
-  BackHandler,
-  FlatList,
-} from 'react-native';
+import { View, StyleSheet, Text, BackHandler, FlatList } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
@@ -19,6 +12,7 @@ import { IAccordionController } from '../../types/controllerTypes';
 import {
   NeighbourhoodData,
   ZoneData,
+  LotWithNeedMowingInterface,
   NestedLotsWithIndicatorsInterface,
 } from '../../types/types';
 

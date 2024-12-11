@@ -25,7 +25,7 @@ const LotsForHomeScreen = () => {
   useEffect(() => {
     collapseAllNeighbourhoods();
     collapseAllZones();
-  }, [collapseAllNeighbourhoods, collapseAllZones]);
+  }, []);
 
   const handleDeselectLots = useCallback(() => {
     deselectAllLots();

@@ -21,7 +21,7 @@ export default function App() {
 
   useEffect(() => {
     initializeServices();
-  }, [initializeServices]);
+  }, []);
 
   return (
     <PaperProvider>

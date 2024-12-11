@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import useControllerService from './src/controllers/useHomeScreenController';
+import useHomeScreenController from './src/controllers/useHomeScreenController';
 import BottomTabNavigator from './src/navigation/BottonTabNavigator';
 
 if (__DEV__) {
@@ -17,9 +17,11 @@ if (__DEV__) {
 }
 
 export default function App() {
+  const { initializeServices } = useHomeScreenController();
+
   useEffect(() => {
-    useControllerService.initializeServices();
-  }, []);
+    initializeServices();
+  }, [initializeServices]);
 
   return (
     <PaperProvider>

@@ -80,9 +80,15 @@ const useHomeScreenController = (): IHomeScreenController => {
     return true;
   };
 
-  const createLot = (lot: Partial<LotInStore>): void => {
-    const newLot = useLotService.createLot(lot, workgroupId);
-    useLotStore.getState().addLot(newLot);
+  const createLot = (lot: Partial<LotInStore>): boolean => {
+    try {
+      const newLot = useLotService.createLot(lot, workgroupId);
+      useLotStore.getState().addLot(newLot);
+      return true; // Indicate success
+    } catch (error) {
+      console.error('Error creating lot:', error);
+      return false; // Indicate failure
+    }
   };
 
   const createZone = (neighbourhoodId: string, zoneLabel: string): ZoneData => {

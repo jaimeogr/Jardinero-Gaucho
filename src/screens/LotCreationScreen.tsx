@@ -246,8 +246,12 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             value={lotData.neighbourhoodId}
             items={neighbourhoodItems}
             onValueChange={(value) => {
+              if (value === null) {
+                handleNeighbourhoodChange('');
+                return;
+              }
               if (typeof value === 'string') {
-                handleNeighbourhoodChange(value); // Handle only boolean values
+                handleNeighbourhoodChange(value);
               } else {
                 console.warn('Invalid value type passed:', value); // Debugging fallback
               }
@@ -262,8 +266,12 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             value={lotData.zoneId}
             items={zoneItems}
             onValueChange={(value) => {
+              if (value === null) {
+                handleZoneChange('');
+                return;
+              }
               if (typeof value === 'string') {
-                handleZoneChange(value); // Handle only boolean values
+                handleZoneChange(value);
               } else {
                 console.warn('Invalid value type passed:', value); // Debugging fallback
               }

@@ -136,8 +136,6 @@ const useHomeScreenController = (): IHomeScreenController => {
 
   const toggleZoneSelection = (zoneId: string, newState: boolean) => {
     const currentLots = useLotStore.getState().lots; // without this way of accessing the lots the app doesnt work correctly.
-    console.log(currentLots);
-
     const lotIdsForZone = currentLots
       .filter((lot) => lot.zoneId === zoneId)
       .map((lot) => lot.lotId);
@@ -151,7 +149,8 @@ const useHomeScreenController = (): IHomeScreenController => {
     neighbourhoodId: string,
     newState: boolean,
   ) => {
-    const lotIdsForNeighbourhood = lots
+    const currentLots = useLotStore.getState().lots; // without this way of accessing the lots the app doesnt work correctly.
+    const lotIdsForNeighbourhood = currentLots
       .filter((lot) => lot.neighbourhoodId === neighbourhoodId)
       .map((lot) => lot.lotId);
 

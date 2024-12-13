@@ -1,6 +1,6 @@
 // useHomeScreenController.ts
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
 import BackendService from '../backend/BackendService';
@@ -11,13 +11,8 @@ import useHomeScreenStore from '../stores/useHomeScreenStore';
 import useLotStore from '../stores/useLotStore';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
 import {
-  LotComputedForDisplay,
   ZoneData,
-  UserInterface,
-  UserInActiveWorkgroupWithRole,
-  TemporaryUserData,
   NestedLotsWithIndicatorsInterface,
-  NeighbourhoodZoneData,
   NeighbourhoodData,
   LotInStore,
 } from '../types/types';

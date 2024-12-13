@@ -2,28 +2,20 @@
 
 // LOTS / ZONES / NEIGHBOURHOODS
 export interface LotInStore {
+  workgroupId: string;
   lotId: string; // Unique identifier for the lot, now as a UUID
   lotLabel: string; // Lot number or label
   zoneId: string; // ID of the zone the lot belongs to, as a UUID
   neighbourhoodId: string; // ID of the neighbourhood the lot belongs to, as a UUID
-  assignedTo: string[]; // Users assigned to the lot, can still be numbers if these are internal references
-  workgroupId: string;
   lastMowingDate?: Date; // Last mowing date for the lot
   extraNotes?: string; // Optional extra notes about the lot
 }
 
-export interface LotComputedForDisplay {
-  lotId: string; // Unique identifier for the lot, now as a UUID
-  lotLabel: string; // Lot number or label
-  zoneId: string; // ID of the zone the lot belongs to, as a UUID
+export interface LotComputedForDisplay extends LotInStore {
+  // in the future i can combine LotWithNeedMowingInterface and LotComputedForDisplay
   zoneLabel: string; // Name of the zone
-  neighbourhoodId: string; // ID of the neighbourhood the lot belongs to, as a UUID
   neighbourhoodLabel: string; // Name of the neighbourhood
   lotIsSelected: boolean; // Selection state of the lot
-  assignedTo: string[]; // Users assigned to the lot, can still be numbers if these are internal references
-  workgroupId: string;
-  lastMowingDate?: Date; // Last mowing date for the lot
-  extraNotes?: string; // Optional extra notes about the lot
 }
 
 export interface GroupOfLotsInterface {
@@ -67,7 +59,6 @@ export interface ZoneData {
   zoneLabel: string;
   isSelected: boolean;
   isExpanded: boolean;
-  assignedTo: string[]; // Users assigned
 }
 
 export interface NeighbourhoodData {
@@ -77,24 +68,24 @@ export interface NeighbourhoodData {
   zones: ZoneData[];
   isSelected: boolean;
   isExpanded: boolean;
-  assignedTo: string[]; // Users assigned
 }
 
 export interface NeighbourhoodZoneData {
+  // remove this BS for the sake of goodwill and use NeighbourhoodData instead :)
   neighbourhoods: NeighbourhoodData[];
 }
 
 // USERS / WORKGROUPS
 export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
 
-export interface UserInvitedPendingAcceptanceInterface {
-  email: string;
+export interface WorkgroupDataForUser {
+  workgroupId: string;
+  name: string; // The workgroup’s name
   role: UserRole;
-  accessToAllLots: boolean; // Default
-}
-
-export interface GroupOfUsersInterface {
-  users: UserInterface[];
+  accessToAllLots: boolean;
+  assignedNeighbourhoods: string[];
+  assignedZones: string[];
+  hasAcceptedPresenceInWorkgroup: boolean;
 }
 
 export interface WorkgroupAssignment {
@@ -104,10 +95,9 @@ export interface WorkgroupAssignment {
   hasAcceptedPresenceInWorkgroup: boolean;
 }
 
-export interface TemporaryUserData {
-  email: string;
-  role: UserRole;
-  accessToAllLots: boolean;
+export interface WorkgroupInterface {
+  workgroupId: string;
+  name: string;
 }
 
 export interface UserInterface {
@@ -118,17 +108,18 @@ export interface UserInterface {
   workgroupAssignments: WorkgroupAssignment[];
 }
 
+export interface TemporaryUserData {
+  email: string;
+  role: UserRole;
+  accessToAllLots: boolean;
+}
+
 export type UserInActiveWorkgroupWithRole = UserInterface &
   WorkgroupAssignment & {
     // This is a combination of UserInterface and WorkgroupAssignment plus some assigned zones and lots
     assignedZonesCount: number;
     assignedLotsCount: number;
   };
-
-export interface WorkgroupInterface {
-  workgroupId: string;
-  name: string;
-}
 
 export interface TaskInterface {
   taskId: string;

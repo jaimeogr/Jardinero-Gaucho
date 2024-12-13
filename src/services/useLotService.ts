@@ -16,14 +16,14 @@ import {
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 import { userHasPermission } from '../utils/permissionUtils';
 
-const initializeStore = () => {
-  const lots = BackendService.getMyLots();
-  const neighbourhoodsAndZones = BackendService.getNeighbourhoodZoneData();
-  useLotStore.getState().initializeLots(lots);
-  useLotStore
-    .getState()
-    .initializeNeighbourhoodsAndZones(neighbourhoodsAndZones);
-};
+// const initializeStore = () => {
+//   const lots = BackendService.getMyLots();
+//   const neighbourhoodsAndZones = BackendService.getNeighbourhoodZoneData();
+//   useLotStore.getState().initializeLots(lots);
+//   useLotStore
+//     .getState()
+//     .initializeNeighbourhoodsAndZones(neighbourhoodsAndZones);
+// };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////// NEW FUNCTIONS START HERE ///////////////////////////////////////////////////////
@@ -373,8 +373,6 @@ const unassignZoneFromUser = (
 };
 
 export default {
-  initializeStore,
-
   // Lots, zones, neighbourhoods
   createLot,
   computeNestedLots,

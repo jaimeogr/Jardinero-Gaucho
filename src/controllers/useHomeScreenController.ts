@@ -1,6 +1,6 @@
 // useHomeScreenController.ts
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
 import BackendService from '../backend/BackendService';
@@ -41,10 +41,21 @@ const useHomeScreenController = (): IHomeScreenController => {
   );
 
   const initializeServices = () => {
-    useLotService.initializeStore();
+    // Initialize Lots, Zones and Neighbourhoods
+    const lotsData = BackendService.getMyLots();
+    console.log('lotsData:', lotsData);
+    const neighbourhoodData = BackendService.getNeighbourhoodZoneData();
+    console.log('neighbourhoodData:', neighbourhoodData);
+    useLotStore.getState().initializeLots(lotsData);
+    useLotStore.getState().initializeNeighbourhoodsAndZones(neighbourhoodData);
+
+    // Initialize Users and Workgroups
     useUserService.initializeUsers();
     useWorkgroupService.initializeWorkgroups();
     setActiveWorkgroup('1');
+
+    console.log('\n\nInitialized lots:', lots);
+    console.log('\n\nInitialized lots:', lots);
   };
 
   const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
@@ -123,15 +134,33 @@ const useHomeScreenController = (): IHomeScreenController => {
     useHomeScreenStore.getState().toggleSelectionSingleLot(lotId, newState);
   };
 
-  const toggleZoneSelection = (zoneId: string, newState: boolean) => {
-    const lotIdsForZone = lots
-      .filter((lot) => lot.zoneId === zoneId)
-      .map((lot) => lot.lotId);
+  // const toggleZoneSelection = (zoneId: string, newState: boolean) => {
+  //   console.log(lots);
 
-    useHomeScreenStore
-      .getState()
-      .toggleSelectionLotsArray(lotIdsForZone, newState);
-  };
+  //   const lotIdsForZone = lots
+  //     .filter((lot) => lot.zoneId === zoneId)
+  //     .map((lot) => lot.lotId);
+
+  //   useHomeScreenStore
+  //     .getState()
+  //     .toggleSelectionLotsArray(lotIdsForZone, newState);
+  // };
+
+  const toggleZoneSelection = useCallback(
+    (zoneId: string, newState: boolean) => {
+      const currentLots = useLotStore.getState().lots;
+      console.log(currentLots);
+
+      const lotIdsForZone = currentLots
+        .filter((lot) => lot.zoneId === zoneId)
+        .map((lot) => lot.lotId);
+
+      useHomeScreenStore
+        .getState()
+        .toggleSelectionLotsArray(lotIdsForZone, newState);
+    },
+    [],
+  );
 
   const toggleNeighbourhoodSelection = (
     neighbourhoodId: string,
@@ -189,6 +218,7 @@ const useHomeScreenController = (): IHomeScreenController => {
       expandedNeighbourhoods,
     ]);
 
+    console.log('nestedLots:', nestedLots);
     return nestedLots;
   };
 

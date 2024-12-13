@@ -1,3 +1,5 @@
+// App.tsx
+
 import 'react-native-get-random-values';
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect } from 'react';

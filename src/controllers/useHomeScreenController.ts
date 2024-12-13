@@ -43,9 +43,7 @@ const useHomeScreenController = (): IHomeScreenController => {
   const initializeServices = () => {
     // Initialize Lots, Zones and Neighbourhoods
     const lotsData = BackendService.getMyLots();
-    console.log('lotsData:', lotsData);
     const neighbourhoodData = BackendService.getNeighbourhoodZoneData();
-    console.log('neighbourhoodData:', neighbourhoodData);
     useLotStore.getState().initializeLots(lotsData);
     useLotStore.getState().initializeNeighbourhoodsAndZones(neighbourhoodData);
 
@@ -53,9 +51,6 @@ const useHomeScreenController = (): IHomeScreenController => {
     useUserService.initializeUsers();
     useWorkgroupService.initializeWorkgroups();
     setActiveWorkgroup('1');
-
-    console.log('\n\nInitialized lots:', lots);
-    console.log('\n\nInitialized lots:', lots);
   };
 
   const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {

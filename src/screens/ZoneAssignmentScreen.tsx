@@ -35,10 +35,6 @@ interface Props {
 
 const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const {
-    useNestedLots,
-    toggleLotSelection,
-    toggleZoneSelection,
-    toggleNeighbourhoodSelection,
     deselectAllLots,
     updateZoneAssignmentsForMember,
     selectAssignedZonesForUser,

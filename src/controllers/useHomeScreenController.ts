@@ -218,7 +218,6 @@ const useHomeScreenController = (): IHomeScreenController => {
       expandedNeighbourhoods,
     ]);
 
-    console.log('nestedLots:', nestedLots);
     return nestedLots;
   };
 

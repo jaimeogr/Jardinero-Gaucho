@@ -121,7 +121,7 @@ const useHomeScreenController = (): IHomeScreenController => {
   };
 
   const toggleLotSelection = (lotId: string, newState: boolean) => {
-    useHomeScreenStore.getState().toggleSelectionSingleLot(lotId, newState);
+    useHomeScreenStore.getState().toggleSelectionForSingleLot(lotId, newState);
   };
 
   const toggleZoneSelection = (zoneId: string, newState: boolean) => {
@@ -132,7 +132,7 @@ const useHomeScreenController = (): IHomeScreenController => {
 
     useHomeScreenStore
       .getState()
-      .toggleSelectionLotsArray(lotIdsForZone, newState);
+      .toggleSelectionForLotsArray(lotIdsForZone, newState);
   };
 
   const toggleNeighbourhoodSelection = (
@@ -146,7 +146,7 @@ const useHomeScreenController = (): IHomeScreenController => {
 
     useHomeScreenStore
       .getState()
-      .toggleSelectionLotsArray(lotIdsForNeighbourhood, newState);
+      .toggleSelectionForLotsArray(lotIdsForNeighbourhood, newState);
   };
 
   const deselectAllLots = () => {

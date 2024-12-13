@@ -43,8 +43,7 @@ const useTeamManagementController = (): ITeamManagementController => {
   };
 
   const toggleZoneSelection = (zoneId: string, newState: boolean) => {
-    const currentLots = useLotStore.getState().lots; // without this way of accessing the lots the app doesnt work correctly.
-    const lotIdsForZone = currentLots
+    const lotIdsForZone = lots
       .filter((lot) => lot.zoneId === zoneId)
       .map((lot) => lot.lotId);
 
@@ -57,8 +56,7 @@ const useTeamManagementController = (): ITeamManagementController => {
     neighbourhoodId: string,
     newState: boolean,
   ) => {
-    const currentLots = useLotStore.getState().lots; // without this way of accessing the lots the app doesnt work correctly.
-    const lotIdsForNeighbourhood = currentLots
+    const lotIdsForNeighbourhood = lots
       .filter((lot) => lot.neighbourhoodId === neighbourhoodId)
       .map((lot) => lot.lotId);
 

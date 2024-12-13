@@ -1,5 +1,9 @@
 // types.ts or interfaces.ts
 
+// in the future i can have different data types for neighbourhood/zones like LotInStore, LotComputedForDisplay
+// in the future i can remove NeighbourhoodZoneData for the sake of goodwill and use NeighbourhoodData instead :)
+// in the future i can combine LotWithNeedMowingInterface and LotComputedForDisplay
+
 // LOTS / ZONES / NEIGHBOURHOODS
 export interface LotInStore {
   workgroupId: string;
@@ -12,7 +16,6 @@ export interface LotInStore {
 }
 
 export interface LotComputedForDisplay extends LotInStore {
-  // in the future i can combine LotWithNeedMowingInterface and LotComputedForDisplay
   zoneLabel: string; // Name of the zone
   neighbourhoodLabel: string; // Name of the neighbourhood
   lotIsSelected: boolean; // Selection state of the lot
@@ -71,7 +74,6 @@ export interface NeighbourhoodData {
 }
 
 export interface NeighbourhoodZoneData {
-  // remove this BS for the sake of goodwill and use NeighbourhoodData instead :)
   neighbourhoods: NeighbourhoodData[];
 }
 

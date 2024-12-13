@@ -7,8 +7,8 @@ interface ZoneAssignmentScreenState {
   expandedNeighbourhoods: Set<string>;
 
   // Actions for selections
-  toggleLotSelection: (lotId: string, newState: boolean) => void;
-  selectLots: (lotIds: string[]) => void;
+  toggleSelectionForSingleLot: (lotId: string, newState: boolean) => void;
+  toggleSelectionForLotsArray: (lotIds: string[], newState: boolean) => void;
   deselectLots: (lotIds: string[]) => void;
   deselectAllLots: () => void;
 
@@ -18,6 +18,7 @@ interface ZoneAssignmentScreenState {
 
   // Actions for neighbourhoods expansions / collapsing
   toggleNeighbourhoodExpansion: (neighbourhoodId: string) => void;
+  collapseAllNeighbourhoods: () => void;
   expandAllNeighbourhoods: (neighbourhoodIds: string[]) => void;
 }
 
@@ -28,7 +29,7 @@ const useZoneAssignmentScreenStore = create<ZoneAssignmentScreenState>(
     expandedNeighbourhoods: new Set<string>(),
 
     // Actions for selections
-    toggleLotSelection: (lotId, newState) => {
+    toggleSelectionForSingleLot: (lotId, newState) => {
       set((state) => {
         const selectedLots = new Set(state.selectedLots);
         if (newState) {
@@ -39,10 +40,16 @@ const useZoneAssignmentScreenStore = create<ZoneAssignmentScreenState>(
         return { selectedLots };
       });
     },
-    selectLots: (lotIds) => {
+    toggleSelectionForLotsArray: (lotIds, newState) => {
       set((state) => {
         const selectedLots = new Set(state.selectedLots);
-        lotIds.forEach((id) => selectedLots.add(id));
+        lotIds.forEach((id) => {
+          if (newState) {
+            selectedLots.add(id);
+          } else {
+            selectedLots.delete(id);
+          }
+        });
         return { selectedLots };
       });
     },
@@ -88,6 +95,11 @@ const useZoneAssignmentScreenStore = create<ZoneAssignmentScreenState>(
         }
         return { expandedNeighbourhoods };
       });
+    },
+    collapseAllNeighbourhoods: () => {
+      set(() => ({
+        expandedNeighbourhoods: new Set(),
+      }));
     },
     expandAllNeighbourhoods: (neighbourhoodIds) => {
       set(() => ({

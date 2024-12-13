@@ -18,7 +18,8 @@ import {
 import { ITeamManagementController } from './../types/controllerTypes';
 
 const useTeamManagementController = (): ITeamManagementController => {
-  const { toggleLotSelection, selectLots } = useZoneAssignmentScreenStore();
+  const { toggleSelectionForSingleLot, toggleSelectionForLotsArray } =
+    useZoneAssignmentScreenStore();
 
   const workgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
   const lots: LotInStore[] = useLotStore((state) => state.lots);
@@ -43,7 +44,7 @@ const useTeamManagementController = (): ITeamManagementController => {
 
     useZoneAssignmentScreenStore
       .getState()
-      .toggleSelectionLotsArray(lotIdsForZone, newState);
+      .toggleSelectionForLotsArray(lotIdsForZone, newState);
   };
 
   const toggleNeighbourhoodSelection = (
@@ -57,7 +58,7 @@ const useTeamManagementController = (): ITeamManagementController => {
 
     useZoneAssignmentScreenStore
       .getState()
-      .toggleSelectionLotsArray(lotIdsForNeighbourhood, newState);
+      .toggleSelectionForLotsArray(lotIdsForNeighbourhood, newState);
   };
 
   const deselectAllLots = () => {
@@ -189,7 +190,7 @@ const useTeamManagementController = (): ITeamManagementController => {
       activeWorkgroupId,
     );
     const lotIds = assignedLots.map((lot) => lot.lotId);
-    selectLots(lotIds);
+    toggleSelectionForLotsArray(lotIds);
   };
 
   const getUserInActiveWorkgroupWithRole = (
@@ -335,7 +336,7 @@ const useTeamManagementController = (): ITeamManagementController => {
 
   return {
     useNestedLots,
-    toggleLotSelection,
+    toggleLotSelection: toggleSelectionForSingleLot,
     toggleZoneSelection,
     deselectAllLots,
     updateZoneAssignmentsForMember,
@@ -343,8 +344,7 @@ const useTeamManagementController = (): ITeamManagementController => {
     getUserInActiveWorkgroupWithRole,
     useUsersInActiveWorkgroupWithRoles,
     inviteUserToActiveWorkgroup,
-    expandAllNeighbourhoods:
-      useZoneAssignmentScreenStore.getState().expandAllNeighbourhoods,
+    expandAllNeighbourhoods,
 
     // temporary user data for navigation purposes
     getTemporaryUserData,

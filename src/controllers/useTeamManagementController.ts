@@ -36,7 +36,7 @@ const useTeamManagementController = (): ITeamManagementController => {
   );
 
   const toggleLotSelection = (lotId: string, newState: boolean) => {
-    return;
+    return; // ill leave this implemented but empty to comply with the React functional component for now, could be removed in the future
   };
 
   const toggleZoneSelection = (zoneId: string, newState: boolean) => {
@@ -338,16 +338,28 @@ const useTeamManagementController = (): ITeamManagementController => {
     };
 
   return {
+    // Lots
     useNestedLots,
-    toggleLotSelection,
-    toggleZoneSelection,
-    deselectAllLots,
+
+    // Team management
+    inviteUserToActiveWorkgroup,
     updateZoneAssignmentsForMember,
     selectAssignedZonesForUser,
     getUserInActiveWorkgroupWithRole,
     useUsersInActiveWorkgroupWithRoles,
-    inviteUserToActiveWorkgroup,
+
+    // selections
+    deselectAllLots,
+    toggleLotSelection,
+    toggleZoneSelection,
+    toggleNeighbourhoodSelection,
+
+    // Expanded and collapsed accordions
+    toggleZoneExpansion,
+    toggleNeighbourhoodExpansion,
+    collapseAllZones,
     expandAllNeighbourhoods,
+    collapseAllNeighbourhoods,
 
     // temporary user data for navigation purposes
     getTemporaryUserData,

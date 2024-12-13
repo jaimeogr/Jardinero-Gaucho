@@ -1,5 +1,6 @@
 // useTeamManagementController.ts
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
 import useLotService from '../services/useLotService';
 import useUserService from '../services/useUserService';
@@ -20,7 +21,9 @@ import { ITeamManagementController } from './../types/controllerTypes';
 const useTeamManagementController = (): ITeamManagementController => {
   const { toggleSelectionForLotsArray } = useZoneAssignmentScreenStore();
 
-  const workgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
+  const activeWorkgroupId = useWorkgroupStore(
+    (state) => state.activeWorkgroupId,
+  );
   const lots: LotInStore[] = useLotStore((state) => state.lots);
   const neighbourhoodsWithZones: NeighbourhoodData[] = useLotStore(
     (state) => state.neighbourhoodZoneData.neighbourhoods,
@@ -98,7 +101,7 @@ const useTeamManagementController = (): ITeamManagementController => {
   const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
     const nestedLots = React.useMemo<NestedLotsWithIndicatorsInterface>(() => {
       return useLotService.computeNestedLots(
-        workgroupId,
+        activeWorkgroupId,
         lots,
         neighbourhoodsWithZones,
         selectedLots,
@@ -106,7 +109,7 @@ const useTeamManagementController = (): ITeamManagementController => {
         expandedNeighbourhoods,
       );
     }, [
-      workgroupId,
+      activeWorkgroupId,
       lots,
       neighbourhoodsWithZones,
       selectedLots,
@@ -179,7 +182,7 @@ const useTeamManagementController = (): ITeamManagementController => {
     } else {
       useLotService.updateZoneAssignmentsForMemberInWorkgroupUsingSelection(
         userId,
-        workgroupId,
+        activeWorkgroupId,
         neighbourhoodsWithZones,
         useNestedLots(),
       );
@@ -236,8 +239,7 @@ const useTeamManagementController = (): ITeamManagementController => {
     accessToAllLots: boolean,
   ): UserInterface | null => {
     const userId = uuidv4();
-    const activeWorkgroup = getActiveWorkgroup();
-    if (!activeWorkgroup) {
+    if (!activeWorkgroupId) {
       console.error('No active workgroup found.');
       return null;
     }
@@ -249,7 +251,7 @@ const useTeamManagementController = (): ITeamManagementController => {
       lastName: '',
       workgroupAssignments: [
         {
-          workgroupId: activeWorkgroup.workgroupId,
+          workgroupId: activeWorkgroupId,
           role,
           accessToAllLots,
           hasAcceptedPresenceInWorkgroup: false,

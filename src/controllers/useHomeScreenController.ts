@@ -20,7 +20,9 @@ import { userHasPermission } from '../utils/permissionUtils';
 import { IHomeScreenController } from './../types/controllerTypes';
 
 const useHomeScreenController = (): IHomeScreenController => {
-  const workgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
+  const activeWorkgroupId = useWorkgroupStore(
+    (state) => state.activeWorkgroupId,
+  );
   const lots: LotInStore[] = useLotStore((state) => state.lots);
   const neighbourhoodsWithZones: NeighbourhoodData[] = useLotStore(
     (state) => state.neighbourhoodZoneData.neighbourhoods,
@@ -83,7 +85,7 @@ const useHomeScreenController = (): IHomeScreenController => {
 
   const createLot = (lot: Partial<LotInStore>): boolean => {
     try {
-      const newLot = useLotService.createLot(lot, workgroupId);
+      const newLot = useLotService.createLot(activeWorkgroupId, lot);
       useLotStore.getState().addLot(newLot);
       return true; // Indicate success
     } catch (error) {
@@ -107,7 +109,7 @@ const useHomeScreenController = (): IHomeScreenController => {
     neighbourhoodLabel: string,
   ): NeighbourhoodData => {
     const neighbourhood = useLotService.addNeighbourhood(
-      workgroupId,
+      activeWorkgroupId,
       neighbourhoodLabel,
     );
 
@@ -179,7 +181,7 @@ const useHomeScreenController = (): IHomeScreenController => {
   const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
     const nestedLots = React.useMemo<NestedLotsWithIndicatorsInterface>(() => {
       return useLotService.computeNestedLots(
-        workgroupId,
+        activeWorkgroupId,
         lots,
         neighbourhoodsWithZones,
         selectedLots,
@@ -187,7 +189,7 @@ const useHomeScreenController = (): IHomeScreenController => {
         expandedNeighbourhoods,
       );
     }, [
-      workgroupId,
+      activeWorkgroupId,
       lots,
       neighbourhoodsWithZones,
       selectedLots,

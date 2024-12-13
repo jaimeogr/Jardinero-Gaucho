@@ -29,8 +29,8 @@ import { userHasPermission } from '../utils/permissionUtils';
 //////////////////////////////////// NEW FUNCTIONS START HERE ///////////////////////////////////////////////////////
 
 const createLot = (
-  newLot: Partial<LotInStore>,
   workgroupId: string | null,
+  newLot: Partial<LotInStore>,
 ): LotInStore => {
   if (!workgroupId) {
     throw new Error('Missing workgroupId in createLot');

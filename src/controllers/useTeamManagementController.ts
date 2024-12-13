@@ -18,8 +18,7 @@ import {
 import { ITeamManagementController } from './../types/controllerTypes';
 
 const useTeamManagementController = (): ITeamManagementController => {
-  const { toggleSelectionForSingleLot, toggleSelectionForLotsArray } =
-    useZoneAssignmentScreenStore();
+  const { toggleSelectionForLotsArray } = useZoneAssignmentScreenStore();
 
   const workgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
   const lots: LotInStore[] = useLotStore((state) => state.lots);
@@ -35,6 +34,10 @@ const useTeamManagementController = (): ITeamManagementController => {
   const expandedNeighbourhoods: Set<string> = useZoneAssignmentScreenStore(
     (state) => state.expandedNeighbourhoods,
   );
+
+  const toggleLotSelection = (lotId: string, newState: boolean) => {
+    return;
+  };
 
   const toggleZoneSelection = (zoneId: string, newState: boolean) => {
     const currentLots = useLotStore.getState().lots; // without this way of accessing the lots the app doesnt work correctly.
@@ -336,7 +339,7 @@ const useTeamManagementController = (): ITeamManagementController => {
 
   return {
     useNestedLots,
-    toggleLotSelection: toggleSelectionForSingleLot,
+    toggleLotSelection,
     toggleZoneSelection,
     deselectAllLots,
     updateZoneAssignmentsForMember,

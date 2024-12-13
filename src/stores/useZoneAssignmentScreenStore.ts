@@ -7,7 +7,6 @@ interface ZoneAssignmentScreenState {
   expandedNeighbourhoods: Set<string>;
 
   // Actions for selections
-  toggleSelectionForSingleLot: (lotId: string, newState: boolean) => void;
   toggleSelectionForLotsArray: (lotIds: string[], newState: boolean) => void;
   deselectLots: (lotIds: string[]) => void;
   deselectAllLots: () => void;
@@ -29,17 +28,6 @@ const useZoneAssignmentScreenStore = create<ZoneAssignmentScreenState>(
     expandedNeighbourhoods: new Set<string>(),
 
     // Actions for selections
-    toggleSelectionForSingleLot: (lotId, newState) => {
-      set((state) => {
-        const selectedLots = new Set(state.selectedLots);
-        if (newState) {
-          selectedLots.add(lotId);
-        } else {
-          selectedLots.delete(lotId);
-        }
-        return { selectedLots };
-      });
-    },
     toggleSelectionForLotsArray: (lotIds, newState) => {
       set((state) => {
         const selectedLots = new Set(state.selectedLots);

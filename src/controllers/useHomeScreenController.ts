@@ -134,20 +134,8 @@ const useHomeScreenController = (): IHomeScreenController => {
     useHomeScreenStore.getState().toggleSelectionSingleLot(lotId, newState);
   };
 
-  // const toggleZoneSelection = (zoneId: string, newState: boolean) => {
-  //   console.log(lots);
-
-  //   const lotIdsForZone = lots
-  //     .filter((lot) => lot.zoneId === zoneId)
-  //     .map((lot) => lot.lotId);
-
-  //   useHomeScreenStore
-  //     .getState()
-  //     .toggleSelectionLotsArray(lotIdsForZone, newState);
-  // };
-
   const toggleZoneSelection = (zoneId: string, newState: boolean) => {
-    const currentLots = useLotStore.getState().lots;
+    const currentLots = useLotStore.getState().lots; // without this way of accessing the lots the app doesnt work correctly.
     console.log(currentLots);
 
     const lotIdsForZone = currentLots
@@ -158,22 +146,6 @@ const useHomeScreenController = (): IHomeScreenController => {
       .getState()
       .toggleSelectionLotsArray(lotIdsForZone, newState);
   };
-
-  // const toggleZoneSelection = useCallback(
-  //   (zoneId: string, newState: boolean) => {
-  //     const currentLots = useLotStore.getState().lots;
-  //     console.log(currentLots);
-
-  //     const lotIdsForZone = currentLots
-  //       .filter((lot) => lot.zoneId === zoneId)
-  //       .map((lot) => lot.lotId);
-
-  //     useHomeScreenStore
-  //       .getState()
-  //       .toggleSelectionLotsArray(lotIdsForZone, newState);
-  //   },
-  //   [],
-  // );
 
   const toggleNeighbourhoodSelection = (
     neighbourhoodId: string,

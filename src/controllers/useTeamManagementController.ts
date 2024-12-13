@@ -7,7 +7,6 @@ import useLotStore from '../stores/useLotStore';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
 import useZoneAssignmentScreenStore from '../stores/useZoneAssignmentScreenStore';
 import {
-  LotComputedForDisplay,
   LotInStore,
   NeighbourhoodData,
   NestedLotsWithIndicatorsInterface,
@@ -19,16 +18,7 @@ import {
 import { ITeamManagementController } from './../types/controllerTypes';
 
 const useTeamManagementController = (): ITeamManagementController => {
-  const {
-    toggleLotSelection,
-    selectLots,
-    deselectLots,
-    deselectAllLots,
-    toggleZoneExpansion,
-    collapseAllZones,
-    toggleNeighbourhoodExpansion,
-    expandAllNeighbourhoods,
-  } = useZoneAssignmentScreenStore();
+  const { toggleLotSelection, selectLots } = useZoneAssignmentScreenStore();
 
   const workgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
   const lots: LotInStore[] = useLotStore((state) => state.lots);
@@ -44,6 +34,62 @@ const useTeamManagementController = (): ITeamManagementController => {
   const expandedNeighbourhoods: Set<string> = useZoneAssignmentScreenStore(
     (state) => state.expandedNeighbourhoods,
   );
+
+  const toggleZoneSelection = (zoneId: string, newState: boolean) => {
+    const currentLots = useLotStore.getState().lots; // without this way of accessing the lots the app doesnt work correctly.
+    const lotIdsForZone = currentLots
+      .filter((lot) => lot.zoneId === zoneId)
+      .map((lot) => lot.lotId);
+
+    useZoneAssignmentScreenStore
+      .getState()
+      .toggleSelectionLotsArray(lotIdsForZone, newState);
+  };
+
+  const toggleNeighbourhoodSelection = (
+    neighbourhoodId: string,
+    newState: boolean,
+  ) => {
+    const currentLots = useLotStore.getState().lots; // without this way of accessing the lots the app doesnt work correctly.
+    const lotIdsForNeighbourhood = currentLots
+      .filter((lot) => lot.neighbourhoodId === neighbourhoodId)
+      .map((lot) => lot.lotId);
+
+    useZoneAssignmentScreenStore
+      .getState()
+      .toggleSelectionLotsArray(lotIdsForNeighbourhood, newState);
+  };
+
+  const deselectAllLots = () => {
+    useZoneAssignmentScreenStore.getState().deselectAllLots();
+  };
+
+  const toggleZoneExpansion = (zoneId: string) => {
+    useZoneAssignmentScreenStore.getState().toggleZoneExpansion(zoneId);
+  };
+
+  const collapseAllZones = () => {
+    useZoneAssignmentScreenStore.getState().collapseAllZones();
+  };
+
+  const toggleNeighbourhoodExpansion = (neighbourhoodId: string) => {
+    useZoneAssignmentScreenStore
+      .getState()
+      .toggleNeighbourhoodExpansion(neighbourhoodId);
+  };
+
+  const collapseAllNeighbourhoods = () => {
+    useZoneAssignmentScreenStore.getState().collapseAllNeighbourhoods();
+  };
+
+  const expandAllNeighbourhoods = () => {
+    const neighbourhoodIds = neighbourhoodsWithZones.map(
+      (n) => n.neighbourhoodId,
+    );
+    useZoneAssignmentScreenStore
+      .getState()
+      .expandAllNeighbourhoods(neighbourhoodIds);
+  };
 
   const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
     const nestedLots = React.useMemo<NestedLotsWithIndicatorsInterface>(() => {
@@ -64,19 +110,6 @@ const useTeamManagementController = (): ITeamManagementController => {
       expandedNeighbourhoods,
     ]);
     return nestedLots;
-  };
-
-  const toggleZoneSelection = (zoneId: string, newState: boolean) => {
-    const lotsInZone = lots.filter(
-      (lot) => lot.zoneId === zoneId && lot.workgroupId === workgroupId,
-    );
-    const lotIds = lotsInZone.map((lot) => lot.lotId);
-
-    if (newState) {
-      selectLots(lotIds);
-    } else {
-      deselectLots(lotIds);
-    }
   };
 
   const assignZoneToUser = (zoneId: string, userId: string) => {

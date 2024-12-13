@@ -169,7 +169,10 @@ const useHomeScreenController = (): IHomeScreenController => {
     useHomeScreenStore.getState().collapseAllNeighbourhoods();
   };
 
-  const expandAllNeighbourhoods = (neighbourhoodIds: string[]) => {
+  const expandAllNeighbourhoods = () => {
+    const neighbourhoodIds = neighbourhoodsWithZones.map(
+      (n) => n.neighbourhoodId,
+    );
     useHomeScreenStore.getState().expandAllNeighbourhoods(neighbourhoodIds);
   };
 

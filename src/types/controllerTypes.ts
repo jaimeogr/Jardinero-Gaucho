@@ -20,7 +20,7 @@ export interface IAccordionController {
   toggleZoneExpansion(zoneId: string): void;
   collapseAllZones(): void;
   collapseAllNeighbourhoods(): void;
-  expandAllNeighbourhoods(neighbourhoodIds: string[]): void;
+  expandAllNeighbourhoods(): void;
 }
 
 export interface IHomeScreenController extends IAccordionController {

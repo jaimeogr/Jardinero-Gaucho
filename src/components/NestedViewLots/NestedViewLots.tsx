@@ -107,6 +107,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
       );
     },
     [
+      controller,
       renderRightSideForAccordion,
       renderRightSideForOneLot,
       onlyZonesAreSelectable,

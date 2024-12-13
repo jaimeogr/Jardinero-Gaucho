@@ -33,4 +33,15 @@ export interface IHomeScreenController extends IAccordionController {
   markSelectedLotsCompletedForSpecificDate(date?: Date): void;
 }
 
-export interface ITeamManagementController extends IAccordionController {}
+export interface ITeamManagementController extends IAccordionController {
+  updateZoneAssignmentsForMember(
+    userId: string,
+    accessToAllLots: boolean,
+  ): void;
+  selectAssignedZonesForUser;
+  getUserInActiveWorkgroupWithRole;
+  inviteUserToActiveWorkgroup;
+  getTemporaryUserData;
+  setTemporaryUserData;
+  useUsersInActiveWorkgroupWithRoles;
+}

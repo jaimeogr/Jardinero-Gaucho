@@ -348,30 +348,6 @@ const updateZoneAssignmentsForMemberInWorkgroupUsingSelection = (
   return neighbourhoodsUpdated;
 };
 
-const assignZoneToUser = (
-  zones: ZoneWithIndicatorsInterface[],
-  userId: string,
-  zoneId: string,
-) => {
-  return zones.map((zone) =>
-    zone.zoneId === zoneId
-      ? { ...zone, assignedTo: [...new Set([...zone.assignedTo, userId])] }
-      : zone,
-  );
-};
-
-const unassignZoneFromUser = (
-  zones: ZoneWithIndicatorsInterface[],
-  userId: string,
-  zoneId: string,
-) => {
-  return zones.map((zone) =>
-    zone.zoneId === zoneId
-      ? { ...zone, assignedTo: zone.assignedTo.filter((id) => id !== userId) }
-      : zone,
-  );
-};
-
 export default {
   // Lots, zones, neighbourhoods
   createLot,
@@ -385,7 +361,4 @@ export default {
   clearZoneAssignmentsForMemberInWorkgroup,
   updateZoneAssignmentsForMemberInWorkgroupUsingSelection,
   computeAssignedZonesCountPerUserInWorkgroup,
-
-  assignZoneToUser,
-  unassignZoneFromUser,
 };

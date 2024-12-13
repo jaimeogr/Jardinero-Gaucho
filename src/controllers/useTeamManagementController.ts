@@ -119,52 +119,6 @@ const useTeamManagementController = (): ITeamManagementController => {
     return nestedLots;
   };
 
-  const assignZoneToUser = (zoneId: string, userId: string) => {
-    const zones = neighbourhoodsWithZones.neighbourhoods.flatMap(
-      (n) => n.zones,
-    );
-    const updatedZones = useLotService.assignZoneToUser(zones, userId, zoneId);
-
-    // Update store with the new zones data
-    useLotStore.setState((state) => ({
-      neighbourhoodZoneData: {
-        ...state.neighbourhoodZoneData,
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
-          ...n,
-          zones: n.zones.map(
-            (zone) =>
-              updatedZones.find((z) => z.zoneId === zone.zoneId) || zone,
-          ),
-        })),
-      },
-    }));
-  };
-
-  const unassignZoneFromUser = (zoneId: string, userId: string) => {
-    const zones = neighbourhoodsWithZones.neighbourhoods.flatMap(
-      (n) => n.zones,
-    );
-    const updatedZones = useLotService.unassignZoneFromUser(
-      zones,
-      userId,
-      zoneId,
-    );
-
-    // Update store with the new zones data
-    useLotStore.setState((state) => ({
-      neighbourhoodZoneData: {
-        ...state.neighbourhoodZoneData,
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
-          ...n,
-          zones: n.zones.map(
-            (zone) =>
-              updatedZones.find((z) => z.zoneId === zone.zoneId) || zone,
-          ),
-        })),
-      },
-    }));
-  };
-
   const updateZoneAssignmentsForMember = (
     userId: string,
     accessToAllLots: boolean,

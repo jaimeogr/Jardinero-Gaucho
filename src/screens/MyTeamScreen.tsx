@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Surface, Badge } from 'react-native-paper';
 
-import ControllerService from '../controllers/useHomeScreenController';
+import useTeamManagementController from '../controllers/useTeamManagementController';
 import { theme } from '../styles/styles';
 import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
 
@@ -31,7 +31,7 @@ interface Props {
 }
 
 const useUsersWithRoles = () => {
-  return ControllerService.useUsersInActiveWorkgroupWithRoles();
+  return useTeamManagementController.useUsersInActiveWorkgroupWithRoles();
 };
 
 const MyTeamScreen: React.FC<Props> = ({ navigation }) => {

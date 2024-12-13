@@ -8,7 +8,7 @@ import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import CustomSelectInput from '../components/CustomSelectInput';
 import CustomTextInput from '../components/CustomTextInput';
 import RolePicker from '../components/RolePicker';
-import ControllerService from '../controllers/useHomeScreenController';
+import useTeamManagementController from '../controllers/useTeamManagementController';
 import { theme } from '../styles/styles';
 import { UserRole } from '../types/types';
 
@@ -31,7 +31,8 @@ interface Props {
 }
 
 const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
-  const { getTemporaryUserData, setTemporaryUserData } = ControllerService;
+  const { getTemporaryUserData, setTemporaryUserData } =
+    useTeamManagementController;
 
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -82,7 +83,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
     if (accessToAllLots === true) {
       // Proceed with inviting the user
       console.log('Inviting user...');
-      const newUser = ControllerService.inviteUserToActiveWorkgroup(
+      const newUser = useTeamManagementController.inviteUserToActiveWorkgroup(
         email,
         selectedRole as UserRole,
         accessToAllLots,

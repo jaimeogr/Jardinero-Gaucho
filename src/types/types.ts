@@ -91,6 +91,7 @@ export interface NeighbourhoodZoneData {
 export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
 
 export interface WorkgroupDataForUser {
+  // this is the workgroup data that corresponds to the user, but not data about the workgroup itself, so thats why the namee of the workgroup is not here.
   workgroupId: string;
   role: UserRole;
   hasAcceptedPresenceInWorkgroup: boolean;
@@ -100,6 +101,7 @@ export interface WorkgroupDataForUser {
 }
 
 export interface WorkgroupInterface {
+  // data of the workgroup itself
   workgroupId: string;
   name: string;
 }
@@ -121,6 +123,7 @@ export interface TemporaryUserData {
 export type UserInActiveWorkgroupWithRole = UserInterface &
   WorkgroupDataForUser & {
     // This is a combination of UserInterface and WorkgroupAssignment plus some assigned zones and lots
+    // the reason why the WorkgroupDataForUser is combined in the root of the object is because in this way the data specific to the current workgroup is exposed in a more clear way.
     assignedZonesCount: number;
     assignedLotsCount: number;
   };

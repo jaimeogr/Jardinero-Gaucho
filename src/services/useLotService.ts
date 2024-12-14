@@ -16,18 +16,6 @@ import {
 import { lotNeedsMowing } from '../utils/DateAnalyser';
 import { userHasPermission } from '../utils/permissionUtils';
 
-// const initializeStore = () => {
-//   const lots = BackendService.getMyLots();
-//   const neighbourhoodsAndZones = BackendService.getNeighbourhoodZoneData();
-//   useLotStore.getState().initializeLots(lots);
-//   useLotStore
-//     .getState()
-//     .initializeNeighbourhoodsAndZones(neighbourhoodsAndZones);
-// };
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////// NEW FUNCTIONS START HERE ///////////////////////////////////////////////////////
-
 const createLot = (
   workgroupId: string | null,
   newLot: Partial<LotInStore>,
@@ -46,7 +34,6 @@ const createLot = (
     workgroupId,
     lotLabel: newLot.lotLabel || '', // provide defaults if necessary
     lastMowingDate: newLot.lastMowingDate || new Date(),
-    assignedTo: newLot.assignedTo || [],
   };
 
   // Return the new lot so the controller can handle updating the store
@@ -249,7 +236,6 @@ const addNeighbourhood = (
     neighbourhoodLabel: neighbourhoodLabel,
     isSelected: false, // Initialize isSelected
     isExpanded: false, // Initialize isExpanded
-    assignedTo: [], // Initialize assignedTo as an empty array
     zones: [], // Initialize zones as an empty array
   };
   return newNeighbourhood;
@@ -264,88 +250,9 @@ const addZoneToNeighbourhood = (
     zoneLabel: zoneLabel,
     isSelected: false, // Initialize isSelected
     isExpanded: false, // Initialize isExpanded
-    assignedTo: [], // Initialize assignedTo as an empty array
   };
 
   return zone;
-};
-
-const clearZoneAssignmentsForMemberInWorkgroup = (
-  neighbourhoods: NeighbourhoodData[],
-  userId: string,
-  activeWorkgroupId: string,
-): NeighbourhoodData[] => {
-  return neighbourhoods.map((n) =>
-    n.workgroupId === activeWorkgroupId
-      ? {
-          ...n,
-          zones: n.zones.map((zone) => ({
-            ...zone,
-            assignedTo: zone.assignedTo.filter((id) => id !== userId),
-          })),
-        }
-      : n,
-  );
-};
-
-const computeAssignedZonesCountPerUserInWorkgroup = (
-  neighbourhoodZoneData: { neighbourhoods: NeighbourhoodData[] },
-  workgroupId: string,
-): Record<string, number> => {
-  const assignedZonesByUser: Record<string, number> = {};
-
-  const neighbourhoods = neighbourhoodZoneData.neighbourhoods.filter(
-    (n) => n.workgroupId === workgroupId,
-  );
-
-  neighbourhoods.forEach((neighbourhood) => {
-    neighbourhood.zones.forEach((zone) => {
-      zone.assignedTo.forEach((userId) => {
-        if (!assignedZonesByUser[userId]) {
-          assignedZonesByUser[userId] = 0;
-        }
-        assignedZonesByUser[userId] += 1;
-      });
-    });
-  });
-
-  return assignedZonesByUser;
-};
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////// NEW FUNCTIONS END HERE ///////////////////////////////////////////////////////
-
-const updateZoneAssignmentsForMemberInWorkgroupUsingSelection = (
-  userId: string,
-  activeWorkgroupId: string,
-  neighbourhoods: NeighbourhoodData[],
-  nestedLots: NestedLotsWithIndicatorsInterface,
-) => {
-  //should i implement nestedLots so that it is used to check if zones are selected? information is there and moemoized but is there a better practice? maybe i should already implement that to avoid future problems.
-
-  // Clone the neighbourhoodZoneData to avoid direct mutation
-  const neighbourhoodsUpdated = neighbourhoods
-    .filter((n) => n.workgroupId === activeWorkgroupId)
-    .map((neighbourhood) => ({
-      ...neighbourhood,
-      zones: neighbourhood.zones.map((zone) => {
-        const isZoneSelected = zone.isSelected;
-
-        return {
-          ...zone,
-          assignedTo: isZoneSelected
-            ? // Add userId if it's not already in the assignedTo array
-              zone.assignedTo.includes(userId)
-              ? zone.assignedTo
-              : [...zone.assignedTo, userId]
-            : // Remove userId if it exists in the array because the zone is not selected for the userId
-              zone.assignedTo.filter((id) => id !== userId),
-        };
-      }),
-    }));
-
-  // Update the store with the modified neighbourhoodZoneData
-  return neighbourhoodsUpdated;
 };
 
 export default {
@@ -356,9 +263,4 @@ export default {
   markSelectedLotsCompletedForSpecificDate,
   addZoneToNeighbourhood,
   addNeighbourhood,
-
-  // zone assignments
-  clearZoneAssignmentsForMemberInWorkgroup,
-  updateZoneAssignmentsForMemberInWorkgroupUsingSelection,
-  computeAssignedZonesCountPerUserInWorkgroup,
 };

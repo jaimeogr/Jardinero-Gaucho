@@ -236,12 +236,12 @@ const useTeamManagementController = (): ITeamManagementController => {
     if (assignment) {
       // the user is in the active workgroup
       const assignedZonesCount =
-        useLotService.getNumberOfAssignedZonesForUserInSpecificWorkgroup(
+        useUserService.computeAssignedZonesCountPerUserInWorkgroup(
           activeWorkgroupId,
           user.userId,
         );
       const assignedLotsCount =
-        useLotService.getNumberOfAssignedLotsForUserInSpecificWorkgroup(
+        useUserService.computeAssignedLotsCountPerUserInWorkgroup(
           activeWorkgroupId,
           user.userId,
         );

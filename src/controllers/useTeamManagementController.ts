@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'; //ID Generator
 import useLotService from '../services/useLotService';
 import useUserService from '../services/useUserService';
 import useLotStore from '../stores/useLotStore';
+import useUserStore from '../stores/useUserStore';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
 import useZoneAssignmentScreenStore from '../stores/useZoneAssignmentScreenStore';
 import {
@@ -37,6 +38,9 @@ const useTeamManagementController = (): ITeamManagementController => {
   const expandedNeighbourhoods: Set<string> = useZoneAssignmentScreenStore(
     (state) => state.expandedNeighbourhoods,
   );
+
+  const users = useUserStore((state) => state.users);
+  const currentUser = useUserStore((state) => state.currentUser);
 
   const toggleLotSelection = (lotId: string, newState: boolean) => {
     return; // ill leave this implemented but empty to comply with the React functional component for now, could be removed in the future
@@ -116,6 +120,63 @@ const useTeamManagementController = (): ITeamManagementController => {
     ]);
     return nestedLots;
   };
+
+  const useUsersInActiveWorkgroupWithRoles =
+    (): UserInActiveWorkgroupWithRole[] => {
+      // Get assigned counts per user from useLotService
+      const assignedZonesByUser =
+        useUserService.computeAssignedZonesCountPerUserInWorkgroup(
+          activeWorkgroupId,
+          users,
+          neighbourhoodsWithZones,
+        );
+      const assignedLotsByUser =
+        useUserService.computeAssignedLotsCountPerUserInWorkgroup(
+          activeWorkgroupId,
+          users,
+          lots,
+        );
+
+      return React.useMemo(() => {
+        if (!activeWorkgroupId) {
+          // Handle the case when activeWorkgroupId is undefined
+          return [];
+        }
+
+        const usersInWorkgroup = users
+          .map((user) => {
+            const assignment = user.workgroupAssignments.find(
+              (wa) => wa.workgroupId === activeWorkgroupId,
+            );
+            if (assignment) {
+              const assignedZonesCount = assignedZonesByUser[user.userId] || 0;
+              const assignedLotsCount = assignedLotsByUser[user.userId] || 0;
+
+              return {
+                ...user,
+                ...assignment,
+                assignedZonesCount,
+                assignedLotsCount,
+              };
+            }
+            return null;
+          })
+          .filter((user) => user !== null) as UserInActiveWorkgroupWithRole[];
+
+        // Sort users by role priority
+        const usersSortedByRole = usersInWorkgroup.sort((a, b) => {
+          const rolePriority = {
+            PrimaryOwner: 1,
+            Owner: 2,
+            Manager: 3,
+            Member: 4,
+          };
+          return rolePriority[a.role] - rolePriority[b.role];
+        });
+
+        return usersSortedByRole;
+      }, [activeWorkgroupId, users, assignedZonesByUser, assignedLotsByUser]);
+    };
 
   const updateZoneAssignmentsForMember = (
     userId: string,
@@ -230,68 +291,6 @@ const useTeamManagementController = (): ITeamManagementController => {
   ) => {
     useUserService.setTemporaryUserData(userData, isNewUser);
   };
-
-  const useUsersInActiveWorkgroupWithRoles =
-    (): UserInActiveWorkgroupWithRole[] => {
-      const activeWorkgroup = getActiveWorkgroup();
-      const activeWorkgroupId = activeWorkgroup?.workgroupId;
-
-      // Subscribe to users
-      const allUsers = useUserService.useAllUsers();
-
-      // Get assigned counts per user from useLotService
-      const assignedZonesByUser =
-        useLotService.useAssignedZonesCountPerUserInWorkgroup(
-          activeWorkgroupId,
-        );
-      const assignedLotsByUser =
-        useLotService.useAssignedLotsCountPerUserInWorkgroup(activeWorkgroupId);
-
-      return React.useMemo(() => {
-        if (!activeWorkgroupId) {
-          // Handle the case when activeWorkgroupId is undefined
-          return [];
-        }
-
-        const usersInWorkgroup = allUsers
-          .map((user) => {
-            const assignment = user.workgroupAssignments.find(
-              (wa) => wa.workgroupId === activeWorkgroupId,
-            );
-            if (assignment) {
-              const assignedZonesCount = assignedZonesByUser[user.userId] || 0;
-              const assignedLotsCount = assignedLotsByUser[user.userId] || 0;
-
-              return {
-                ...user,
-                ...assignment,
-                assignedZonesCount,
-                assignedLotsCount,
-              };
-            }
-            return null;
-          })
-          .filter((user) => user !== null) as UserInActiveWorkgroupWithRole[];
-
-        // Sort users by role priority
-        const usersSortedByRole = usersInWorkgroup.sort((a, b) => {
-          const rolePriority = {
-            PrimaryOwner: 1,
-            Owner: 2,
-            Manager: 3,
-            Member: 4,
-          };
-          return rolePriority[a.role] - rolePriority[b.role];
-        });
-
-        return usersSortedByRole;
-      }, [
-        activeWorkgroupId,
-        allUsers,
-        assignedZonesByUser,
-        assignedLotsByUser,
-      ]);
-    };
 
   return {
     // Lots

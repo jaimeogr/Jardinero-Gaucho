@@ -92,19 +92,11 @@ export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
 
 export interface WorkgroupDataForUser {
   workgroupId: string;
-  name: string; // The workgroup’s name
   role: UserRole;
+  hasAcceptedPresenceInWorkgroup: boolean;
   accessToAllLots: boolean;
   assignedNeighbourhoods: string[];
   assignedZones: string[];
-  hasAcceptedPresenceInWorkgroup: boolean;
-}
-
-export interface WorkgroupDataForUser {
-  workgroupId: string;
-  role: UserRole;
-  accessToAllLots: boolean;
-  hasAcceptedPresenceInWorkgroup: boolean;
 }
 
 export interface WorkgroupInterface {

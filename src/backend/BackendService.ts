@@ -32,7 +32,6 @@ const getNeighbourhoodZoneData = (
         neighbourhoodLabel,
         isSelected: false,
         isExpanded: false,
-        assignedTo: [],
         zones: [],
       };
     }
@@ -51,7 +50,6 @@ const getNeighbourhoodZoneData = (
         zoneLabel,
         isSelected: false,
         isExpanded: false,
-        assignedTo: [],
       });
     }
   });
@@ -71,7 +69,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
     neighbourhoodLabel: 'El Canton',
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -84,7 +81,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
       'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-06'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -97,7 +93,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
       'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-07'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -110,7 +105,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
       'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-07'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -123,7 +117,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
       'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-08'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -136,7 +129,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
       'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
 
@@ -151,7 +143,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
       'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -164,7 +155,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
       'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -177,7 +167,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
       'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-04'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -190,7 +179,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
       'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-25'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
 
@@ -204,7 +192,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
     neighbourhoodLabel: 'La Laguna',
     lastMowingDate: new Date('2024-10-02'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -216,7 +203,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
     neighbourhoodLabel: 'La Laguna',
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -228,7 +214,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
     neighbourhoodLabel: 'La Laguna',
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
 
@@ -242,7 +227,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
     neighbourhoodLabel: 'El Tero',
     lastMowingDate: new Date('2024-10-08'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -254,7 +238,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
     neighbourhoodLabel: 'El Tero',
     lastMowingDate: new Date('2024-10-08'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
 
@@ -268,7 +251,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
     neighbourhoodLabel: 'El Naudir',
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -280,7 +262,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
     neighbourhoodLabel: 'El Naudir',
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -292,7 +273,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
     neighbourhoodLabel: 'El Naudir',
     lastMowingDate: new Date('2024-10-25'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -304,7 +284,6 @@ const hardCodedLots: LotComputedForDisplay[] = [
     neighbourhoodLabel: 'El Naudir',
     lastMowingDate: new Date('2024-10-24'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
 ];
@@ -327,6 +306,8 @@ const currentUser: UserInterface = {
       role: 'PrimaryOwner',
       accessToAllLots: true,
       hasAcceptedPresenceInWorkgroup: true,
+      assignedNeighbourhoods: [],
+      assignedZones: [],
     },
   ],
 };
@@ -343,6 +324,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Owner',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -357,6 +340,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Member',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -371,6 +356,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Owner',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -385,6 +372,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'PrimaryOwner',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -399,6 +388,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Manager',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -413,6 +404,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Member',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -427,6 +420,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Member',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },

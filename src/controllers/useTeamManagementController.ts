@@ -207,6 +207,8 @@ const useTeamManagementController = (): ITeamManagementController => {
           role,
           accessToAllLots,
           hasAcceptedPresenceInWorkgroup: false,
+          assignedNeighbourhoods: [],
+          assignedZones: [],
         },
       ],
     };

@@ -1,8 +1,18 @@
 // types.ts or interfaces.ts
 
-// in the future i can have different data types for neighbourhood/zones like LotInStore, LotComputedForDisplay
-// in the future i can remove NeighbourhoodZoneData for the sake of goodwill and use NeighbourhoodData instead :)
-// in the future i can combine LotWithNeedMowingInterface and LotComputedForDisplay
+// 1. In the future i can have a  data type for my current user where it has an array of WorkgroupDataForUser,
+// and in the other hand a single WorkgroupDataForUser for each team member.
+// Since each workgroup would load the corresponding users,
+// and even if users are repeated accross workgroups, it should be handled appropiately.
+// In this way, data structures would be decoupled from one workgroup to another, minimizing errors.
+//
+//
+// 2. In the future i can have different data types for neighbourhood/zones like LotInStore, LotComputedForDisplay
+//
+//
+// 3. In the future i can remove NeighbourhoodZoneData for the sake of goodwill and use NeighbourhoodData instead :)
+//
+// 4. In the future i can combine LotWithNeedMowingInterface and LotComputedForDisplay.
 
 // LOTS / ZONES / NEIGHBOURHOODS
 export interface LotInStore {
@@ -90,7 +100,7 @@ export interface WorkgroupDataForUser {
   hasAcceptedPresenceInWorkgroup: boolean;
 }
 
-export interface WorkgroupAssignment {
+export interface WorkgroupDataForUser {
   workgroupId: string;
   role: UserRole;
   accessToAllLots: boolean;
@@ -107,7 +117,7 @@ export interface UserInterface {
   firstName: string;
   lastName: string;
   email: string;
-  workgroupAssignments: WorkgroupAssignment[];
+  workgroupAssignments: WorkgroupDataForUser[];
 }
 
 export interface TemporaryUserData {
@@ -117,7 +127,7 @@ export interface TemporaryUserData {
 }
 
 export type UserInActiveWorkgroupWithRole = UserInterface &
-  WorkgroupAssignment & {
+  WorkgroupDataForUser & {
     // This is a combination of UserInterface and WorkgroupAssignment plus some assigned zones and lots
     assignedZonesCount: number;
     assignedLotsCount: number;

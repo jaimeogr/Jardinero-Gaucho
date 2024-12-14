@@ -1,5 +1,3 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 // useUserService.ts
 import BackendService from '../backend/BackendService';
 import useUserStore from '../stores/useUserStore';

@@ -42,6 +42,29 @@ const useTeamManagementController = (): ITeamManagementController => {
   const users = useUserStore((state) => state.users);
   const currentUser = useUserStore((state) => state.currentUser);
 
+  const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
+    const nestedLots = React.useMemo<NestedLotsWithIndicatorsInterface>(() => {
+      return useLotService.computeNestedLots(
+        activeWorkgroupId,
+        lots,
+        neighbourhoodsWithZones,
+        selectedLots,
+        expandedZones,
+        expandedNeighbourhoods,
+      );
+    }, [
+      activeWorkgroupId,
+      lots,
+      neighbourhoodsWithZones,
+      selectedLots,
+      expandedZones,
+      expandedNeighbourhoods,
+    ]);
+    return nestedLots;
+  };
+
+  const nestedLotsData = useNestedLots(); // this must be under the declaration of useNestedLots
+
   const toggleLotSelection = (lotId: string, newState: boolean) => {
     return; // ill leave this implemented but empty to comply with the React functional component for now, could be removed in the future
   };
@@ -98,27 +121,6 @@ const useTeamManagementController = (): ITeamManagementController => {
     useZoneAssignmentScreenStore
       .getState()
       .expandAllNeighbourhoods(neighbourhoodIds);
-  };
-
-  const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
-    const nestedLots = React.useMemo<NestedLotsWithIndicatorsInterface>(() => {
-      return useLotService.computeNestedLots(
-        activeWorkgroupId,
-        lots,
-        neighbourhoodsWithZones,
-        selectedLots,
-        expandedZones,
-        expandedNeighbourhoods,
-      );
-    }, [
-      activeWorkgroupId,
-      lots,
-      neighbourhoodsWithZones,
-      selectedLots,
-      expandedZones,
-      expandedNeighbourhoods,
-    ]);
-    return nestedLots;
   };
 
   const useUsersInActiveWorkgroupWithRoles =
@@ -182,24 +184,31 @@ const useTeamManagementController = (): ITeamManagementController => {
     userId: string,
     accessToAllLots: boolean,
   ) => {
-    if (accessToAllLots) {
-      useUserService.updateUserAccessToAllLots(
-        userId,
-        accessToAllLots,
-        activeWorkgroupId,
-      );
-      useLotService.clearZoneAssignmentsForMemberInWorkgroup(
-        userId,
-        activeWorkgroupId,
-      );
-    } else {
-      useLotService.updateZoneAssignmentsForMemberInWorkgroupUsingSelection(
-        userId,
-        activeWorkgroupId,
-        neighbourhoodsWithZones,
-        useNestedLots(),
-      );
+    // Find the user to ensure we can update their assignments
+    const user = users.find((u) => u.userId === userId);
+    if (!user) {
+      console.warn(`User with ID ${userId} not found.`);
+      return;
     }
+
+    // Compute the updated assignment information
+    const updatedWorkgroupAssignments = useUserService.updateUserAccess(
+      user,
+      accessToAllLots,
+      activeWorkgroupId,
+      nestedLotsData.nestedLots,
+    );
+
+    if (!updatedWorkgroupAssignments) {
+      console.warn('Failed to update user access.');
+    } else {
+      // Update the user in the store with the new assignments
+      useUserStore.getState().updateUser(userId, {
+        workgroupAssignments: updatedWorkgroupAssignments,
+      });
+    }
+
+    // Clear any currently selected lots after updating assignments
     deselectAllLots();
   };
 

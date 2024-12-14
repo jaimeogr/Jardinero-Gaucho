@@ -6,6 +6,8 @@ import {
   TemporaryUserData,
   LotInStore,
   NeighbourhoodData,
+  NeighbourhoodWithIndicatorsInterface,
+  WorkgroupDataForUser,
 } from '../types/types';
 
 const initializeUsers = () => {
@@ -27,42 +29,6 @@ const getUserById = (userId: string): UserInterface | undefined => {
   return useUserStore.getState().getUserById(userId);
 };
 
-// const useAllUsers = (): UserInterface[] => {
-//   const allUsers = useUserStore((state) => state.users);
-//   return allUsers;
-// };
-
-const addUser = (user: UserInterface) => {
-  useUserStore.getState().addUser(user);
-};
-
-const updateUser = (userId: string, updatedInfo: Partial<UserInterface>) => {
-  useUserStore.getState().updateUser(userId, updatedInfo);
-};
-
-const updateUserAccessToAllLots = (
-  userId: string,
-  accessToAllLots: boolean,
-  activeWorkgroupId: string | null,
-) => {
-  if (!activeWorkgroupId) {
-    console.log('No active workgroup selected');
-    return;
-  }
-
-  const user = getUserById(userId);
-  if (user) {
-    const assignmentIndex = user.workgroupAssignments.findIndex(
-      (wa) => wa.workgroupId === activeWorkgroupId,
-    );
-    if (assignmentIndex >= 0) {
-      user.workgroupAssignments[assignmentIndex].accessToAllLots =
-        accessToAllLots;
-      updateUser(userId, user);
-    }
-  }
-};
-
 const getTemporaryUserData = (): {
   temporaryUserData: TemporaryUserData | null;
   temporaryisNewUser: boolean;
@@ -79,6 +45,78 @@ const setTemporaryUserData = (
   useUserStore.getState().setTemporaryUserData(userData);
   useUserStore.getState().setTemporaryIsNewUser(isNewUser);
 };
+
+// const useAllUsers = (): UserInterface[] => {
+//   const allUsers = useUserStore((state) => state.users);
+//   return allUsers;
+// };
+
+const addUser = (user: UserInterface) => {
+  useUserStore.getState().addUser(user);
+};
+
+const updateUser = (userId: string, updatedInfo: Partial<UserInterface>) => {
+  useUserStore.getState().updateUser(userId, updatedInfo);
+};
+
+function updateUserAccess(
+  user: UserInterface,
+  accessToAllLots: boolean,
+  activeWorkgroupId: string | null,
+  nestedLots: NeighbourhoodWithIndicatorsInterface[],
+): WorkgroupDataForUser[] | undefined {
+  if (!activeWorkgroupId) {
+    console.warn('No active workgroup selected.');
+    return;
+  }
+
+  if (!user) {
+    console.warn('No user provided.');
+    return;
+  }
+
+  // Map over the user's workgroup assignments to find and update the one for the active workgroup
+  const updatedAssignments = user.workgroupAssignments.map((assignment) => {
+    if (assignment.workgroupId !== activeWorkgroupId) {
+      return assignment;
+    }
+
+    // If the user now has access to all lots, clear assigned zones/neighbourhoods
+    if (accessToAllLots) {
+      return {
+        ...assignment,
+        accessToAllLots: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
+      } as WorkgroupDataForUser;
+    }
+
+    // Otherwise, determine assigned neighbourhoods and zones from the nestedLots structure
+    const assignedNeighbourhoods: string[] = [];
+    const assignedZones: string[] = [];
+
+    nestedLots.forEach((neighbourhood) => {
+      if (neighbourhood.isSelected) {
+        assignedNeighbourhoods.push(neighbourhood.neighbourhoodId);
+      }
+
+      neighbourhood.zones.forEach((zone) => {
+        if (zone.isSelected) {
+          assignedZones.push(zone.zoneId);
+        }
+      });
+    });
+
+    return {
+      ...assignment,
+      accessToAllLots: false,
+      assignedNeighbourhoods,
+      assignedZones,
+    } as WorkgroupDataForUser;
+  });
+
+  return updatedAssignments;
+}
 
 function computeAssignedZonesCountPerUserInWorkgroup(
   workgroupId: string | null,
@@ -160,13 +198,14 @@ function computeAssignedLotsCountPerUserInWorkgroup(
 
   return assignedLotsByUser;
 }
+
 export default {
   initializeUsers,
   useGetCurrentUser,
   getUserById,
   addUser,
   updateUser,
-  updateUserAccessToAllLots,
+  updateUserAccess,
   getTemporaryUserData,
   setTemporaryUserData,
   computeAssignedZonesCountPerUserInWorkgroup,

@@ -125,25 +125,25 @@ const useTeamManagementController = (): ITeamManagementController => {
 
   const useUsersInActiveWorkgroupWithRoles =
     (): UserInActiveWorkgroupWithRole[] => {
-      // Get assigned counts per user from useLotService
-      const assignedZonesByUser =
-        useUserService.computeAssignedZonesCountPerUserInWorkgroup(
-          activeWorkgroupId,
-          users,
-          neighbourhoodsWithZones,
-        );
-      const assignedLotsByUser =
-        useUserService.computeAssignedLotsCountPerUserInWorkgroup(
-          activeWorkgroupId,
-          users,
-          lots,
-        );
-
       return React.useMemo(() => {
         if (!activeWorkgroupId) {
           // Handle the case when activeWorkgroupId is undefined
           return [];
         }
+
+        // Get assigned counts per user from useLotService
+        const assignedZonesByUser =
+          useUserService.computeAssignedZonesCountPerUserInWorkgroup(
+            activeWorkgroupId,
+            users,
+            neighbourhoodsWithZones,
+          );
+        const assignedLotsByUser =
+          useUserService.computeAssignedLotsCountPerUserInWorkgroup(
+            activeWorkgroupId,
+            users,
+            lots,
+          );
 
         const usersInWorkgroup = users
           .map((user) => {
@@ -177,7 +177,7 @@ const useTeamManagementController = (): ITeamManagementController => {
         });
 
         return usersSortedByRole;
-      }, [activeWorkgroupId, users, assignedZonesByUser, assignedLotsByUser]);
+      }, [activeWorkgroupId, users, lots, neighbourhoodsWithZones]);
     };
 
   const updateZoneAssignmentsForMember = (
@@ -213,46 +213,64 @@ const useTeamManagementController = (): ITeamManagementController => {
   };
 
   const selectAssignedZonesForUser = (userId: string) => {
-    const assignedLots = useLotService.getAssignedLotsForUser(
-      userId,
-      activeWorkgroupId,
-    );
-    const lotIds = assignedLots.map((lot) => lot.lotId);
-    toggleSelectionForLotsArray(lotIds);
-  };
+    if (!activeWorkgroupId) {
+      console.warn('No active workgroup is set.');
+      return;
+    }
 
-  const getUserInActiveWorkgroupWithRole = (
-    userId: string,
-  ): UserInActiveWorkgroupWithRole | null => {
-    const activeWorkgroupId = getActiveWorkgroup()?.workgroupId;
-    if (!activeWorkgroupId) return null;
+    // Find the user
+    const user = users.find((u) => u.userId === userId);
+    if (!user) {
+      console.warn(`User with ID ${userId} not found.`);
+      return;
+    }
 
-    const user = useUserService.getUserById(userId);
-    if (!user) return null;
-
-    const assignment = user.workgroupAssignments.find(
+    // Find the user's assignment for the active workgroup
+    const workgroupAssignment = user.workgroupAssignments.find(
       (wa) => wa.workgroupId === activeWorkgroupId,
     );
-    if (assignment) {
-      // the user is in the active workgroup
-      const assignedZonesCount =
-        useUserService.computeAssignedZonesCountPerUserInWorkgroup(
-          activeWorkgroupId,
-          user.userId,
-        );
-      const assignedLotsCount =
-        useUserService.computeAssignedLotsCountPerUserInWorkgroup(
-          activeWorkgroupId,
-          user.userId,
-        );
-      return {
-        ...user,
-        ...assignment,
-        assignedZonesCount: assignedZonesCount,
-        assignedLotsCount: assignedLotsCount,
-      };
+    if (!workgroupAssignment) {
+      console.warn(
+        `User with ID ${userId} is not assigned to the active workgroup.`,
+      );
+      return;
     }
-    return null;
+
+    // Create sets for quick lookup
+    const assignedZoneIds = new Set(workgroupAssignment.assignedZones);
+    const assignedNeighbourhoodIds = new Set(
+      workgroupAssignment.assignedNeighbourhoods,
+    );
+
+    // Filter lots to only those that belong to the assigned zones or neighbourhoods
+    const lotsToSelect = lots
+      .filter(
+        (lot) =>
+          assignedZoneIds.has(lot.zoneId) ||
+          assignedNeighbourhoodIds.has(lot.neighbourhoodId),
+      )
+      .map((lot) => lot.lotId);
+
+    // Select the filtered lots
+    if (lotsToSelect.length > 0) {
+      useZoneAssignmentScreenStore
+        .getState()
+        .toggleSelectionForLotsArray(lotsToSelect, true);
+    }
+  };
+
+  const useUserInActiveWorkgroupWithRole = (
+    userId: string,
+  ): UserInActiveWorkgroupWithRole | null => {
+    // Reuse the memoized array of users in the active workgroup
+    const usersInWorkgroupWithRoles = useUsersInActiveWorkgroupWithRoles();
+
+    // Find the user by userId in the already computed array
+    const userWithRole = usersInWorkgroupWithRoles.find(
+      (user) => user.userId === userId,
+    );
+
+    return userWithRole || null;
   };
 
   const inviteUserToActiveWorkgroup = (
@@ -309,7 +327,7 @@ const useTeamManagementController = (): ITeamManagementController => {
     inviteUserToActiveWorkgroup,
     updateZoneAssignmentsForMember,
     selectAssignedZonesForUser,
-    getUserInActiveWorkgroupWithRole,
+    getUserInActiveWorkgroupWithRole: useUserInActiveWorkgroupWithRole,
     useUsersInActiveWorkgroupWithRoles,
 
     // selections

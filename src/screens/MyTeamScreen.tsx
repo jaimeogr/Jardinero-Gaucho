@@ -30,12 +30,9 @@ interface Props {
   navigation: MyTeamScreenNavigationProp;
 }
 
-const useUsersWithRoles = () => {
-  return useTeamManagementController.useUsersInActiveWorkgroupWithRoles();
-};
-
 const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
-  const users: Array<UserInActiveWorkgroupWithRole> = useUsersWithRoles();
+  const users: Array<UserInActiveWorkgroupWithRole> =
+    useTeamManagementController().useUsersInActiveWorkgroupWithRoles();
 
   const integrantesCount = users.length;
 

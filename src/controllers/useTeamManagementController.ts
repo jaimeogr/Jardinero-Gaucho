@@ -327,7 +327,7 @@ const useTeamManagementController = (): ITeamManagementController => {
     inviteUserToActiveWorkgroup,
     updateZoneAssignmentsForMember,
     selectAssignedZonesForUser,
-    getUserInActiveWorkgroupWithRole: useUserInActiveWorkgroupWithRole,
+    useUserInActiveWorkgroupWithRole,
     useUsersInActiveWorkgroupWithRoles,
 
     // selections

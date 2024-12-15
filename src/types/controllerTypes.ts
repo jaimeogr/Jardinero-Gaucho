@@ -5,6 +5,10 @@ import {
   NeighbourhoodData,
   ZoneData,
   LotInStore,
+  UserInActiveWorkgroupWithRole,
+  UserRole,
+  UserInterface,
+  TemporaryUserData,
 } from './types';
 
 export interface IAccordionController {
@@ -38,10 +42,22 @@ export interface ITeamManagementController extends IAccordionController {
     userId: string,
     accessToAllLots: boolean,
   ): void;
-  selectAssignedZonesForUser;
-  getUserInActiveWorkgroupWithRole;
-  inviteUserToActiveWorkgroup;
-  getTemporaryUserData;
-  setTemporaryUserData;
-  useUsersInActiveWorkgroupWithRoles;
+  selectAssignedZonesForUser(userId: string): void;
+  useUserInActiveWorkgroupWithRole(
+    userId: string,
+  ): UserInActiveWorkgroupWithRole | null;
+  useUsersInActiveWorkgroupWithRoles(): UserInActiveWorkgroupWithRole[];
+  inviteUserToActiveWorkgroup(
+    email: string,
+    role: UserRole,
+    accessToAllLots: boolean,
+  ): UserInterface | null;
+  getTemporaryUserData(): {
+    temporaryUserData: TemporaryUserData | null;
+    temporaryisNewUser: boolean;
+  };
+  setTemporaryUserData(
+    userData: TemporaryUserData | null,
+    isNewUser: boolean,
+  ): void;
 }

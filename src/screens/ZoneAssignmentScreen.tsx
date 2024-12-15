@@ -38,7 +38,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     deselectAllLots,
     updateZoneAssignmentsForMember,
     selectAssignedZonesForUser,
-    getUserInActiveWorkgroupWithRole,
+    useUserInActiveWorkgroupWithRole: getUserInActiveWorkgroupWithRole,
     inviteUserToActiveWorkgroup,
     getTemporaryUserData,
     setTemporaryUserData,
@@ -95,7 +95,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         setAccessToAllLots(existingUser.accessToAllLots);
         // Pre-select zones assigned to the user when it doesnt have access to all zones
         if (!existingUser.accessToAllLots) {
-          selectAssignedZonesForUser(SCREEN_CODE_FOR_GLOBAL_STATE, userId);
+          selectAssignedZonesForUser(userId);
         }
       } else {
         Alert.alert('Error', 'Usuario no encontrado.');
@@ -142,7 +142,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         // No need to select zones; user has access to all
       } else if (userId) {
         // select zones assigned to the user if there is an existant userId
-        selectAssignedZonesForUser(SCREEN_CODE_FOR_GLOBAL_STATE, userId);
+        selectAssignedZonesForUser(userId);
       } else {
         deselectAllLots();
       }
@@ -171,11 +171,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
           Alert.alert('Éxito', 'El integrante ha sido invitado.');
         } else {
           // Assign zones to the new user using the selection in the store
-          updateZoneAssignmentsForMember(
-            SCREEN_CODE_FOR_GLOBAL_STATE,
-            newUser.userId,
-            accessToAllLots,
-          );
+          updateZoneAssignmentsForMember(newUser.userId, accessToAllLots);
           Alert.alert(
             'Asignación exitosa',
             'El integrante ha sido invitado y las zonas han sido asignadas.',
@@ -186,11 +182,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       }
     } else if (userId) {
       // Existing user case
-      updateZoneAssignmentsForMember(
-        SCREEN_CODE_FOR_GLOBAL_STATE,
-        userId,
-        accessToAllLots,
-      );
+      updateZoneAssignmentsForMember(userId, accessToAllLots);
 
       Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');
     } else {

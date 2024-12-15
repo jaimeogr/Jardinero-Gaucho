@@ -31,8 +31,11 @@ interface Props {
 }
 
 const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
-  const { getTemporaryUserData, setTemporaryUserData } =
-    useTeamManagementController;
+  const {
+    getTemporaryUserData,
+    setTemporaryUserData,
+    inviteUserToActiveWorkgroup,
+  } = useTeamManagementController();
 
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -83,7 +86,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
     if (accessToAllLots === true) {
       // Proceed with inviting the user
       console.log('Inviting user...');
-      const newUser = useTeamManagementController.inviteUserToActiveWorkgroup(
+      const newUser = inviteUserToActiveWorkgroup(
         email,
         selectedRole as UserRole,
         accessToAllLots,

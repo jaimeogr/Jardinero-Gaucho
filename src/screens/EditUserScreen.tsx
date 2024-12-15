@@ -15,7 +15,7 @@ import {
 import CustomSelectInput from '../components/CustomSelectInput';
 import ReadOnlyField from '../components/ReadOnlyField'; // Import ReadOnlyField
 import RolePicker from '../components/RolePicker';
-import useControllerService from '../controllers/useHomeScreenController';
+import useTeamManagementController from '../controllers/useTeamManagementController';
 import { theme } from '../styles/styles';
 import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
 
@@ -43,9 +43,10 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean | null>(null);
 
+  const fetchedUser: UserInActiveWorkgroupWithRole | null =
+    useTeamManagementController().useUserInActiveWorkgroupWithRole(userId);
+
   useEffect(() => {
-    const fetchedUser: UserInActiveWorkgroupWithRole | null =
-      useControllerService.getUserInActiveWorkgroupWithRole(userId);
     if (fetchedUser) {
       setUser(fetchedUser);
       setSelectedRole(fetchedUser.role);
@@ -54,7 +55,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
       Alert.alert('Error', 'Usuario no encontrado.');
       navigation.goBack();
     }
-  }, [userId, navigation]);
+  }, [userId, navigation, fetchedUser]);
 
   const isPickerDisabled =
     selectedRole === 'Owner' || selectedRole === 'Manager';
@@ -82,7 +83,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
 
     // Proceed with updating the user
     console.log('Updating user...');
-    const success = useControllerService.updateUserInActiveWorkgroup(
+    const success = useTeamManagementController().updateUserInActiveWorkgroup(
       user.userId,
       selectedRole as UserRole,
       accessToAllLots,

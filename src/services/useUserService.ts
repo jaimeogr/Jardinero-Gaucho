@@ -1,4 +1,6 @@
 // useUserService.ts
+import { Use } from 'react-native-svg';
+
 import BackendService from '../backend/BackendService';
 import useUserStore from '../stores/useUserStore';
 import {
@@ -8,6 +10,7 @@ import {
   NeighbourhoodData,
   NeighbourhoodWithIndicatorsInterface,
   WorkgroupDataForUser,
+  UserRole,
 } from '../types/types';
 
 const initializeUsers = () => {
@@ -59,9 +62,10 @@ const updateUser = (userId: string, updatedInfo: Partial<UserInterface>) => {
   useUserStore.getState().updateUser(userId, updatedInfo);
 };
 
-function updateUserAccess(
+function updateUserAccessAndRole(
   user: UserInterface,
   accessToAllLots: boolean,
+  role: UserRole,
   activeWorkgroupId: string | null,
   nestedLots: NeighbourhoodWithIndicatorsInterface[],
 ): WorkgroupDataForUser[] | undefined {
@@ -85,6 +89,7 @@ function updateUserAccess(
     if (accessToAllLots) {
       return {
         ...assignment,
+        role,
         accessToAllLots: true,
         assignedNeighbourhoods: [],
         assignedZones: [],
@@ -205,7 +210,7 @@ export default {
   getUserById,
   addUser,
   updateUser,
-  updateUserAccess,
+  updateUserAccessAndRole,
   getTemporaryUserData,
   setTemporaryUserData,
   computeAssignedZonesCountPerUserInWorkgroup,

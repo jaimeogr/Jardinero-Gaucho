@@ -180,9 +180,10 @@ const useTeamManagementController = (): ITeamManagementController => {
       }, [activeWorkgroupId, users, lots, neighbourhoodsWithZones]);
     };
 
-  const updateZoneAssignmentsForMember = (
+  const updateZoneAssignmentsAndRoleForUser = (
     userId: string,
     accessToAllLots: boolean,
+    role: UserRole,
   ) => {
     // Find the user to ensure we can update their assignments
     const user = users.find((u) => u.userId === userId);
@@ -192,9 +193,10 @@ const useTeamManagementController = (): ITeamManagementController => {
     }
 
     // Compute the updated assignment information
-    const updatedWorkgroupAssignments = useUserService.updateUserAccess(
+    const updatedWorkgroupAssignments = useUserService.updateUserAccessAndRole(
       user,
       accessToAllLots,
+      role,
       activeWorkgroupId,
       nestedLotsData.nestedLots,
     );
@@ -325,7 +327,7 @@ const useTeamManagementController = (): ITeamManagementController => {
 
     // Team management
     inviteUserToActiveWorkgroup,
-    updateZoneAssignmentsForMember,
+    updateZoneAssignmentsAndRoleForUser,
     selectAssignedZonesForUser,
     useUserInActiveWorkgroupWithRole,
     useUsersInActiveWorkgroupWithRoles,

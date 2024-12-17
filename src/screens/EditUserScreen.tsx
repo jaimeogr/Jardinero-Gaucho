@@ -37,6 +37,8 @@ interface Props {
 }
 
 const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
+  const { updateZoneAssignmentsAndRoleForUser } = useTeamManagementController();
+
   const { userId } = route.params;
   const [user, setUser] = useState<UserInActiveWorkgroupWithRole | null>(null);
 
@@ -81,23 +83,19 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
       return;
     }
 
-    // Proceed with updating the user
-    console.log('Updating user...');
-    const success = useTeamManagementController().updateUserInActiveWorkgroup(
-      user.userId,
-      selectedRole as UserRole,
-      accessToAllLots,
-    );
-    if (success) {
-      if (accessToAllLots) {
-        Alert.alert('Éxito', 'El integrante ha sido actualizado.');
-        navigation.goBack();
-      } else {
-        // Navigate to zone assignment screen
-        navigation.navigate('ZoneAssignment', { userId: user.userId });
-      }
+    if (accessToAllLots) {
+      console.log('Updating user...');
+      updateZoneAssignmentsAndRoleForUser(
+        user.userId,
+        accessToAllLots,
+        selectedRole as UserRole,
+      );
+
+      Alert.alert('Éxito', 'El integrante ha sido actualizado.');
+      navigation.goBack();
     } else {
-      Alert.alert('Error', 'No se pudo actualizar el integrante.');
+      // Navigate to zone assignment screen
+      navigation.navigate('ZoneAssignment', { userId: user.userId });
     }
   };
 

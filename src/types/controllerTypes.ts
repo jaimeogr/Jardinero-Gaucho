@@ -38,9 +38,10 @@ export interface IHomeScreenController extends IAccordionController {
 }
 
 export interface ITeamManagementController extends IAccordionController {
-  updateZoneAssignmentsForMember(
+  updateZoneAssignmentsAndRoleForUser(
     userId: string,
     accessToAllLots: boolean,
+    role: UserRole,
   ): void;
   selectAssignedZonesForUser(userId: string): void;
   useUserInActiveWorkgroupWithRole(

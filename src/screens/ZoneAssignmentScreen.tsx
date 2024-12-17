@@ -36,9 +36,9 @@ interface Props {
 const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const {
     deselectAllLots,
-    updateZoneAssignmentsForMember,
+    updateZoneAssignmentsAndRoleForUser,
     selectAssignedZonesForUser,
-    useUserInActiveWorkgroupWithRole: getUserInActiveWorkgroupWithRole,
+    useUserInActiveWorkgroupWithRole,
     inviteUserToActiveWorkgroup,
     getTemporaryUserData,
     setTemporaryUserData,
@@ -49,6 +49,9 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
 
   const [user, setUser] = useState<Partial<UserInterface> | null>(null);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(false);
+
+  // Existing user case, get the user data when the userId is provided
+  const existingUser = useUserInActiveWorkgroupWithRole(userId || '');
 
   // Get neighbourhoods and zones
 
@@ -88,8 +91,6 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       });
       setAccessToAllLots(temporaryUserData.accessToAllLots);
     } else if (userId) {
-      // Existing user case
-      const existingUser = getUserInActiveWorkgroupWithRole(userId);
       if (existingUser) {
         setUser(existingUser);
         setAccessToAllLots(existingUser.accessToAllLots);
@@ -127,8 +128,9 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     temporaryUserData,
     temporaryisNewUser,
     navigation,
+    existingUser,
     deselectAllLots,
-    getUserInActiveWorkgroupWithRole,
+    useUserInActiveWorkgroupWithRole,
     selectAssignedZonesForUser,
     setTemporaryUserData,
     clearTemporaryState,
@@ -171,7 +173,11 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
           Alert.alert('Éxito', 'El integrante ha sido invitado.');
         } else {
           // Assign zones to the new user using the selection in the store
-          updateZoneAssignmentsForMember(newUser.userId, accessToAllLots);
+          updateZoneAssignmentsAndRoleForUser(
+            newUser.userId,
+            accessToAllLots,
+            temporaryUserData.role,
+          );
           Alert.alert(
             'Asignación exitosa',
             'El integrante ha sido invitado y las zonas han sido asignadas.',
@@ -182,7 +188,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       }
     } else if (userId) {
       // Existing user case
-      updateZoneAssignmentsForMember(userId, accessToAllLots);
+      updateZoneAssignmentsAndRoleForUser(userId, accessToAllLots, 'Member');
 
       Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');
     } else {

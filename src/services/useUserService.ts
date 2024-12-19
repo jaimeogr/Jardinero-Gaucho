@@ -16,8 +16,7 @@ import {
 const initializeUsers = () => {
   const currentUser = BackendService.getMyUser();
 
-  const usersFromAllMyWorkgroups: UserInterface[] =
-    BackendService.getUsersFromAllMyWorkgroups();
+  const usersFromAllMyWorkgroups: UserInterface[] = BackendService.getUsersFromAllMyWorkgroups();
 
   useUserStore.getState().initializeUsers(usersFromAllMyWorkgroups);
   useUserStore.getState().setCurrentUser(currentUser);
@@ -41,10 +40,7 @@ const getTemporaryUserData = (): {
   return { temporaryUserData, temporaryisNewUser };
 };
 
-const setTemporaryUserData = (
-  userData: TemporaryUserData | null,
-  isNewUser: boolean,
-) => {
+const setTemporaryUserData = (userData: TemporaryUserData | null, isNewUser: boolean) => {
   useUserStore.getState().setTemporaryUserData(userData);
   useUserStore.getState().setTemporaryIsNewUser(isNewUser);
 };
@@ -134,30 +130,30 @@ function computeAssignedZonesCountPerUserInWorkgroup(
     return assignedZonesByUser;
   }
 
-  // Collect all existing zoneIds for the given workgroup
-  const existingZones = new Set<string>();
-  const relevantNeighbourhoods = neighbourhoodsWithZones.filter(
-    (n) => n.workgroupId === workgroupId,
-  );
-
-  for (const neighbourhood of relevantNeighbourhoods) {
-    for (const zone of neighbourhood.zones) {
-      existingZones.add(zone.zoneId);
-    }
-  }
-
-  // Count only zones that still exist in the neighbourhoodZoneData structure
-  // validZoneIds are the ones that exist and are assigned to the user
-  // This helps avoid counting zones that have been deleted when userData is stale
   for (const user of users) {
-    const assignment = user.workgroupAssignments.find(
-      (wa) => wa.workgroupId === workgroupId,
-    );
+    const assignment = user.workgroupAssignments.find((wa) => wa.workgroupId === workgroupId);
+
     if (assignment) {
-      const validZoneIds = assignment.assignedZones.filter((zoneId) =>
-        existingZones.has(zoneId),
-      );
-      assignedZonesByUser[user.userId] = validZoneIds.length;
+      // Initialize a set to collect unique assigned zone IDs
+      const assignedZoneIds = new Set<string>(assignment.assignedZones);
+
+      // Iterate through all neighborhoods and their zones
+      neighbourhoodsWithZones.forEach((neighbourhood) => {
+        neighbourhood.zones.forEach((zone) => {
+          // Include zones if the parent neighborhood is assigned
+          if (assignment.assignedNeighbourhoods.includes(neighbourhood.neighbourhoodId)) {
+            assignedZoneIds.add(zone.zoneId);
+          }
+
+          // Include zones that are assigned directly
+          if (assignment.assignedZones.includes(zone.zoneId)) {
+            assignedZoneIds.add(zone.zoneId);
+          }
+        });
+      });
+
+      // Store the total count of unique assigned zones for the user
+      assignedZonesByUser[user.userId] = assignedZoneIds.size;
     }
   }
 
@@ -188,9 +184,7 @@ function computeAssignedLotsCountPerUserInWorkgroup(
 
   // For each user, sum the lots in all assigned zones
   for (const user of users) {
-    const assignment = user.workgroupAssignments.find(
-      (wa) => wa.workgroupId === workgroupId,
-    );
+    const assignment = user.workgroupAssignments.find((wa) => wa.workgroupId === workgroupId);
     if (assignment) {
       let totalLots = 0;
       for (const zoneId of assignment.assignedZones) {

@@ -144,13 +144,11 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
             }}
             items={[
               {
-                label: isPickerDisabled
-                  ? 'Todas las zonas'
-                  : 'Todas las zonas (Más simple)',
+                label: 'Todas las zonas',
                 value: true,
               },
               {
-                label: 'Solo las seleccionadas (Mayor control)',
+                label: 'Solo las seleccionadas',
                 value: false,
               },
             ]}

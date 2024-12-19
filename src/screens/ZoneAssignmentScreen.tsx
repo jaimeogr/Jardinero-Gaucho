@@ -226,11 +226,11 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
           customStyle={styles.accessToAllZonesPickerContainer}
           items={[
             {
-              label: 'Solo las seleccionadas (Mayor control)',
+              label: 'Solo las seleccionadas',
               value: false,
             },
             {
-              label: 'Todas las zonas (Más simple)',
+              label: 'Todas las zonas',
               value: true,
             },
           ]}

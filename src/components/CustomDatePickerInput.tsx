@@ -1,13 +1,7 @@
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 
 import { theme } from '../styles/styles';
 
@@ -45,9 +39,7 @@ const CustomDatePickerInput: React.FC<DatePickerFieldProps> = ({
     <View style={styles.container}>
       {/* Label and optional indicator */}
       <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-        <Text style={[styles.label, isOptional && styles.labelIsOptional]}>
-          {label}
-        </Text>
+        <Text style={[styles.label, isOptional && styles.labelIsOptional]}>{label}</Text>
         {isOptional && ( // if input is optional then this is rendered for the user to know
           <Text style={styles.optionalInParentheses}>(opcional)</Text>
         )}
@@ -57,18 +49,9 @@ const CustomDatePickerInput: React.FC<DatePickerFieldProps> = ({
       <View style={styles.dateContainer}>
         <TouchableOpacity
           onPress={() => setShowDatePicker(true)}
-          style={[
-            styles.input,
-            isOptional && styles.inputIsOptional,
-            styles.datePicker,
-          ]}
+          style={[styles.input, isOptional && styles.inputIsOptional, styles.datePicker]}
         >
-          <Text
-            style={[
-              styles.dateText,
-              { color: value ? 'black' : theme.colors.placeholder },
-            ]}
-          >
+          <Text style={[styles.dateText, { color: value ? 'black' : theme.colors.placeholder }]}>
             {value ? value.toDateString() : 'La última fecha de corte de pasto'}
           </Text>
           <View style={styles.calendarIconContainer}>
@@ -89,12 +72,7 @@ const CustomDatePickerInput: React.FC<DatePickerFieldProps> = ({
 
       {/* DateTimePicker modal */}
       {showDatePicker && (
-        <DateTimePicker
-          value={value || new Date()}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
+        <DateTimePicker value={value || new Date()} mode="date" display="default" onChange={handleDateChange} />
       )}
     </View>
   );

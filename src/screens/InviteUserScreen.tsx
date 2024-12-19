@@ -20,10 +20,7 @@ type RootStackParamList = {
 
 type InviteUserScreenRouteProp = RouteProp<RootStackParamList, 'InviteUser'>;
 
-type InviteUserScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'InviteUser'
->;
+type InviteUserScreenNavigationProp = StackNavigationProp<RootStackParamList, 'InviteUser'>;
 
 interface Props {
   navigation: InviteUserScreenNavigationProp;
@@ -31,11 +28,7 @@ interface Props {
 }
 
 const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
-  const {
-    getTemporaryUserData,
-    setTemporaryUserData,
-    inviteUserToActiveWorkgroup,
-  } = useTeamManagementController();
+  const { getTemporaryUserData, setTemporaryUserData, inviteUserToActiveWorkgroup } = useTeamManagementController();
 
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -59,8 +52,7 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
     }, [temporaryUserData]), // ESLint will warn about `navigation`, but it can be safely ignored
   );
 
-  const isPickerDisabled =
-    selectedRole === 'Owner' || selectedRole === 'Manager';
+  const isPickerDisabled = selectedRole === 'Owner' || selectedRole === 'Manager';
 
   const handleRolePick = (role: string) => {
     setSelectedRole(role);
@@ -76,21 +68,14 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
     if (accessToAllLots === null) {
-      Alert.alert(
-        'Acceso a zonas debe estar completo',
-        'Por favor seleccioná una opción.',
-      );
+      Alert.alert('Acceso a zonas debe estar completo', 'Por favor seleccioná una opción.');
       return;
     }
 
     if (accessToAllLots === true) {
       // Proceed with inviting the user
       console.log('Inviting user...');
-      const newUser = inviteUserToActiveWorkgroup(
-        email,
-        selectedRole as UserRole,
-        accessToAllLots,
-      );
+      const newUser = inviteUserToActiveWorkgroup(email, selectedRole as UserRole, accessToAllLots);
       if (newUser) {
         Alert.alert('Éxito', 'El integrante ha sido invitado.');
         setTemporaryUserData(null, false); // Clear temporary user data
@@ -137,13 +122,11 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
         }}
         items={[
           {
-            label: isPickerDisabled
-              ? 'Todas las zonas'
-              : 'Todas las zonas (Más simple)',
+            label: 'Todas las zonas',
             value: true,
           },
           {
-            label: 'Solo las seleccionadas (Mayor control)',
+            label: 'Solo las seleccionadas',
             value: false,
           },
         ]}
@@ -154,15 +137,8 @@ const InviteUserScreen: React.FC<Props> = ({ navigation }) => {
         style={[styles.button, accessToAllLots ? null : styles.secondaryButton]}
         onPress={handleButtonPress}
       >
-        <Text
-          style={[
-            styles.buttonText,
-            accessToAllLots ? null : styles.secondaryText,
-          ]}
-        >
-          {accessToAllLots
-            ? 'Invitar Integrante'
-            : 'Invitar Integrante y Seleccionar sus Zonas'}
+        <Text style={[styles.buttonText, accessToAllLots ? null : styles.secondaryText]}>
+          {accessToAllLots ? 'Invitar Integrante' : 'Invitar Integrante y Seleccionar sus Zonas'}
         </Text>
       </TouchableOpacity>
     </View>

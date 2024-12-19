@@ -12,16 +12,10 @@ export function lotNeedsMowing(dateToCheck?: Date): number {
   today.setHours(0, 0, 0, 0);
 
   // Get the start and end of the current week
-  const { start: currentWeekStart, end: currentWeekEnd } = getWeekRange(
-    today,
-    0,
-  );
+  const { start: currentWeekStart, end: currentWeekEnd } = getWeekRange(today, 0);
 
   // Get the start and end of the previous week
-  const { start: previousWeekStart, end: previousWeekEnd } = getWeekRange(
-    today,
-    -1,
-  );
+  const { start: previousWeekStart, end: previousWeekEnd } = getWeekRange(today, -1);
 
   if (date >= currentWeekStart && date <= currentWeekEnd) {
     // Date is in the current week
@@ -36,10 +30,7 @@ export function lotNeedsMowing(dateToCheck?: Date): number {
 }
 
 // Helper function to get the start and end dates of a week
-function getWeekRange(
-  referenceDate: Date,
-  weekOffset: number = 0,
-): { start: Date; end: Date } {
+function getWeekRange(referenceDate: Date, weekOffset: number = 0): { start: Date; end: Date } {
   // Create a copy of the reference date
   const date = new Date(referenceDate);
 

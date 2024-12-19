@@ -1,5 +1,4 @@
 // useUserService.ts
-import { Use } from 'react-native-svg';
 
 import BackendService from '../backend/BackendService';
 import useUserStore from '../stores/useUserStore';

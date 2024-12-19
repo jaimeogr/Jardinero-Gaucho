@@ -42,11 +42,9 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   const homeController = useHomeScreenController();
   const teamController = useTeamManagementController();
 
-  const controller: IAccordionController =
-    screen === 'homeScreen' ? homeController : teamController;
+  const controller: IAccordionController = screen === 'homeScreen' ? homeController : teamController;
 
-  const nestedLotsWithIndicatorsInterface: NestedLotsWithIndicatorsInterface =
-    controller.useNestedLots();
+  const nestedLotsWithIndicatorsInterface: NestedLotsWithIndicatorsInterface = controller.useNestedLots();
 
   const { nestedLots, selectedLots } = nestedLotsWithIndicatorsInterface;
 
@@ -56,10 +54,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
       handleDeselectLots();
       return true; // Return true to prevent the default back behavior
     };
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      onBackPress,
-    );
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
     return () => backHandler.remove(); // Cleanup the listener when the component unmounts
   }, [handleDeselectLots]);
 
@@ -106,13 +101,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
         </CustomAccordion>
       );
     },
-    [
-      controller,
-      renderRightSideForAccordion,
-      renderRightSideForOneLot,
-      onlyZonesAreSelectable,
-      blockZoneExpansion,
-    ],
+    [controller, renderRightSideForAccordion, renderRightSideForOneLot, onlyZonesAreSelectable, blockZoneExpansion],
   );
 
   return (
@@ -124,11 +113,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
         <View style={styles.upperSide}>
           <View style={styles.selectedIndicatorsTextAndButtons}>
             <View style={styles.selectingStateLeftSideCounter}>
-              <Appbar.BackAction
-                color={theme.colors.primary}
-                size={28}
-                onPress={handleDeselectLots}
-              />
+              <Appbar.BackAction color={theme.colors.primary} size={28} onPress={handleDeselectLots} />
               <Text style={styles.selectedIndicatorsText}>
                 {selectedLots}
                 {'   '}lotes
@@ -137,9 +122,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
 
             {/* Conditionally render right-side actions if provided */}
             {selectingStateRightSideActions && (
-              <View style={styles.selectingStateRightSideActions}>
-                {selectingStateRightSideActions}
-              </View>
+              <View style={styles.selectingStateRightSideActions}>{selectingStateRightSideActions}</View>
             )}
           </View>
         </View>
@@ -153,10 +136,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
         renderItem={renderNeighbourhood}
         contentContainerStyle={styles.scrollContent}
       />
-      <LinearGradient
-        colors={['transparent', 'rgba(255, 255, 255, 0.9)']}
-        style={styles.fadeEffect}
-      />
+      <LinearGradient colors={['transparent', 'rgba(255, 255, 255, 0.9)']} style={styles.fadeEffect} />
     </View>
   );
 };

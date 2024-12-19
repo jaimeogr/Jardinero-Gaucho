@@ -3,14 +3,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
-import {
-  ActivityIndicator,
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
-} from 'react-native';
+import { ActivityIndicator, View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 
 import CustomSelectInput from '../components/CustomSelectInput';
 import ReadOnlyField from '../components/ReadOnlyField'; // Import ReadOnlyField
@@ -24,10 +17,7 @@ type RootStackParamList = {
   // other routes...
 };
 
-type EditUserScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'EditUser'
->;
+type EditUserScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditUser'>;
 
 type EditUserScreenRouteProp = RouteProp<RootStackParamList, 'EditUser'>;
 
@@ -59,8 +49,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
     }
   }, [userId, navigation, fetchedUser]);
 
-  const isPickerDisabled =
-    selectedRole === 'Owner' || selectedRole === 'Manager';
+  const isPickerDisabled = selectedRole === 'Owner' || selectedRole === 'Manager';
 
   const handleRolePick = (role: string) => {
     setSelectedRole(role);
@@ -76,20 +65,13 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
     }
 
     if (accessToAllLots === null) {
-      Alert.alert(
-        'Acceso a zonas debe estar completo',
-        'Por favor seleccioná una opción.',
-      );
+      Alert.alert('Acceso a zonas debe estar completo', 'Por favor seleccioná una opción.');
       return;
     }
 
     if (accessToAllLots) {
       console.log('Updating user...');
-      updateZoneAssignmentsAndRoleForUser(
-        user.userId,
-        accessToAllLots,
-        selectedRole as UserRole,
-      );
+      updateZoneAssignmentsAndRoleForUser(user.userId, accessToAllLots, selectedRole as UserRole);
 
       Alert.alert('Éxito', 'El integrante ha sido actualizado.');
       navigation.goBack();
@@ -120,11 +102,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
           />
 
           {/* Email Display */}
-          <ReadOnlyField
-            label="Email"
-            text={user.email}
-            placeholder="Email no disponible"
-          />
+          <ReadOnlyField label="Email" text={user.email} placeholder="Email no disponible" />
 
           {/* Role Picker */}
           <RolePicker selectedRole={selectedRole} onSelect={handleRolePick} />
@@ -156,21 +134,11 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
 
           {/* Dynamic CTA Button - Call to Action */}
           <TouchableOpacity
-            style={[
-              styles.button,
-              accessToAllLots ? null : styles.secondaryButton,
-            ]}
+            style={[styles.button, accessToAllLots ? null : styles.secondaryButton]}
             onPress={handleButtonPress}
           >
-            <Text
-              style={[
-                styles.buttonText,
-                accessToAllLots ? null : styles.secondaryText,
-              ]}
-            >
-              {accessToAllLots
-                ? 'Actualizar Integrante'
-                : 'Actualizar Integrante y Seleccionar sus Zonas'}
+            <Text style={[styles.buttonText, accessToAllLots ? null : styles.secondaryText]}>
+              {accessToAllLots ? 'Actualizar Integrante' : 'Actualizar Integrante y Seleccionar sus Zonas'}
             </Text>
           </TouchableOpacity>
         </>

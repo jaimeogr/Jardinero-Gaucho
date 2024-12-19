@@ -6,12 +6,8 @@ import { theme } from '../../styles/styles';
 import { IAccordionController } from '../../types/controllerTypes';
 import { LotWithNeedMowingInterface } from '../../types/types';
 
-const {
-  lotBackgroundNotSelected,
-  lotBorderNotSelected,
-  lotBackgroundSelected,
-  lotBorderSelected,
-} = theme.colors.accordion;
+const { lotBackgroundNotSelected, lotBorderNotSelected, lotBackgroundSelected, lotBorderSelected } =
+  theme.colors.accordion;
 
 interface OneLotForCustomAccordionProps {
   controller: IAccordionController;
@@ -41,13 +37,7 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
 
   return (
     <View>
-      <TouchableOpacity
-        style={
-          lot.lotIsSelected
-            ? [styles.container, styles.lotIsSelected]
-            : styles.container
-        }
-      >
+      <TouchableOpacity style={lot.lotIsSelected ? [styles.container, styles.lotIsSelected] : styles.container}>
         {/* Left Icon */}
         {isSelectable && (
           <TouchableOpacity
@@ -66,16 +56,12 @@ const OneLotForCustomAccordion: React.FC<OneLotForCustomAccordionProps> = ({
         <View style={styles.textContainer}>
           <Text style={styles.title}>{lot.lotLabel}</Text>
           <Text style={styles.description}>
-            {lot.lastMowingDate
-              ? 'Ultima Pasada ' + lot.lastMowingDate.toDateString()
-              : null}
+            {lot.lastMowingDate ? 'Ultima Pasada ' + lot.lastMowingDate.toDateString() : null}
           </Text>
         </View>
 
         {/* Right Side */}
-        {renderRightSide && (
-          <View style={styles.lotRightSide}>{renderRightSide(lot)}</View>
-        )}
+        {renderRightSide && <View style={styles.lotRightSide}>{renderRightSide(lot)}</View>}
       </TouchableOpacity>
     </View>
   );

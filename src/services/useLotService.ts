@@ -2,8 +2,6 @@
 
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
-import BackendService from '../backend/BackendService';
-import useLotStore from '../stores/useLotStore';
 import {
   LotWithNeedMowingInterface,
   ZoneWithIndicatorsInterface,
@@ -14,12 +12,8 @@ import {
   LotInStore,
 } from '../types/types';
 import { lotNeedsMowing } from '../utils/DateAnalyser';
-import { userHasPermission } from '../utils/permissionUtils';
 
-const createLot = (
-  workgroupId: string | null,
-  newLot: Partial<LotInStore>,
-): LotInStore => {
+const createLot = (workgroupId: string | null, newLot: Partial<LotInStore>): LotInStore => {
   if (!workgroupId) {
     throw new Error('Missing workgroupId in createLot');
   }
@@ -40,11 +34,7 @@ const createLot = (
   return lot;
 };
 
-const markLotCompletedForSpecificDate = (
-  allLots: LotInStore[],
-  lotId: string,
-  date?: Date,
-): LotInStore[] => {
+const markLotCompletedForSpecificDate = (allLots: LotInStore[], lotId: string, date?: Date): LotInStore[] => {
   // In a real scenario, you'd verify permissions here before updating.
   // Assuming permission is handled at a higher level.
 
@@ -61,9 +51,7 @@ const markSelectedLotsCompletedForSpecificDate = (
   date?: Date,
 ): LotInStore[] => {
   const updatedLots = allLots.map((lot) =>
-    selectedLots.has(lot.lotId)
-      ? { ...lot, lastMowingDate: date || new Date() }
-      : lot,
+    selectedLots.has(lot.lotId) ? { ...lot, lastMowingDate: date || new Date() } : lot,
   );
 
   console.log(`${selectedLots.size} lots marked as completed`);
@@ -139,9 +127,7 @@ const computeNestedLots = (
       const lotsInZone = lotsByNeighbourhoodAndZone[neighbourhoodId][zoneId];
 
       // Get zone data from neighbourhoodData to check if the zone is expanded
-      const zoneData = neighbourhoodData?.zones.find(
-        (z) => z.zoneId === zoneId,
-      );
+      const zoneData = neighbourhoodData?.zones.find((z) => z.zoneId === zoneId);
       const zoneLabel = zoneData?.zoneLabel || '';
       const isZoneExpanded = expandedZones.has(zoneId);
 
@@ -181,8 +167,7 @@ const computeNestedLots = (
       neighbourhoodSelectedLotsCounter += zoneSelectedLotsCounter;
 
       // Check if all lots in the zone are selected
-      const isZoneSelected =
-        zoneSelectedLotsCounter === lotsInZone.length && lotsInZone.length > 0;
+      const isZoneSelected = zoneSelectedLotsCounter === lotsInZone.length && lotsInZone.length > 0;
 
       const zoneOption: ZoneWithIndicatorsInterface = {
         zoneId: zoneId,
@@ -200,8 +185,7 @@ const computeNestedLots = (
 
     // Check if all lots in the neighbourhood are selected
     const isNeighbourhoodSelected =
-      neighbourhoodSelectedLotsCounter === neighbourhoodAllLotsCounter &&
-      neighbourhoodAllLotsCounter > 0;
+      neighbourhoodSelectedLotsCounter === neighbourhoodAllLotsCounter && neighbourhoodAllLotsCounter > 0;
 
     const neighbourhoodOption: NeighbourhoodWithIndicatorsInterface = {
       neighbourhoodId: neighbourhoodId,
@@ -222,10 +206,7 @@ const computeNestedLots = (
   return result;
 };
 
-const addNeighbourhood = (
-  workgroupId: string | null,
-  neighbourhoodLabel: string,
-): NeighbourhoodData => {
+const addNeighbourhood = (workgroupId: string | null, neighbourhoodLabel: string): NeighbourhoodData => {
   if (!workgroupId) {
     throw new Error('Missing workgroupId in addNeighbourhood');
   }
@@ -241,10 +222,7 @@ const addNeighbourhood = (
   return newNeighbourhood;
 };
 
-const addZoneToNeighbourhood = (
-  neighbourhoodId: string,
-  zoneLabel: string,
-): ZoneData => {
+const addZoneToNeighbourhood = (neighbourhoodId: string, zoneLabel: string): ZoneData => {
   const zone: ZoneData = {
     zoneId: uuidv4(),
     zoneLabel: zoneLabel,

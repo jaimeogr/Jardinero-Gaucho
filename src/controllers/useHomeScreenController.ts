@@ -10,32 +10,18 @@ import useWorkgroupService from '../services/useWorkgroupService';
 import useHomeScreenStore from '../stores/useHomeScreenStore';
 import useLotStore from '../stores/useLotStore';
 import useWorkgroupStore from '../stores/useWorkgroupStore';
-import {
-  ZoneData,
-  NestedLotsWithIndicatorsInterface,
-  NeighbourhoodData,
-  LotInStore,
-} from '../types/types';
-import { userHasPermission } from '../utils/permissionUtils';
+import { ZoneData, NestedLotsWithIndicatorsInterface, NeighbourhoodData, LotInStore } from '../types/types';
 import { IHomeScreenController } from './../types/controllerTypes';
 
 const useHomeScreenController = (): IHomeScreenController => {
-  const activeWorkgroupId = useWorkgroupStore(
-    (state) => state.activeWorkgroupId,
-  );
+  const activeWorkgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
   const lots: LotInStore[] = useLotStore((state) => state.lots);
   const neighbourhoodsWithZones: NeighbourhoodData[] = useLotStore(
     (state) => state.neighbourhoodZoneData.neighbourhoods,
   );
-  const selectedLots: Set<string> = useHomeScreenStore(
-    (state) => state.selectedLots,
-  );
-  const expandedZones: Set<string> = useHomeScreenStore(
-    (state) => state.expandedZones,
-  );
-  const expandedNeighbourhoods: Set<string> = useHomeScreenStore(
-    (state) => state.expandedNeighbourhoods,
-  );
+  const selectedLots: Set<string> = useHomeScreenStore((state) => state.selectedLots);
+  const expandedZones: Set<string> = useHomeScreenStore((state) => state.expandedZones);
+  const expandedNeighbourhoods: Set<string> = useHomeScreenStore((state) => state.expandedNeighbourhoods);
 
   const initializeServices = () => {
     // Initialize Lots, Zones and Neighbourhoods
@@ -51,32 +37,20 @@ const useHomeScreenController = (): IHomeScreenController => {
   };
 
   const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
-    const updatedLots = useLotService.markLotCompletedForSpecificDate(
-      lots,
-      lotId,
-      date,
-    );
+    const updatedLots = useLotService.markLotCompletedForSpecificDate(lots, lotId, date);
     updatedLots.forEach((updatedLot) => {
       if (updatedLot.lotId === lotId) {
-        useLotStore
-          .getState()
-          .updateLotLastMowingDate(updatedLot.lotId, updatedLot.lastMowingDate);
+        useLotStore.getState().updateLotLastMowingDate(updatedLot.lotId, updatedLot.lastMowingDate);
         // updatedLot.lastMowingDate is never undefined because there is a default value inside markLotCompletedForSpecificDate
       }
     });
   };
 
   const markSelectedLotsCompletedForSpecificDate = (date?: Date) => {
-    const updatedLots = useLotService.markSelectedLotsCompletedForSpecificDate(
-      lots,
-      selectedLots,
-      date,
-    );
+    const updatedLots = useLotService.markSelectedLotsCompletedForSpecificDate(lots, selectedLots, date);
     updatedLots.forEach((updatedLot) => {
       if (selectedLots.has(updatedLot.lotId)) {
-        useLotStore
-          .getState()
-          .updateLotLastMowingDate(updatedLot.lotId, updatedLot.lastMowingDate);
+        useLotStore.getState().updateLotLastMowingDate(updatedLot.lotId, updatedLot.lastMowingDate);
         // updatedLot.lastMowingDate is never undefined because there is a default value inside markSelectedLotsCompletedForSpecificDate
       }
     });
@@ -95,23 +69,15 @@ const useHomeScreenController = (): IHomeScreenController => {
   };
 
   const createZone = (neighbourhoodId: string, zoneLabel: string): ZoneData => {
-    const zone = useLotService.addZoneToNeighbourhood(
-      neighbourhoodId,
-      zoneLabel,
-    );
+    const zone = useLotService.addZoneToNeighbourhood(neighbourhoodId, zoneLabel);
 
     useLotStore.getState().addZoneToNeighbourhood(neighbourhoodId, zone);
 
     return zone;
   };
 
-  const createNeighbourhood = (
-    neighbourhoodLabel: string,
-  ): NeighbourhoodData => {
-    const neighbourhood = useLotService.addNeighbourhood(
-      activeWorkgroupId,
-      neighbourhoodLabel,
-    );
+  const createNeighbourhood = (neighbourhoodLabel: string): NeighbourhoodData => {
+    const neighbourhood = useLotService.addNeighbourhood(activeWorkgroupId, neighbourhoodLabel);
 
     useLotStore.getState().addNeighbourhood(neighbourhood);
 
@@ -127,26 +93,17 @@ const useHomeScreenController = (): IHomeScreenController => {
   };
 
   const toggleZoneSelection = (zoneId: string, newState: boolean) => {
-    const lotIdsForZone = lots
-      .filter((lot) => lot.zoneId === zoneId)
-      .map((lot) => lot.lotId);
+    const lotIdsForZone = lots.filter((lot) => lot.zoneId === zoneId).map((lot) => lot.lotId);
 
-    useHomeScreenStore
-      .getState()
-      .toggleSelectionForLotsArray(lotIdsForZone, newState);
+    useHomeScreenStore.getState().toggleSelectionForLotsArray(lotIdsForZone, newState);
   };
 
-  const toggleNeighbourhoodSelection = (
-    neighbourhoodId: string,
-    newState: boolean,
-  ) => {
+  const toggleNeighbourhoodSelection = (neighbourhoodId: string, newState: boolean) => {
     const lotIdsForNeighbourhood = lots
       .filter((lot) => lot.neighbourhoodId === neighbourhoodId)
       .map((lot) => lot.lotId);
 
-    useHomeScreenStore
-      .getState()
-      .toggleSelectionForLotsArray(lotIdsForNeighbourhood, newState);
+    useHomeScreenStore.getState().toggleSelectionForLotsArray(lotIdsForNeighbourhood, newState);
   };
 
   const deselectAllLots = () => {
@@ -170,9 +127,7 @@ const useHomeScreenController = (): IHomeScreenController => {
   };
 
   const expandAllNeighbourhoods = () => {
-    const neighbourhoodIds = neighbourhoodsWithZones.map(
-      (n) => n.neighbourhoodId,
-    );
+    const neighbourhoodIds = neighbourhoodsWithZones.map((n) => n.neighbourhoodId);
     useHomeScreenStore.getState().expandAllNeighbourhoods(neighbourhoodIds);
   };
 
@@ -186,14 +141,7 @@ const useHomeScreenController = (): IHomeScreenController => {
         expandedZones,
         expandedNeighbourhoods,
       );
-    }, [
-      activeWorkgroupId,
-      lots,
-      neighbourhoodsWithZones,
-      selectedLots,
-      expandedZones,
-      expandedNeighbourhoods,
-    ]);
+    }, [activeWorkgroupId, lots, neighbourhoodsWithZones, selectedLots, expandedZones, expandedNeighbourhoods]);
 
     return nestedLots;
   };

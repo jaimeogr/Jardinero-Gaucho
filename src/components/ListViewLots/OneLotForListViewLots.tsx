@@ -23,9 +23,7 @@ const OneLotForTodaysLots: React.FC<LotComputedForDisplay> = ({
           <Text style={styles.itemText}>
             Número: {number} - Zona: {zone} - Barrio: {neighbourhood}
           </Text>
-          {extraNotes ? (
-            <Text style={styles.extraNotes}>{extraNotes}</Text>
-          ) : null}
+          {extraNotes ? <Text style={styles.extraNotes}>{extraNotes}</Text> : null}
         </View>
         <TouchableOpacity onPress={() => setCompl(!compl)}>
           <MaterialCommunityIcons

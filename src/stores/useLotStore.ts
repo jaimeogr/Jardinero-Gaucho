@@ -1,12 +1,7 @@
 //useLotStore
 import { create } from 'zustand';
 
-import {
-  NeighbourhoodZoneData,
-  NeighbourhoodData,
-  ZoneData,
-  LotInStore,
-} from '../types/types';
+import { NeighbourhoodZoneData, NeighbourhoodData, ZoneData, LotInStore } from '../types/types';
 
 interface LotStoreState {
   lots: LotInStore[];
@@ -44,10 +39,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
   addNeighbourhood: (neighbourhood) => {
     set((state) => ({
       neighbourhoodZoneData: {
-        neighbourhoods: [
-          ...state.neighbourhoodZoneData.neighbourhoods,
-          neighbourhood,
-        ],
+        neighbourhoods: [...state.neighbourhoodZoneData.neighbourhoods, neighbourhood],
       },
     }));
     return neighbourhood;
@@ -72,17 +64,13 @@ const useLotStore = create<LotStoreState>((set, get) => ({
 
   updateLotLastMowingDate: (lotId: string, date: Date) => {
     set((state) => ({
-      lots: state.lots.map((lot) =>
-        lot.lotId === lotId ? { ...lot, lastMowingDate: date } : lot,
-      ),
+      lots: state.lots.map((lot) => (lot.lotId === lotId ? { ...lot, lastMowingDate: date } : lot)),
     }));
   },
 
   updateLot: (lotId: string, updatedInfo: Partial<LotInStore>) => {
     set((state) => ({
-      lots: state.lots.map((lot) =>
-        lot.lotId === lotId ? { ...lot, ...updatedInfo } : lot,
-      ),
+      lots: state.lots.map((lot) => (lot.lotId === lotId ? { ...lot, ...updatedInfo } : lot)),
     }));
   },
 }));

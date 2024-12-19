@@ -12,9 +12,7 @@ const initializeWorkgroups = () => {
 
 const getActiveWorkgroup = () => {
   const state = useWorkgroupStore.getState();
-  return state.workgroups.find(
-    (wg) => wg.workgroupId === state.activeWorkgroupId,
-  );
+  return state.workgroups.find((wg) => wg.workgroupId === state.activeWorkgroupId);
 };
 
 const setActiveWorkgroup = (workgroupId?: string) => {
@@ -37,11 +35,7 @@ const createWorkgroup = (workgroup: WorkgroupInterface) => {
   useWorkgroupStore.getState().addWorkgroup(workgroup);
 };
 
-const addUserToWorkgroup = (
-  workgroupId: string,
-  userId: string,
-  role: UserRole,
-) => {
+const addUserToWorkgroup = (workgroupId: string, userId: string, role: UserRole) => {
   const workgroup = useWorkgroupStore.getState().getWorkgroupById(workgroupId);
 
   if (workgroup) {
@@ -77,11 +71,7 @@ const removeUserFromWorkgroup = (workgroupId: string, userId: string) => {
   }
 };
 
-const updateWorkgroupRoles = (
-  workgroupId: string,
-  userId: string,
-  newRole: UserRole,
-) => {
+const updateWorkgroupRoles = (workgroupId: string, userId: string, newRole: UserRole) => {
   // a special function is required for the moment when the primary owner is changed
   const workgroup = useWorkgroupStore.getState().getWorkgroupById(workgroupId);
 
@@ -105,9 +95,7 @@ const updateWorkgroupRoles = (
 };
 
 const useGetWorkgroupById = (workgroupId: string) => {
-  return useWorkgroupStore((state) =>
-    state.workgroups.find((wg) => wg.workgroupId === workgroupId),
-  );
+  return useWorkgroupStore((state) => state.workgroups.find((wg) => wg.workgroupId === workgroupId));
 };
 
 export default {

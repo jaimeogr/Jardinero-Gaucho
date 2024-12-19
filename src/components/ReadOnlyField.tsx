@@ -9,20 +9,14 @@ interface ReadOnlyFieldProps {
   placeholder?: string; // Placeholder text for when the value is empty
 }
 
-const ReadOnlyField: React.FC<ReadOnlyFieldProps> = ({
-  label,
-  text,
-  placeholder = '',
-}) => {
+const ReadOnlyField: React.FC<ReadOnlyFieldProps> = ({ label, text, placeholder = '' }) => {
   return (
     <View style={styles.container}>
       {/* Label */}
       <Text style={styles.label}>{label}</Text>
 
       {/* Display Value or Placeholder. If there is no text, apply placeholder style*/}
-      <Text style={[styles.text, !text && styles.placeholder]}>
-        {text || placeholder}
-      </Text>
+      <Text style={[styles.text, !text && styles.placeholder]}>{text || placeholder}</Text>
     </View>
   );
 };

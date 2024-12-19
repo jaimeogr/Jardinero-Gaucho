@@ -16,10 +16,7 @@ export interface IAccordionController {
   deselectAllLots(): void;
   toggleLotSelection(lotId: string, newState: boolean): void;
   toggleZoneSelection(zoneId: string, newState: boolean): void;
-  toggleNeighbourhoodSelection(
-    neighbourhoodId: string,
-    newState: boolean,
-  ): void;
+  toggleNeighbourhoodSelection(neighbourhoodId: string, newState: boolean): void;
   toggleNeighbourhoodExpansion(neighbourhoodId: string): void;
   toggleZoneExpansion(zoneId: string): void;
   collapseAllZones(): void;
@@ -38,27 +35,14 @@ export interface IHomeScreenController extends IAccordionController {
 }
 
 export interface ITeamManagementController extends IAccordionController {
-  updateZoneAssignmentsAndRoleForUser(
-    userId: string,
-    accessToAllLots: boolean,
-    role: UserRole,
-  ): void;
+  updateZoneAssignmentsAndRoleForUser(userId: string, accessToAllLots: boolean, role: UserRole): void;
   selectAssignedZonesForUser(userId: string): void;
-  useUserInActiveWorkgroupWithRole(
-    userId: string,
-  ): UserInActiveWorkgroupWithRole | null;
+  useUserInActiveWorkgroupWithRole(userId: string): UserInActiveWorkgroupWithRole | null;
   useUsersInActiveWorkgroupWithRoles(): UserInActiveWorkgroupWithRole[];
-  inviteUserToActiveWorkgroup(
-    email: string,
-    role: UserRole,
-    accessToAllLots: boolean,
-  ): UserInterface | null;
+  inviteUserToActiveWorkgroup(email: string, role: UserRole, accessToAllLots: boolean): UserInterface | null;
   getTemporaryUserData(): {
     temporaryUserData: TemporaryUserData | null;
     temporaryisNewUser: boolean;
   };
-  setTemporaryUserData(
-    userData: TemporaryUserData | null,
-    isNewUser: boolean,
-  ): void;
+  setTemporaryUserData(userData: TemporaryUserData | null, isNewUser: boolean): void;
 }

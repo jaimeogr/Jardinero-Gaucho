@@ -15,12 +15,8 @@ import {
 const SCREEN_CODE_FOR_GLOBAL_STATE = 'homeScreen';
 
 const LotsForHomeScreen = () => {
-  const {
-    markSelectedLotsCompletedForSpecificDate,
-    deselectAllLots,
-    collapseAllNeighbourhoods,
-    collapseAllZones,
-  } = useHomeScreenController();
+  const { markSelectedLotsCompletedForSpecificDate, deselectAllLots, collapseAllNeighbourhoods, collapseAllZones } =
+    useHomeScreenController();
 
   useEffect(() => {
     collapseAllNeighbourhoods();
@@ -36,52 +32,31 @@ const LotsForHomeScreen = () => {
     handleDeselectLots();
   };
 
-  const renderRightSideForOneLot = useCallback(
-    (lot: LotWithNeedMowingInterface) => {
-      if (lot) {
-        return (
-          <TouchableOpacity style={{ paddingHorizontal: 10 }}>
-            <Icon name="clock-outline" size={28} color="orange" />
-          </TouchableOpacity>
-        );
-      } else {
-        return null;
-      }
-    },
-    [],
-  );
+  const renderRightSideForOneLot = useCallback((lot: LotWithNeedMowingInterface) => {
+    if (lot) {
+      return (
+        <TouchableOpacity style={{ paddingHorizontal: 10 }}>
+          <Icon name="clock-outline" size={28} color="orange" />
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
+  }, []);
 
   const renderRightSideForAccordion = useCallback(
-    (
-      element:
-        | ZoneWithIndicatorsInterface
-        | NeighbourhoodWithIndicatorsInterface,
-    ) => {
+    (element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface) => {
       if (element) {
         return (
           <View style={styles.indicatorsContainer}>
             {element.needMowingCritically ? (
-              <View
-                style={[
-                  styles.accordionHeaderIndicator,
-                  styles.accordionHeaderIndicatorCritical,
-                ]}
-              >
-                <Text style={styles.accordionHeaderIndicatorText}>
-                  {element.needMowingCritically}
-                </Text>
+              <View style={[styles.accordionHeaderIndicator, styles.accordionHeaderIndicatorCritical]}>
+                <Text style={styles.accordionHeaderIndicatorText}>{element.needMowingCritically}</Text>
               </View>
             ) : null}
             {element.needMowing ? (
-              <View
-                style={[
-                  styles.accordionHeaderIndicator,
-                  styles.accordionHeaderIndicatorNormal,
-                ]}
-              >
-                <Text style={styles.accordionHeaderIndicatorText}>
-                  {element.needMowing}
-                </Text>
+              <View style={[styles.accordionHeaderIndicator, styles.accordionHeaderIndicatorNormal]}>
+                <Text style={styles.accordionHeaderIndicatorText}>{element.needMowing}</Text>
               </View>
             ) : null}
           </View>
@@ -101,18 +76,8 @@ const LotsForHomeScreen = () => {
         size={28}
         onPress={handleMarkLotsCompleted}
       />
-      <Appbar.Action
-        icon="account-arrow-left"
-        color={theme.colors.primary}
-        size={28}
-        onPress={() => {}}
-      />
-      <Appbar.Action
-        icon="dots-vertical"
-        color={theme.colors.primary}
-        size={28}
-        onPress={() => {}}
-      />
+      <Appbar.Action icon="account-arrow-left" color={theme.colors.primary} size={28} onPress={() => {}} />
+      <Appbar.Action icon="dots-vertical" color={theme.colors.primary} size={28} onPress={() => {}} />
     </>
   );
 

@@ -155,26 +155,15 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
 
     if (temporaryisNewUser && temporaryUserData) {
       // Create the new user now
-      const newUser = inviteUserToActiveWorkgroup(
-        temporaryUserData.email,
-        temporaryUserData.role,
-        accessToAllLots,
-      );
+      const newUser = inviteUserToActiveWorkgroup(temporaryUserData.email, temporaryUserData.role, accessToAllLots);
 
       if (newUser) {
         if (accessToAllLots) {
           Alert.alert('Éxito', 'El integrante ha sido invitado.');
         } else {
           // Assign zones to the new user using the selection in the store
-          updateZoneAssignmentsAndRoleForUser(
-            newUser.userId,
-            accessToAllLots,
-            temporaryUserData.role,
-          );
-          Alert.alert(
-            'Asignación exitosa',
-            'El integrante ha sido invitado y las zonas han sido asignadas.',
-          );
+          updateZoneAssignmentsAndRoleForUser(newUser.userId, accessToAllLots, temporaryUserData.role);
+          Alert.alert('Asignación exitosa', 'El integrante ha sido invitado y las zonas han sido asignadas.');
         }
       } else {
         Alert.alert('Error', 'No se pudo crear el usuario.');
@@ -206,17 +195,8 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     <View style={styles.container}>
       {/* Render the user name and email */}
       <View style={styles.userInfoAndPickerContainer}>
-        {getFullName() && (
-          <Text style={styles.userFullName}>{getFullName()}</Text>
-        )}
-        <Text
-          style={[
-            styles.userEmail,
-            getFullName() ? null : styles.userEmailIsLarge,
-          ]}
-        >
-          {user?.email}
-        </Text>
+        {getFullName() && <Text style={styles.userFullName}>{getFullName()}</Text>}
+        <Text style={[styles.userEmail, getFullName() ? null : styles.userEmailIsLarge]}>{user?.email}</Text>
 
         {/* Access to All Lots Zones */}
         <CustomSelectInput
@@ -252,9 +232,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       {/* Button to assign the selected lots */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleAssignZones}>
-          <Text style={styles.buttonText}>
-            {temporaryisNewUser ? 'Asignar Zonas' : 'Guardar Cambios'}
-          </Text>
+          <Text style={styles.buttonText}>{temporaryisNewUser ? 'Asignar Zonas' : 'Guardar Cambios'}</Text>
         </TouchableOpacity>
       </View>
     </View>

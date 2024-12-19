@@ -9,12 +9,7 @@ const LotManagementScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Searchbar
-        placeholder="Search"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-        style={styles.searchBar}
-      />
+      <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} style={styles.searchBar} />
       <Text>Lot Management Screen</Text>
     </View>
   );

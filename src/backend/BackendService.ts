@@ -6,9 +6,7 @@ import {
   UserInterface,
 } from '../types/types';
 
-const getNeighbourhoodZoneData = (
-  lots?: LotComputedForDisplay[],
-): NeighbourhoodZoneData => {
+const getNeighbourhoodZoneData = (lots?: LotComputedForDisplay[]): NeighbourhoodZoneData => {
   const neighbourhoodMap: { [key: string]: NeighbourhoodData } = {};
 
   if (!lots) {
@@ -16,13 +14,7 @@ const getNeighbourhoodZoneData = (
   }
 
   lots.forEach((lot) => {
-    const {
-      neighbourhoodId,
-      neighbourhoodLabel,
-      zoneId,
-      zoneLabel,
-      workgroupId,
-    } = lot;
+    const { neighbourhoodId, neighbourhoodLabel, zoneId, zoneLabel, workgroupId } = lot;
 
     // Initialize neighbourhood if it doesn't exist
     if (!neighbourhoodMap[neighbourhoodId]) {
@@ -39,9 +31,7 @@ const getNeighbourhoodZoneData = (
     const neighbourhood = neighbourhoodMap[neighbourhoodId];
 
     // Check if the zone already exists in the neighbourhood
-    const zoneExists = neighbourhood.zones.some(
-      (zone) => zone.zoneId === zoneId,
-    );
+    const zoneExists = neighbourhood.zones.some((zone) => zone.zoneId === zoneId);
 
     // Add the zone if it doesn't exist
     if (!zoneExists) {
@@ -77,8 +67,7 @@ const hardCodedLots: LotComputedForDisplay[] = [
     zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
     zoneLabel: '1',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-06'),
     lotIsSelected: false,
     workgroupId: '1',
@@ -89,8 +78,7 @@ const hardCodedLots: LotComputedForDisplay[] = [
     zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
     zoneLabel: '1',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-07'),
     lotIsSelected: false,
     workgroupId: '1',
@@ -101,8 +89,7 @@ const hardCodedLots: LotComputedForDisplay[] = [
     zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
     zoneLabel: '1',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-07'),
     lotIsSelected: false,
     workgroupId: '1',
@@ -113,8 +100,7 @@ const hardCodedLots: LotComputedForDisplay[] = [
     zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
     zoneLabel: '1',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-08'),
     lotIsSelected: false,
     workgroupId: '1',
@@ -125,8 +111,7 @@ const hardCodedLots: LotComputedForDisplay[] = [
     zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
     zoneLabel: '1',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
     workgroupId: '1',
@@ -139,8 +124,7 @@ const hardCodedLots: LotComputedForDisplay[] = [
     zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
     zoneLabel: '2',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
     workgroupId: '1',
@@ -151,8 +135,7 @@ const hardCodedLots: LotComputedForDisplay[] = [
     zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
     zoneLabel: '2',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
     workgroupId: '1',
@@ -163,8 +146,7 @@ const hardCodedLots: LotComputedForDisplay[] = [
     zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
     zoneLabel: '2',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-04'),
     lotIsSelected: false,
     workgroupId: '1',
@@ -175,8 +157,7 @@ const hardCodedLots: LotComputedForDisplay[] = [
     zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
     zoneLabel: '2',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-25'),
     lotIsSelected: false,
     workgroupId: '1',

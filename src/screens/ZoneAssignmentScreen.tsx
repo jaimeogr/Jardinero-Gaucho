@@ -63,12 +63,15 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   }, [setTemporaryUserData]);
 
   useEffect(() => {
+    console.log('route.params?.userId');
+    console.log(route.params?.userId);
     // Expand the neighbourhood accordions
     expandAllNeighbourhoods();
-
     // Clear selections
     deselectAllLots();
+  }, []);
 
+  useEffect(() => {
     // Initialize the user
     const hasNoTemporaryData = !temporaryisNewUser && !temporaryUserData; // use case 1
     const hasNoUserId = !userId; // use case 2
@@ -79,9 +82,8 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       return;
     }
 
-    // Initialize the user based on the provided data
-    if (temporaryisNewUser && temporaryUserData) {
-      // New user case
+    // Use case 1: New user case. This will run only the first time when the user is still null
+    if (temporaryisNewUser && temporaryUserData && user === null) {
       setUser({
         userId: undefined, // Will be set upon creation
         email: temporaryUserData.email,
@@ -89,22 +91,15 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         lastName: '',
         workgroupAssignments: [],
       });
-      setAccessToAllLots(temporaryUserData.accessToAllLots);
-    } else if (userId) {
-      if (existingUser) {
-        setUser(existingUser);
-        setAccessToAllLots(existingUser.accessToAllLots);
-        // Pre-select zones assigned to the user when it doesnt have access to all zones
-        if (!existingUser.accessToAllLots) {
-          selectAssignedZonesForUser(userId);
-        }
-      } else {
-        Alert.alert('Error', 'Usuario no encontrado.');
-        navigation.goBack();
+    }
+
+    // Use case 2: Existing user case. This will run only the first time when the user is still null
+    if (userId && existingUser && user === null) {
+      setUser(existingUser);
+      // Pre-select zones assigned to the user when it doesnt have access to all zones
+      if (!existingUser.accessToAllLots) {
+        selectAssignedZonesForUser(userId);
       }
-    } else {
-      Alert.alert('Error', 'Datos inválidos.');
-      navigation.goBack();
     }
 
     // Add `beforeRemove` listener
@@ -129,12 +124,9 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     temporaryisNewUser,
     navigation,
     existingUser,
-    deselectAllLots,
     useUserInActiveWorkgroupWithRole,
     selectAssignedZonesForUser,
-    setTemporaryUserData,
     clearTemporaryState,
-    expandAllNeighbourhoods,
   ]);
 
   const handleAccessToAllLotsChange = (value: string | boolean | null) => {
@@ -146,6 +138,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         // select zones assigned to the user if there is an existant userId
         selectAssignedZonesForUser(userId);
       } else {
+        // since there is no userId, deselect all lots for the new user case
         deselectAllLots();
       }
     } else {

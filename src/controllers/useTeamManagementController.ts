@@ -180,6 +180,20 @@ const useTeamManagementController = (): ITeamManagementController => {
       }, [activeWorkgroupId, users, lots, neighbourhoodsWithZones]);
     };
 
+  const useUserInActiveWorkgroupWithRole = (
+    userId: string,
+  ): UserInActiveWorkgroupWithRole | null => {
+    // Reuse the memoized array of users in the active workgroup
+    const usersInWorkgroupWithRoles = useUsersInActiveWorkgroupWithRoles();
+
+    // Find the user by userId in the already computed array
+    const userWithRole = usersInWorkgroupWithRoles.find(
+      (user) => user.userId === userId,
+    );
+
+    return userWithRole || null;
+  };
+
   const updateZoneAssignmentsAndRoleForUser = (
     userId: string,
     accessToAllLots: boolean,
@@ -259,20 +273,6 @@ const useTeamManagementController = (): ITeamManagementController => {
         .getState()
         .toggleSelectionForLotsArray(lotsToSelect, true);
     }
-  };
-
-  const useUserInActiveWorkgroupWithRole = (
-    userId: string,
-  ): UserInActiveWorkgroupWithRole | null => {
-    // Reuse the memoized array of users in the active workgroup
-    const usersInWorkgroupWithRoles = useUsersInActiveWorkgroupWithRoles();
-
-    // Find the user by userId in the already computed array
-    const userWithRole = usersInWorkgroupWithRoles.find(
-      (user) => user.userId === userId,
-    );
-
-    return userWithRole || null;
   };
 
   const inviteUserToActiveWorkgroup = (

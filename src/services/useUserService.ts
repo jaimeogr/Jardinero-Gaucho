@@ -109,6 +109,7 @@ function updateUserAccessAndRole(
 
     return {
       ...assignment,
+      role,
       accessToAllLots: false,
       assignedNeighbourhoods,
       assignedZones,

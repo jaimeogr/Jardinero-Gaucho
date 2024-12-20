@@ -1,25 +1,41 @@
 // types.ts or interfaces.ts
 
+// 1. In the future i can have a  data type for my current user where it has an array of WorkgroupDataForUser,
+// and in the other hand a single WorkgroupDataForUser for each team member.
+// Since each workgroup would load the corresponding users,
+// and even if users are repeated accross workgroups, it should be handled appropiately.
+// In this way, data structures would be decoupled from one workgroup to another, minimizing errors.
+//
+//
+// 2. In the future i can have different data types for neighbourhood/zones like LotInStore, LotComputedForDisplay
+//
+//
+// 3. In the future i can remove NeighbourhoodZoneData for the sake of goodwill and use NeighbourhoodData instead :)
+//
+// 4. In the future i can combine LotWithNeedMowingInterface and LotComputedForDisplay.
+
 // LOTS / ZONES / NEIGHBOURHOODS
-export interface LotInterface {
+export interface LotInStore {
+  workgroupId: string;
   lotId: string; // Unique identifier for the lot, now as a UUID
   lotLabel: string; // Lot number or label
   zoneId: string; // ID of the zone the lot belongs to, as a UUID
-  zoneLabel: string; // Name of the zone
   neighbourhoodId: string; // ID of the neighbourhood the lot belongs to, as a UUID
-  neighbourhoodLabel: string; // Name of the neighbourhood
-  lastMowingDate: Date; // Last mowing date for the lot
-  lotIsSelected: boolean; // Selection state of the lot
+  lastMowingDate?: Date; // Last mowing date for the lot
   extraNotes?: string; // Optional extra notes about the lot
-  assignedTo: string[]; // Users assigned to the lot, can still be numbers if these are internal references
-  workgroupId: string;
+}
+
+export interface LotComputedForDisplay extends LotInStore {
+  zoneLabel: string; // Name of the zone
+  neighbourhoodLabel: string; // Name of the neighbourhood
+  lotIsSelected: boolean; // Selection state of the lot
 }
 
 export interface GroupOfLotsInterface {
-  lots: LotInterface[]; // lots is an array of LotInterface
+  lots: LotComputedForDisplay[]; // lots is an array of LotInterface
 }
 
-export interface LotWithNeedMowingInterface extends LotInterface {
+export interface LotWithNeedMowingInterface extends LotComputedForDisplay {
   needMowing: number;
 }
 
@@ -56,7 +72,6 @@ export interface ZoneData {
   zoneLabel: string;
   isSelected: boolean;
   isExpanded: boolean;
-  assignedTo: string[]; // Users assigned
 }
 
 export interface NeighbourhoodData {
@@ -66,7 +81,6 @@ export interface NeighbourhoodData {
   zones: ZoneData[];
   isSelected: boolean;
   isExpanded: boolean;
-  assignedTo: string[]; // Users assigned
 }
 
 export interface NeighbourhoodZoneData {
@@ -76,21 +90,28 @@ export interface NeighbourhoodZoneData {
 // USERS / WORKGROUPS
 export type UserRole = 'PrimaryOwner' | 'Owner' | 'Manager' | 'Member';
 
-export interface UserInvitedPendingAcceptanceInterface {
-  email: string;
-  role: UserRole;
-  accessToAllLots: boolean; // Default
-}
-
-export interface GroupOfUsersInterface {
-  users: UserInterface[];
-}
-
-export interface WorkgroupAssignment {
+export interface WorkgroupDataForUser {
+  // this is the workgroup data that corresponds to the user, but not data about the workgroup itself, so thats why the namee of the workgroup is not here.
   workgroupId: string;
   role: UserRole;
-  accessToAllLots: boolean;
   hasAcceptedPresenceInWorkgroup: boolean;
+  accessToAllLots: boolean;
+  assignedNeighbourhoods: string[];
+  assignedZones: string[];
+}
+
+export interface WorkgroupInterface {
+  // data of the workgroup itself
+  workgroupId: string;
+  name: string;
+}
+
+export interface UserInterface {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  workgroupAssignments: WorkgroupDataForUser[];
 }
 
 export interface TemporaryUserData {
@@ -99,25 +120,13 @@ export interface TemporaryUserData {
   accessToAllLots: boolean;
 }
 
-export interface UserInterface {
-  userId: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  workgroupAssignments: WorkgroupAssignment[];
-}
-
 export type UserInActiveWorkgroupWithRole = UserInterface &
-  WorkgroupAssignment & {
+  WorkgroupDataForUser & {
     // This is a combination of UserInterface and WorkgroupAssignment plus some assigned zones and lots
+    // the reason why the WorkgroupDataForUser is combined in the root of the object is because in this way the data specific to the current workgroup is exposed in a more clear way.
     assignedZonesCount: number;
     assignedLotsCount: number;
   };
-
-export interface WorkgroupInterface {
-  workgroupId: string;
-  name: string;
-}
 
 export interface TaskInterface {
   taskId: string;

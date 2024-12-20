@@ -16,22 +16,17 @@ interface TaskStoreState {
 const useTaskStore = create<TaskStoreState>((set, get) => ({
   tasks: [],
 
-  addTask: (task: TaskInterface) =>
-    set((state) => ({ tasks: [...state.tasks, task] })),
+  addTask: (task: TaskInterface) => set((state) => ({ tasks: [...state.tasks, task] })),
 
   initializeTasks: (tasks: TaskInterface[]) => set({ tasks }),
 
-  getTasksByWorkgroupId: (workgroupId: string) =>
-    get().tasks.filter((task) => task.workgroupId === workgroupId),
+  getTasksByWorkgroupId: (workgroupId: string) => get().tasks.filter((task) => task.workgroupId === workgroupId),
 
-  getTasksByLotId: (lotId: string) =>
-    get().tasks.filter((task) => task.lotId === lotId),
+  getTasksByLotId: (lotId: string) => get().tasks.filter((task) => task.lotId === lotId),
 
   updateTask: (taskId: string, updatedInfo: Partial<TaskInterface>) => {
     set((state) => ({
-      tasks: state.tasks.map((task) =>
-        task.taskId === taskId ? { ...task, ...updatedInfo } : task,
-      ),
+      tasks: state.tasks.map((task) => (task.taskId === taskId ? { ...task, ...updatedInfo } : task)),
     }));
   },
 

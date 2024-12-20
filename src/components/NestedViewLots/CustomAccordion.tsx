@@ -1,14 +1,11 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
-import useControllerService from '../../services/useControllerService';
 import { theme } from '../../styles/styles';
-import {
-  ZoneWithIndicatorsInterface,
-  NeighbourhoodWithIndicatorsInterface,
-} from '../../types/types';
+import { IAccordionController } from '../../types/controllerTypes';
+import { ZoneWithIndicatorsInterface, NeighbourhoodWithIndicatorsInterface } from '../../types/types';
 
 const {
   accordion: {
@@ -37,9 +34,8 @@ interface CustomAccordionProps {
   isSelectable?: boolean;
   isExpanded?: boolean;
   blockExpansion?: boolean;
-  renderRightSide?: (
-    element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface,
-  ) => JSX.Element;
+  renderRightSide?: (element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface) => JSX.Element;
+  controller: IAccordionController;
 }
 
 const CustomAccordion: React.FC<CustomAccordionProps> = ({
@@ -53,13 +49,10 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
   isExpanded = false,
   blockExpansion = false,
   renderRightSide = null,
+  controller,
 }) => {
-  const {
-    toggleZoneSelection,
-    toggleNeighbourhoodSelection,
-    toggleNeighbourhoodExpansion,
-    toggleZoneExpansion,
-  } = useControllerService;
+  const { toggleZoneSelection, toggleNeighbourhoodSelection, toggleNeighbourhoodExpansion, toggleZoneExpansion } =
+    controller;
 
   const handleToggleIsExpanded = useCallback(() => {
     if (level === 0) {
@@ -76,38 +69,20 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
     } else {
       toggleZoneSelection(id, newState);
     }
-  }, [
-    id,
-    isSelected,
-    level,
-    toggleZoneSelection,
-    toggleNeighbourhoodSelection,
-  ]);
+  }, [id, isSelected, level, toggleZoneSelection, toggleNeighbourhoodSelection]);
 
   return (
     <View
       style={[
-        level === 0
-          ? styles.accordionContainerForNeighbourhood
-          : styles.accordionContainerForZone,
-        isSelected && level === 0
-          ? styles.accordionContainterIsSelectedForNeighbourhood
-          : null,
-        isSelected && level === 1
-          ? styles.accordionContainterIsSelectedForZone
-          : null,
+        level === 0 ? styles.accordionContainerForNeighbourhood : styles.accordionContainerForZone,
+        isSelected && level === 0 ? styles.accordionContainterIsSelectedForNeighbourhood : null,
+        isSelected && level === 1 ? styles.accordionContainterIsSelectedForZone : null,
       ]}
     >
-      <TouchableOpacity
-        onPress={() => handleToggleIsExpanded()}
-        style={styles.accordionHeader}
-      >
+      <TouchableOpacity onPress={() => handleToggleIsExpanded()} style={styles.accordionHeader}>
         <View style={styles.accordionHeaderLeftSide}>
           {isSelectable && (
-            <TouchableOpacity
-              onPress={handleToggleIsSelected}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
+            <TouchableOpacity onPress={handleToggleIsSelected} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
               <MaterialCommunityIcons
                 name={isSelected ? 'circle-slice-8' : 'circle-outline'}
                 color={theme.colors.primary}
@@ -116,27 +91,18 @@ const CustomAccordion: React.FC<CustomAccordionProps> = ({
             </TouchableOpacity>
           )}
 
-          <Text
-            style={styles.accordionTitle}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
+          <Text style={styles.accordionTitle} numberOfLines={1} ellipsizeMode="tail">
             {title}
           </Text>
         </View>
 
         <View style={styles.accordionHeaderRightSide}>
           {renderRightSide && <View>{renderRightSide(element)}</View>}
-          <IconButton
-            icon={isExpanded && !blockExpansion ? 'chevron-up' : 'chevron-down'}
-            size={28}
-          />
+          <IconButton icon={isExpanded && !blockExpansion ? 'chevron-up' : 'chevron-down'} size={28} />
         </View>
       </TouchableOpacity>
 
-      {isExpanded && !blockExpansion && (
-        <View style={styles.accordionContent}>{children}</View>
-      )}
+      {isExpanded && !blockExpansion && <View style={styles.accordionContent}>{children}</View>}
     </View>
   );
 };

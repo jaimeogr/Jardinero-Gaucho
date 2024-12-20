@@ -14,9 +14,7 @@ import { Badge } from 'react-native-paper';
 
 import { theme } from '../styles/styles';
 
-const RoleDescriptionForRoleCard: React.FC<{ items: string[] }> = ({
-  items,
-}) => (
+const RoleDescriptionForRoleCard: React.FC<{ items: string[] }> = ({ items }) => (
   <View>
     {items.map((item, index) => (
       <View key={index} style={styles.bulletItem}>
@@ -73,10 +71,7 @@ const RolePicker: React.FC<RolePickerProps> = ({ selectedRole, onSelect }) => {
           'Sin otros derechos.',
         ];
       case 'Member':
-        return [
-          'Registra tareas realizadas en las zonas asignados.',
-          'Sin accesos adicionales.',
-        ];
+        return ['Registra tareas realizadas en las zonas asignados.', 'Sin accesos adicionales.'];
       default:
         return ['Descripción no disponible.'];
     }
@@ -85,17 +80,10 @@ const RolePicker: React.FC<RolePickerProps> = ({ selectedRole, onSelect }) => {
   return (
     <View>
       <Text style={styles.inputTitle}>Rol</Text>
-      <TouchableOpacity
-        style={styles.picker}
-        onPress={() => setModalVisible(true)}
-      >
-        <Text
-          style={[styles.pickerText, selectedRole ? null : styles.placeholder]}
-        >
+      <TouchableOpacity style={styles.picker} onPress={() => setModalVisible(true)}>
+        <Text style={[styles.pickerText, selectedRole ? null : styles.placeholder]}>
           {/* The selected role is displayed, or the placeholder */}
-          {selectedRole
-            ? roles.find((r) => r.role === selectedRole)?.title
-            : 'Seleccionar Rol'}
+          {selectedRole ? roles.find((r) => r.role === selectedRole)?.title : 'Seleccionar Rol'}
         </Text>
         <Icon name="chevron-down" size={26} color={theme.colors.primary} />
       </TouchableOpacity>
@@ -117,8 +105,7 @@ const RolePicker: React.FC<RolePickerProps> = ({ selectedRole, onSelect }) => {
                       style={[
                         styles.roleCard,
                         {
-                          borderColor:
-                            theme.colors.roles[item.role] || '#1976D2',
+                          borderColor: theme.colors.roles[item.role] || '#1976D2',
                         },
                       ]}
                       onPress={() => handleRoleSelect(item.role)}
@@ -127,17 +114,14 @@ const RolePicker: React.FC<RolePickerProps> = ({ selectedRole, onSelect }) => {
                         style={[
                           styles.roleBadge,
                           {
-                            backgroundColor:
-                              theme.colors.roles[item.role] || '#1976D2',
+                            backgroundColor: theme.colors.roles[item.role] || '#1976D2',
                           },
                         ]}
                         size={24}
                       >
                         {item.title}
                       </Badge>
-                      <RoleDescriptionForRoleCard
-                        items={getRoleDescriptionArray(item.role)}
-                      />
+                      <RoleDescriptionForRoleCard items={getRoleDescriptionArray(item.role)} />
                     </TouchableOpacity>
                   )}
                 />

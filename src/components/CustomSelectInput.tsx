@@ -27,12 +27,7 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
   return (
     <View style={customStyle}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <View
-        style={[
-          styles.pickerContainer,
-          isDisabled ? styles.disabledPickerContainer : {},
-        ]}
-      >
+      <View style={[styles.pickerContainer, isDisabled ? styles.disabledPickerContainer : {}]}>
         <RNPickerSelect
           onValueChange={onValueChange}
           items={items}
@@ -59,9 +54,7 @@ const CustomSelectInput: React.FC<AppPickerProps> = ({
             <Icon
               name="chevron-down" // Chevron icon
               size={26}
-              color={
-                isDisabled ? theme.colors.placeholder : theme.colors.primary
-              }
+              color={isDisabled ? theme.colors.placeholder : theme.colors.primary}
             />
           )}
         />

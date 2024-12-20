@@ -5,9 +5,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 
 import { theme } from '../../styles/styles';
-import { LotInterface } from '../../types/types';
+import { LotComputedForDisplay } from '../../types/types';
 
-const OneLotForTodaysLots: React.FC<LotInterface> = ({
+const OneLotForTodaysLots: React.FC<LotComputedForDisplay> = ({
   lotLabel: number,
   zoneId: zone,
   neighbourhoodId: neighbourhood,
@@ -23,9 +23,7 @@ const OneLotForTodaysLots: React.FC<LotInterface> = ({
           <Text style={styles.itemText}>
             Número: {number} - Zona: {zone} - Barrio: {neighbourhood}
           </Text>
-          {extraNotes ? (
-            <Text style={styles.extraNotes}>{extraNotes}</Text>
-          ) : null}
+          {extraNotes ? <Text style={styles.extraNotes}>{extraNotes}</Text> : null}
         </View>
         <TouchableOpacity onPress={() => setCompl(!compl)}>
           <MaterialCommunityIcons

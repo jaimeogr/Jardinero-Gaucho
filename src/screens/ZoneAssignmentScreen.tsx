@@ -6,9 +6,11 @@ import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 
 import CustomSelectInput from '../components/CustomSelectInput';
 import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
-import useControllerService from '../services/useControllerService';
+import useTeamManagementController from '../controllers/useTeamManagementController';
 import { theme } from '../styles/styles';
 import { UserInterface } from '../types/types';
+
+const SCREEN_CODE_FOR_GLOBAL_STATE = 'zoneAssignmentScreen';
 
 type RootStackParamList = {
   ZoneAssignment: {
@@ -33,25 +35,25 @@ interface Props {
 
 const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   const {
-    updateZoneAssignmentsForMember,
     deselectAllLots,
-    selectAllZones,
-    preselectAssignedZonesInWorkgroupForUser,
-    getUserInActiveWorkgroupWithRole,
-    useNeighbourhoodsAndZones,
+    updateZoneAssignmentsAndRoleForUser,
+    selectAssignedZonesForUser,
+    useUserInActiveWorkgroupWithRole,
     inviteUserToActiveWorkgroup,
     getTemporaryUserData,
     setTemporaryUserData,
     expandAllNeighbourhoods,
-  } = useControllerService;
+  } = useTeamManagementController();
 
   const userId = route.params?.userId;
 
   const [user, setUser] = useState<Partial<UserInterface> | null>(null);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean>(false);
 
+  // Existing user case, get the user data when the userId is provided
+  const existingUser = useUserInActiveWorkgroupWithRole(userId || '');
+
   // Get neighbourhoods and zones
-  const neighbourhoods = useNeighbourhoodsAndZones();
 
   // Get temporary user data
   const { temporaryUserData, temporaryisNewUser } = getTemporaryUserData();
@@ -61,12 +63,15 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
   }, [setTemporaryUserData]);
 
   useEffect(() => {
+    console.log('route.params?.userId');
+    console.log(route.params?.userId);
     // Expand the neighbourhood accordions
     expandAllNeighbourhoods();
-
     // Clear selections
     deselectAllLots();
+  }, []);
 
+  useEffect(() => {
     // Initialize the user
     const hasNoTemporaryData = !temporaryisNewUser && !temporaryUserData; // use case 1
     const hasNoUserId = !userId; // use case 2
@@ -77,9 +82,8 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       return;
     }
 
-    // Initialize the user based on the provided data
-    if (temporaryisNewUser && temporaryUserData) {
-      // New user case
+    // Use case 1: New user case. This will run only the first time when the user is still null
+    if (temporaryisNewUser && temporaryUserData && user === null) {
       setUser({
         userId: undefined, // Will be set upon creation
         email: temporaryUserData.email,
@@ -87,24 +91,15 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         lastName: '',
         workgroupAssignments: [],
       });
-      setAccessToAllLots(temporaryUserData.accessToAllLots);
-    } else if (userId) {
-      // Existing user case
-      const existingUser = getUserInActiveWorkgroupWithRole(userId);
-      if (existingUser) {
-        setUser(existingUser);
-        setAccessToAllLots(existingUser.accessToAllLots);
-        // Pre-select zones assigned to the user when it doesnt have access to all zones
-        if (!existingUser.accessToAllLots) {
-          preselectAssignedZonesInWorkgroupForUser(userId);
-        }
-      } else {
-        Alert.alert('Error', 'Usuario no encontrado.');
-        navigation.goBack();
+    }
+
+    // Use case 2: Existing user case. This will run only the first time when the user is still null
+    if (userId && existingUser && user === null) {
+      setUser(existingUser);
+      // Pre-select zones assigned to the user when it doesnt have access to all zones
+      if (!existingUser.accessToAllLots) {
+        selectAssignedZonesForUser(userId);
       }
-    } else {
-      Alert.alert('Error', 'Datos inválidos.');
-      navigation.goBack();
     }
 
     // Add `beforeRemove` listener
@@ -124,35 +119,16 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       unsubscribe();
     };
   }, [
+    user,
     userId,
     temporaryUserData,
     temporaryisNewUser,
     navigation,
-    deselectAllLots,
-    selectAllZones,
-    getUserInActiveWorkgroupWithRole,
-    preselectAssignedZonesInWorkgroupForUser,
-    setTemporaryUserData,
+    existingUser,
+    useUserInActiveWorkgroupWithRole,
+    selectAssignedZonesForUser,
     clearTemporaryState,
-    expandAllNeighbourhoods,
   ]);
-
-  // Compute totalZones and selectedZones
-  const { totalZones, selectedZones } = React.useMemo(() => {
-    let total = 0;
-    let selected = 0;
-
-    neighbourhoods.forEach((neighbourhood) => {
-      neighbourhood.zones.forEach((zone) => {
-        total += 1;
-        if (zone.isSelected) {
-          selected += 1;
-        }
-      });
-    });
-
-    return { totalZones: total, selectedZones: selected };
-  }, [neighbourhoods]);
 
   const handleAccessToAllLotsChange = (value: string | boolean | null) => {
     if (typeof value === 'boolean') {
@@ -161,8 +137,9 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
         // No need to select zones; user has access to all
       } else if (userId) {
         // select zones assigned to the user if there is an existant userId
-        preselectAssignedZonesInWorkgroupForUser(userId);
+        selectAssignedZonesForUser(userId);
       } else {
+        // since there is no userId, deselect all lots for the new user case
         deselectAllLots();
       }
     } else {
@@ -179,29 +156,22 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
 
     if (temporaryisNewUser && temporaryUserData) {
       // Create the new user now
-      const newUser = inviteUserToActiveWorkgroup(
-        temporaryUserData.email,
-        temporaryUserData.role,
-        accessToAllLots,
-      );
+      const newUser = inviteUserToActiveWorkgroup(temporaryUserData.email, temporaryUserData.role, accessToAllLots);
 
       if (newUser) {
         if (accessToAllLots) {
           Alert.alert('Éxito', 'El integrante ha sido invitado.');
         } else {
           // Assign zones to the new user using the selection in the store
-          updateZoneAssignmentsForMember(newUser.userId, accessToAllLots);
-          Alert.alert(
-            'Asignación exitosa',
-            'El integrante ha sido invitado y las zonas han sido asignadas.',
-          );
+          updateZoneAssignmentsAndRoleForUser(newUser.userId, accessToAllLots, temporaryUserData.role);
+          Alert.alert('Asignación exitosa', 'El integrante ha sido invitado y las zonas han sido asignadas.');
         }
       } else {
         Alert.alert('Error', 'No se pudo crear el usuario.');
       }
     } else if (userId) {
       // Existing user case
-      updateZoneAssignmentsForMember(userId, accessToAllLots);
+      updateZoneAssignmentsAndRoleForUser(userId, accessToAllLots, 'Member');
 
       Alert.alert('Asignación exitosa', 'Las zonas han sido asignadas.');
     } else {
@@ -226,17 +196,8 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
     <View style={styles.container}>
       {/* Render the user name and email */}
       <View style={styles.userInfoAndPickerContainer}>
-        {getFullName() && (
-          <Text style={styles.userFullName}>{getFullName()}</Text>
-        )}
-        <Text
-          style={[
-            styles.userEmail,
-            getFullName() ? null : styles.userEmailIsLarge,
-          ]}
-        >
-          {user?.email}
-        </Text>
+        {getFullName() && <Text style={styles.userFullName}>{getFullName()}</Text>}
+        <Text style={[styles.userEmail, getFullName() ? null : styles.userEmailIsLarge]}>{user?.email}</Text>
 
         {/* Access to All Lots Zones */}
         <CustomSelectInput
@@ -246,11 +207,11 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
           customStyle={styles.accessToAllZonesPickerContainer}
           items={[
             {
-              label: 'Solo las seleccionadas (Mayor control)',
+              label: 'Solo las seleccionadas',
               value: false,
             },
             {
-              label: 'Todas las zonas (Más simple)',
+              label: 'Todas las zonas',
               value: true,
             },
           ]}
@@ -261,6 +222,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       {/* This way, when accessToAllLots is true, the user won't see the list of zones, emphasizing that they have access to all zones. */}
       {!accessToAllLots && (
         <NestedViewLots
+          screen={SCREEN_CODE_FOR_GLOBAL_STATE}
           handleDeselectLots={() => null} // since this part of the code is not even rendered, i pass null to avoid turning this prop as optional just to keep it easier to maintain and implement
           onlyZonesAreSelectable={true}
           blockZoneExpansion={true}
@@ -271,9 +233,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       {/* Button to assign the selected lots */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleAssignZones}>
-          <Text style={styles.buttonText}>
-            {temporaryisNewUser ? 'Asignar Zonas' : 'Guardar Cambios'}
-          </Text>
+          <Text style={styles.buttonText}>{temporaryisNewUser ? 'Asignar Zonas' : 'Guardar Cambios'}</Text>
         </TouchableOpacity>
       </View>
     </View>

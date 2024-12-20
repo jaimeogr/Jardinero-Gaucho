@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  TextInput,
-  View,
-  StyleSheet,
-  TextInputProps,
-} from 'react-native';
+import { Text, TextInput, View, StyleSheet, TextInputProps } from 'react-native';
 
 import { theme } from '../styles/styles';
 
@@ -31,21 +25,13 @@ const CustomTextInput: React.FC<InputTextProps> = ({
     <View style={styles.container}>
       {/* Label and Optional Indicator */}
       <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-        <Text style={[styles.label, isOptional && styles.labelIsOptional]}>
-          {label}
-        </Text>
-        {isOptional && (
-          <Text style={styles.optionalInParentheses}>(opcional)</Text>
-        )}
+        <Text style={[styles.label, isOptional && styles.labelIsOptional]}>{label}</Text>
+        {isOptional && <Text style={styles.optionalInParentheses}>(opcional)</Text>}
       </View>
 
       {/* Input Field */}
       <TextInput
-        style={[
-          styles.input,
-          multiline && styles.inputMultiline,
-          isOptional && styles.inputIsOptional,
-        ]}
+        style={[styles.input, multiline && styles.inputMultiline, isOptional && styles.inputIsOptional]}
         value={value}
         onChangeText={onChangeText} // Use onChangeText instead of onChange
         placeholder={placeholder}

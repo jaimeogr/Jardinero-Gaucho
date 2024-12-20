@@ -1,11 +1,15 @@
+/* eslint-disable no-undef */
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: 2021,
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
     },
+  },
+  env: {
+    es2021: true,
   },
   extends: [
     'eslint:recommended',
@@ -17,9 +21,11 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
   ],
-  plugins: ['@typescript-eslint', 'import', 'jsx-a11y', 'react-hooks'],
+  plugins: ['@typescript-eslint', 'import', 'jsx-a11y', 'react-hooks', 'react-native'],
   rules: {
     '@typescript-eslint/no-unused-vars': ['warn'],
+    '@typescript-eslint/no-explicit-any': ['warn'],
+
     'import/order': [
       'warn',
       {
@@ -39,14 +45,18 @@ module.exports = {
         },
       },
     ],
+
+    'react/prop-types': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
+
     'jsx-a11y/anchor-is-valid': [
       'warn',
       {
         aspects: ['invalidHref', 'preferButton'],
       },
     ],
+
     'prettier/prettier': [
       'error',
       {

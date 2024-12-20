@@ -3,19 +3,12 @@
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
-import {
-  ActivityIndicator,
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-  StyleSheet,
-} from 'react-native';
+import { ActivityIndicator, View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 
 import CustomSelectInput from '../components/CustomSelectInput';
 import ReadOnlyField from '../components/ReadOnlyField'; // Import ReadOnlyField
 import RolePicker from '../components/RolePicker';
-import useControllerService from '../services/useControllerService';
+import useTeamManagementController from '../controllers/useTeamManagementController';
 import { theme } from '../styles/styles';
 import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
 
@@ -24,10 +17,7 @@ type RootStackParamList = {
   // other routes...
 };
 
-type EditUserScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'EditUser'
->;
+type EditUserScreenNavigationProp = StackNavigationProp<RootStackParamList, 'EditUser'>;
 
 type EditUserScreenRouteProp = RouteProp<RootStackParamList, 'EditUser'>;
 
@@ -37,15 +27,18 @@ interface Props {
 }
 
 const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
+  const { updateZoneAssignmentsAndRoleForUser } = useTeamManagementController();
+
   const { userId } = route.params;
   const [user, setUser] = useState<UserInActiveWorkgroupWithRole | null>(null);
 
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [accessToAllLots, setAccessToAllLots] = useState<boolean | null>(null);
 
+  const fetchedUser: UserInActiveWorkgroupWithRole | null =
+    useTeamManagementController().useUserInActiveWorkgroupWithRole(userId);
+
   useEffect(() => {
-    const fetchedUser: UserInActiveWorkgroupWithRole | null =
-      useControllerService.getUserInActiveWorkgroupWithRole(userId);
     if (fetchedUser) {
       setUser(fetchedUser);
       setSelectedRole(fetchedUser.role);
@@ -54,10 +47,9 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
       Alert.alert('Error', 'Usuario no encontrado.');
       navigation.goBack();
     }
-  }, [userId, navigation]);
+  }, [userId, navigation, fetchedUser]);
 
-  const isPickerDisabled =
-    selectedRole === 'Owner' || selectedRole === 'Manager';
+  const isPickerDisabled = selectedRole === 'Owner' || selectedRole === 'Manager';
 
   const handleRolePick = (role: string) => {
     setSelectedRole(role);
@@ -73,30 +65,19 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
     }
 
     if (accessToAllLots === null) {
-      Alert.alert(
-        'Acceso a zonas debe estar completo',
-        'Por favor seleccioná una opción.',
-      );
+      Alert.alert('Acceso a zonas debe estar completo', 'Por favor seleccioná una opción.');
       return;
     }
 
-    // Proceed with updating the user
-    console.log('Updating user...');
-    const success = useControllerService.updateUserInActiveWorkgroup(
-      user.userId,
-      selectedRole as UserRole,
-      accessToAllLots,
-    );
-    if (success) {
-      if (accessToAllLots) {
-        Alert.alert('Éxito', 'El integrante ha sido actualizado.');
-        navigation.goBack();
-      } else {
-        // Navigate to zone assignment screen
-        navigation.navigate('ZoneAssignment', { userId: user.userId });
-      }
+    if (accessToAllLots) {
+      console.log('Updating user...');
+      updateZoneAssignmentsAndRoleForUser(user.userId, accessToAllLots, selectedRole as UserRole);
+
+      Alert.alert('Éxito', 'El integrante ha sido actualizado.');
+      navigation.goBack();
     } else {
-      Alert.alert('Error', 'No se pudo actualizar el integrante.');
+      // Navigate to zone assignment screen
+      navigation.navigate('ZoneAssignment', { userId: user.userId });
     }
   };
 
@@ -121,11 +102,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
           />
 
           {/* Email Display */}
-          <ReadOnlyField
-            label="Email"
-            text={user.email}
-            placeholder="Email no disponible"
-          />
+          <ReadOnlyField label="Email" text={user.email} placeholder="Email no disponible" />
 
           {/* Role Picker */}
           <RolePicker selectedRole={selectedRole} onSelect={handleRolePick} />
@@ -145,13 +122,11 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
             }}
             items={[
               {
-                label: isPickerDisabled
-                  ? 'Todas las zonas'
-                  : 'Todas las zonas (Más simple)',
+                label: 'Todas las zonas',
                 value: true,
               },
               {
-                label: 'Solo las seleccionadas (Mayor control)',
+                label: 'Solo las seleccionadas',
                 value: false,
               },
             ]}
@@ -159,21 +134,11 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
 
           {/* Dynamic CTA Button - Call to Action */}
           <TouchableOpacity
-            style={[
-              styles.button,
-              accessToAllLots ? null : styles.secondaryButton,
-            ]}
+            style={[styles.button, accessToAllLots ? null : styles.secondaryButton]}
             onPress={handleButtonPress}
           >
-            <Text
-              style={[
-                styles.buttonText,
-                accessToAllLots ? null : styles.secondaryText,
-              ]}
-            >
-              {accessToAllLots
-                ? 'Actualizar Integrante'
-                : 'Actualizar Integrante y Seleccionar sus Zonas'}
+            <Text style={[styles.buttonText, accessToAllLots ? null : styles.secondaryText]}>
+              {accessToAllLots ? 'Actualizar Integrante' : 'Actualizar Integrante y Seleccionar sus Zonas'}
             </Text>
           </TouchableOpacity>
         </>

@@ -38,9 +38,7 @@ const useUserStore = create<UserStoreState>((set, get) => ({
   },
   updateUser: (id: string, updatedInfo: Partial<UserInterface>) => {
     set((state) => ({
-      users: state.users.map((user) =>
-        user.userId === id ? { ...user, ...updatedInfo } : user,
-      ),
+      users: state.users.map((user) => (user.userId === id ? { ...user, ...updatedInfo } : user)),
     }));
   },
   removeUser: (id: string) => {

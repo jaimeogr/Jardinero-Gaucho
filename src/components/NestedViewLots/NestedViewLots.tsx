@@ -1,43 +1,52 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useCallback, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Text,
-  BackHandler,
-  FlatList,
-} from 'react-native';
+import { View, StyleSheet, Text, BackHandler, FlatList } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
 import CustomAccordion from './CustomAccordion';
 import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import { useNestedLots } from '../../services/useLotService';
+import useHomeScreenController from '../../controllers/useHomeScreenController';
+import useTeamManagementController from '../../controllers/useTeamManagementController';
 import { theme } from '../../styles/styles';
-import { NeighbourhoodData, ZoneData } from '../../types/types';
+import { IAccordionController } from '../../types/controllerTypes';
+import {
+  NeighbourhoodData,
+  ZoneData,
+  LotWithNeedMowingInterface,
+  NestedLotsWithIndicatorsInterface,
+} from '../../types/types';
 
 interface NestedViewLotsProps {
-  selectingStateRightSideActions?: React.ReactNode;
+  title?: string;
+  screen: string;
   handleDeselectLots: () => void;
+  selectingStateRightSideActions?: React.ReactNode;
   renderRightSideForAccordion?: Function;
   renderRightSideForOneLot?: Function;
   hideLotsCounterAndTitle?: boolean;
-  title?: string;
   onlyZonesAreSelectable?: boolean;
   blockZoneExpansion?: boolean;
 }
 
 const NestedViewLots: React.FC<NestedViewLotsProps> = ({
-  selectingStateRightSideActions = null,
+  screen,
+  title = 'Mis lotes',
   handleDeselectLots,
+  selectingStateRightSideActions = null,
   renderRightSideForAccordion = null,
   renderRightSideForOneLot = null,
   hideLotsCounterAndTitle = null,
-  title = 'Mis lotes',
   onlyZonesAreSelectable = false,
   blockZoneExpansion = false,
 }) => {
-  const { nestedLots, selectedLots } = useNestedLots();
+  const homeController = useHomeScreenController();
+  const teamController = useTeamManagementController();
+
+  const controller: IAccordionController = screen === 'homeScreen' ? homeController : teamController;
+
+  const nestedLotsWithIndicatorsInterface: NestedLotsWithIndicatorsInterface = controller.useNestedLots();
+
+  const { nestedLots, selectedLots } = nestedLotsWithIndicatorsInterface;
 
   // this will handle the Native OS back button press event
   useEffect(() => {
@@ -45,10 +54,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
       handleDeselectLots();
       return true; // Return true to prevent the default back behavior
     };
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      onBackPress,
-    );
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
     return () => backHandler.remove(); // Cleanup the listener when the component unmounts
   }, [handleDeselectLots]);
 
@@ -56,6 +62,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
     ({ item: neighbourhood }) => {
       return (
         <CustomAccordion
+          controller={controller}
           id={neighbourhood.neighbourhoodId}
           element={neighbourhood}
           level={0}
@@ -68,6 +75,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
           {/* Zones */}
           {neighbourhood.zones.map((zone) => (
             <CustomAccordion
+              controller={controller}
               id={zone.zoneId}
               key={zone.zoneId}
               level={1}
@@ -81,9 +89,9 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
               {/* Lots */}
               {zone.lots.map((lot) => (
                 <OneLotForCustomAccordion
+                  controller={controller}
                   key={lot.lotId}
-                  lotId={lot.lotId}
-                  isLastItem={false}
+                  lot={lot}
                   isSelectable={!onlyZonesAreSelectable}
                   renderRightSide={renderRightSideForOneLot}
                 />
@@ -93,13 +101,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
         </CustomAccordion>
       );
     },
-    [
-      nestedLots,
-      renderRightSideForAccordion,
-      renderRightSideForOneLot,
-      onlyZonesAreSelectable,
-      blockZoneExpansion,
-    ],
+    [controller, renderRightSideForAccordion, renderRightSideForOneLot, onlyZonesAreSelectable, blockZoneExpansion],
   );
 
   return (
@@ -111,11 +113,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
         <View style={styles.upperSide}>
           <View style={styles.selectedIndicatorsTextAndButtons}>
             <View style={styles.selectingStateLeftSideCounter}>
-              <Appbar.BackAction
-                color={theme.colors.primary}
-                size={28}
-                onPress={handleDeselectLots}
-              />
+              <Appbar.BackAction color={theme.colors.primary} size={28} onPress={handleDeselectLots} />
               <Text style={styles.selectedIndicatorsText}>
                 {selectedLots}
                 {'   '}lotes
@@ -124,9 +122,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
 
             {/* Conditionally render right-side actions if provided */}
             {selectingStateRightSideActions && (
-              <View style={styles.selectingStateRightSideActions}>
-                {selectingStateRightSideActions}
-              </View>
+              <View style={styles.selectingStateRightSideActions}>{selectingStateRightSideActions}</View>
             )}
           </View>
         </View>
@@ -140,10 +136,7 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
         renderItem={renderNeighbourhood}
         contentContainerStyle={styles.scrollContent}
       />
-      <LinearGradient
-        colors={['transparent', 'rgba(255, 255, 255, 0.9)']}
-        style={styles.fadeEffect}
-      />
+      <LinearGradient colors={['transparent', 'rgba(255, 255, 255, 0.9)']} style={styles.fadeEffect} />
     </View>
   );
 };

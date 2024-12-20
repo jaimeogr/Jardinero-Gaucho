@@ -8,11 +8,7 @@ const ClickableRoundButton = ({ title, iconName, onPress }) => {
   const titleContent = title.split(' ').join('\n');
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.7}
-      style={styles.touchable}
-    >
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={styles.touchable}>
       <View style={styles.roundButton}>
         <IconButton icon={iconName} size={34} style={styles.icon} />
 

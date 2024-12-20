@@ -12,25 +12,10 @@ const Stack = createNativeStackNavigator();
 
 const HomeStackNavigator = () => {
   return (
-    <Stack.Navigator
-      style={styles.homeStackNavigator}
-      initialRouteName="HomeMain"
-    >
-      <Stack.Screen
-        name="HomeMain"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="LotManagement"
-        component={LotManagementScreen}
-        options={{ title: 'Lot Management' }}
-      />
-      <Stack.Screen
-        name="LotCreation"
-        component={LotCreationScreen}
-        options={{ title: 'Crear nuevo lote' }}
-      />
+    <Stack.Navigator style={styles.homeStackNavigator} initialRouteName="HomeMain">
+      <Stack.Screen name="HomeMain" component={HomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="LotManagement" component={LotManagementScreen} options={{ title: 'Lot Management' }} />
+      <Stack.Screen name="LotCreation" component={LotCreationScreen} options={{ title: 'Crear nuevo lote' }} />
     </Stack.Navigator>
   );
 };

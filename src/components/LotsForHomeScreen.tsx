@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Surface, Appbar } from 'react-native-paper';
 
 import NestedViewLots from './NestedViewLots/NestedViewLots';
-import useControllerService from '../services/useControllerService';
+import useHomeScreenController from '../controllers/useHomeScreenController';
 import { theme } from '../styles/styles';
 import {
   LotWithNeedMowingInterface,
@@ -12,79 +12,51 @@ import {
   NeighbourhoodWithIndicatorsInterface,
 } from '../types/types';
 
+const SCREEN_CODE_FOR_GLOBAL_STATE = 'homeScreen';
+
 const LotsForHomeScreen = () => {
-  const {
-    markSelectedLotsCompletedForSpecificDate,
-    deselectAllLots,
-    collapseAllNeighbourhoods,
-    collapseAllZones,
-  } = useControllerService;
+  const { markSelectedLotsCompletedForSpecificDate, deselectAllLots, collapseAllNeighbourhoods, collapseAllZones } =
+    useHomeScreenController();
 
   useEffect(() => {
     collapseAllNeighbourhoods();
     collapseAllZones();
-  }, [collapseAllNeighbourhoods, collapseAllZones]);
+  }, []);
 
   const handleDeselectLots = useCallback(() => {
     deselectAllLots();
   }, [deselectAllLots]);
 
   const handleMarkLotsCompleted = () => {
-    const success = markSelectedLotsCompletedForSpecificDate();
-    if (success) {
-      console.log('Selected lots marked as completed');
-      handleDeselectLots();
-    } else {
-      console.error('No lots were selected to mark as completed');
-    }
+    markSelectedLotsCompletedForSpecificDate();
+    handleDeselectLots();
   };
 
-  const renderRightSideForOneLot = useCallback(
-    (lot: LotWithNeedMowingInterface) => {
-      if (lot) {
-        return (
-          <TouchableOpacity style={{ paddingHorizontal: 10 }}>
-            <Icon name="clock-outline" size={28} color="orange" />
-          </TouchableOpacity>
-        );
-      } else {
-        return null;
-      }
-    },
-    [],
-  );
+  const renderRightSideForOneLot = useCallback((lot: LotWithNeedMowingInterface) => {
+    if (lot) {
+      return (
+        <TouchableOpacity style={{ paddingHorizontal: 10 }}>
+          <Icon name="clock-outline" size={28} color="orange" />
+        </TouchableOpacity>
+      );
+    } else {
+      return null;
+    }
+  }, []);
 
   const renderRightSideForAccordion = useCallback(
-    (
-      element:
-        | ZoneWithIndicatorsInterface
-        | NeighbourhoodWithIndicatorsInterface,
-    ) => {
+    (element: ZoneWithIndicatorsInterface | NeighbourhoodWithIndicatorsInterface) => {
       if (element) {
         return (
           <View style={styles.indicatorsContainer}>
             {element.needMowingCritically ? (
-              <View
-                style={[
-                  styles.accordionHeaderIndicator,
-                  styles.accordionHeaderIndicatorCritical,
-                ]}
-              >
-                <Text style={styles.accordionHeaderIndicatorText}>
-                  {element.needMowingCritically}
-                </Text>
+              <View style={[styles.accordionHeaderIndicator, styles.accordionHeaderIndicatorCritical]}>
+                <Text style={styles.accordionHeaderIndicatorText}>{element.needMowingCritically}</Text>
               </View>
             ) : null}
             {element.needMowing ? (
-              <View
-                style={[
-                  styles.accordionHeaderIndicator,
-                  styles.accordionHeaderIndicatorNormal,
-                ]}
-              >
-                <Text style={styles.accordionHeaderIndicatorText}>
-                  {element.needMowing}
-                </Text>
+              <View style={[styles.accordionHeaderIndicator, styles.accordionHeaderIndicatorNormal]}>
+                <Text style={styles.accordionHeaderIndicatorText}>{element.needMowing}</Text>
               </View>
             ) : null}
           </View>
@@ -104,18 +76,8 @@ const LotsForHomeScreen = () => {
         size={28}
         onPress={handleMarkLotsCompleted}
       />
-      <Appbar.Action
-        icon="account-arrow-left"
-        color={theme.colors.primary}
-        size={28}
-        onPress={() => {}}
-      />
-      <Appbar.Action
-        icon="dots-vertical"
-        color={theme.colors.primary}
-        size={28}
-        onPress={() => {}}
-      />
+      <Appbar.Action icon="account-arrow-left" color={theme.colors.primary} size={28} onPress={() => {}} />
+      <Appbar.Action icon="dots-vertical" color={theme.colors.primary} size={28} onPress={() => {}} />
     </>
   );
 
@@ -123,6 +85,7 @@ const LotsForHomeScreen = () => {
     <Surface style={styles.surface}>
       <View style={styles.content}>
         <NestedViewLots
+          screen={SCREEN_CODE_FOR_GLOBAL_STATE}
           selectingStateRightSideActions={selectingStateRightSideActions}
           handleDeselectLots={handleDeselectLots}
           renderRightSideForAccordion={renderRightSideForAccordion}

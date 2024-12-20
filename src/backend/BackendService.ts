@@ -1,14 +1,12 @@
 import {
-  LotInterface,
+  LotComputedForDisplay,
   NeighbourhoodZoneData,
   NeighbourhoodData,
   WorkgroupInterface,
   UserInterface,
 } from '../types/types';
 
-const getNeighbourhoodZoneData = (
-  lots?: LotInterface[],
-): NeighbourhoodZoneData => {
+const getNeighbourhoodZoneData = (lots?: LotComputedForDisplay[]): NeighbourhoodZoneData => {
   const neighbourhoodMap: { [key: string]: NeighbourhoodData } = {};
 
   if (!lots) {
@@ -16,13 +14,7 @@ const getNeighbourhoodZoneData = (
   }
 
   lots.forEach((lot) => {
-    const {
-      neighbourhoodId,
-      neighbourhoodLabel,
-      zoneId,
-      zoneLabel,
-      workgroupId,
-    } = lot;
+    const { neighbourhoodId, neighbourhoodLabel, zoneId, zoneLabel, workgroupId } = lot;
 
     // Initialize neighbourhood if it doesn't exist
     if (!neighbourhoodMap[neighbourhoodId]) {
@@ -32,7 +24,6 @@ const getNeighbourhoodZoneData = (
         neighbourhoodLabel,
         isSelected: false,
         isExpanded: false,
-        assignedTo: [],
         zones: [],
       };
     }
@@ -40,9 +31,7 @@ const getNeighbourhoodZoneData = (
     const neighbourhood = neighbourhoodMap[neighbourhoodId];
 
     // Check if the zone already exists in the neighbourhood
-    const zoneExists = neighbourhood.zones.some(
-      (zone) => zone.zoneId === zoneId,
-    );
+    const zoneExists = neighbourhood.zones.some((zone) => zone.zoneId === zoneId);
 
     // Add the zone if it doesn't exist
     if (!zoneExists) {
@@ -51,7 +40,6 @@ const getNeighbourhoodZoneData = (
         zoneLabel,
         isSelected: false,
         isExpanded: false,
-        assignedTo: [],
       });
     }
   });
@@ -60,7 +48,7 @@ const getNeighbourhoodZoneData = (
   return { neighbourhoods: Object.values(neighbourhoodMap) };
 };
 
-const hardCodedLots: LotInterface[] = [
+const hardCodedLots: LotComputedForDisplay[] = [
   // Neighbourhood: El Canton, Zone: 1
   {
     lotId: 'b1597fc2-cc63-4dd2-9f54-3fa5a19b8c37',
@@ -71,7 +59,6 @@ const hardCodedLots: LotInterface[] = [
     neighbourhoodLabel: 'El Canton',
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -80,11 +67,9 @@ const hardCodedLots: LotInterface[] = [
     zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
     zoneLabel: '1',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-06'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -93,11 +78,9 @@ const hardCodedLots: LotInterface[] = [
     zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
     zoneLabel: '1',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-07'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -106,11 +89,9 @@ const hardCodedLots: LotInterface[] = [
     zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
     zoneLabel: '1',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-07'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -119,11 +100,9 @@ const hardCodedLots: LotInterface[] = [
     zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
     zoneLabel: '1',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-08'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -132,11 +111,9 @@ const hardCodedLots: LotInterface[] = [
     zoneId: '6d3f8c22-bbd6-4ed1-9cb2-2e0895a8df94',
     zoneLabel: '1',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
 
@@ -147,11 +124,9 @@ const hardCodedLots: LotInterface[] = [
     zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
     zoneLabel: '2',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -160,11 +135,9 @@ const hardCodedLots: LotInterface[] = [
     zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
     zoneLabel: '2',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -173,11 +146,9 @@ const hardCodedLots: LotInterface[] = [
     zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
     zoneLabel: '2',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-04'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -186,11 +157,9 @@ const hardCodedLots: LotInterface[] = [
     zoneId: 'bf5c9c35-4c9f-4664-9b8a-6a9bc1efc8e3',
     zoneLabel: '2',
     neighbourhoodId: 'e1c2406d-b1a5-441e-bd91-f6c5c8e6e0e7',
-    neighbourhoodLabel:
-      'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    neighbourhoodLabel: 'El Cantonaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     lastMowingDate: new Date('2024-10-25'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
 
@@ -204,7 +173,6 @@ const hardCodedLots: LotInterface[] = [
     neighbourhoodLabel: 'La Laguna',
     lastMowingDate: new Date('2024-10-02'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -216,7 +184,6 @@ const hardCodedLots: LotInterface[] = [
     neighbourhoodLabel: 'La Laguna',
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -228,7 +195,6 @@ const hardCodedLots: LotInterface[] = [
     neighbourhoodLabel: 'La Laguna',
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
 
@@ -242,7 +208,6 @@ const hardCodedLots: LotInterface[] = [
     neighbourhoodLabel: 'El Tero',
     lastMowingDate: new Date('2024-10-08'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -254,7 +219,6 @@ const hardCodedLots: LotInterface[] = [
     neighbourhoodLabel: 'El Tero',
     lastMowingDate: new Date('2024-10-08'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
 
@@ -268,7 +232,6 @@ const hardCodedLots: LotInterface[] = [
     neighbourhoodLabel: 'El Naudir',
     lastMowingDate: new Date('2024-10-10'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -280,7 +243,6 @@ const hardCodedLots: LotInterface[] = [
     neighbourhoodLabel: 'El Naudir',
     lastMowingDate: new Date('2024-10-09'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -292,7 +254,6 @@ const hardCodedLots: LotInterface[] = [
     neighbourhoodLabel: 'El Naudir',
     lastMowingDate: new Date('2024-10-25'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
   {
@@ -304,7 +265,6 @@ const hardCodedLots: LotInterface[] = [
     neighbourhoodLabel: 'El Naudir',
     lastMowingDate: new Date('2024-10-24'),
     lotIsSelected: false,
-    assignedTo: [],
     workgroupId: '1',
   },
 ];
@@ -327,6 +287,8 @@ const currentUser: UserInterface = {
       role: 'PrimaryOwner',
       accessToAllLots: true,
       hasAcceptedPresenceInWorkgroup: true,
+      assignedNeighbourhoods: [],
+      assignedZones: [],
     },
   ],
 };
@@ -343,6 +305,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Owner',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -357,6 +321,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Member',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -371,6 +337,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Owner',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -385,6 +353,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'PrimaryOwner',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -399,6 +369,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Manager',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -413,6 +385,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Member',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },
@@ -427,6 +401,8 @@ const usersFromAllMyWorkgroups: UserInterface[] = [
         role: 'Member',
         accessToAllLots: true,
         hasAcceptedPresenceInWorkgroup: true,
+        assignedNeighbourhoods: [],
+        assignedZones: [],
       },
     ],
   },

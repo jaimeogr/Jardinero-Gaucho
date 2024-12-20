@@ -4,33 +4,21 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  Text,
-  ScrollView,
-  Alert,
-  TouchableOpacity,
-  Modal,
-} from 'react-native';
+import { View, TextInput, StyleSheet, Text, ScrollView, Alert, TouchableOpacity, Modal } from 'react-native';
 
 import CustomDatePickerInput from '../components/CustomDatePickerInput';
 import CustomSelectInput from '../components/CustomSelectInput';
 import CustomTextInput from '../components/CustomTextInput';
-import useControllerService from '../services/useControllerService';
+import useHomeScreenController from '../controllers/useHomeScreenController';
 import { theme } from '../styles/styles';
-import { LotInterface } from '../types/types';
+import { LotComputedForDisplay } from '../types/types';
 
 type RootStackParamList = {
   LotCreation: undefined;
   // Other routes...
 };
 
-type LotCreationScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'LotCreation'
->;
+type LotCreationScreenNavigationProp = StackNavigationProp<RootStackParamList, 'LotCreation'>;
 
 type LotCreationScreenRouteProp = RouteProp<RootStackParamList, 'LotCreation'>;
 
@@ -50,19 +38,13 @@ const initialLotData = {
 };
 
 const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
-  const {
-    createLot,
-    useNeighbourhoodsAndZones,
-    addNeighbourhood,
-    addZoneToNeighbourhood,
-  } = useControllerService;
-  const neighbourhoods = useNeighbourhoodsAndZones();
+  const { createLot, useNeighbourhoodsWithZones, createNeighbourhood, createZone } = useHomeScreenController();
+
+  const neighbourhoods = useNeighbourhoodsWithZones();
 
   const [lotData, setLotData] = useState(initialLotData);
-
   const [showNeighbourhoodModal, setShowNeighbourhoodModal] = useState(false);
   const [newNeighbourhoodLabel, setNewNeighbourhoodLabel] = useState('');
-
   const [showZoneModal, setShowZoneModal] = useState(false);
   const [newZoneLabel, setNewZoneLabel] = useState('');
 
@@ -85,18 +67,10 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       handleInputChange('zoneId', '');
       handleInputChange('zoneLabel', '');
     } else {
-      const selectedNeighbourhood = neighbourhoods.find(
-        (n) => n.neighbourhoodId === value,
-      );
+      const selectedNeighbourhood = neighbourhoods.find((n) => n.neighbourhoodId === value);
       if (selectedNeighbourhood) {
-        handleInputChange(
-          'neighbourhoodId',
-          selectedNeighbourhood.neighbourhoodId,
-        );
-        handleInputChange(
-          'neighbourhoodLabel',
-          selectedNeighbourhood.neighbourhoodLabel,
-        );
+        handleInputChange('neighbourhoodId', selectedNeighbourhood.neighbourhoodId);
+        handleInputChange('neighbourhoodLabel', selectedNeighbourhood.neighbourhoodLabel);
         // Reset zone selection
         handleInputChange('zoneId', '');
         handleInputChange('zoneLabel', '');
@@ -112,12 +86,8 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       handleInputChange('zoneId', '');
       handleInputChange('zoneLabel', '');
     } else {
-      const selectedNeighbourhood = neighbourhoods.find(
-        (n) => n.neighbourhoodId === lotData.neighbourhoodId,
-      );
-      const selectedZone = selectedNeighbourhood?.zones.find(
-        (z) => z.zoneId === value,
-      );
+      const selectedNeighbourhood = neighbourhoods.find((n) => n.neighbourhoodId === lotData.neighbourhoodId);
+      const selectedZone = selectedNeighbourhood?.zones.find((z) => z.zoneId === value);
       if (selectedZone) {
         handleInputChange('zoneId', selectedZone.zoneId);
         handleInputChange('zoneLabel', selectedZone.zoneLabel);
@@ -135,12 +105,9 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
-    const newNeighbourhood = addNeighbourhood(newNeighbourhoodLabel.trim());
+    const newNeighbourhood = createNeighbourhood(newNeighbourhoodLabel.trim());
     handleInputChange('neighbourhoodId', newNeighbourhood.neighbourhoodId);
-    handleInputChange(
-      'neighbourhoodLabel',
-      newNeighbourhood.neighbourhoodLabel,
-    );
+    handleInputChange('neighbourhoodLabel', newNeighbourhood.neighbourhoodLabel);
     // Close modal
     setShowNeighbourhoodModal(false);
     setNewNeighbourhoodLabel('');
@@ -159,10 +126,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       return;
     }
 
-    const newZone = addZoneToNeighbourhood(
-      lotData.neighbourhoodId,
-      newZoneLabel.trim(),
-    );
+    const newZone = createZone(lotData.neighbourhoodId, newZoneLabel.trim());
     handleInputChange('zoneId', newZone.zoneId);
     handleInputChange('zoneLabel', newZone.zoneLabel);
     // Close modal
@@ -177,22 +141,14 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
 
   // Submit lot and navigate back
   const handleSubmit = async (keepCreating: boolean) => {
-    if (
-      !lotData.lotLabel ||
-      !lotData.neighbourhoodLabel ||
-      !lotData.zoneLabel
-    ) {
-      Alert.alert(
-        'Falta información.',
-        'Es necesario que completes todos los campos.',
-      );
+    if (!lotData.lotLabel || !lotData.neighbourhoodLabel || !lotData.zoneLabel) {
+      Alert.alert('Falta información.', 'Es necesario que completes todos los campos.');
       return;
     }
-    const newLot: Partial<LotInterface> = {
+    const newLot: Partial<LotComputedForDisplay> = {
       ...lotData,
       lotId: undefined,
       lotIsSelected: false,
-      assignedTo: [],
       workgroupId: undefined,
       lastMowingDate: lotData.lastMowingDate || undefined,
     };
@@ -229,9 +185,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     value: 'add_new',
   });
 
-  const selectedNeighbourhood = neighbourhoods.find(
-    (n) => n.neighbourhoodId === lotData.neighbourhoodId,
-  );
+  const selectedNeighbourhood = neighbourhoods.find((n) => n.neighbourhoodId === lotData.neighbourhoodId);
   const zoneItems = selectedNeighbourhood
     ? selectedNeighbourhood.zones.map((z) => ({
         label: z.zoneLabel,
@@ -250,8 +204,12 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             value={lotData.neighbourhoodId}
             items={neighbourhoodItems}
             onValueChange={(value) => {
+              if (value === null) {
+                handleNeighbourhoodChange('');
+                return;
+              }
               if (typeof value === 'string') {
-                handleNeighbourhoodChange(value); // Handle only boolean values
+                handleNeighbourhoodChange(value);
               } else {
                 console.warn('Invalid value type passed:', value); // Debugging fallback
               }
@@ -266,17 +224,17 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             value={lotData.zoneId}
             items={zoneItems}
             onValueChange={(value) => {
+              if (value === null) {
+                handleZoneChange('');
+                return;
+              }
               if (typeof value === 'string') {
-                handleZoneChange(value); // Handle only boolean values
+                handleZoneChange(value);
               } else {
                 console.warn('Invalid value type passed:', value); // Debugging fallback
               }
             }}
-            placeholder={
-              lotData.neighbourhoodId
-                ? 'Seleccionar Zona'
-                : 'Selecciona un barrio primero'
-            }
+            placeholder={lotData.neighbourhoodId ? 'Seleccionar Zona' : 'Selecciona un barrio primero'}
             isDisabled={!lotData.neighbourhoodId} // Disable until neighbourhood is chosen
           />
 
@@ -316,11 +274,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       </View>
 
       {/* Neighbourhood Modal */}
-      <Modal
-        visible={showNeighbourhoodModal}
-        transparent={true}
-        animationType="slide"
-      >
+      <Modal visible={showNeighbourhoodModal} transparent={true} animationType="slide">
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Agregar Nuevo Barrio</Text>
@@ -340,10 +294,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
               >
                 <Text style={styles.modalButtonText}>Cancelar</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalAddButton}
-                onPress={handleAddNeighbourhood}
-              >
+              <TouchableOpacity style={styles.modalAddButton} onPress={handleAddNeighbourhood}>
                 <Text style={styles.modalButtonText}>Agregar</Text>
               </TouchableOpacity>
             </View>
@@ -372,10 +323,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
               >
                 <Text style={styles.modalButtonText}>Cancelar</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalAddButton}
-                onPress={handleAddZone}
-              >
+              <TouchableOpacity style={styles.modalAddButton} onPress={handleAddZone}>
                 <Text style={styles.modalButtonText}>Agregar</Text>
               </TouchableOpacity>
             </View>
@@ -386,10 +334,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       {/* Buttons */}
       <View style={styles.buttonsContainer}>
         <View style={styles.buttonsCancelAndSubmit}>
-          <TouchableOpacity
-            style={[styles.button, styles.cancelButton, { flex: 6 }]}
-            onPress={handleCancel}
-          >
+          <TouchableOpacity style={[styles.button, styles.cancelButton, { flex: 6 }]} onPress={handleCancel}>
             <Text style={styles.cancelButtonText}>Cancelar</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -399,10 +344,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
             <Text style={styles.submitButtonText}>Crear Lote</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={[styles.button, styles.nextLotButton]}
-          onPress={() => handleSubmit(true)}
-        >
+        <TouchableOpacity style={[styles.button, styles.nextLotButton]} onPress={() => handleSubmit(true)}>
           <Text style={styles.nextLotButtonText}>Crear Lote y Siguiente</Text>
         </TouchableOpacity>
       </View>

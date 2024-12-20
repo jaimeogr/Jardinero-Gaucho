@@ -2,16 +2,10 @@ import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Surface, Badge } from 'react-native-paper';
 
-import ControllerService from '../services/useControllerService';
+import useTeamManagementController from '../controllers/useTeamManagementController';
 import { theme } from '../styles/styles';
 import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
 
@@ -21,21 +15,15 @@ type RootStackParamList = {
   EditUser: { userId: string };
 };
 
-type MyTeamScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'MyTeam'
->;
+type MyTeamScreenNavigationProp = StackNavigationProp<RootStackParamList, 'MyTeam'>;
 
 interface Props {
   navigation: MyTeamScreenNavigationProp;
 }
 
-const useUsersWithRoles = () => {
-  return ControllerService.useUsersInActiveWorkgroupWithRoles();
-};
-
 const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
-  const users: Array<UserInActiveWorkgroupWithRole> = useUsersWithRoles();
+  const users: Array<UserInActiveWorkgroupWithRole> =
+    useTeamManagementController().useUsersInActiveWorkgroupWithRoles();
 
   const integrantesCount = users.length;
 
@@ -65,14 +53,11 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
     if (assignedZonesCount === 0) {
       return 'Sin zonas asignadas';
     }
-    const zoneWord =
-      assignedZonesCount === 1 ? 'zona asignada' : 'zonas asignadas';
+    const zoneWord = assignedZonesCount === 1 ? 'zona asignada' : 'zonas asignadas';
     return `${assignedZonesCount} ${zoneWord}`;
   };
 
-  const accessTextCautionColor = (
-    user: UserInActiveWorkgroupWithRole,
-  ): boolean => {
+  const accessTextCautionColor = (user: UserInActiveWorkgroupWithRole): boolean => {
     const { accessToAllLots, assignedZonesCount } = user;
 
     if (accessToAllLots) {
@@ -105,13 +90,8 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.header}>
         <Text style={styles.title}>Mi Equipo</Text>
         <View style={styles.headerRow}>
-          <Text style={styles.integrantesCount}>
-            Integrantes: {integrantesCount}
-          </Text>
-          <TouchableOpacity
-            style={styles.inviteButton}
-            onPress={() => navigation.navigate('InviteUser')}
-          >
+          <Text style={styles.integrantesCount}>Integrantes: {integrantesCount}</Text>
+          <TouchableOpacity style={styles.inviteButton} onPress={() => navigation.navigate('InviteUser')}>
             <Text style={styles.inviteButtonText}>Agregar Integrante</Text>
           </TouchableOpacity>
         </View>
@@ -130,58 +110,36 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
                 <View style={styles.userInfo}>
                   <View style={styles.userNameAndBadge}>
                     {item.hasAcceptedPresenceInWorkgroup ? (
-                      <Text
-                        style={styles.userName}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
+                      <Text style={styles.userName} numberOfLines={1} ellipsizeMode="tail">
                         {getFullName(item)}
                       </Text>
                     ) : (
                       // if user has not accepted the invitation yet
-                      <Text
-                        style={styles.userWaitingText}
-                        numberOfLines={2}
-                        ellipsizeMode="tail"
-                      >
+                      <Text style={styles.userWaitingText} numberOfLines={2} ellipsizeMode="tail">
                         Invitación enviada al mail
                       </Text>
                     )}
 
-                    <Badge
-                      style={[styles.roleBadge, { backgroundColor: roleColor }]}
-                      size={24}
-                    >
+                    <Badge style={[styles.roleBadge, { backgroundColor: roleColor }]} size={24}>
                       {getRoleBadgeText(item.role)}
                     </Badge>
                   </View>
 
-                  <Text
-                    style={styles.userEmail}
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                  >
+                  <Text style={styles.userEmail} numberOfLines={1} ellipsizeMode="tail">
                     {item.email}
                   </Text>
                 </View>
               </View>
 
               <View style={styles.userAccess}>
-                <Text
-                  style={[
-                    styles.accessText,
-                    accessTextCautionColor(item) && styles.accessTextCaution,
-                  ]}
-                >
+                <Text style={[styles.accessText, accessTextCautionColor(item) && styles.accessTextCaution]}>
                   {getAccessText(item)}
                 </Text>
               </View>
 
               <TouchableOpacity
                 style={styles.editButton}
-                onPress={() =>
-                  navigation.navigate('EditUser', { userId: item.userId })
-                }
+                onPress={() => navigation.navigate('EditUser', { userId: item.userId })}
               >
                 <Icon name="pencil" size={20} color="#1976D2" />
                 <Text style={styles.editButtonText}>Editar</Text>
@@ -190,10 +148,7 @@ const MyTeamScreen: React.FC<Props> = ({ navigation }) => {
           );
         }}
       />
-      <LinearGradient
-        colors={['transparent', 'rgba(255, 255, 255, 0.9)']}
-        style={styles.gradientOverlay}
-      />
+      <LinearGradient colors={['transparent', 'rgba(255, 255, 255, 0.9)']} style={styles.gradientOverlay} />
     </View>
   );
 };

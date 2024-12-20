@@ -1,39 +1,20 @@
 //useLotStore
 import { create } from 'zustand';
 
-import {
-  LotInterface,
-  NeighbourhoodZoneData,
-  NeighbourhoodData,
-  ZoneData,
-} from '../types/types';
+import { NeighbourhoodZoneData, NeighbourhoodData, ZoneData, LotInStore } from '../types/types';
 
 interface LotStoreState {
-  lots: LotInterface[];
+  lots: LotInStore[];
   neighbourhoodZoneData: NeighbourhoodZoneData;
 
-  initializeLots: (lots: LotInterface[]) => void;
+  initializeLots: (lots: LotInStore[]) => void;
   initializeNeighbourhoodsAndZones: (data: NeighbourhoodZoneData) => void;
 
-  addLot: (newLot: LotInterface) => void;
+  addLot: (newLot: LotInStore) => void;
   addNeighbourhood: (neighbourhood: NeighbourhoodData) => NeighbourhoodData;
   addZoneToNeighbourhood: (neighbourhoodId: string, zone: ZoneData) => ZoneData;
   updateLotLastMowingDate: (lotId: string, date: Date) => void;
-  updateLot: (lotId: string, updatedInfo: Partial<LotInterface>) => void;
-
-  deselectAllLots: () => void;
-  toggleLotSelection: (lotId: string, newState: boolean) => void;
-  toggleZoneSelection: (zoneId: string, newState: boolean) => void;
-  toggleNeighbourhoodSelection: (
-    neighbourhoodId: string,
-    newState: boolean,
-  ) => void;
-
-  toggleNeighbourhoodExpansion: (neighbourhoodId: string) => void;
-  expandAllNeighbourhoods: () => void;
-  collapseAllNeighbourhoods: () => void;
-  toggleZoneExpansion: (zoneId: string) => void;
-  collapseAllZones: () => void;
+  updateLot: (lotId: string, updatedInfo: Partial<LotInStore>) => void;
 }
 
 // I believe my code would be much simpler if instead of having objects of zonedata and neighbourhoodData, i just had them as separate arrays. but its almost working perfectly so i can do with that for now.
@@ -41,7 +22,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
   lots: [],
   neighbourhoodZoneData: { neighbourhoods: [] },
 
-  initializeLots: (lots: LotInterface[]) => {
+  initializeLots: (lots: LotInStore[]) => {
     set({ lots });
   },
 
@@ -49,7 +30,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
     set({ neighbourhoodZoneData: data });
   },
 
-  addLot: (newLot: LotInterface) => {
+  addLot: (newLot: LotInStore) => {
     set((state) => ({
       lots: [...state.lots, newLot],
     }));
@@ -58,10 +39,7 @@ const useLotStore = create<LotStoreState>((set, get) => ({
   addNeighbourhood: (neighbourhood) => {
     set((state) => ({
       neighbourhoodZoneData: {
-        neighbourhoods: [
-          ...state.neighbourhoodZoneData.neighbourhoods,
-          neighbourhood,
-        ],
+        neighbourhoods: [...state.neighbourhoodZoneData.neighbourhoods, neighbourhood],
       },
     }));
     return neighbourhood;
@@ -84,162 +62,15 @@ const useLotStore = create<LotStoreState>((set, get) => ({
     return zone;
   },
 
-  deselectAllLots: () => {
-    const { neighbourhoodZoneData } = get();
-    neighbourhoodZoneData.neighbourhoods.forEach((neighbourhood) => {
-      get().toggleNeighbourhoodSelection(neighbourhood.neighbourhoodId, false);
-    });
-
-    set((state) => ({
-      lots: state.lots.map((lot) => ({
-        ...lot,
-        lotIsSelected: false,
-      })),
-    }));
-  },
-
-  toggleLotSelection: (lotId: string, newState: boolean) => {
-    set((state) => ({
-      lots: state.lots.map((lot) =>
-        lot.lotId === lotId ? { ...lot, lotIsSelected: newState } : lot,
-      ),
-    }));
-  },
-
-  toggleZoneSelection: (zoneId: string, newState: boolean) => {
-    set((state) => ({
-      lots: state.lots.map((lot) =>
-        lot.zoneId === zoneId ? { ...lot, lotIsSelected: newState } : lot,
-      ),
-      neighbourhoodZoneData: {
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map(
-          (neighbourhood) => ({
-            ...neighbourhood,
-            zones: neighbourhood.zones.map((zone) =>
-              zone.zoneId === zoneId ? { ...zone, isSelected: newState } : zone,
-            ),
-          }),
-        ),
-      },
-    }));
-  },
-
-  toggleNeighbourhoodSelection: (
-    neighbourhoodId: string,
-    newState: boolean,
-  ) => {
-    const { neighbourhoodZoneData } = get();
-
-    const neighbourhood = neighbourhoodZoneData.neighbourhoods.find(
-      (n) => n.neighbourhoodId === neighbourhoodId,
-    );
-
-    if (neighbourhood) {
-      neighbourhood.zones.forEach((zone) =>
-        get().toggleZoneSelection(zone.zoneId, newState),
-      );
-    }
-
-    set((state) => ({
-      lots: state.lots.map((lot) =>
-        lot.neighbourhoodId === neighbourhoodId
-          ? { ...lot, lotIsSelected: newState }
-          : lot,
-      ),
-      neighbourhoodZoneData: {
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) =>
-          n.neighbourhoodId === neighbourhoodId
-            ? { ...n, isSelected: newState }
-            : n,
-        ),
-      },
-    }));
-  },
-
   updateLotLastMowingDate: (lotId: string, date: Date) => {
     set((state) => ({
-      lots: state.lots.map((lot) =>
-        lot.lotId === lotId ? { ...lot, lastMowingDate: date } : lot,
-      ),
+      lots: state.lots.map((lot) => (lot.lotId === lotId ? { ...lot, lastMowingDate: date } : lot)),
     }));
   },
 
-  updateLot: (lotId: string, updatedInfo: Partial<LotInterface>) => {
+  updateLot: (lotId: string, updatedInfo: Partial<LotInStore>) => {
     set((state) => ({
-      lots: state.lots.map((lot) =>
-        lot.lotId === lotId ? { ...lot, ...updatedInfo } : lot,
-      ),
-    }));
-  },
-
-  // Toggle neighbourhood expansion
-  toggleNeighbourhoodExpansion: (neighbourhoodId: string) => {
-    set((state) => ({
-      neighbourhoodZoneData: {
-        ...state.neighbourhoodZoneData,
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) =>
-          n.neighbourhoodId === neighbourhoodId
-            ? { ...n, isExpanded: !n.isExpanded }
-            : n,
-        ),
-      },
-    }));
-  },
-
-  // Expand all neighbourhoods
-  expandAllNeighbourhoods: () => {
-    set((state) => ({
-      neighbourhoodZoneData: {
-        ...state.neighbourhoodZoneData,
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
-          ...n,
-          isExpanded: true,
-        })),
-      },
-    }));
-  },
-
-  // Collapse all neighbourhoods
-  collapseAllNeighbourhoods: () => {
-    set((state) => ({
-      neighbourhoodZoneData: {
-        ...state.neighbourhoodZoneData,
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
-          ...n,
-          isExpanded: false,
-        })),
-      },
-    }));
-  },
-
-  // Toggle zone expansion
-  toggleZoneExpansion: (zoneId: string) => {
-    set((state) => ({
-      neighbourhoodZoneData: {
-        ...state.neighbourhoodZoneData,
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
-          ...n,
-          zones: n.zones.map((z) =>
-            z.zoneId === zoneId ? { ...z, isExpanded: !z.isExpanded } : z,
-          ),
-        })),
-      },
-    }));
-  },
-
-  // Collapse all zones
-  collapseAllZones: () => {
-    set((state) => ({
-      neighbourhoodZoneData: {
-        ...state.neighbourhoodZoneData,
-        neighbourhoods: state.neighbourhoodZoneData.neighbourhoods.map((n) => ({
-          ...n,
-          zones: n.zones.map((z) => ({
-            ...z,
-            isExpanded: false,
-          })),
-        })),
-      },
+      lots: state.lots.map((lot) => (lot.lotId === lotId ? { ...lot, ...updatedInfo } : lot)),
     }));
   },
 }));

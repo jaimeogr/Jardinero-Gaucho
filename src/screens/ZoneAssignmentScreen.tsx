@@ -119,6 +119,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
       unsubscribe();
     };
   }, [
+    user,
     userId,
     temporaryUserData,
     temporaryisNewUser,

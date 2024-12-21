@@ -126,7 +126,7 @@ const EditUserScreen: React.FC<Props> = ({ navigation, route }) => {
                 value: true,
               },
               {
-                label: 'Solo las seleccionadas',
+                label: 'Solamente las seleccionadas',
                 value: false,
               },
             ]}

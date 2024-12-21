@@ -10,6 +10,8 @@ import useTeamManagementController from '../controllers/useTeamManagementControl
 import { theme } from '../styles/styles';
 import { UserInterface } from '../types/types';
 
+// In this screen, the temporary user data might seem unuseful at glance, but its extremely useful when the user wants to navigate back to this screen. This way, the user can continue where they left off.
+
 const SCREEN_CODE_FOR_GLOBAL_STATE = 'zoneAssignmentScreen';
 
 type RootStackParamList = {
@@ -207,7 +209,7 @@ const ZoneAssignmentScreen: React.FC<Props> = ({ navigation, route }) => {
           customStyle={styles.accessToAllZonesPickerContainer}
           items={[
             {
-              label: 'Solo las seleccionadas',
+              label: 'Solamente las seleccionadas',
               value: false,
             },
             {

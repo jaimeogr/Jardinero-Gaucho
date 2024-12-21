@@ -31,10 +31,6 @@ export interface LotComputedForDisplay extends LotInStore {
   lotIsSelected: boolean; // Selection state of the lot
 }
 
-export interface GroupOfLotsInterface {
-  lots: LotComputedForDisplay[]; // lots is an array of LotInterface
-}
-
 export interface LotWithNeedMowingInterface extends LotComputedForDisplay {
   needMowing: number;
 }

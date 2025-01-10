@@ -1,66 +1,22 @@
 {
-  "name": "jardinero-gaucho",
-  "version": "1.0.0",
-  "main": "expo/AppEntry.js",
-  "scripts": {
-    "1": "emulator -avd Medium_Phone_API_35",
-    "2": "expo start --android",
-    "emulator": "emulator -avd Medium_Phone_API_35",
-    "clean-emulator": "emulator -avd Medium_Phone_API_35 -no-snapshot-load",
-    "c1": "npm run clean-emulator",
-    "start": "expo start",
-    "android": "expo start --android",
-    "clean-android": "expo start --android -c",
-    "c2": "npm run clean-android",
-    "ios": "DARK_MODE=media expo start --ios",
-    "web": "DARK_MODE=media expo start --web",
-    "lint": "eslint . --fix"
-  },
-  "dependencies": {
-    "@react-native-community/datetimepicker": "8.0.1",
-    "@react-native-picker/picker": "^2.7.5",
-    "@react-navigation/bottom-tabs": "^6.6.1",
-    "@react-navigation/native": "^6.1.18",
-    "@react-navigation/native-stack": "^6.11.0",
-    "@react-navigation/stack": "^6.4.1",
-    "babel-plugin-module-resolver": "^5.0.2",
-    "expo": "~51.0.38",
-    "expo-linear-gradient": "~13.0.2",
-    "expo-status-bar": "~1.12.1",
-    "react": "18.2.0",
-    "react-native": "0.74.5",
-    "react-native-get-random-values": "^1.11.0",
-    "react-native-paper": "^5.12.5",
-    "react-native-picker-select": "^9.3.1",
-    "react-native-reanimated": "3.10.1",
-    "react-native-safe-area-context": "4.10.5",
-    "react-native-screens": "3.31.1",
-    "react-native-svg": "15.2.0",
-    "react-native-vector-icons": "^10.2.0",
-    "uuid": "^10.0.0",
-    "zustand": "^5.0.0-rc.2"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@eslint/js": "^8.57.0",
-    "@types/react": "~18.2.45",
-    "@types/react-native-vector-icons": "^6.4.18",
-    "@types/uuid": "^10.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.7.0",
-    "@typescript-eslint/parser": "^8.7.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.30.0",
-    "eslint-plugin-jsx-a11y": "^6.10.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react": "^7.35.0",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-native": "^4.1.0",
-    "jscodeshift": "^0.15.2",
-    "prettier": "^3.3.3",
-    "reactotron-react-native": "^5.1.8",
-    "typescript": "5.3.3",
-    "typescript-eslint": "^8.7.0"
-  },
-  "private": true
-}
+    "name": "jardinero-gaucho-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+      "apps/frontend",
+      "apps/backend"
+    ],
+    "scripts": {
+      "start:frontend": "npm run start --workspace=frontend",
+      "start:backend": "npm run start --workspace=backend",
+      "start": "npm run start:frontend & npm run start:backend",
+      "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
+      "lint": "npm run lint --workspace=frontend"
+    },
+    "devDependencies": {
+      "typescript": "^5.3.3",
+      "eslint": "^8.57.0",
+      "prettier": "^3.3.3"
+    }
+  }
+  

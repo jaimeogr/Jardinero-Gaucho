@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -50,13 +49,6 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
 
-    'jsx-a11y/anchor-is-valid': [
-      'warn',
-      {
-        aspects: ['invalidHref', 'preferButton'],
-      },
-    ],
-
     'prettier/prettier': [
       'error',
       {
@@ -65,7 +57,6 @@ module.exports = {
     ],
   },
   settings: {
-    'import/ignore': ['react-native'],
     react: {
       version: 'detect',
     },

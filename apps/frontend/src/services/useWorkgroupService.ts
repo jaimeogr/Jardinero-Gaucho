@@ -1,9 +1,9 @@
 // useWorkgroupService.ts
 
-import BackendService from '../backend/BackendService';
-import LocalStorageService from '../localStorage/LocalStorageService';
-import useWorkgroupStore from '../stores/useWorkgroupStore';
-import { WorkgroupInterface, UserRole } from '../types/types';
+import BackendService from '@/backend/BackendService';
+import LocalStorageService from '@/localStorage/LocalStorageService';
+import useWorkgroupStore from '@/stores/useWorkgroupStore';
+import { WorkgroupInterface, UserRole } from '@/types/types';
 
 const initializeWorkgroups = () => {
   const workgroups = BackendService.getMyWorgroups();

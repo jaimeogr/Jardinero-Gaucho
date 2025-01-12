@@ -5,12 +5,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 
-import CustomSelectInput from '../components/CustomSelectInput';
-import CustomTextInput from '../components/CustomTextInput';
-import RolePicker from '../components/RolePicker';
-import useTeamManagementController from '../controllers/useTeamManagementController';
-import { theme } from '../styles/styles';
-import { UserRole } from '../types/types';
+import CustomSelectInput from '@/components/CustomSelectInput';
+import CustomTextInput from '@/components/CustomTextInput';
+import RolePicker from '@/components/RolePicker';
+import useTeamManagementController from '@/controllers/useTeamManagementController';
+import { theme } from '@/styles/styles';
+import { UserRole } from '@/types/types';
 
 type RootStackParamList = {
   InviteUser: undefined;

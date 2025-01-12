@@ -5,12 +5,12 @@ import React from 'react';
 import { TouchableRipple } from 'react-native-paper';
 
 // Import your screen components or stack navigators
-import HomeStackNavigator from './HomeStackNavigator';
-import TeamStackNavigator from './TeamStackNavigator';
-import MoneyManagementScreen from '../screens/MoneyManagementScreen';
-import MyTeamScreen from '../screens/MyTeamScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import { theme } from '../styles/styles';
+import HomeStackNavigator from '@/navigation/HomeStackNavigator';
+import TeamStackNavigator from '@/navigation/TeamStackNavigator';
+import MoneyManagementScreen from '@/screens/MoneyManagementScreen';
+import MyTeamScreen from '@/screens/MyTeamScreen';
+import SettingsScreen from '@/screens/SettingsScreen';
+import { theme } from '@/styles/styles';
 
 const Tab = createBottomTabNavigator();
 

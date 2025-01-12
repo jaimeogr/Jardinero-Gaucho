@@ -1,7 +1,7 @@
 // useUserService.ts
 
-import BackendService from '../backend/BackendService';
-import useUserStore from '../stores/useUserStore';
+import BackendService from '@/backend/BackendService';
+import useUserStore from '@/stores/useUserStore';
 import {
   UserInterface,
   TemporaryUserData,
@@ -10,7 +10,7 @@ import {
   NeighbourhoodWithIndicatorsInterface,
   WorkgroupDataForUser,
   UserRole,
-} from '../types/types';
+} from '@/types/types';
 
 const initializeUsers = () => {
   const currentUser = BackendService.getMyUser();

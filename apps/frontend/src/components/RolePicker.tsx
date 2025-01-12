@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Badge } from 'react-native-paper';
 
-import { theme } from '../styles/styles';
+import { theme } from '@/styles/styles';
 
 const RoleDescriptionForRoleCard: React.FC<{ items: string[] }> = ({ items }) => (
   <View>

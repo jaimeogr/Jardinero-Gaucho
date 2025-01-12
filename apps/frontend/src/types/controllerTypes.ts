@@ -9,7 +9,7 @@ import {
   UserRole,
   UserInterface,
   TemporaryUserData,
-} from './types';
+} from '@/types/types';
 
 export interface IAccordionController {
   useNestedLots(): NestedLotsWithIndicatorsInterface;

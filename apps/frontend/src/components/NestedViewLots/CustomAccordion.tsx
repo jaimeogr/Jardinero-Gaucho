@@ -3,9 +3,9 @@ import React, { useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
-import { theme } from '../../styles/styles';
-import { IAccordionController } from '../../types/controllerTypes';
-import { ZoneWithIndicatorsInterface, NeighbourhoodWithIndicatorsInterface } from '../../types/types';
+import { theme } from '@/styles/styles';
+import { IAccordionController } from '@/types/controllerTypes';
+import { ZoneWithIndicatorsInterface, NeighbourhoodWithIndicatorsInterface } from '@/types/types';
 
 const {
   accordion: {

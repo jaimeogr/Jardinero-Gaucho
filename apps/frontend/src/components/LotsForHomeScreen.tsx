@@ -3,14 +3,14 @@ import React, { useEffect, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Surface, Appbar } from 'react-native-paper';
 
-import NestedViewLots from './NestedViewLots/NestedViewLots';
-import useHomeScreenController from '../controllers/useHomeScreenController';
-import { theme } from '../styles/styles';
+import NestedViewLots from '@/components/NestedViewLots/NestedViewLots';
+import useHomeScreenController from '@/controllers/useHomeScreenController';
+import { theme } from '@/styles/styles';
 import {
   LotWithNeedMowingInterface,
   ZoneWithIndicatorsInterface,
   NeighbourhoodWithIndicatorsInterface,
-} from '../types/types';
+} from '@/types/types';
 
 const SCREEN_CODE_FOR_GLOBAL_STATE = 'homeScreen';
 

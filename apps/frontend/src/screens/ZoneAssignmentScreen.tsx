@@ -4,11 +4,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 
-import CustomSelectInput from '../components/CustomSelectInput';
-import NestedViewLots from '../components/NestedViewLots/NestedViewLots';
-import useTeamManagementController from '../controllers/useTeamManagementController';
-import { theme } from '../styles/styles';
-import { UserInterface } from '../types/types';
+import CustomSelectInput from '@/components/CustomSelectInput';
+import NestedViewLots from '@/components/NestedViewLots/NestedViewLots';
+import useTeamManagementController from '@/controllers/useTeamManagementController';
+import { theme } from '@/styles/styles';
+import { UserInterface } from '@/types/types';
 
 // In this screen, the temporary user data might seem unuseful at glance, but its extremely useful when the user wants to navigate back to this screen. This way, the user can continue where they left off.
 

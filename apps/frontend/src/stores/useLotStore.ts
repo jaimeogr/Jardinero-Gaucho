@@ -1,7 +1,7 @@
 //useLotStore
 import { create } from 'zustand';
 
-import { NeighbourhoodZoneData, NeighbourhoodData, ZoneData, LotInStore } from '../types/types';
+import { NeighbourhoodZoneData, NeighbourhoodData, ZoneData, LotInStore } from '@/types/types';
 
 interface LotStoreState {
   lots: LotInStore[];

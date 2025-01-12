@@ -1,4 +1,4 @@
-// styles.js
+// styles.ts
 export const theme = {
   colors: {
     primary: '#155E63', //155E63

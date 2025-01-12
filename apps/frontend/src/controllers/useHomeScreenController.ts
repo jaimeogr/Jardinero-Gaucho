@@ -3,15 +3,15 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
-import BackendService from '../backend/BackendService';
-import useLotService from '../services/useLotService';
-import useUserService from '../services/useUserService';
-import useWorkgroupService from '../services/useWorkgroupService';
-import useHomeScreenStore from '../stores/useHomeScreenStore';
-import useLotStore from '../stores/useLotStore';
-import useWorkgroupStore from '../stores/useWorkgroupStore';
-import { ZoneData, NestedLotsWithIndicatorsInterface, NeighbourhoodData, LotInStore } from '../types/types';
-import { IHomeScreenController } from './../types/controllerTypes';
+import BackendService from '@/backend/BackendService';
+import useLotService from '@/services/useLotService';
+import useUserService from '@/services/useUserService';
+import useWorkgroupService from '@/services/useWorkgroupService';
+import useHomeScreenStore from '@/stores/useHomeScreenStore';
+import useLotStore from '@/stores/useLotStore';
+import useWorkgroupStore from '@/stores/useWorkgroupStore';
+import { IHomeScreenController } from '@/types/controllerTypes';
+import { ZoneData, NestedLotsWithIndicatorsInterface, NeighbourhoodData, LotInStore } from '@/types/types';
 
 const useHomeScreenController = (): IHomeScreenController => {
   const activeWorkgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);

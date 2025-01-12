@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
-import { theme } from '../styles/styles';
+import { theme } from '@/styles/styles';
 
 const ClickableRoundButton = ({ title, iconName, onPress }) => {
   const titleContent = title.split(' ').join('\n');

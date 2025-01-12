@@ -1,7 +1,7 @@
 //useTaskStore
 import { create } from 'zustand';
 
-import { TaskInterface } from '../types/types';
+import { TaskInterface } from '@/types/types';
 
 interface TaskStoreState {
   tasks: TaskInterface[];

@@ -3,18 +3,18 @@ import React, { useCallback, useEffect } from 'react';
 import { View, StyleSheet, Text, BackHandler, FlatList } from 'react-native';
 import { Appbar } from 'react-native-paper';
 
-import CustomAccordion from './CustomAccordion';
-import OneLotForCustomAccordion from './OneLotForCustomAccordion';
-import useHomeScreenController from '../../controllers/useHomeScreenController';
-import useTeamManagementController from '../../controllers/useTeamManagementController';
-import { theme } from '../../styles/styles';
-import { IAccordionController } from '../../types/controllerTypes';
+import CustomAccordion from '@/components/NestedViewLots/CustomAccordion';
+import OneLotForCustomAccordion from '@/components/NestedViewLots/OneLotForCustomAccordion';
+import useHomeScreenController from '@/controllers/useHomeScreenController';
+import useTeamManagementController from '@/controllers/useTeamManagementController';
+import { theme } from '@/styles/styles';
+import { IAccordionController } from '@/types/controllerTypes';
 import {
   NeighbourhoodData,
   ZoneData,
   LotWithNeedMowingInterface,
   NestedLotsWithIndicatorsInterface,
-} from '../../types/types';
+} from '@/types/types';
 
 interface NestedViewLotsProps {
   title?: string;

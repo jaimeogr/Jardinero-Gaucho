@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 
-import { WorkgroupInterface } from '../types/types';
+import { WorkgroupInterface } from '@/types/types';
 
 interface WorkgroupStoreState {
   activeWorkgroupId: string | null;

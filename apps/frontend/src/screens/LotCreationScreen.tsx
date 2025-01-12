@@ -6,12 +6,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Text, ScrollView, Alert, TouchableOpacity, Modal } from 'react-native';
 
-import CustomDatePickerInput from '../components/CustomDatePickerInput';
-import CustomSelectInput from '../components/CustomSelectInput';
-import CustomTextInput from '../components/CustomTextInput';
-import useHomeScreenController from '../controllers/useHomeScreenController';
-import { theme } from '../styles/styles';
-import { LotComputedForDisplay } from '../types/types';
+import CustomDatePickerInput from '@/components/CustomDatePickerInput';
+import CustomSelectInput from '@/components/CustomSelectInput';
+import CustomTextInput from '@/components/CustomTextInput';
+import useHomeScreenController from '@/controllers/useHomeScreenController';
+import { theme } from '@/styles/styles';
+import { LotComputedForDisplay } from '@/types/types';
 
 type RootStackParamList = {
   LotCreation: undefined;

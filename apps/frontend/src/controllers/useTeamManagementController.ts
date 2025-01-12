@@ -2,12 +2,13 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
-import useLotService from '../services/useLotService';
-import useUserService from '../services/useUserService';
-import useLotStore from '../stores/useLotStore';
-import useUserStore from '../stores/useUserStore';
-import useWorkgroupStore from '../stores/useWorkgroupStore';
-import useZoneAssignmentScreenStore from '../stores/useZoneAssignmentScreenStore';
+import useLotService from '@/services/useLotService';
+import useUserService from '@/services/useUserService';
+import useLotStore from '@/stores/useLotStore';
+import useUserStore from '@/stores/useUserStore';
+import useWorkgroupStore from '@/stores/useWorkgroupStore';
+import useZoneAssignmentScreenStore from '@/stores/useZoneAssignmentScreenStore';
+import { ITeamManagementController } from '@/types/controllerTypes';
 import {
   LotInStore,
   NeighbourhoodData,
@@ -16,8 +17,7 @@ import {
   TemporaryUserData,
   UserRole,
   UserInterface,
-} from '../types/types';
-import { ITeamManagementController } from './../types/controllerTypes';
+} from '@/types/types';
 
 const useTeamManagementController = (): ITeamManagementController => {
   const activeWorkgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);

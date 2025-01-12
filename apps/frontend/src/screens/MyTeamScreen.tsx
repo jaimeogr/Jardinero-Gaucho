@@ -5,9 +5,9 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { Surface, Badge } from 'react-native-paper';
 
-import useTeamManagementController from '../controllers/useTeamManagementController';
-import { theme } from '../styles/styles';
-import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
+import useTeamManagementController from '@/controllers/useTeamManagementController';
+import { theme } from '@/styles/styles';
+import { UserRole, UserInActiveWorkgroupWithRole } from '@/types/types';
 
 type RootStackParamList = {
   MyTeam: undefined;

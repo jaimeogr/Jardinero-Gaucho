@@ -1,4 +1,4 @@
-import { WorkgroupInterface, UserRole } from '../types/types';
+import { WorkgroupInterface, UserRole } from '@/types/types';
 
 export const userHasPermission = (workgroup: WorkgroupInterface, userId: string, requiredRole: UserRole) => {
   if (requiredRole === 'PrimaryOwner') {

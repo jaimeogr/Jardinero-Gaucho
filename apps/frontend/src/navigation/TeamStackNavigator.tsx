@@ -3,10 +3,10 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 
 // Import your screen components
-import EditUserScreen from '../screens/EditUserScreen';
-import InviteUserScreen from '../screens/InviteUserScreen';
-import MyTeamScreen from '../screens/MyTeamScreen';
-import ZoneAssignmentScreen from '../screens/ZoneAssignmentScreen';
+import EditUserScreen from '@/screens/EditUserScreen';
+import InviteUserScreen from '@/screens/InviteUserScreen';
+import MyTeamScreen from '@/screens/MyTeamScreen';
+import ZoneAssignmentScreen from '@/screens/ZoneAssignmentScreen';
 
 const Stack = createNativeStackNavigator();
 

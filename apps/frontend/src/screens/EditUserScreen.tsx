@@ -5,12 +5,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 
-import CustomSelectInput from '../components/CustomSelectInput';
-import ReadOnlyField from '../components/ReadOnlyField'; // Import ReadOnlyField
-import RolePicker from '../components/RolePicker';
-import useTeamManagementController from '../controllers/useTeamManagementController';
-import { theme } from '../styles/styles';
-import { UserRole, UserInActiveWorkgroupWithRole } from '../types/types';
+import CustomSelectInput from '@/components/CustomSelectInput';
+import ReadOnlyField from '@/components/ReadOnlyField'; // Import ReadOnlyField
+import RolePicker from '@/components/RolePicker';
+import useTeamManagementController from '@/controllers/useTeamManagementController';
+import { theme } from '@/styles/styles';
+import { UserRole, UserInActiveWorkgroupWithRole } from '@/types/types';
 
 type RootStackParamList = {
   EditUser: { userId: string };

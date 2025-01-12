@@ -4,9 +4,9 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Surface } from 'react-native-paper';
 
-import ClickableRoundButton from '../components/ClickableRoundButton';
-import LotsForHomeScreen from '../components/LotsForHomeScreen';
-import { theme } from '../styles/styles';
+import ClickableRoundButton from '@/components/ClickableRoundButton';
+import LotsForHomeScreen from '@/components/LotsForHomeScreen';
+import { theme } from '@/styles/styles';
 
 const HomeScreen = ({ navigation }) => {
   return (

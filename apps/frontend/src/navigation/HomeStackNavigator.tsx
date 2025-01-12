@@ -4,9 +4,9 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 
 // Import your screen components
-import HomeScreen from '../screens/HomeScreen';
-import LotCreationScreen from '../screens/LotCreationScreen';
-import LotManagementScreen from '../screens/LotManagementScreen';
+import HomeScreen from '@/screens/HomeScreen';
+import LotCreationScreen from '@/screens/LotCreationScreen';
+import LotManagementScreen from '@/screens/LotManagementScreen';
 
 const Stack = createNativeStackNavigator();
 

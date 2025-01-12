@@ -10,8 +10,8 @@ import {
   NeighbourhoodData,
   ZoneData,
   LotInStore,
-} from '../types/types';
-import { lotNeedsMowing } from '../utils/DateAnalyser';
+} from '@/types/types';
+import { lotNeedsMowing } from '@/utils/DateAnalyser';
 
 const createLot = (workgroupId: string | null, newLot: Partial<LotInStore>): LotInStore => {
   if (!workgroupId) {

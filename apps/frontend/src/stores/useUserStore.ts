@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 
-import { UserInterface, UserRole, TemporaryUserData } from '../types/types';
+import { UserInterface, UserRole, TemporaryUserData } from '@/types/types';
 
 interface UserStoreState {
   users: UserInterface[];

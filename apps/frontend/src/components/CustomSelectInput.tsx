@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
-import { theme } from '../styles/styles';
+import { theme } from '@/styles/styles';
 
 interface AppPickerProps {
   label?: string;

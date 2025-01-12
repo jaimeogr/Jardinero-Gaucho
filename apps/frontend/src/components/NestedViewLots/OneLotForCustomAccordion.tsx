@@ -2,9 +2,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-import { theme } from '../../styles/styles';
-import { IAccordionController } from '../../types/controllerTypes';
-import { LotWithNeedMowingInterface } from '../../types/types';
+import { theme } from '@/styles/styles';
+import { IAccordionController } from '@/types/controllerTypes';
+import { LotWithNeedMowingInterface } from '@/types/types';
 
 const { lotBackgroundNotSelected, lotBorderNotSelected, lotBackgroundSelected, lotBorderSelected } =
   theme.colors.accordion;

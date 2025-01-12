@@ -11,15 +11,15 @@
     "jsx": "react-native",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
-    }
+    },
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules"]

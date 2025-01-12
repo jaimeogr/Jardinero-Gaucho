@@ -12,30 +12,11 @@ const Stack = createNativeStackNavigator();
 
 const TeamStackNavigator = () => {
   return (
-    <Stack.Navigator
-      style={styles.TeamStackNavigator}
-      initialRouteName="MyTeam"
-    >
-      <Stack.Screen
-        name="MyTeam"
-        component={MyTeamScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="InviteUser"
-        component={InviteUserScreen}
-        options={{ title: 'Invitar integrante' }}
-      />
-      <Stack.Screen
-        name="ZoneAssignment"
-        component={ZoneAssignmentScreen}
-        options={{ title: 'Asignar Zonas' }}
-      />
-      <Stack.Screen
-        name="EditUser"
-        component={EditUserScreen}
-        options={{ title: 'Editar Usuario' }}
-      />
+    <Stack.Navigator style={styles.TeamStackNavigator} initialRouteName="MyTeam">
+      <Stack.Screen name="MyTeam" component={MyTeamScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="InviteUser" component={InviteUserScreen} options={{ title: 'Invitar integrante' }} />
+      <Stack.Screen name="ZoneAssignment" component={ZoneAssignmentScreen} options={{ title: 'Asignar Zonas' }} />
+      <Stack.Screen name="EditUser" component={EditUserScreen} options={{ title: 'Editar Usuario' }} />
     </Stack.Navigator>
   );
 };

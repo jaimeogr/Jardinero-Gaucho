@@ -38,8 +38,9 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# VSCode
-.vscode/
+# Ignore all .vscode files except settings.json
+.vscode/*
+!.vscode/settings.json
 
 #weird Shit probably from reactotron or react dev tools, information about the active user
 %ProgramData%/

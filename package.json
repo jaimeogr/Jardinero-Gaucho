@@ -1,29 +1,31 @@
 {
-    "name": "jardinero-gaucho-monorepo",
-    "version": "1.0.0",
-    "private": true,
-    "workspaces": [
-        "apps/frontend",
-        "apps/backend"
-    ],
-    "scripts": {
-        "start:frontend": "npm run start --workspace=frontend",
-        "start:backend": "npm run start --workspace=backend",
-        "start": "npm run start:frontend & npm run start:backend",
-        "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
-        "lint": "npm run lint --workspace=frontend"
-    },
-    "devDependencies": {
-        "@eslint/js": "^8.57.0",
-        "@typescript-eslint/eslint-plugin": "^8.7.0",
-        "@typescript-eslint/parser": "^8.7.0",
-        "eslint": "^8.57.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-import-resolver-typescript": "^3.7.0",
-        "eslint-plugin-import": "^2.30.0",
-        "eslint-plugin-prettier": "^5.2.1",
-        "prettier": "^3.3.3",
-        "typescript": "^5.3.3",
-        "typescript-eslint": "^8.7.0"
-    }
+  "name": "jardinero-gaucho-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/frontend",
+    "apps/backend"
+  ],
+  "scripts": {
+    "start:frontend": "npm run start --workspace=frontend",
+    "start:backend": "npm run start --workspace=backend",
+    "start": "npm run start:frontend & npm run start:backend",
+    "build": "npm run build --workspace=frontend && npm run build --workspace=backend",
+    "lint": "npm run lint --workspace=frontend",
+    "format": "prettier --write .",
+    "format-check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^8.7.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.7.0"
+  }
 }

@@ -7,7 +7,8 @@
     "apps/backend"
   ],
   "scripts": {
-    "start:frontend": "npm run start --workspace=frontend",
+    "c1": "npm run c1 --workspace=frontend",
+    "start:frontend": "npm run c2 --workspace=frontend",
     "start:backend": "npm run start --workspace=backend",
     "start": "npm run start:frontend & npm run start:backend",
     "build": "npm run build --workspace=frontend && npm run build --workspace=backend",

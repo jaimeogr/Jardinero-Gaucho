@@ -42,5 +42,5 @@ yarn-error.*
 .vscode/*
 !.vscode/settings.json
 
-#weird Shit probably from reactotron or react dev tools, information about the active user
-%ProgramData%/
+# Folder probably created when running the emulator script.
+apps/frontend/%ProgramData%/

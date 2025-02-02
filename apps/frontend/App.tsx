@@ -1,9 +1,9 @@
 // App.tsx
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import 'react-native-get-random-values';
 import { ClerkProvider, ClerkLoaded, useAuth } from '@clerk/clerk-expo';
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -59,18 +59,14 @@ export default function App() {
 function AuthNavigator() {
   const { isSignedIn } = useAuth();
 
+  if (isSignedIn) {
+    return <BottomTabNavigator />;
+  }
+
   return (
-    <>
-      {isSignedIn ? (
-        // 🔹 User is signed in, show main app
-        <BottomTabNavigator />
-      ) : (
-        // 🔹 User is NOT signed in, show auth screens
-        <Stack.Navigator>
-          <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
-        </Stack.Navigator>
-      )}
-    </>
+    <Stack.Navigator>
+      <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
+    </Stack.Navigator>
   );
 }

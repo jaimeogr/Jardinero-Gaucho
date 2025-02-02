@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, View, Text, StyleSheet } from 'react-native';
 
-const SignInScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text>Sign In Screen</Text>
-      <Button title="Don't have an account? Sign Up" onPress={() => navigation.navigate('SignUp')} />
+      <Text>Sign Up Screen</Text>
+      <Button title="Already have an account? Sign In" onPress={() => navigation.navigate('SignIn')} />
     </View>
   );
 };
@@ -18,4 +18,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInScreen;
+export default SignUpScreen;

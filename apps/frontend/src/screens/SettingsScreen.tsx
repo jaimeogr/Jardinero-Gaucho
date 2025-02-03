@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { useAuth } from '@clerk/clerk-expo';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
 const SettingsScreen = () => {
-  const [visible, setVisible] = useState(false);
+  const { signOut } = useAuth();
 
-  const toggleVisibility = () => {
-    setVisible(!visible);
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      // After signing out, navigate to the sign-in screen or another appropriate screen
+      // navigation.navigate('SignIn');
+    } catch (err) {
+      console.error('Error signing out:', err);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Button mode="contained" onPress={toggleVisibility}>
-        {visible ? 'Hide Text' : 'Show Text'}
+      <Button mode="contained" onPress={handleSignOut}>
+        Sign Out
       </Button>
-      {visible && <Text style={styles.title}>This is the toggled text!</Text>}
     </View>
   );
 };

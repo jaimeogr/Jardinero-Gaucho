@@ -36,6 +36,26 @@ const SignInScreen = ({ navigation }) => {
     }
   }, [isLoaded, emailAddress, password]);
 
+  // Google OAuth sign in
+  const onGoogleSignInPress = async () => {
+    if (!isLoaded) return;
+    try {
+      await signIn.authenticateWithRedirect({ strategy: 'oauth_google' });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Apple OAuth sign in
+  const onAppleSignInPress = async () => {
+    if (!isLoaded) return;
+    try {
+      await signIn.authenticateWithRedirect({ strategy: 'oauth_apple' });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -51,7 +71,14 @@ const SignInScreen = ({ navigation }) => {
         onChangeText={(password) => setPassword(password)}
       />
       <Button title="Sign in" onPress={onSignInPress} />
+
       <View>
+        <Text style={styles.divider}>Or sign in with:</Text>
+        <Button title="Sign in with Google" onPress={onGoogleSignInPress} />
+        <Button title="Sign in with Apple" onPress={onAppleSignInPress} />
+      </View>
+
+      <View style={styles.signupSection}>
         <Text>Dont have an account?</Text>
         <Button title="Don't have an account? Sign Up" onPress={() => navigation.navigate('SignUp')} />
       </View>
@@ -62,7 +89,16 @@ const SignInScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  divider: {
+    marginVertical: 10,
+    fontSize: 16,
+  },
+  signupSection: {
+    marginTop: 20,
     alignItems: 'center',
   },
 });

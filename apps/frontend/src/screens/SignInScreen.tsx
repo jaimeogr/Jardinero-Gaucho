@@ -1,4 +1,5 @@
 import { useSignIn } from '@clerk/clerk-expo';
+import * as Linking from 'expo-linking';
 import React, { useState, useCallback } from 'react';
 import { Button, View, Text, StyleSheet, TextInput } from 'react-native';
 
@@ -7,6 +8,8 @@ const SignInScreen = ({ navigation }) => {
 
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
+
+  const redirectUrl = Linking.createURL('/auth-callback');
 
   // Handle the submission of the sign-in form
   const onSignInPress = useCallback(async () => {
@@ -40,7 +43,13 @@ const SignInScreen = ({ navigation }) => {
   const onGoogleSignInPress = async () => {
     if (!isLoaded) return;
     try {
-      await signIn.authenticateWithRedirect({ strategy: 'oauth_google' });
+      console.log('Redirect URL:', redirectUrl);
+
+      await signIn.authenticateWithRedirect({
+        strategy: 'oauth_google',
+        redirectUrl,
+        redirectUrlComplete: redirectUrl,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -50,7 +59,13 @@ const SignInScreen = ({ navigation }) => {
   const onAppleSignInPress = async () => {
     if (!isLoaded) return;
     try {
-      await signIn.authenticateWithRedirect({ strategy: 'oauth_apple' });
+      console.log('Redirect URL:', redirectUrl);
+
+      await signIn.authenticateWithRedirect({
+        strategy: 'oauth_apple',
+        redirectUrl,
+        redirectUrlComplete: redirectUrl,
+      });
     } catch (err) {
       console.error(err);
     }

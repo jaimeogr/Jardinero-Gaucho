@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "tero-matero",
     "name": "Jardinero-Gaucho",
     "slug": "Jardinero-Gaucho",
     "version": "1.0.0",

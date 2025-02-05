@@ -13,9 +13,9 @@
     "c2": "npm run clean-android",
     "lint": "eslint . --fix",
     "lint-check": "eslint .",
-    "devcl": " npx expo start --dev-client",
-    "bdev": "eas build --profile development --platform android",
-    "bdevloc": "eas build --local --profile development --platform android",
+    "client": " npx expo start --dev-client",
+    "build": "eas build --profile development --platform android",
+    "buildlocal": "eas build --local --profile development --platform android",
     "remove-unused-deps": "npx depcheck"
   },
   "dependencies": {

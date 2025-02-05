@@ -1,18 +1,31 @@
-import { useSignIn } from '@clerk/clerk-expo';
-import * as Linking from 'expo-linking';
+// SignInScreen.tsx
+import { useSSO, useSignIn } from '@clerk/clerk-expo';
 import * as WebBrowser from 'expo-web-browser';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Button, View, Text, StyleSheet, TextInput } from 'react-native';
+
+export const useWarmUpBrowser = () => {
+  useEffect(() => {
+    // Preloads the browser for Android devices to reduce authentication load time
+    // See: https://docs.expo.dev/guides/authentication/#improving-user-experience
+    void WebBrowser.warmUpAsync();
+    return () => {
+      // Cleanup: closes browser when component unmounts
+      void WebBrowser.coolDownAsync();
+    };
+  }, []);
+};
 
 WebBrowser.maybeCompleteAuthSession();
 
 const SignInScreen = ({ navigation }) => {
+  useWarmUpBrowser();
+
+  const { startSSOFlow } = useSSO();
   const { signIn, setActive, isLoaded } = useSignIn();
 
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-
-  const redirectUrl = Linking.createURL('auth-callback', { scheme: 'teromatero' });
 
   // Handle the submission of the sign-in form
   const onSignInPress = useCallback(async () => {
@@ -44,33 +57,35 @@ const SignInScreen = ({ navigation }) => {
 
   // Google OAuth sign in
   const onGoogleSignInPress = async () => {
-    if (!isLoaded) return;
     try {
-      console.log('Redirect URL:', redirectUrl);
-
-      await signIn.authenticateWithRedirect({
+      const { createdSessionId, setActive } = await startSSOFlow({
         strategy: 'oauth_google',
-        redirectUrl,
-        redirectUrlComplete: redirectUrl,
       });
+
+      if (createdSessionId && setActive) {
+        await setActive({ session: createdSessionId });
+      } else {
+        console.warn('OAuth flow needs additional steps (e.g., MFA)');
+      }
     } catch (err) {
-      console.error(err);
+      console.error('Google OAuth Sign-In Error:', err);
     }
   };
 
   // Apple OAuth sign in
   const onAppleSignInPress = async () => {
-    if (!isLoaded) return;
     try {
-      console.log('Redirect URL:', redirectUrl);
-
-      await signIn.authenticateWithRedirect({
+      const { createdSessionId, setActive } = await startSSOFlow({
         strategy: 'oauth_apple',
-        redirectUrl,
-        redirectUrlComplete: redirectUrl,
       });
+
+      if (createdSessionId && setActive) {
+        await setActive({ session: createdSessionId });
+      } else {
+        console.warn('OAuth flow needs additional steps (e.g., MFA)');
+      }
     } catch (err) {
-      console.error(err);
+      console.error('Apple OAuth Sign-In Error:', err);
     }
   };
 

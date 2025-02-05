@@ -1,7 +1,10 @@
 import { useSignIn } from '@clerk/clerk-expo';
 import * as Linking from 'expo-linking';
+import * as WebBrowser from 'expo-web-browser';
 import React, { useState, useCallback } from 'react';
 import { Button, View, Text, StyleSheet, TextInput } from 'react-native';
+
+WebBrowser.maybeCompleteAuthSession();
 
 const SignInScreen = ({ navigation }) => {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -9,7 +12,7 @@ const SignInScreen = ({ navigation }) => {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
 
-  const redirectUrl = Linking.createURL('/auth-callback');
+  const redirectUrl = Linking.createURL('auth-callback', { scheme: 'teromatero' });
 
   // Handle the submission of the sign-in form
   const onSignInPress = useCallback(async () => {

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme": "tero-matero",
+    "scheme": "teromatero",
     "name": "Jardinero-Gaucho",
     "slug": "Jardinero-Gaucho",
     "version": "1.0.0",
@@ -16,16 +16,23 @@
       "supportsTablet": true
     },
     "android": {
+      "enableHermes": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.teromatero.jardinerogaucho"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "889c467c-1a6c-473a-82d9-efcf54f231e0"
+      }
+    }
   }
 }

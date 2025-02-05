@@ -12,7 +12,11 @@
     "clean-android": "expo start --android -c",
     "c2": "npm run clean-android",
     "lint": "eslint . --fix",
-    "lint-check": "eslint ."
+    "lint-check": "eslint .",
+    "devcl": " npx expo start --dev-client",
+    "bdev": "eas build --profile development --platform android",
+    "bdevloc": "eas build --local --profile development --platform android",
+    "remove-unused-deps": "npx depcheck"
   },
   "dependencies": {
     "@clerk/clerk-expo": "^2.7.3",
@@ -41,7 +45,8 @@
     "react-native-svg": "15.2.0",
     "react-native-vector-icons": "^10.2.0",
     "uuid": "^10.0.0",
-    "zustand": "^5.0.0-rc.2"
+    "zustand": "^5.0.0-rc.2",
+    "expo-dev-client": "~4.0.29"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

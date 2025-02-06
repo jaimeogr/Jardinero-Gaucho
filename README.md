@@ -20,6 +20,8 @@ This configuration is required inside your .vscode/settings.json file:
 "eslint.run": "onSave"
 }
 
+the script "sound" inside the "apps/frontend/package.json" is just a wrapper for building an EAS development build, but with a feedback sound on success or failure.
+
 Its probably better to code in Ubuntu to have access to Flipper and debug and analyze the components tree more easily and with better integration.
 
 Icons:

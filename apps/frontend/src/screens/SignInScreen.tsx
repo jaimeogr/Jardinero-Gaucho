@@ -63,11 +63,19 @@ const SignInScreen = ({ navigation }) => {
       });
 
       if (createdSessionId && setActive) {
+        console.log('Inside createdSessionId:\n');
+        console.warn(JSON.stringify(createdSessionId, null, 2));
+        console.log('\n\n\nInside setActive:\n');
+        console.warn(JSON.stringify(setActive, null, 2));
+        console.log('\n\n\nInside signIn:\n');
+        console.warn(JSON.stringify(signIn, null, 2));
         await setActive({ session: createdSessionId });
       } else if (signIn) {
         console.warn('⚠️ OAuth flow requires additional steps for sign-in:', signIn.status);
+        console.warn(JSON.stringify(signIn, null, 2));
       } else if (signUp) {
         console.warn('⚠️ OAuth flow requires additional steps for sign-up:', signUp.status);
+        console.warn(JSON.stringify(signUp, null, 2));
       } else {
         console.warn('Google - Unknown issue in OAuth flow');
       }

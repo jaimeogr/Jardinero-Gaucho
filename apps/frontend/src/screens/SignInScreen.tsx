@@ -65,7 +65,7 @@ const SignInScreen = ({ navigation }) => {
       if (createdSessionId && setActive) {
         await setActive({ session: createdSessionId });
       } else {
-        console.warn('OAuth flow needs additional steps (e.g., MFA)');
+        console.warn('Google OAuth flow needs additional steps (e.g., MFA)');
       }
     } catch (err) {
       console.error('Google OAuth Sign-In Error:', err);
@@ -82,7 +82,7 @@ const SignInScreen = ({ navigation }) => {
       if (createdSessionId && setActive) {
         await setActive({ session: createdSessionId });
       } else {
-        console.warn('OAuth flow needs additional steps (e.g., MFA)');
+        console.warn('Apple OAuth flow needs additional steps (e.g., MFA)');
       }
     } catch (err) {
       console.error('Apple OAuth Sign-In Error:', err);

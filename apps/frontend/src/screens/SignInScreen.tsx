@@ -76,23 +76,6 @@ const SignInScreen = ({ navigation }) => {
     }
   };
 
-  // Apple OAuth sign in
-  const onAppleSignInPress = async () => {
-    try {
-      const { createdSessionId, setActive } = await startSSOFlow({
-        strategy: 'oauth_apple',
-      });
-
-      if (createdSessionId && setActive) {
-        await setActive({ session: createdSessionId });
-      } else {
-        console.warn('Apple OAuth flow needs additional steps (e.g., MFA)');
-      }
-    } catch (err) {
-      console.error('Apple OAuth Sign-In Error:', err);
-    }
-  };
-
   return (
     <View style={styles.container}>
       <TextInput
@@ -112,7 +95,6 @@ const SignInScreen = ({ navigation }) => {
       <View>
         <Text style={styles.divider}>Or sign in with:</Text>
         <Button title="Sign in with Google" onPress={onGoogleSignInPress} />
-        <Button title="Sign in with Apple" onPress={onAppleSignInPress} />
       </View>
 
       <View style={styles.signupSection}>

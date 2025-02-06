@@ -58,14 +58,18 @@ const SignInScreen = ({ navigation }) => {
   // Google OAuth sign in
   const onGoogleSignInPress = async () => {
     try {
-      const { createdSessionId, setActive } = await startSSOFlow({
+      const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
         strategy: 'oauth_google',
       });
 
       if (createdSessionId && setActive) {
         await setActive({ session: createdSessionId });
+      } else if (signIn) {
+        console.warn('⚠️ OAuth flow requires additional steps for sign-in:', signIn.status);
+      } else if (signUp) {
+        console.warn('⚠️ OAuth flow requires additional steps for sign-up:', signUp.status);
       } else {
-        console.warn('Google OAuth flow needs additional steps (e.g., MFA)');
+        console.warn('Google - Unknown issue in OAuth flow');
       }
     } catch (err) {
       console.error('Google OAuth Sign-In Error:', err);

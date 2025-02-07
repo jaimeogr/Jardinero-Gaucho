@@ -1,6 +1,7 @@
 // App.tsx
 
 import 'react-native-get-random-values';
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
@@ -63,7 +64,10 @@ function AuthNavigator() {
           <Button title="Sign Out" onPress={signOut} />
         </>
       ) : (
-        <Button title="Google Sign-In" onPress={signIn} color="#4285F4" />
+        <>
+          <Button title="Google Sign-In" onPress={signIn} color="#4285F4" />
+          <GoogleSigninButton size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Dark} />
+        </>
       )}
       {error && <Text style={styles.error}>{error}</Text>}
     </View>

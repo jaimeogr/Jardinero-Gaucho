@@ -1,62 +1,71 @@
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import {
+  User,
+  GoogleSignin,
+  statusCodes,
+  isSuccessResponse,
+  isErrorWithCode,
+  isCancelledResponse,
+  isNoSavedCredentialFoundResponse,
+} from '@react-native-google-signin/google-signin';
 import { useEffect, useState } from 'react';
 
 // Configure Google Sign-In
 GoogleSignin.configure({
-  webClientId: 'YOUR_WEB_CLIENT_ID',
+  webClientId: '757268538389-b5pbjjp31i7has7tmgknovn92sgdhbo4.apps.googleusercontent.com',
+  scopes: [],
+  offlineAccess: true,
+  forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs on https://react-native-google-signin.github.io/docs/original.
 });
 
 const GoogleAuth = () => {
-  const [user, setUser] = useState(null);
+  console.log('process.env.GOOGLE_WEB_CLIENT_ID_WEB_DEV:\n', process.env.GOOGLE_WEB_CLIENT_ID_WEB_DEV);
+
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    checkCurrentUser();
+    setCurrentUser();
   }, []);
 
-  const checkCurrentUser = async () => {
+  const setCurrentUser = async () => {
     try {
-      const isSignedIn = await GoogleSignin.isSignedIn();
-      if (isSignedIn) {
-        getCurrentUser();
+      const currentUser = await GoogleSignin.getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
       }
     } catch (error) {
       console.error('Check user error:', error);
     }
   };
 
-  const getCurrentUser = async () => {
-    try {
-      const currentUser = await GoogleSignin.getCurrentUser();
-      setUser(currentUser);
-    } catch (error) {
-      console.error('Get current user error:', error);
-    }
-  };
-
   const signIn = async () => {
+    setLoading(true);
+    setError(null);
+
     try {
-      setLoading(true);
-      setError(null);
-
       await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      setUser(userInfo);
-
-      // Get user's ID token
-      const { accessToken, idToken } = await GoogleSignin.getTokens();
-      // Send these tokens to your backend for verification
-    } catch (error) {
-      setError(error.message);
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('Sign in cancelled');
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log('Sign in in progress');
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log('Play services not available');
+      const response = await GoogleSignin.signIn();
+      if (isSuccessResponse(response)) {
+        setUser(response.data);
       } else {
-        console.error('Sign-in error:', error);
+        // sign in was cancelled by user
+      }
+    } catch (error) {
+      if (isErrorWithCode(error)) {
+        switch (error.code) {
+          case statusCodes.IN_PROGRESS:
+            console.log('Sign in in progress');
+            break;
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            console.log('Play services not available or outdated');
+            break;
+          default:
+            console.error('Sign-in error:', error);
+        }
+      } else {
+        // an error that's not related to google sign in occurred
+        console.error('An error occurred:', error);
       }
     } finally {
       setLoading(false);

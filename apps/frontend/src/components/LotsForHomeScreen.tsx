@@ -1,4 +1,3 @@
-import { useUser } from '@clerk/clerk-expo';
 import { MaterialCommunityIcons as Icon } from '@expo/vector-icons';
 import React, { useEffect, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
@@ -18,8 +17,6 @@ const SCREEN_CODE_FOR_GLOBAL_STATE = 'homeScreen';
 const LotsForHomeScreen = () => {
   const { markSelectedLotsCompletedForSpecificDate, deselectAllLots, collapseAllNeighbourhoods, collapseAllZones } =
     useHomeScreenController();
-
-  const { isSignedIn, user, isLoaded } = useUser();
 
   useEffect(() => {
     collapseAllNeighbourhoods();
@@ -84,20 +81,9 @@ const LotsForHomeScreen = () => {
     </>
   );
 
-  if (!isLoaded) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (!isSignedIn) {
-    return <Text>Sign in to view this page</Text>;
-  }
-
-  console.log(JSON.stringify(user, null, 2));
-
   return (
     <Surface style={styles.surface}>
       <View style={styles.content}>
-        <Text>Hello {user.primaryEmailAddress?.emailAddress}!</Text>
         <NestedViewLots
           screen={SCREEN_CODE_FOR_GLOBAL_STATE}
           selectingStateRightSideActions={selectingStateRightSideActions}

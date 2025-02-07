@@ -50,9 +50,9 @@ function AuthNavigator() {
   // TODO: Replace this with a proper authentication check
   const { user, loading, error, signIn, signOut } = GoogleAuth();
 
-  if (user) {
-    return <BottomTabNavigator />;
-  }
+  // if (user) {
+  //   return <BottomTabNavigator />;
+  // }
 
   if (loading) {
     return <ActivityIndicator size="large" color="#4285F4" />;
@@ -62,7 +62,7 @@ function AuthNavigator() {
     <View style={styles.container}>
       {user ? (
         <>
-          <Text style={styles.welcomeText}>Welcome, {user.name}</Text>
+          <Text style={styles.welcomeText}>Welcome, {user.user.name}</Text>
           <Button title="Sign Out" onPress={signOut} />
         </>
       ) : (

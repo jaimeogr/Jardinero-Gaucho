@@ -20,9 +20,8 @@
     "remove-unused-deps": "npx depcheck"
   },
   "dependencies": {
-    "@clerk/clerk-expo": "^2.7.3",
-    "@clerk/types": "^4.45.0",
     "@react-native-community/datetimepicker": "8.0.1",
+    "@react-native-google-signin/google-signin": "^13.1.0",
     "@react-native-picker/picker": "^2.7.5",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",
@@ -30,11 +29,10 @@
     "@react-navigation/stack": "^6.4.1",
     "expo": "~51.0.38",
     "expo-auth-session": "~5.5.2",
+    "expo-dev-client": "~4.0.29",
     "expo-linear-gradient": "~13.0.2",
-    "expo-linking": "~6.3.1",
     "expo-secure-store": "~13.0.2",
     "expo-status-bar": "~1.12.1",
-    "expo-web-browser": "~13.0.3",
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-get-random-values": "^1.11.0",
@@ -46,8 +44,7 @@
     "react-native-svg": "15.2.0",
     "react-native-vector-icons": "^10.2.0",
     "uuid": "^10.0.0",
-    "zustand": "^5.0.0-rc.2",
-    "expo-dev-client": "~4.0.29"
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

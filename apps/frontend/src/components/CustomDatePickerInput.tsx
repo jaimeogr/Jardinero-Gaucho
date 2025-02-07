@@ -52,7 +52,7 @@ const CustomDatePickerInput: React.FC<DatePickerFieldProps> = ({
           style={[styles.input, isOptional && styles.inputIsOptional, styles.datePicker]}
         >
           <Text style={[styles.dateText, { color: value ? 'black' : theme.colors.placeholder }]}>
-            {value ? value.toDateString() : 'La última fecha de corte de pasto'}
+            {value ? value.toDateString() : 'Ingresá la fecha'}
           </Text>
           <View style={styles.calendarIconContainer}>
             <Icon name="calendar-range" size={22} color="#fff" />

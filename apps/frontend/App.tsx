@@ -1,7 +1,6 @@
 // App.tsx
 
 import 'react-native-get-random-values';
-import { ClerkProvider, ClerkLoaded, useAuth } from '@clerk/clerk-expo';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
@@ -9,7 +8,6 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // TODO: Replace this imports with @ pattern imports
-import { tokenCache } from './cache';
 import useHomeScreenController from './src/controllers/useHomeScreenController';
 import BottomTabNavigator from './src/navigation/BottonTabNavigator';
 import SignInScreen from './src/screens/SignInScreen';
@@ -25,13 +23,6 @@ if (__DEV__) {
 }
 
 export default function App() {
-  // Load Clerk publishable key from .env
-  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
-  if (!publishableKey) {
-    throw new Error('Missing Clerk Publishable Key. Add EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in .env');
-  }
-
   const { initializeServices } = useHomeScreenController();
 
   useEffect(() => {
@@ -39,25 +30,22 @@ export default function App() {
   }, []);
 
   return (
-    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-      <ClerkLoaded>
-        <PaperProvider>
-          <SafeAreaProvider>
-            <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-              <NavigationContainer>
-                <AuthNavigator />
-              </NavigationContainer>
-            </SafeAreaView>
-          </SafeAreaProvider>
-        </PaperProvider>
-      </ClerkLoaded>
-    </ClerkProvider>
+    <PaperProvider>
+      <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
+          <NavigationContainer>
+            <AuthNavigator />
+          </NavigationContainer>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </PaperProvider>
   );
 }
 
-// 🔹 Authentication-based Navigation
+// Authentication-based Navigation
 function AuthNavigator() {
-  const { isSignedIn } = useAuth();
+  // TODO: Replace this with a proper authentication check
+  const isSignedIn = false;
 
   if (isSignedIn) {
     return <BottomTabNavigator />;

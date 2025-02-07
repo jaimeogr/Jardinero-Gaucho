@@ -31,6 +31,4 @@ when debugging, remember you can use 'react-devtools' command on the console to 
 
 POSIBLE ERRORS:
 
-"npm install" has been working, but in case you get into trouble, "npm install --legacy-peer-deps" might be a good option. Since I included Clerk for authentication I started running into this, but I believe it stopped after I configured the monorepo project by including the apps/frontend/index.ts file which directs towars App.tsx.
-
 Since the monorepo project shares dependencies at the root level of the project, its required that dependencies in the frontend and in the backend use the same version to avoid problems.

@@ -54,13 +54,15 @@ function AuthNavigator() {
     return <BottomTabNavigator />;
   }
 
+  if (loading) {
+    return <ActivityIndicator size="large" color="#4285F4" />;
+  }
+
   return (
     <View style={styles.container}>
-      {loading ? (
-        <ActivityIndicator size="large" color="#4285F4" />
-      ) : user ? (
+      {user ? (
         <>
-          <Text style={styles.welcomeText}>Welcome, {user.user.name}</Text>
+          <Text style={styles.welcomeText}>Welcome, {user.name}</Text>
           <Button title="Sign Out" onPress={signOut} />
         </>
       ) : (

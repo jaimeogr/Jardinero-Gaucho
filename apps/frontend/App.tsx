@@ -66,7 +66,11 @@ function AuthNavigator() {
       ) : (
         <>
           <Button title="Google Sign-In" onPress={signIn} color="#4285F4" />
-          <GoogleSigninButton size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Dark} />
+          <GoogleSigninButton
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Dark}
+            onPress={signIn}
+          />
         </>
       )}
       {error && <Text style={styles.error}>{error}</Text>}

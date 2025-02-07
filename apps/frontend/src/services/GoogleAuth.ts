@@ -24,10 +24,6 @@ const GoogleAuth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    setCurrentUser();
-  }, []);
-
   const setCurrentUser = async () => {
     try {
       const currentUser = await GoogleSignin.getCurrentUser();
@@ -48,8 +44,10 @@ const GoogleAuth = () => {
       const response = await GoogleSignin.signIn();
       if (isSuccessResponse(response)) {
         setUser(response.data);
+        console.log(JSON.stringify(response.data, null, 2));
       } else {
         // sign in was cancelled by user
+        console.warn('Sign in was cancelled by user');
       }
     } catch (error) {
       if (isErrorWithCode(error)) {

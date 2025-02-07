@@ -1,10 +1,11 @@
-import { useAuth } from '@clerk/clerk-expo';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
+import GoogleAuth from '../services/GoogleAuth';
+
 const SettingsScreen = () => {
-  const { signOut } = useAuth();
+  const { signOut } = GoogleAuth();
 
   const handleSignOut = async () => {
     try {

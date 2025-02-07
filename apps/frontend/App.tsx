@@ -4,6 +4,7 @@ import 'react-native-get-random-values';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
+import { View, ActivityIndicator, Text, Button, StyleSheet } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
@@ -12,6 +13,7 @@ import useHomeScreenController from './src/controllers/useHomeScreenController';
 import BottomTabNavigator from './src/navigation/BottonTabNavigator';
 import SignInScreen from './src/screens/SignInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
+import GoogleAuth from './src/services/GoogleAuth';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,11 +47,27 @@ export default function App() {
 // Authentication-based Navigation
 function AuthNavigator() {
   // TODO: Replace this with a proper authentication check
-  const isSignedIn = false;
+  const { user, loading, error, signIn, signOut } = GoogleAuth();
 
-  if (isSignedIn) {
+  if (user) {
     return <BottomTabNavigator />;
   }
+
+  return (
+    <View style={styles.container}>
+      {loading ? (
+        <ActivityIndicator size="large" color="#4285F4" />
+      ) : user ? (
+        <>
+          <Text style={styles.welcomeText}>Welcome, {user.user.name}</Text>
+          <Button title="Sign Out" onPress={signOut} />
+        </>
+      ) : (
+        <Button title="Google Sign-In" onPress={signIn} color="#4285F4" />
+      )}
+      {error && <Text style={styles.error}>{error}</Text>}
+    </View>
+  );
 
   return (
     <Stack.Navigator>
@@ -58,3 +76,24 @@ function AuthNavigator() {
     </Stack.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f8f9fa', // Light background for better visibility
+    paddingHorizontal: 20,
+  },
+  welcomeText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#333',
+  },
+  error: {
+    color: 'red',
+    marginTop: 10,
+    fontSize: 14,
+  },
+});

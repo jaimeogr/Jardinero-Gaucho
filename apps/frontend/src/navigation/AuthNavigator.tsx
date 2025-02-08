@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
 
 import useHomeScreenController from '@/controllers/useHomeScreenController';
 import BottomTabNavigator from '@/navigation/BottonTabNavigator';
@@ -31,26 +30,5 @@ const AuthNavigator = () => {
     </Stack.Navigator>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f8f9fa', // Light background for better visibility
-    paddingHorizontal: 20,
-  },
-  welcomeText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
-  error: {
-    color: 'red',
-    marginTop: 10,
-    fontSize: 14,
-  },
-});
 
 export default AuthNavigator;

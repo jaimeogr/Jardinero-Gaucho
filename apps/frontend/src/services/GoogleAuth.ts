@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 
 // Configure Google Sign-In
 GoogleSignin.configure({
-  webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID, // you don’t need to manually include a separate GOOGLE_ANDROID_CLIENT_ID in your code when working with Expo managed projects (and not using Firebase). Just ensure your OAuth credentials are properly set up on Google’s side and that your Expo configuration has the correct package/bundle identifiers. Then use your webClientId in your GoogleSignin.configure call, and you’re good to go. theoretically this applies to production environment as well
   scopes: [],
   offlineAccess: true,
   forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs on https://react-native-google-signin.github.io/docs/original.

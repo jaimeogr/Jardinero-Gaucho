@@ -26,6 +26,10 @@ const useGetCurrentUser = () => {
   return currentUser;
 };
 
+const useSetCurrentUser = (user: UserInterface | null) => {
+  useUserStore.getState().setCurrentUser(user);
+};
+
 const getUserById = (userId: string): UserInterface | undefined => {
   return useUserStore.getState().getUserById(userId);
 };
@@ -43,11 +47,6 @@ const setTemporaryUserData = (userData: TemporaryUserData | null, isNewUser: boo
   useUserStore.getState().setTemporaryUserData(userData);
   useUserStore.getState().setTemporaryIsNewUser(isNewUser);
 };
-
-// const useAllUsers = (): UserInterface[] => {
-//   const allUsers = useUserStore((state) => state.users);
-//   return allUsers;
-// };
 
 const addUser = (user: UserInterface) => {
   useUserStore.getState().addUser(user);
@@ -201,6 +200,7 @@ function computeAssignedLotsCountPerUserInWorkgroup(
 export default {
   initializeUsers,
   useGetCurrentUser,
+  useSetCurrentUser,
   getUserById,
   addUser,
   updateUser,

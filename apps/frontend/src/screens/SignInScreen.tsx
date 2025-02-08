@@ -1,20 +1,24 @@
 // SignInScreen.tsx
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import React, { useState, useCallback } from 'react';
-import { Button, View, Text, StyleSheet, TextInput } from 'react-native';
+import { Button, View, Text, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
+
+import GoogleAuth from '@/services/GoogleAuth';
 
 const SignInScreen = ({ navigation }) => {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
+
+  const { user, loading, error, signIn, signOut } = GoogleAuth();
 
   // Handle the submission of the sign-in form
   const onSignInPress = useCallback(async () => {
     console.error('Google OAuth Sign-In Error:');
   }, [emailAddress, password]);
 
-  // Google OAuth sign in
-  const onGoogleSignInPress = async () => {
-    console.error('Google OAuth Sign-In Error:');
-  };
+  if (loading) {
+    return <ActivityIndicator size="large" color="#4285F4" />;
+  }
 
   return (
     <View style={styles.container}>
@@ -33,8 +37,13 @@ const SignInScreen = ({ navigation }) => {
       <Button title="Sign in" onPress={onSignInPress} />
 
       <View>
-        <Text style={styles.divider}>Or sign in with:</Text>
-        <Button title="Sign in with Google" onPress={onGoogleSignInPress} />
+        <Text style={styles.divider}>O iniciá sesión con:</Text>
+        <Button title="Google Sign-In" onPress={signIn} color="#4285F4" />
+        <GoogleSigninButton
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Dark}
+          onPress={signIn}
+        />
       </View>
 
       <View style={styles.signupSection}>

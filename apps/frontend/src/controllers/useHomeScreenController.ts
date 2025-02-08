@@ -1,7 +1,7 @@
 // useHomeScreenController.ts
 
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid'; //ID Generator
+import { v4 as uuidv4 } from 'uuid'; //TODO: ID Generator might be not completely compatible with react native, research needed
 
 import BackendService from '@/backend/BackendService';
 import useLotService from '@/services/useLotService';

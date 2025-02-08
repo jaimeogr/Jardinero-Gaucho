@@ -32,3 +32,8 @@ when debugging, remember you can use 'react-devtools' command on the console to 
 POSIBLE ERRORS:
 
 Since the monorepo project shares dependencies at the root level of the project, its required that dependencies in the frontend and in the backend use the same version to avoid problems.
+
+Handling environment variables in different environments:
+If you create an environment-specific file, like .env.test, you can load it by setting NODE_ENV when running the Expo CLI:
+
+NODE_ENV=test npx expo start

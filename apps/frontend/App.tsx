@@ -26,6 +26,11 @@ if (__DEV__) {
 }
 
 export default function App() {
+  console.log(
+    'inside App.ts, process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID_DEV:\n',
+    process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID_DEV,
+  );
+
   const { initializeServices } = useHomeScreenController();
 
   useEffect(() => {

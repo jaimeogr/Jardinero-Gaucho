@@ -11,14 +11,17 @@ import { useEffect, useState } from 'react';
 
 // Configure Google Sign-In
 GoogleSignin.configure({
-  webClientId: '757268538389-b5pbjjp31i7has7tmgknovn92sgdhbo4.apps.googleusercontent.com',
+  webClientId: '757268538389-ct9u5nsnbjdrn8hju3il1f451c5rn0nt.apps.googleusercontent.com',
   scopes: [],
   offlineAccess: true,
   forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs on https://react-native-google-signin.github.io/docs/original.
 });
 
 const GoogleAuth = () => {
-  console.log('process.env.GOOGLE_WEB_CLIENT_ID_WEB_DEV:\n', process.env.GOOGLE_WEB_CLIENT_ID_WEB_DEV);
+  console.log(
+    'inside GoogleAuth.ts, process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID_DEV:\n',
+    process.env.EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID_DEV,
+  );
 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);

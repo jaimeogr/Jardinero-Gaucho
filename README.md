@@ -37,3 +37,5 @@ Handling environment variables in different environments:
 If you create an environment-specific file, like .env.test, you can load it by setting NODE_ENV when running the Expo CLI:
 
 NODE_ENV=test npx expo start
+
+.env variables must start with the prefix 'EXPO_PUBLIC' for them to work using something like: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID

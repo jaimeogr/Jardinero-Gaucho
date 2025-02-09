@@ -54,22 +54,28 @@ app.post('/auth/supabase', async (req, res) => {
   try {
     const userData = await validateGoogleToken(token);
 
+    // I should probably use: https://supabase.com/docs/reference/javascript/auth-signinwithidtoken
+    // const { data, error } = await supabase.auth.signInWithIdToken({
+    //   provider: 'google',
+    //   token: 'your-id-token'
+    // })
+
     // Check if user exists in Supabase
-    const { data: user, error } = await supabase
-      .from('profiles') // Assuming you have a profiles table
-      .upsert({
-        id: userData.sub, // Use Google user ID as the primary key
-        email: userData.email,
-        name: userData.name,
-        // Add other fields as necessary
-      });
+    const { data: user, error } = await supabase.from('users').upsert({
+      user_id: userData.sub, // Use Google user ID as the primary key
+      email: userData.email,
+      first_name: userData.given_name,
+      last_name: userData.family_name,
+    });
 
     if (error) {
+      console.error('Supabase upsert error:', error);
       throw error;
     }
 
     res.status(200).json(user);
   } catch (error) {
-    res.status(401).json({ error: 'Invalid token or error creating user' });
+    console.error('Invalid token or error upserting user:', error);
+    res.status(401).json({ error: 'Invalid token or error upserting user' });
   }
 });

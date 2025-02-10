@@ -9,6 +9,8 @@ import {
 } from '@react-native-google-signin/google-signin';
 import { useEffect, useState } from 'react';
 
+import { supabase } from '@/utils/supabase';
+
 // Configure Google Sign-In
 GoogleSignin.configure({
   webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID, // you don’t need to manually include a separate GOOGLE_ANDROID_CLIENT_ID in your code when working with Expo managed projects (and not using Firebase). Just ensure your OAuth credentials are properly set up on Google’s side and that your Expo configuration has the correct package/bundle identifiers. Then use your webClientId in your GoogleSignin.configure call, and you’re good to go. theoretically this applies to production environment as well
@@ -43,6 +45,11 @@ const GoogleAuth = () => {
       if (isSuccessResponse(response)) {
         setUser(response.data);
         console.log(JSON.stringify(response.data, null, 2));
+        const { supadata, error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: response.data.idToken,
+        });
+        console.log(error, supadata);
       } else {
         // sign in was cancelled by user
         console.warn('Sign in was cancelled by user');

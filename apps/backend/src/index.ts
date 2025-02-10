@@ -79,3 +79,23 @@ app.post('/auth/supabase', async (req, res) => {
     res.status(401).json({ error: 'Invalid token or error upserting user' });
   }
 });
+
+app.post('/auth/supabase/sign-in', async (req, res) => {
+  const { token } = req.body;
+  try {
+    const { data, error } = await supabase.auth.signInWithIdToken({
+      provider: 'google',
+      token: token,
+    });
+
+    if (error) {
+      console.error('Supabase upsert error:', error);
+      throw error;
+    }
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Invalid token or error upserting user:', error);
+    res.status(401).json({ error: 'Invalid token or error upserting user' });
+  }
+});

@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS public.workgroups (
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
   updated_at TIMESTAMP NOT NULL  DEFAULT now()
 );
--- 3) Enum for user roles
-CREATE TYPE user_role AS ENUM (
+-- 3) Enum for account roles
+CREATE TYPE account_role AS ENUM (
   'PrimaryOwner',
   'Owner',
   'Manager',
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS public.tasks (
   id      uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   lot_id       uuid NOT NULL REFERENCES public.lots (id)
     ON DELETE CASCADE,
-  user_id      uuid NOT NULL REFERENCES public.accounts
+  account_id      uuid NOT NULL REFERENCES public.accounts
    (id)
     ON DELETE CASCADE,
   type    task_type NOT NULL,
@@ -101,27 +101,27 @@ CREATE TABLE IF NOT EXISTS public.task_interactions (
   updated_at TIMESTAMP NOT NULL  DEFAULT now()
   -- The lack of deleted_at ensures a permanent audit log
 );
--- 11) The Neighborhood assignments for a user in a certain workgroup
+-- 11) The Neighborhood assignments for an account in a certain workgroup
 CREATE TABLE IF NOT EXISTS public.neighborhood_assignments (
   id                uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_workgroup_id uuid NOT NULL REFERENCES public.user_workgroups (id)
+  account_workgroup_id uuid NOT NULL REFERENCES public.account_workgroups (id)
     ON DELETE CASCADE,
   neighborhood_id   uuid NOT NULL REFERENCES public.neighborhoods (id)
     ON DELETE CASCADE,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
   updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  UNIQUE (user_workgroup_id, neighborhood_id)
+  UNIQUE (account_workgroup_id, neighborhood_id)
 );
--- 12) The Zone assignments for a user in a certain workgroup
+-- 12) The Zone assignments for an account in a certain workgroup
 CREATE TABLE IF NOT EXISTS public.zone_assignments (
   id                uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_workgroup_id uuid NOT NULL REFERENCES public.user_workgroups (id)
+  account_workgroup_id uuid NOT NULL REFERENCES public.account_workgroups (id)
     ON DELETE CASCADE,
   zone_id   uuid NOT NULL REFERENCES public.zones (id)
     ON DELETE CASCADE,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
   updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  UNIQUE (user_workgroup_id, zone_id)
+  UNIQUE (account_workgroup_id, zone_id)
 );
 
 
@@ -144,19 +144,19 @@ RETURNS trigger
 set search_path = ''
 AS $$
 DECLARE
-  existing_user public.accounts
+  existing_account public.accounts
   %ROWTYPE;
 BEGIN
   -- Try to fetch an existing record from public.accounts
 
-  SELECT * INTO existing_user FROM public.accounts
+  SELECT * INTO existing_account FROM public.accounts
    WHERE id = NEW.id;
 
   IF FOUND THEN
-    -- For an existing user, update only if at least one key field has changed.
-    IF existing_user.email <> NEW.email 
-       OR existing_user.full_name <> NEW.raw_user_meta_data->>'full_name'
-       OR existing_user.avatar_url <> NEW.raw_user_meta_data->>'avatar_url'
+    -- For an existing account, update only if at least one key field has changed.
+    IF existing_account.email <> NEW.email 
+       OR existing_account.full_name <> NEW.raw_user_meta_data->>'full_name'
+       OR existing_account.avatar_url <> NEW.raw_user_meta_data->>'avatar_url'
     THEN
       UPDATE public.accounts
 
@@ -220,9 +220,9 @@ BEFORE UPDATE ON public.workgroups
 FOR EACH ROW
 EXECUTE PROCEDURE public.set_updated_at();
 
--- For table public.user_workgroups
-CREATE TRIGGER update_user_workgroups_updated_at
-BEFORE UPDATE ON public.user_workgroups
+-- For table public.account_workgroups
+CREATE TRIGGER update_account_workgroups_updated_at
+BEFORE UPDATE ON public.account_workgroups
 FOR EACH ROW
 EXECUTE PROCEDURE public.set_updated_at();
 
@@ -283,15 +283,11 @@ alter table accounts
   enable row level security;
 
 
-create policy "accounts can view own user by everyone." on accounts
-  for select using (true);
-
-
-create policy "accounts can insert their own user." on accounts
+create policy "accounts can insert their own account." on accounts
   for insert with check ((select auth.uid()) = id);
 
 
-create policy "accounts can update own user." on accounts
+create policy "accounts can update own account." on accounts
   for update using ((select auth.uid()) = id);
 
 
@@ -321,7 +317,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE;
 
-CREATE POLICY "Allowed team view" ON public.user_workgroups
+CREATE POLICY "Allowed team view" ON public.account_workgroups
   FOR SELECT
   USING (
     public.has_team_access(auth.uid(), workgroup_id)

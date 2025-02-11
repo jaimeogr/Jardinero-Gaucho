@@ -60,6 +60,8 @@ CREATE TABLE IF NOT EXISTS public.zones (
 -- 7) Lots
 CREATE TABLE IF NOT EXISTS public.lots (
   id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  workgroup_id uuid NOT NULL REFERENCES public.workgroups (id)
+    ON DELETE CASCADE,
   zone_id           uuid NOT NULL REFERENCES public.zones (id)
     ON DELETE CASCADE,
   label         text NOT NULL,
@@ -300,7 +302,7 @@ create policy "Anyone can upload an avatar." on storage.objects
   for insert with check (bucket_id = 'avatars');
 
 
-CREATE OR REPLACE FUNCTION public.has_team_access(
+CREATE OR REPLACE FUNCTION public.has_priviliges(
   _account_id uuid,
   _workgroup_id uuid
 )
@@ -320,7 +322,14 @@ $$ LANGUAGE plpgsql STABLE;
 CREATE POLICY "Allowed team view" ON public.account_workgroups
   FOR SELECT
   USING (
-    public.has_team_access(auth.uid(), workgroup_id)
+    public.has_priviliges(auth.uid(), workgroup_id)
+  );
+
+CREATE POLICY "Allowed lot view" ON public.lots
+  FOR SELECT
+  USING (
+    public.has_priviliges(auth.uid(), workgroup_id)
+    OR public.has_lots_assigned(auth.uid(), workgroup_id)
   );
 
 

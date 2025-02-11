@@ -364,7 +364,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE;
 
+
 CREATE OR REPLACE FUNCTION public.has_lot_assigned(
+  -- TODO: shouldnt i be sending the id for the lots to check particularly for each row? Or am i not understanding some underlying magic?
   _account_id uuid,
   _workgroup_id uuid
 )
@@ -437,6 +439,7 @@ CREATE POLICY "Allowed lot view" ON public.lots
 INDEXES
 *
 *
+*
 */
 
 
@@ -464,6 +467,7 @@ CREATE INDEX idx_account_workgroups_workgroup_id ON public.account_workgroups(ac
 *
 *
 MORE
+*
 *
 *
 */

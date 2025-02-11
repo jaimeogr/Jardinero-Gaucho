@@ -6,17 +6,15 @@ CREATE TABLE IF NOT EXISTS public.accounts (
   email      text NOT NULL,
   avatar_url text,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
-  updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  deleted_at TIMESTAMP DEFAULT NULL
-);
+  updated_at TIMESTAMP NOT NULL  DEFAULT now()
+  );
 -- 2) Workgroups
 -- Wokgroups must not have on delete cascade to avoid data loss when WG should be transferred instead of deleted
 CREATE TABLE IF NOT EXISTS public.workgroups (
   id   uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name           text NOT NULL,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
-  updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  deleted_at TIMESTAMP DEFAULT NULL
+  updated_at TIMESTAMP NOT NULL  DEFAULT now()
 );
 -- 3) Enum for user roles
 CREATE TYPE user_role AS ENUM (
@@ -39,7 +37,6 @@ CREATE TABLE IF NOT EXISTS public.account_workgroups (
   has_accepted_presence      TIMESTAMP DEFAULT NULL,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
   updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  deleted_at TIMESTAMP DEFAULT NULL,
   UNIQUE (account_id, workgroup_id)
 );
 -- 5) Neighborhoods
@@ -49,8 +46,7 @@ CREATE TABLE IF NOT EXISTS public.neighborhoods (
     ON DELETE CASCADE,
   label text NOT NULL,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
-  updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  deleted_at TIMESTAMP DEFAULT NULL
+  updated_at TIMESTAMP NOT NULL  DEFAULT now()
 );
 -- 6) Zones
 CREATE TABLE IF NOT EXISTS public.zones (
@@ -59,8 +55,7 @@ CREATE TABLE IF NOT EXISTS public.zones (
     ON DELETE CASCADE,
   label       text NOT NULL,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
-  updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  deleted_at TIMESTAMP DEFAULT NULL
+  updated_at TIMESTAMP NOT NULL  DEFAULT now()
 );
 -- 7) Lots
 CREATE TABLE IF NOT EXISTS public.lots (
@@ -71,8 +66,7 @@ CREATE TABLE IF NOT EXISTS public.lots (
   last_mowing_date  timestamp with time zone,
   extra_notes       text,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
-  updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  deleted_at TIMESTAMP DEFAULT NULL
+  updated_at TIMESTAMP NOT NULL  DEFAULT now()
 );
 -- 8) task_type enum
 CREATE TYPE task_type AS ENUM (
@@ -92,8 +86,7 @@ CREATE TABLE IF NOT EXISTS public.tasks (
   name    text,
   date         timestamp with time zone NOT NULL DEFAULT now(),
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
-  updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  deleted_at TIMESTAMP DEFAULT NULL
+  updated_at TIMESTAMP NOT NULL  DEFAULT now()
 );
 -- 10) task_interactions
 CREATE TABLE IF NOT EXISTS public.task_interactions (
@@ -105,8 +98,7 @@ CREATE TABLE IF NOT EXISTS public.task_interactions (
   completed           boolean NOT NULL,
   comments text,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
-  updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  deleted_at TIMESTAMP DEFAULT NULL
+  updated_at TIMESTAMP NOT NULL  DEFAULT now()
   -- The lack of deleted_at ensures a permanent audit log
 );
 -- 11) The Neighborhood assignments for a user in a certain workgroup
@@ -118,7 +110,6 @@ CREATE TABLE IF NOT EXISTS public.neighborhood_assignments (
     ON DELETE CASCADE,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
   updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  deleted_at TIMESTAMP DEFAULT NULL,
   UNIQUE (user_workgroup_id, neighborhood_id)
 );
 -- 12) The Zone assignments for a user in a certain workgroup
@@ -130,7 +121,6 @@ CREATE TABLE IF NOT EXISTS public.zone_assignments (
     ON DELETE CASCADE,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
   updated_at TIMESTAMP NOT NULL  DEFAULT now(),
-  deleted_at TIMESTAMP DEFAULT NULL,
   UNIQUE (user_workgroup_id, zone_id)
 );
 

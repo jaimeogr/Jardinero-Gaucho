@@ -53,6 +53,8 @@ CREATE TABLE IF NOT EXISTS public.zones (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   neighborhood_id  uuid NOT NULL REFERENCES public.neighborhoods (id)
     ON DELETE CASCADE,
+  workgroup_id uuid NOT NULL REFERENCES public.workgroups (id)
+    ON DELETE CASCADE,
   label       text NOT NULL,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
   updated_at TIMESTAMP NOT NULL  DEFAULT now()
@@ -108,6 +110,8 @@ CREATE TABLE IF NOT EXISTS public.neighborhood_assignments (
   id                uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   account_workgroup_id uuid NOT NULL REFERENCES public.account_workgroups (id)
     ON DELETE CASCADE,
+  workgroup_id uuid NOT NULL REFERENCES public.workgroups (id)
+    ON DELETE CASCADE,
   neighborhood_id   uuid NOT NULL REFERENCES public.neighborhoods (id)
     ON DELETE CASCADE,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),
@@ -118,6 +122,8 @@ CREATE TABLE IF NOT EXISTS public.neighborhood_assignments (
 CREATE TABLE IF NOT EXISTS public.zone_assignments (
   id                uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   account_workgroup_id uuid NOT NULL REFERENCES public.account_workgroups (id)
+    ON DELETE CASCADE,
+  workgroup_id uuid NOT NULL REFERENCES public.workgroups (id)
     ON DELETE CASCADE,
   zone_id   uuid NOT NULL REFERENCES public.zones (id)
     ON DELETE CASCADE,
@@ -135,7 +141,13 @@ CREATE TABLE IF NOT EXISTS public.zone_assignments (
 
 
 /*
+*
+*
+*
 TRIGGERS
+*
+*
+*
 */
 
 
@@ -281,13 +293,46 @@ POLICIES
 *
 */
 
+/*
+--TODO: do i need to activate RLS for each table even though i have created policies?
+Since the policies are to grant permissions i guess i should first revoke them by activating RLS.
+*/
+
 alter table accounts
   enable row level security;
 
+alter table workgroups
+  enable row level security;
+
+alter table account_workgroups
+  enable row level security;
+
+alter table neighborhoods
+  enable row level security;
+  
+alter table zones
+  enable row level security;
+
+alter table lots
+  enable row level security;
+
+alter table tasks
+  enable row level security;
+
+alter table task_interactions
+  enable row level security;
+
+alter table neighborhood_assignments
+  enable row level security;
+
+alter table zone_assignments
+  enable row level security;
+
+create policy "accounts can read their own account." on accounts
+  for select with check ((select auth.uid()) = id);
 
 create policy "accounts can insert their own account." on accounts
   for insert with check ((select auth.uid()) = id);
-
 
 create policy "accounts can update own account." on accounts
   for update using ((select auth.uid()) = id);
@@ -319,6 +364,57 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE;
 
+CREATE OR REPLACE FUNCTION public.has_lot_assigned(
+  _account_id uuid,
+  _workgroup_id uuid
+)
+RETURNS boolean
+AS $$
+DECLARE
+  access_all boolean;
+BEGIN
+  -- First, check if the account has blanket access to all lots
+  SELECT aw.access_to_all_lots INTO access_all
+  FROM public.account_workgroups aw
+  WHERE aw.account_id = _account_id
+    AND aw.workgroup_id = _workgroup_id
+  LIMIT 1;
+
+  IF access_all THEN
+    RETURN true;
+  END IF;
+
+  -- Otherwise, check for specific assignments.
+  -- You could check neighborhood assignments first:
+  IF EXISTS (
+    SELECT 1
+    FROM public.neighborhood_assignments na
+    JOIN public.neighborhoods n ON n.id = na.neighborhood_id
+    WHERE na.user_workgroup_id IN (
+      SELECT id FROM public.account_workgroups
+      WHERE account_id = _account_id AND workgroup_id = _workgroup_id
+    )
+  ) THEN
+    RETURN true;
+  END IF;
+
+  -- Then check for zone assignments
+  IF EXISTS (
+    SELECT 1
+    FROM public.zone_assignments za
+    WHERE za.user_workgroup_id IN (
+      SELECT id FROM public.account_workgroups
+      WHERE account_id = _account_id AND workgroup_id = _workgroup_id
+    )
+  ) THEN
+    RETURN true;
+  END IF;
+
+  RETURN false;
+END;
+$$ LANGUAGE plpgsql STABLE;
+
+
 CREATE POLICY "Allowed team view" ON public.account_workgroups
   FOR SELECT
   USING (
@@ -329,8 +425,37 @@ CREATE POLICY "Allowed lot view" ON public.lots
   FOR SELECT
   USING (
     public.has_priviliges(auth.uid(), workgroup_id)
-    OR public.has_lots_assigned(auth.uid(), workgroup_id)
+    OR public.has_lot_assigned(auth.uid(), workgroup_id)
   );
+
+
+
+/*
+*
+*
+*
+INDEXES
+*
+*
+*/
+
+
+
+CREATE INDEX idx_lots_workgroup_id ON public.lots(workgroup_id);
+CREATE INDEX idx_zones_workgroup_id ON public.zones(workgroup_id);
+CREATE INDEX idx_neighborhoods_workgroup_id ON public.neighborhoods(workgroup_id);
+
+CREATE INDEX idx_zone_assignments_workgroup_id ON public.zone_assignments(workgroup_id);
+CREATE INDEX idx_neighborhood_assignments_workgroup_id ON public.neighborhood_assignments(workgroup_id);
+
+--
+
+CREATE INDEX idx_account_workgroups_workgroup_id ON public.account_workgroups(workgroup_id);
+CREATE INDEX idx_account_workgroups_workgroup_id ON public.account_workgroups(account_id);
+
+
+
+
 
 
 
@@ -347,4 +472,7 @@ MORE
 -- Set up Storage!
 insert into storage.buckets (id, name)
   values ('avatars', 'avatars');
+
+
+
 

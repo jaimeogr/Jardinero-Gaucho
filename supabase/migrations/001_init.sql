@@ -368,7 +368,8 @@ $$ LANGUAGE plpgsql STABLE;
 CREATE OR REPLACE FUNCTION public.has_lot_assigned(
   -- TODO: shouldnt i be sending the id for the lots to check particularly for each row? Or am i not understanding some underlying magic?
   _account_id uuid,
-  _workgroup_id uuid
+  _workgroup_id uuid,
+  _zone_id uuid
 )
 RETURNS boolean
 AS $$
@@ -392,9 +393,10 @@ BEGIN
     SELECT 1
     FROM public.neighborhood_assignments na
     JOIN public.neighborhoods n ON n.id = na.neighborhood_id
-    WHERE na.user_workgroup_id IN (
+    JOIN public.zones z ON z.neighborhood_id = n.id
+    WHERE na.account_workgroup_id IN (
       SELECT id FROM public.account_workgroups
-      WHERE account_id = _account_id AND workgroup_id = _workgroup_id
+      WHERE account_id = _account_id AND workgroup_id = _workgroup_id AND _zone_id = z.id
     )
   ) THEN
     RETURN true;
@@ -404,9 +406,10 @@ BEGIN
   IF EXISTS (
     SELECT 1
     FROM public.zone_assignments za
-    WHERE za.user_workgroup_id IN (
+    JOIN public.zones z ON z.id = za.zone_id
+    WHERE za.account_workgroup_id IN (
       SELECT id FROM public.account_workgroups
-      WHERE account_id = _account_id AND workgroup_id = _workgroup_id
+      WHERE account_id = _account_id AND workgroup_id = _workgroup_id AND _zone_id = z.id
     )
   ) THEN
     RETURN true;

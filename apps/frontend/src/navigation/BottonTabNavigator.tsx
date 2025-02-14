@@ -8,7 +8,6 @@ import { TouchableRipple } from 'react-native-paper';
 import HomeStackNavigator from '@/navigation/HomeStackNavigator';
 import TeamStackNavigator from '@/navigation/TeamStackNavigator';
 import MoneyManagementScreen from '@/screens/MoneyManagementScreen';
-import MyTeamScreen from '@/screens/MyTeamScreen';
 import SettingsScreen from '@/screens/SettingsScreen';
 import { theme } from '@/styles/styles';
 

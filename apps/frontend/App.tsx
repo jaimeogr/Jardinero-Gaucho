@@ -2,12 +2,12 @@
 
 import 'react-native-get-random-values';
 import { NavigationContainer } from '@react-navigation/native';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import useHomeScreenController from './src/controllers/useHomeScreenController';
-import BottomTabNavigator from './src/navigation/BottonTabNavigator';
+// TODO: Replace this imports with @ pattern imports
+import AuthNavigator from './src/navigation/AuthNavigator';
 
 if (__DEV__) {
   console.log('The app is running in development mode');
@@ -17,18 +17,12 @@ if (__DEV__) {
 }
 
 export default function App() {
-  const { initializeServices } = useHomeScreenController();
-
-  useEffect(() => {
-    initializeServices();
-  }, []);
-
   return (
     <PaperProvider>
       <SafeAreaProvider>
         <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
           <NavigationContainer>
-            <BottomTabNavigator />
+            <AuthNavigator />
           </NavigationContainer>
         </SafeAreaView>
       </SafeAreaProvider>

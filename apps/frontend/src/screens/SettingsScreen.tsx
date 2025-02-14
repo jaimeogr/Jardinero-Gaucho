@@ -4,7 +4,6 @@ import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import GoogleAuth from '@/services/GoogleAuth';
-import useUserService from '@/services/useUserService';
 
 const SettingsScreen = () => {
   const { signOut } = GoogleAuth();
@@ -14,7 +13,6 @@ const SettingsScreen = () => {
       await signOut();
       // After signing out, navigate to the sign-in screen or another appropriate screen
       // navigation.navigate('SignIn');
-      useUserService.useSetCurrentUser(null);
     } catch (err) {
       console.error('Error signing out:', err);
     }

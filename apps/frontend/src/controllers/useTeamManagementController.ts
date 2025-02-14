@@ -30,7 +30,6 @@ const useTeamManagementController = (): ITeamManagementController => {
   const expandedNeighbourhoods: Set<string> = useZoneAssignmentScreenStore((state) => state.expandedNeighbourhoods);
 
   const users = useUserStore((state) => state.users);
-  const currentUser = useUserStore((state) => state.currentUser);
 
   const useNestedLots = (): NestedLotsWithIndicatorsInterface => {
     const nestedLots = React.useMemo<NestedLotsWithIndicatorsInterface>(() => {

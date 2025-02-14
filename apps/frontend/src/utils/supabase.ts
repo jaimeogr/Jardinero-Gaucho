@@ -57,18 +57,16 @@ class LargeSecureStore {
   }
 }
 
-let supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-let supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_KEY;
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 if (!supabaseUrl) {
-  throw new Error('Missing SUPABASE_URL environment variable');
+  throw new Error('Missing EXPO_PUBLIC_SUPABASE_URL environment variable');
 }
-if (!supabaseKey) {
-  throw new Error('Missing SUPABASE_KEY environment variable');
+if (!supabaseAnonKey) {
+  throw new Error('Missing EXPO_PUBLIC_SUPABASE_ANON_KEY environment variable');
 }
-supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_KEY || '';
-supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL || '';
 
-const supabase = createClient(supabaseUrl, supabaseKey, {
+const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: new LargeSecureStore(),
     autoRefreshToken: true,

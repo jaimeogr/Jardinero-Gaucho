@@ -39,3 +39,6 @@ If you create an environment-specific file, like .env.test, you can load it by s
 NODE_ENV=test npx expo start
 
 .env variables must start with the prefix 'EXPO_PUBLIC' for them to work using something like: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
+
+EAS Builds are located in:
+C:\Users\current-user\AppData\Local\Temp\eas-cli-nodejs\eas-build-run-cache

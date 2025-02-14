@@ -9,7 +9,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import { useEffect, useState } from 'react';
 
-import { supabase } from '@/utils/supabase';
+import supabase from '@/utils/supabase';
 
 // Configure Google Sign-In
 GoogleSignin.configure({
@@ -45,11 +45,11 @@ const GoogleAuth = () => {
       if (isSuccessResponse(response)) {
         setUser(response.data);
         console.log(JSON.stringify(response.data, null, 2));
-        const { supadata, error } = await supabase.auth.signInWithIdToken({
+        const { data, error } = await supabase.auth.signInWithIdToken({
           provider: 'google',
           token: response.data.idToken,
         });
-        console.log(error, supadata);
+        console.log(error, data);
       } else {
         // sign in was cancelled by user
         console.warn('Sign in was cancelled by user');

@@ -29,15 +29,67 @@ const GoogleAuth = () => {
 
     try {
       await GoogleSignin.hasPlayServices();
-      const response = await GoogleSignin.signIn();
-      if (isSuccessResponse(response)) {
-        setUser(response.data);
-        console.log(JSON.stringify(response.data, null, 2));
-        const { data, error } = await supabase.auth.signInWithIdToken({
+      const googleResponse = await GoogleSignin.signIn();
+      if (isSuccessResponse(googleResponse)) {
+        setUser(googleResponse.data);
+        console.log(JSON.stringify(googleResponse.data, null, 2));
+
+        // Sign in with Supabase using the Google ID token
+        const { data: supaData, error: supaError } = await supabase.auth.signInWithIdToken({
           provider: 'google',
-          token: response.data.idToken,
+          token: googleResponse.data.idToken,
         });
-        console.log(error, data);
+        if (supaError) {
+          console.error('Supabase sign-in error:', error);
+          return;
+        }
+
+        // Update the user's first and last name in the "accounts" table if they are missing
+        if (supaData && supaData.user) {
+          const userId: string = supaData.user.id;
+          const firstName: string = googleResponse.data.givenName ?? '';
+          const lastName: string = googleResponse.data.familyName ?? '';
+
+          // First, try to fetch the existing account record from the "accounts" table.
+          const { data: accountRecord, error: selectError } = await supabase
+            .from('accounts')
+            .select('first_name, last_name')
+            .eq('id', userId)
+            .single();
+
+          if (selectError) {
+            console.error('Error selecting account record:', selectError);
+            return;
+          }
+
+          if (!accountRecord) {
+            console.error(
+              'Account record not found, but should have been found since it should be automatically created after google sign in',
+            );
+          }
+
+          const shouldUpdate =
+            !accountRecord.first_name ||
+            accountRecord.first_name.trim() === '' ||
+            !accountRecord.last_name ||
+            accountRecord.last_name.trim() === '';
+
+          if (shouldUpdate) {
+            const updatePayload = {
+              first_name:
+                accountRecord.first_name && accountRecord.first_name.trim() !== ''
+                  ? accountRecord.first_name
+                  : firstName,
+              last_name:
+                accountRecord.last_name && accountRecord.last_name.trim() !== '' ? accountRecord.last_name : lastName,
+            };
+
+            const { error: updateError } = await supabase.from('accounts').update(updatePayload).eq('id', userId);
+            if (updateError) {
+              console.error('Error updating account record:', updateError);
+            }
+          }
+        }
       } else {
         // sign in was cancelled by user
         console.warn('Sign in was cancelled by user');

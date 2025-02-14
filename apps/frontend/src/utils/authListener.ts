@@ -9,10 +9,22 @@ const authListener = () => {
 
   supabase.auth.onAuthStateChange((event, session) => {
     if (session?.user) {
-      setCurrentUser({
-        id: session.user.id,
-        email: session.user.email,
-      });
+      (async () => {
+        // Retrieve the complete account record from the "accounts" table using session.user.id
+        const { data: account, error } = await supabase
+          .from<UserInterface, UserInterface>('accounts')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+
+        if (error) {
+          console.error('Error retrieving account data:', error);
+          // Optionally, you could fall back to the session.user object if the account record is not found
+          // TODO: Or even better, fall back to an AsynStorage object of the user's data
+        } else {
+          setCurrentUser(account);
+        }
+      })();
     } else {
       setCurrentUser(null);
     }

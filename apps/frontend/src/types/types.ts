@@ -104,10 +104,13 @@ export interface WorkgroupInterface {
 
 export interface UserInterface {
   userId: string;
-  firstName: string;
-  lastName: string;
   email: string;
+  fullName: string;
+  firstName?: string;
+  lastName?: string;
   avatarUrl?: string;
+  created_at?: string;
+  updated_at?: string;
   workgroupAssignments?: WorkgroupDataForUser[];
 }
 

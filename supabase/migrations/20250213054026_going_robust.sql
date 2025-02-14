@@ -3,6 +3,8 @@ CREATE TABLE IF NOT EXISTS public.accounts (
   id    uuid references auth.accounts
    on delete cascade not null PRIMARY KEY,
   full_name text,
+  first_name text,
+  last_name text,
   email      text NOT NULL,
   avatar_url text,
   created_at TIMESTAMP NOT NULL  DEFAULT now(),

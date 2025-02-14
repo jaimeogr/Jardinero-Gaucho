@@ -5,6 +5,9 @@ import * as aesjs from 'aes-js';
 import * as SecureStore from 'expo-secure-store';
 import 'react-native-get-random-values';
 
+// TODO: Even with auto-refresh enabled, plan for failure cases. For example, if token refresh fails due to a network error or an expired refresh token, your app should gracefully prompt the user to log in again.
+// Meaning, test the app when the access token and especially the refresh token have expired.
+
 // As Expo's SecureStore does not support values larger than 2048
 // bytes, an AES-256 key is generated and stored in SecureStore, while
 // it is used to encrypt/decrypt values stored in AsyncStorage.

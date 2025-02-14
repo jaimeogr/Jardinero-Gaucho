@@ -1,24 +1,26 @@
 // AuthNavigator.tsx
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import useHomeScreenController from '@/controllers/useHomeScreenController';
 import BottomTabNavigator from '@/navigation/BottonTabNavigator';
 import SignInScreen from '@/screens/SignInScreen';
 import SignUpScreen from '@/screens/SignUpScreen';
-import useUserStore from '@/stores/useUserStore';
+import useCurrentAccountStore from '@/stores/useCurrentAccountStore';
 import { UserInterface } from '@/types/types';
+import supabase from '@/utils/supabase';
 
 const Stack = createNativeStackNavigator();
 
 const AuthNavigator = () => {
   const { initializeServices } = useHomeScreenController();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     initializeServices();
   }, []);
 
-  const currentUser: UserInterface | null = useUserStore((state) => state.currentUser);
+  const currentUser: UserInterface | null = useCurrentAccountStore((state) => state.currentUser);
 
   if (currentUser) {
     return <BottomTabNavigator />;

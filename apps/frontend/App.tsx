@@ -8,6 +8,8 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // TODO: Replace this imports with @ pattern imports
 import AuthNavigator from './src/navigation/AuthNavigator';
+import authListener from './src/utils/authListener';
+authListener();
 
 if (__DEV__) {
   console.log('The app is running in development mode');

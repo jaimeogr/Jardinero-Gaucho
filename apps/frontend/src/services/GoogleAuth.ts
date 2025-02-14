@@ -5,10 +5,8 @@ import {
   statusCodes,
   isSuccessResponse,
   isErrorWithCode,
-  isCancelledResponse,
-  isNoSavedCredentialFoundResponse,
 } from '@react-native-google-signin/google-signin';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import supabase from '@/utils/supabase';
 
@@ -24,17 +22,6 @@ const GoogleAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const setCurrentUser = async () => {
-    try {
-      const currentUser = await GoogleSignin.getCurrentUser();
-      if (currentUser) {
-        setUser(currentUser);
-      }
-    } catch (error) {
-      console.error('Check user error:', error);
-    }
-  };
 
   const signIn = async () => {
     setLoading(true);

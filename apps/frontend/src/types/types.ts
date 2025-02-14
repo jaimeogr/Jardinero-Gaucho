@@ -107,7 +107,8 @@ export interface UserInterface {
   firstName: string;
   lastName: string;
   email: string;
-  workgroupAssignments: WorkgroupDataForUser[];
+  avatarUrl?: string;
+  workgroupAssignments?: WorkgroupDataForUser[];
 }
 
 export interface TemporaryUserData {

@@ -1,6 +1,6 @@
 -- 1) accounts
 CREATE TABLE IF NOT EXISTS public.accounts (
-  id    uuid references auth.accounts
+  id    uuid references auth.users
    on delete cascade not null PRIMARY KEY,
   full_name text,
   first_name text,
@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS public.workgroups (
   updated_at TIMESTAMP NOT NULL  DEFAULT now()
 );
 -- 3) Enum for account roles
+DROP TYPE IF EXISTS account_role CASCADE;
 CREATE TYPE account_role AS ENUM (
   'PrimaryOwner',
   'Owner',
@@ -75,6 +76,7 @@ CREATE TABLE IF NOT EXISTS public.lots (
   updated_at TIMESTAMP NOT NULL  DEFAULT now()
 );
 -- 8) task_type enum
+DROP TYPE IF EXISTS task_type CASCADE;
 CREATE TYPE task_type AS ENUM (
   'Garden',
   'Pool',
@@ -146,7 +148,7 @@ CREATE TABLE IF NOT EXISTS public.zone_assignments (
 *
 *
 *
-TRIGGERS
+**************************   TRIGGERS
 *
 *
 *
@@ -208,7 +210,7 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 
 CREATE TRIGGER sync_auth_accounts
-  AFTER INSERT OR UPDATE ON auth.accounts
+  AFTER INSERT OR UPDATE ON auth.users
 
   FOR EACH ROW EXECUTE PROCEDURE public.sync_auth_to_accounts
   ();
@@ -289,7 +291,7 @@ EXECUTE PROCEDURE public.set_updated_at();
 *
 *
 *
-POLICIES
+**************************   POLICIES
 *
 *
 *
@@ -331,7 +333,7 @@ alter table zone_assignments
   enable row level security;
 
 create policy "accounts can read their own account." on accounts
-  for select with check ((select auth.uid()) = id);
+  for select using ((select auth.uid()) = id);
 
 create policy "accounts can insert their own account." on accounts
   for insert with check ((select auth.uid()) = id);
@@ -432,7 +434,7 @@ CREATE POLICY "Allowed lot view" ON public.lots
   FOR SELECT
   USING (
     public.has_priviliges(auth.uid(), workgroup_id)
-    OR public.has_lot_assigned(auth.uid(), workgroup_id)
+    OR public.has_lot_assigned(auth.uid(), workgroup_id, zone_id)
   );
 
 
@@ -441,7 +443,7 @@ CREATE POLICY "Allowed lot view" ON public.lots
 *
 *
 *
-INDEXES
+**************************   INDEXES
 *
 *
 *
@@ -471,7 +473,7 @@ CREATE INDEX idx_account_workgroups_workgroup_id ON public.account_workgroups(ac
 *
 *
 *
-MORE
+**************************   MORE
 *
 *
 *

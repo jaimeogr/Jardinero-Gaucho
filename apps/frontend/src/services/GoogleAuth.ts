@@ -8,6 +8,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import { useState } from 'react';
 
+import { refreshCurrentAccount } from '@/services/accountService';
 import supabase from '@/utils/supabase';
 
 // Configure Google Sign-In
@@ -43,12 +44,13 @@ const GoogleAuth = () => {
           console.error('Supabase sign-in error:', error);
           return;
         }
+        console.log(JSON.stringify(supaData, null, 2));
 
         // Update the user's first and last name in the "accounts" table if they are missing
         if (supaData && supaData.user) {
           const userId: string = supaData.user.id;
-          const firstName: string = googleResponse.data.givenName ?? '';
-          const lastName: string = googleResponse.data.familyName ?? '';
+          const firstName: string = googleResponse.data.user.givenName ?? '';
+          const lastName: string = googleResponse.data.user.familyName ?? '';
 
           // First, try to fetch the existing account record from the "accounts" table.
           const { data: accountRecord, error: selectError } = await supabase
@@ -87,6 +89,9 @@ const GoogleAuth = () => {
             const { error: updateError } = await supabase.from('accounts').update(updatePayload).eq('id', userId);
             if (updateError) {
               console.error('Error updating account record:', updateError);
+            } else {
+              console.log('On Updating after first sign in.');
+              refreshCurrentAccount(userId);
             }
           }
         }

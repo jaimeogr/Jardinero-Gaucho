@@ -11,11 +11,7 @@ const authListener = () => {
     if (session?.user) {
       (async () => {
         // Retrieve the complete account record from the "accounts" table using session.user.id
-        const { data: account, error } = await supabase
-          .from<UserInterface, UserInterface>('accounts')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
+        const { data: account, error } = await supabase.from('accounts').select('*').eq('id', session.user.id).single();
 
         if (error) {
           console.error('Error retrieving account data:', error);

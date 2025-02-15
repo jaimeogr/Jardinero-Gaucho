@@ -11,9 +11,11 @@ const authListener = () => {
       (async () => {
         console.log('onAuthStateChange');
         await refreshCurrentAccount(session.user.id);
+        useCurrentAccountStore.getState().setAuthLoaded(true);
       })();
     } else {
       useCurrentAccountStore.getState().setCurrentUser(null);
+      useCurrentAccountStore.getState().setAuthLoaded(true);
     }
   });
 };

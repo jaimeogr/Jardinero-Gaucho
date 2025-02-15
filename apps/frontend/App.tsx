@@ -2,13 +2,17 @@
 
 import 'react-native-get-random-values';
 import { NavigationContainer } from '@react-navigation/native';
-import React from 'react';
+import * as SplashScreen from 'expo-splash-screen';
+import React, { useEffect } from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // TODO: Replace this imports with @ pattern imports
 import AuthNavigator from './src/navigation/AuthNavigator';
+import useCurrentAccountStore from './src/stores/useCurrentAccountStore';
 import authListener from './src/utils/authListener';
+
+SplashScreen.preventAutoHideAsync();
 authListener();
 
 if (__DEV__) {
@@ -19,6 +23,14 @@ if (__DEV__) {
 }
 
 export default function App() {
+  const authLoaded = useCurrentAccountStore((state) => state.authLoaded);
+
+  useEffect(() => {
+    if (authLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [authLoaded]);
+
   return (
     <PaperProvider>
       <SafeAreaProvider>

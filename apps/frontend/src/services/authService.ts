@@ -156,6 +156,18 @@ const AuthService = () => {
       });
       if (error) {
         console.error('Supabase email+password sign-up error:', error);
+        console.error('Error Name:', error.name);
+        if (error.name === 'AuthWeakPasswordError') {
+          setError(
+            '- La contraseña debe tener al menos 8 caracteres.\n- Al menos una letra mayúscula.\n- Al menos una letra minúscula.\n- Al menos un número.',
+          );
+          return;
+        }
+
+        if (error.name === 'AuthApiError' && error.message.includes('User already registered')) {
+          setError('El correo electrónico ya está en uso.');
+          return;
+        }
         setError('Un error ocurrió durante el registro. Por favor, inténtalo de nuevo.');
         return;
       }
@@ -178,29 +190,31 @@ const AuthService = () => {
   };
 
   const signOut = async () => {
+    // TODO activate splash / loading screen, which could mean importing setLoading into authListener.ts, which i dont love as an architecture so procrastinate for now.
+    setError(null);
     try {
-      // Revoke Google token + sign out from Google
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-
-      // Then sign out from Supabase
-      const { error } = await supabase.auth.signOut();
-
-      /*
-        It is not necessary to run the following line of code:
-        useCurrentAccountStore.getState().setCurrentUser(null);
-
-        The reason it is not necessary is because authListener.ts
-        will run that and set the current user to null automatically when
-        the supabase session value changes.
-      */
-
-      if (error) {
-        // Handle error or log
-        console.error(error);
+      const currentUser = await GoogleSignin.getCurrentUser();
+      if (currentUser) {
+        // If a Google user exists, revoke access and sign out
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
       }
-    } catch (error) {
-      console.error('Sign out error:', error);
+    } catch (err) {
+      console.warn('Google sign-out error:', err);
+    }
+
+    /*
+      It is not necessary to run the following line of code:
+      useCurrentAccountStore.getState().setCurrentUser(null);
+
+      The reason it is not necessary is because authListener.ts
+      will run that and set the current user to null automatically when
+      the supabase session value changes.
+    */
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      // Handle error or log
+      console.error(error);
     }
   };
 

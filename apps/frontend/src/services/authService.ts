@@ -1,6 +1,5 @@
-// GoogleAuth.ts
+// authService.ts
 import {
-  User,
   GoogleSignin,
   statusCodes,
   isSuccessResponse,
@@ -19,20 +18,18 @@ GoogleSignin.configure({
   forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs on https://react-native-google-signin.github.io/docs/original.
 });
 
-const GoogleAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+const AuthService = () => {
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const signIn = async () => {
-    setLoading(true);
+  const signInWithGoogle = async () => {
     setError(null);
+    setLoading(true);
 
     try {
       await GoogleSignin.hasPlayServices();
       const googleResponse = await GoogleSignin.signIn();
       if (isSuccessResponse(googleResponse)) {
-        setUser(googleResponse.data);
         console.log(JSON.stringify(googleResponse.data, null, 2));
 
         // Sign in with Supabase using the Google ID token
@@ -122,21 +119,37 @@ const GoogleAuth = () => {
 
   const signOut = async () => {
     try {
+      // Revoke Google token + sign out from Google
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
-      setUser(null);
+
+      // Then sign out from Supabase
+      const { error } = await supabase.auth.signOut();
+
+      /*
+        It is not necessary to run the following line of code:
+        useCurrentAccountStore.getState().setCurrentUser(null);
+
+        The reason it is not necessary is because authListener.ts
+        will run that and set the current user to null automatically when
+        the supabase session value changes.
+      */
+
+      if (error) {
+        // Handle error or log
+        console.error(error);
+      }
     } catch (error) {
       console.error('Sign out error:', error);
     }
   };
 
   return {
-    user,
-    loading,
     error,
-    signIn,
+    loading,
+    signInWithGoogle,
     signOut,
   };
 };
 
-export default GoogleAuth;
+export default AuthService;

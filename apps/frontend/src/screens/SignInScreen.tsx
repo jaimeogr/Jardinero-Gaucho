@@ -3,13 +3,13 @@ import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import React, { useState, useCallback } from 'react';
 import { Button, View, Text, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
 
-import GoogleAuth from '@/services/GoogleAuth';
+import AuthService from '@/services/authService';
 
 const SignInScreen = ({ navigation }) => {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
 
-  const { user, loading, error, signIn, signOut } = GoogleAuth();
+  const { signInWithGoogle, loading, error } = AuthService();
 
   // Handle the submission of the sign-in form
   const onSignInPress = useCallback(async () => {
@@ -38,11 +38,11 @@ const SignInScreen = ({ navigation }) => {
 
       <View>
         <Text style={styles.divider}>O iniciá sesión con:</Text>
-        <Button title="Google Sign-In" onPress={signIn} color="#4285F4" />
+        <Button title="Google Sign-In" onPress={signInWithGoogle} color="#4285F4" />
         <GoogleSigninButton
           size={GoogleSigninButton.Size.Wide}
           color={GoogleSigninButton.Color.Dark}
-          onPress={signIn}
+          onPress={signInWithGoogle}
         />
       </View>
 

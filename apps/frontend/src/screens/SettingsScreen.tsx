@@ -3,18 +3,14 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 
-import GoogleAuth from '@/services/GoogleAuth';
-import supabase from '@/utils/supabase';
+import AuthService from '@/services/authService';
 
 const SettingsScreen = () => {
-  const { signOut } = GoogleAuth();
+  const { signOut } = AuthService();
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      // After signing out, navigate to the sign-in screen or another appropriate screen
-      // navigation.navigate('SignIn');
-      await supabase.auth.signOut();
     } catch (err) {
       console.error('Error signing out:', err);
     }

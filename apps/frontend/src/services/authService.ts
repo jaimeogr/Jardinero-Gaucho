@@ -19,7 +19,7 @@ GoogleSignin.configure({
 });
 
 const AuthService = () => {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const signInWithGoogle = async () => {
@@ -117,6 +117,66 @@ const AuthService = () => {
     }
   };
 
+  const signInWithEmailPassword = async (email: string, password: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        console.error('Supabase email+password sign-in error:', error);
+        setError('Un error ocurrió durante el inicio de sesión. Por favor, inténtalo de nuevo.');
+        return;
+      }
+
+      if (data?.user) {
+        // Refresh the account record from your "accounts" table
+        await refreshCurrentAccount(data.user.id);
+      }
+    } catch (err) {
+      console.error('Error signing in with email/password:', err);
+      setError('Un error ocurrió durante el inicio de sesión. Por favor, inténtalo de nuevo.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signUpWithEmailPassword = async (email: string, password: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      // By default, if "Enable email confirmations" is on in Supabase Auth settings,
+      // the user must verify their email before the session is valid.
+      // If confirmations are off, the user will be signed in immediately.
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (error) {
+        console.error('Supabase email+password sign-up error:', error);
+        setError('Un error ocurrió durante el registro. Por favor, inténtalo de nuevo.');
+        return;
+      }
+
+      // If confirmations are disabled, data.user / data.session will be present immediately
+      if (data?.user) {
+        console.log('User created with ID:', data.user.id);
+        // Optionally refresh the account record
+        await refreshCurrentAccount(data.user.id);
+      } else {
+        // If email confirmations are on, you might not have data.user here.
+        console.log('Sign-up successful, check your email for a confirmation link if its required.');
+      }
+    } catch (err) {
+      console.error('Error signing up with email/password:', err);
+      setError('Un error ocurrió durante el registro. Por favor, inténtalo de nuevo.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signOut = async () => {
     try {
       // Revoke Google token + sign out from Google
@@ -148,6 +208,8 @@ const AuthService = () => {
     error,
     loading,
     signInWithGoogle,
+    signInWithEmailPassword,
+    signUpWithEmailPassword,
     signOut,
   };
 };

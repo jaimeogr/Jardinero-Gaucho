@@ -1,6 +1,6 @@
 // SignInScreen.tsx
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Button, View, Text, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
 
 import AuthService from '@/services/authService';
@@ -9,12 +9,7 @@ const SignInScreen = ({ navigation }) => {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
 
-  const { signInWithGoogle, loading, error } = AuthService();
-
-  // Handle the submission of the sign-in form
-  const onSignInPress = useCallback(async () => {
-    console.error('Google OAuth Sign-In Error:');
-  }, [emailAddress, password]);
+  const { signInWithGoogle, signInWithEmailPassword, loading, error } = AuthService();
 
   if (loading) {
     return <ActivityIndicator size="large" color="#4285F4" />;
@@ -34,7 +29,9 @@ const SignInScreen = ({ navigation }) => {
         secureTextEntry={true}
         onChangeText={(password) => setPassword(password)}
       />
-      <Button title="Sign in" onPress={onSignInPress} />
+      <Button title="Sign in" onPress={() => signInWithEmailPassword(emailAddress, password)} />
+
+      {error && <Text style={styles.errorText}>{error}</Text>}
 
       <View>
         <Text style={styles.divider}>O iniciá sesión con:</Text>
@@ -68,6 +65,10 @@ const styles = StyleSheet.create({
   signupSection: {
     marginTop: 20,
     alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 10,
   },
 });
 

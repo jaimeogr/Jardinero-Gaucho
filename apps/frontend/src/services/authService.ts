@@ -152,17 +152,18 @@ const AuthService = () => {
   const signUpWithEmailPassword = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
+    setEmailError(null);
+    setPasswordError(null);
     email = email.trim();
     try {
       const check = await validateEmail(email);
       if (check.valid === false) {
-        setError('Por favor usá un email válido.');
+        setEmailError('Por favor usá un email válido.');
         return;
       }
       if (check.valid && check.suggestion) {
         setEmailError('Quisiste decir: ' + check.suggestion + '?');
         console.log();
-        setError('Por favor usá un email válido.');
         return;
       }
       // By default, if "Enable email confirmations" is on in Supabase Auth settings,
@@ -180,23 +181,23 @@ const AuthService = () => {
           error.name === 'AuthApiError' &&
           error.message.includes('Unable to validate email address: invalid format')
         ) {
-          setError('Por favor usá un email válido.');
+          setEmailError('Por favor usá un email válido.');
           return;
         }
 
         if (error.name === 'AuthWeakPasswordError') {
-          setError(
-            '- La contraseña debe tener al menos 8 caracteres.\n- Al menos una letra mayúscula.\n- Al menos una letra minúscula.\n- Al menos un número.',
+          setEmailError(
+            '- La contraseña debe tener al menos 8 caracteres.\n- Necesita mayúsculas y minúsculas.\n- Al menos un número.',
           );
           return;
         }
 
         if (error.name === 'AuthApiError' && error.message.includes('User already registered')) {
-          setError('El correo electrónico ya está en uso.');
+          setEmailError('El correo electrónico ya está en uso.');
           return;
         }
 
-        setError('Un error ocurrió durante el registro. Por favor, inténtalo de nuevo.');
+        setError('Un error ocurrió durante el registro. Por favor, intentalo de nuevo.');
         return;
       }
 
@@ -246,15 +247,20 @@ const AuthService = () => {
     }
   };
 
+  const clearEmailError = () => setEmailError(null);
+  const clearPasswordError = () => setPasswordError(null);
+
   return {
     error,
-    emailError,
-    passwordError,
+    emailError, // Only used on SignUp function
+    passwordError, // Only used on SignUp function
     loading,
     signInWithGoogle,
     signInWithEmailPassword,
     signUpWithEmailPassword,
     signOut,
+    clearEmailError, // Only used on SignUp function
+    clearPasswordError, // Only used on SignUp function
   };
 };
 
@@ -269,6 +275,7 @@ const validateEmail = (email: string): Promise<{ valid: boolean; suggestion?: st
     }
     // Use Mailcheck for suggestions
     Mailcheck.run({
+      // TODO: Make sure that if the user tries a custom corporate domain, it is still accepted.
       email: trimmedEmail,
       suggested(result) {
         resolve({ valid: true, suggestion: result.full });

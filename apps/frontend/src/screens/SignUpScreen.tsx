@@ -1,8 +1,8 @@
 // SignUpScreen.tsx
-
 import React, { useState, useCallback } from 'react';
 import { Button, View, Text, TextInput, ActivityIndicator, StyleSheet } from 'react-native';
 
+import CustomTextInput from '@/components/CustomTextInput';
 import AuthService from '@/services/authService';
 
 const SignUpScreen = ({ navigation }) => {
@@ -11,7 +11,8 @@ const SignUpScreen = ({ navigation }) => {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState('');
 
-  const { signUpWithEmailPassword, loading, error, emailError, passwordError } = AuthService();
+  const { signUpWithEmailPassword, clearEmailError, clearPasswordError, loading, error, emailError, passwordError } =
+    AuthService();
 
   // Handle submission of sign-up form
   const onSignUpPress = useCallback(async () => {
@@ -51,24 +52,31 @@ const SignUpScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>Sign Up</Text>
+      <Text>Mateá con Tero!</Text>
 
-      <TextInput
-        autoCapitalize="none"
+      <CustomTextInput
+        label="Email"
+        placeholder="Ingresá el email"
         value={emailAddress}
-        placeholder="Enter email"
-        onChangeText={(text) => setEmailAddress(text)}
-        style={styles.textInput}
+        onChangeText={(emailAddress) => {
+          clearEmailError();
+          setEmailAddress(emailAddress);
+        }}
+        autoCapitalize="none"
+        error={emailError}
       />
-      {emailError && <Text style={styles.errorText}>{emailError}</Text>}
-      <TextInput
+
+      <CustomTextInput
+        label="Contraseña"
         value={password}
-        placeholder="Enter password"
+        placeholder="Ingresá la contraseña"
+        onChangeText={(text) => {
+          clearPasswordError();
+          setPassword(text);
+        }}
         secureTextEntry={true}
-        onChangeText={(text) => setPassword(text)}
-        style={styles.textInput}
+        error={passwordError}
       />
-      {passwordError && <Text style={styles.errorText}>{passwordError}</Text>}
 
       <Button title="Continue" onPress={onSignUpPress} />
 

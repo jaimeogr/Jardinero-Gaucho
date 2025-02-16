@@ -11,7 +11,7 @@ const SignUpScreen = ({ navigation }) => {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState('');
 
-  const { signUpWithEmailPassword, loading, error } = AuthService();
+  const { signUpWithEmailPassword, loading, error, emailError, passwordError } = AuthService();
 
   // Handle submission of sign-up form
   const onSignUpPress = useCallback(async () => {
@@ -60,6 +60,7 @@ const SignUpScreen = ({ navigation }) => {
         onChangeText={(text) => setEmailAddress(text)}
         style={styles.textInput}
       />
+      {emailError && <Text style={styles.errorText}>{emailError}</Text>}
       <TextInput
         value={password}
         placeholder="Enter password"
@@ -67,6 +68,7 @@ const SignUpScreen = ({ navigation }) => {
         onChangeText={(text) => setPassword(text)}
         style={styles.textInput}
       />
+      {passwordError && <Text style={styles.errorText}>{passwordError}</Text>}
 
       <Button title="Continue" onPress={onSignUpPress} />
 

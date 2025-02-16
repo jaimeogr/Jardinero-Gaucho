@@ -5,7 +5,9 @@ import {
   isSuccessResponse,
   isErrorWithCode,
 } from '@react-native-google-signin/google-signin';
+import Mailcheck from 'mailcheck';
 import { useState } from 'react';
+import validator from 'validator';
 
 import { refreshCurrentAccount } from '@/services/accountService';
 import supabase from '@/utils/supabase';
@@ -20,6 +22,8 @@ GoogleSignin.configure({
 
 const AuthService = () => {
   const [error, setError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const signInWithGoogle = async () => {
@@ -120,6 +124,8 @@ const AuthService = () => {
   const signInWithEmailPassword = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
+    email = email.trim();
+
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -146,7 +152,19 @@ const AuthService = () => {
   const signUpWithEmailPassword = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
+    email = email.trim();
     try {
+      const check = await validateEmail(email);
+      if (check.valid === false) {
+        setError('Por favor usá un email válido.');
+        return;
+      }
+      if (check.valid && check.suggestion) {
+        setEmailError('Quisiste decir: ' + check.suggestion + '?');
+        console.log();
+        setError('Por favor usá un email válido.');
+        return;
+      }
       // By default, if "Enable email confirmations" is on in Supabase Auth settings,
       // the user must verify their email before the session is valid.
       // If confirmations are off, the user will be signed in immediately.
@@ -157,6 +175,15 @@ const AuthService = () => {
       if (error) {
         console.error('Supabase email+password sign-up error:', error);
         console.error('Error Name:', error.name);
+
+        if (
+          error.name === 'AuthApiError' &&
+          error.message.includes('Unable to validate email address: invalid format')
+        ) {
+          setError('Por favor usá un email válido.');
+          return;
+        }
+
         if (error.name === 'AuthWeakPasswordError') {
           setError(
             '- La contraseña debe tener al menos 8 caracteres.\n- Al menos una letra mayúscula.\n- Al menos una letra minúscula.\n- Al menos un número.',
@@ -168,6 +195,7 @@ const AuthService = () => {
           setError('El correo electrónico ya está en uso.');
           return;
         }
+
         setError('Un error ocurrió durante el registro. Por favor, inténtalo de nuevo.');
         return;
       }
@@ -220,6 +248,8 @@ const AuthService = () => {
 
   return {
     error,
+    emailError,
+    passwordError,
     loading,
     signInWithGoogle,
     signInWithEmailPassword,
@@ -229,3 +259,24 @@ const AuthService = () => {
 };
 
 export default AuthService;
+
+const validateEmail = (email: string): Promise<{ valid: boolean; suggestion?: string }> => {
+  return new Promise((resolve) => {
+    const trimmedEmail = email.trim();
+    // Check basic syntax
+    if (!validator.isEmail(trimmedEmail, { require_tld: true })) {
+      return resolve({ valid: false });
+    }
+    // Use Mailcheck for suggestions
+    Mailcheck.run({
+      email: trimmedEmail,
+      domains: ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'],
+      suggested(result) {
+        resolve({ valid: true, suggestion: result.full });
+      },
+      empty() {
+        resolve({ valid: true });
+      },
+    });
+  });
+};

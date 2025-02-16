@@ -270,7 +270,6 @@ const validateEmail = (email: string): Promise<{ valid: boolean; suggestion?: st
     // Use Mailcheck for suggestions
     Mailcheck.run({
       email: trimmedEmail,
-      domains: ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'],
       suggested(result) {
         resolve({ valid: true, suggestion: result.full });
       },

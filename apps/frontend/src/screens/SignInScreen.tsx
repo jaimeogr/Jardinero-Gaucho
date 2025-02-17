@@ -1,7 +1,7 @@
 // SignInScreen.tsx
 // import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import React, { useState } from 'react';
-import { Button, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { Button, View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 
 import CustomTextInput from '@/components/CustomTextInput';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
@@ -40,16 +40,22 @@ const SignInScreen = ({ navigation }) => {
           value={password}
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
+          contentBetweenInputAndError={
+            <TouchableOpacity onPress={() => console.error('Forgot password not implemented yet')}>
+              <Text style={styles.forgotPasswordText}>Olvidé mi contraseña</Text>
+            </TouchableOpacity>
+          }
         />
 
-        <Button title="Sign in" onPress={() => signInWithEmailPassword(emailAddress, password)} />
+        <Button title="Iniciar sesión" onPress={() => signInWithEmailPassword(emailAddress, password)} />
 
         {error && <Text style={styles.errorText}>{error}</Text>}
 
-        <View style={styles.signupSection}>
-          <Text>Dont have an account?</Text>
-          <Button title="Don't have an account? Sign Up" onPress={() => navigation.navigate('SignUp')} />
-        </View>
+        <TouchableOpacity style={styles.signupSection} onPress={() => navigation.navigate('SignUp')}>
+          <Text style={styles.signupText}>
+            No tenés cuenta todavía? <Text style={styles.signupLink}>Registrarme</Text>
+          </Text>
+        </TouchableOpacity>
 
         <View>
           <Text>
@@ -75,8 +81,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 40,
     alignSelf: 'center',
+  },
+  forgotPasswordText: {
+    color: 'blue',
+    alignSelf: 'flex-end',
+    fontWeight: 'bold',
   },
   divider: {
     marginVertical: 10,
@@ -85,6 +96,15 @@ const styles = StyleSheet.create({
   signupSection: {
     marginTop: 20,
     alignItems: 'center',
+  },
+  signupText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  signupLink: {
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: 'bold',
   },
   errorText: {
     color: 'red',

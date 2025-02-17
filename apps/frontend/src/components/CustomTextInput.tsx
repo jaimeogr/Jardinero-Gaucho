@@ -11,6 +11,7 @@ interface InputTextProps extends TextInputProps {
   onChangeText: (text: string) => void; // Handler for text change
   isOptional?: boolean;
   multiline?: boolean;
+  contentBetweenInputAndError?: React.ReactNode;
   error?: string | null;
 }
 
@@ -21,6 +22,7 @@ const CustomTextInput: React.FC<InputTextProps> = ({
   onChangeText,
   isOptional = false,
   multiline = false,
+  contentBetweenInputAndError = null,
   error = null,
   ...rest
 }) => {
@@ -46,6 +48,9 @@ const CustomTextInput: React.FC<InputTextProps> = ({
         multiline={multiline}
         {...rest} // Pass other TextInputProps like keyboardType, maxLength, etc.
       />
+      {contentBetweenInputAndError && (
+        <View style={styles.contentBetweenInputAndError}>{contentBetweenInputAndError}</View>
+      )}
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
@@ -86,6 +91,9 @@ const styles = StyleSheet.create({
   },
   inputIsOptional: {
     borderColor: theme.colors.input.optionalFieldBorder,
+  },
+  contentBetweenInputAndError: {
+    marginTop: 5,
   },
   inputError: {
     borderColor: 'red',

@@ -7,6 +7,7 @@ import CustomTextInput from '@/components/CustomTextInput';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
 import OrDivider from '@/components/OrDivider';
 import AuthService from '@/services/authService';
+import { theme } from '@/styles/styles';
 
 const SignInScreen = ({ navigation }) => {
   const [emailAddress, setEmailAddress] = useState('');
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   forgotPasswordText: {
-    color: 'blue',
+    color: theme.colors.link,
     alignSelf: 'flex-end',
     fontWeight: 'bold',
   },
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     fontSize: 16,
-    color: '#007AFF',
+    color: theme.colors.link,
     fontWeight: 'bold',
   },
   errorText: {
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   termsLink: {
-    color: '#007AFF',
+    color: theme.colors.link,
     fontWeight: 'bold',
   },
 });

@@ -1,6 +1,8 @@
 // styles.ts
 export const theme = {
   colors: {
+    link: '#007AFF',
+
     primary: '#155E63', //155E63
     secondary: '#059212',
     tertiary: 'green',

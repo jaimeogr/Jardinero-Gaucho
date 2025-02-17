@@ -52,45 +52,51 @@ const SignUpScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>Mateá con Tero!</Text>
+      <View style={styles.elementsWrapper}>
+        <Text>Mateá con Tero!</Text>
 
-      <CustomTextInput
-        label="Email"
-        placeholder="Ingresá el email"
-        value={emailAddress}
-        onChangeText={(emailAddress) => {
-          clearEmailError();
-          setEmailAddress(emailAddress);
-        }}
-        autoCapitalize="none"
-        error={emailError}
-      />
+        <CustomTextInput
+          label="Email"
+          placeholder="Ingresá el email"
+          value={emailAddress}
+          onChangeText={(emailAddress) => {
+            clearEmailError();
+            setEmailAddress(emailAddress);
+          }}
+          autoCapitalize="none"
+          error={emailError}
+        />
 
-      <CustomTextInput
-        label="Contraseña"
-        value={password}
-        placeholder="Ingresá la contraseña"
-        onChangeText={(text) => {
-          clearPasswordError();
-          setPassword(text);
-        }}
-        secureTextEntry={true}
-        error={passwordError}
-      />
+        <CustomTextInput
+          label="Contraseña"
+          value={password}
+          placeholder="Ingresá la contraseña"
+          onChangeText={(text) => {
+            clearPasswordError();
+            setPassword(text);
+          }}
+          secureTextEntry={true}
+          error={passwordError}
+        />
 
-      <Button title="Continue" onPress={onSignUpPress} />
+        <Button title="Continue" onPress={onSignUpPress} />
 
-      {error && <Text style={styles.errorText}>{error}</Text>}
+        {error && <Text style={styles.errorText}>{error}</Text>}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
+    flexGrow: 1,
+    padding: 36,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  elementsWrapper: {
+    width: '100%',
   },
   textInput: {
     width: '80%',

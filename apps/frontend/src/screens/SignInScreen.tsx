@@ -1,9 +1,11 @@
 // SignInScreen.tsx
-import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
+// import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import React, { useState } from 'react';
 import { Button, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
 import CustomTextInput from '@/components/CustomTextInput';
+import GoogleSignInButton from '@/components/GoogleSignInButton';
+import OrDivider from '@/components/OrDivider';
 import AuthService from '@/services/authService';
 
 const SignInScreen = ({ navigation }) => {
@@ -19,6 +21,11 @@ const SignInScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.elementsWrapper}>
+        <Text style={styles.title}>Iniciar sesión</Text>
+        <GoogleSignInButton onPress={signInWithGoogle} />
+
+        <OrDivider />
+
         <CustomTextInput
           label="Email"
           placeholder="Ingresá el email"
@@ -39,19 +46,16 @@ const SignInScreen = ({ navigation }) => {
 
         {error && <Text style={styles.errorText}>{error}</Text>}
 
-        <View>
-          <Text style={styles.divider}>O iniciá sesión con:</Text>
-          <Button title="Google Sign-In" onPress={signInWithGoogle} color="#4285F4" />
-          <GoogleSigninButton
-            size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
-            onPress={signInWithGoogle}
-          />
-        </View>
-
         <View style={styles.signupSection}>
           <Text>Dont have an account?</Text>
           <Button title="Don't have an account? Sign Up" onPress={() => navigation.navigate('SignUp')} />
+        </View>
+
+        <View>
+          <Text>
+            Al crear una cuenta o usar la aplicación estás aceptando los términos de servicio y las políticas de
+            privacidad.
+          </Text>
         </View>
       </View>
     </View>
@@ -68,6 +72,11 @@ const styles = StyleSheet.create({
   },
   elementsWrapper: {
     width: '100%',
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    alignSelf: 'center',
   },
   divider: {
     marginVertical: 10,

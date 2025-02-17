@@ -177,6 +177,7 @@ const AuthService = () => {
         console.error('Supabase email+password sign-up error:', error);
         console.error('Error Name:', error.name);
 
+        // TODO: handle by error codes instead of error names/messages?
         if (
           error.name === 'AuthApiError' &&
           error.message.includes('Unable to validate email address: invalid format')

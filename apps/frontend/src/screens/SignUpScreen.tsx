@@ -65,7 +65,7 @@ const SignUpScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.elementsWrapper}>
-        <Text style={styles.title}>Registrate y mateá con Tero!</Text>
+        <Text style={styles.title}>Registrarme</Text>
         <GoogleSignInButton onPress={signInWithGoogle} />
 
         <OrDivider />
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     marginBottom: 40,
     alignSelf: 'center',
   },

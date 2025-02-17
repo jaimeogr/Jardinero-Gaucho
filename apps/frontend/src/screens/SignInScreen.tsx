@@ -6,6 +6,7 @@ import { Button, View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } f
 import CustomTextInput from '@/components/CustomTextInput';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
 import OrDivider from '@/components/OrDivider';
+import TermsAndConditions from '@/components/TermsAndConditions';
 import AuthService from '@/services/authService';
 import { theme } from '@/styles/styles';
 
@@ -58,20 +59,7 @@ const SignInScreen = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
-        <View style={styles.termsAndConditions}>
-          {/* TODO: add links to the Terms and Conditions, and to the Privacy Policy*/}
-          <Text style={styles.termsText}>
-            Al registrarte o usar esta aplicación, aceptas nuestros{' '}
-            <Text style={styles.termsLink} onPress={() => console.error('Go to T&C')}>
-              Términos y Condiciones
-            </Text>{' '}
-            y nuestra{' '}
-            <Text style={styles.termsLink} onPress={() => console.error('Go to Privacy Policy')}>
-              Política de Privacidad
-            </Text>
-            .
-          </Text>
-        </View>
+        <TermsAndConditions />
       </View>
     </View>
   );
@@ -86,7 +74,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   elementsWrapper: {
-    paddingTop: 40,
+    paddingTop: 60,
     flex: 1,
     width: '100%',
   },
@@ -99,10 +87,6 @@ const styles = StyleSheet.create({
     color: theme.colors.link,
     alignSelf: 'flex-end',
     fontWeight: 'bold',
-  },
-  divider: {
-    marginVertical: 10,
-    fontSize: 16,
   },
   signupSection: {
     marginTop: 20,
@@ -120,22 +104,6 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginTop: 10,
-  },
-  termsAndConditions: {
-    position: 'absolute',
-    bottom: 20,
-    width: '85%',
-    alignSelf: 'center',
-    paddingHorizontal: 10,
-  },
-  termsText: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
-  },
-  termsLink: {
-    color: theme.colors.link,
-    fontWeight: 'bold',
   },
 });
 

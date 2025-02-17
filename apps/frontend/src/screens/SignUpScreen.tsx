@@ -1,9 +1,13 @@
 // SignUpScreen.tsx
 import React, { useState, useCallback } from 'react';
-import { Button, View, Text, TextInput, ActivityIndicator, StyleSheet } from 'react-native';
+import { Button, View, Text, TextInput, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
 
 import CustomTextInput from '@/components/CustomTextInput';
+import GoogleSignInButton from '@/components/GoogleSignInButton';
+import OrDivider from '@/components/OrDivider';
+import TermsAndConditions from '@/components/TermsAndConditions';
 import AuthService from '@/services/authService';
+import { theme } from '@/styles/styles';
 
 const SignUpScreen = ({ navigation }) => {
   const [emailAddress, setEmailAddress] = useState('');
@@ -11,8 +15,16 @@ const SignUpScreen = ({ navigation }) => {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState('');
 
-  const { signUpWithEmailPassword, clearEmailError, clearPasswordError, loading, error, emailError, passwordError } =
-    AuthService();
+  const {
+    signInWithGoogle,
+    signUpWithEmailPassword,
+    clearEmailError,
+    clearPasswordError,
+    loading,
+    error,
+    emailError,
+    passwordError,
+  } = AuthService();
 
   // Handle submission of sign-up form
   const onSignUpPress = useCallback(async () => {
@@ -53,7 +65,10 @@ const SignUpScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.elementsWrapper}>
-        <Text>Mateá con Tero!</Text>
+        <Text style={styles.title}>Registrate y mateá con Tero!</Text>
+        <GoogleSignInButton onPress={signInWithGoogle} />
+
+        <OrDivider />
 
         <CustomTextInput
           label="Email"
@@ -79,9 +94,17 @@ const SignUpScreen = ({ navigation }) => {
           error={passwordError}
         />
 
-        <Button title="Continue" onPress={onSignUpPress} />
+        <Button title="Continuar" onPress={onSignUpPress} />
 
         {error && <Text style={styles.errorText}>{error}</Text>}
+
+        <TouchableOpacity style={styles.signInSection} onPress={() => navigation.navigate('SignIn')}>
+          <Text style={styles.signInText}>
+            Ya tenés una cuenta? <Text style={styles.signInLink}>Iniciar Sesión</Text>
+          </Text>
+        </TouchableOpacity>
+
+        <TermsAndConditions />
       </View>
     </View>
   );
@@ -96,7 +119,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   elementsWrapper: {
+    flex: 1,
     width: '100%',
+    paddingTop: 60,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 40,
+    alignSelf: 'center',
   },
   textInput: {
     width: '80%',
@@ -104,9 +134,22 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderWidth: 1,
   },
+  signInSection: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  signInText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  signInLink: {
+    fontSize: 16,
+    color: theme.colors.link,
+    fontWeight: 'bold',
+  },
   errorText: {
     color: 'red',
-    marginTop: 10,
+    marginTop: 30,
   },
 });
 

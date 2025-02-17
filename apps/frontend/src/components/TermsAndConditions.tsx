@@ -1,0 +1,44 @@
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+import { theme } from '@/styles/styles';
+
+const TermsAndConditions = () => {
+  return (
+    <View style={styles.termsAndConditions}>
+      {/* TODO: add links to the Terms and Conditions, and to the Privacy Policy*/}
+      <Text style={styles.termsText}>
+        Al registrarte o usar esta aplicación, aceptas nuestros{' '}
+        <Text style={styles.termsLink} onPress={() => console.error('Go to T&C')}>
+          Términos y Condiciones
+        </Text>{' '}
+        y nuestra{' '}
+        <Text style={styles.termsLink} onPress={() => console.error('Go to Privacy Policy')}>
+          Política de Privacidad
+        </Text>
+        .
+      </Text>
+    </View>
+  );
+};
+
+export default TermsAndConditions;
+
+const styles = StyleSheet.create({
+  termsAndConditions: {
+    position: 'absolute',
+    bottom: 20,
+    width: '85%',
+    alignSelf: 'center',
+    paddingHorizontal: 10,
+  },
+  termsText: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+  },
+  termsLink: {
+    color: theme.colors.link,
+    fontWeight: 'bold',
+  },
+});

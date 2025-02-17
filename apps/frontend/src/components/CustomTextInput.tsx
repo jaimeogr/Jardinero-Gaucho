@@ -48,9 +48,7 @@ const CustomTextInput: React.FC<InputTextProps> = ({
         multiline={multiline}
         {...rest} // Pass other TextInputProps like keyboardType, maxLength, etc.
       />
-      {contentBetweenInputAndError && (
-        <View style={styles.contentBetweenInputAndError}>{contentBetweenInputAndError}</View>
-      )}
+      {contentBetweenInputAndError && <View>{contentBetweenInputAndError}</View>}
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
@@ -91,9 +89,6 @@ const styles = StyleSheet.create({
   },
   inputIsOptional: {
     borderColor: theme.colors.input.optionalFieldBorder,
-  },
-  contentBetweenInputAndError: {
-    marginTop: 5,
   },
   inputError: {
     borderColor: 'red',

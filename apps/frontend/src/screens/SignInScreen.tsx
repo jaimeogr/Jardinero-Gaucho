@@ -57,10 +57,18 @@ const SignInScreen = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
-        <View>
-          <Text>
-            Al crear una cuenta o usar la aplicación estás aceptando los términos de servicio y las políticas de
-            privacidad.
+        <View style={styles.termsAndConditions}>
+          {/* TODO: add links to the Terms and Conditions, and to the Privacy Policy*/}
+          <Text style={styles.termsText}>
+            Al registrarte o usar esta aplicación, aceptas nuestros{' '}
+            <Text style={styles.termsLink} onPress={() => console.error('Go to T&C')}>
+              Términos y Condiciones
+            </Text>{' '}
+            y nuestra{' '}
+            <Text style={styles.termsLink} onPress={() => console.error('Go to Privacy Policy')}>
+              Política de Privacidad
+            </Text>
+            .
           </Text>
         </View>
       </View>
@@ -77,6 +85,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   elementsWrapper: {
+    paddingTop: 40,
+    flex: 1,
     width: '100%',
   },
   title: {
@@ -109,6 +119,22 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginTop: 10,
+  },
+  termsAndConditions: {
+    position: 'absolute',
+    bottom: 20,
+    width: '85%',
+    alignSelf: 'center',
+    paddingHorizontal: 10,
+  },
+  termsText: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+  },
+  termsLink: {
+    color: '#007AFF',
+    fontWeight: 'bold',
   },
 });
 

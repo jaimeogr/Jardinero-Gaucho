@@ -137,6 +137,8 @@ const styles = StyleSheet.create({
   signInSection: {
     marginTop: 20,
     alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   signInText: {
     fontSize: 16,

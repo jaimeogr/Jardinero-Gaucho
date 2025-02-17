@@ -45,7 +45,7 @@ const SignInScreen = ({ navigation }) => {
           contentBetweenInputAndError={
             <TouchableOpacity
               style={styles.forgotPasswordContainer}
-              onPress={() => console.error('Forgot password not implemented yet')}
+              onPress={() => console.error('Forgot password not implemented yet')} //TODO: Implement forgot password
             >
               <Text style={styles.forgotPasswordText}>Olvidé mi contraseña</Text>
             </TouchableOpacity>
@@ -82,14 +82,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     marginBottom: 40,
     alignSelf: 'center',
   },
   forgotPasswordContainer: {
     alignSelf: 'flex-end',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   forgotPasswordText: {
     color: theme.colors.link,
@@ -99,6 +99,8 @@ const styles = StyleSheet.create({
   signupSection: {
     marginTop: 20,
     alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   signupText: {
     fontSize: 16,

@@ -28,7 +28,6 @@ export default TermsAndConditions;
 
 const styles = StyleSheet.create({
   termsAndConditions: {
-    // bottom: 10,
     width: '100%',
     alignSelf: 'center',
     paddingHorizontal: 10,

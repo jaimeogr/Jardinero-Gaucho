@@ -5,6 +5,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '@/styles/styles';
 
 const TermsAndConditions = () => {
+  // TODO: This component sometimes flickers when opening the keyboard in the SignInScreen or SignUpScreen. Fix it.
   return (
     <View style={styles.termsAndConditions}>
       {/* TODO: add links to the Terms and Conditions, and to the Privacy Policy*/}

@@ -1,6 +1,16 @@
 // SignUpScreen.tsx
 import React, { useState, useCallback } from 'react';
-import { Button, View, Text, TextInput, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Button,
+  View,
+  Text,
+  TextInput,
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import CustomTextInput from '@/components/CustomTextInput';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
@@ -64,48 +74,54 @@ const SignUpScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.elementsWrapper}>
-        <Text style={styles.title}>Registrarme</Text>
-        <GoogleSignInButton onPress={signInWithGoogle} />
+      <KeyboardAvoidingView
+        style={styles.elementsWrapper}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+      >
+        <View style={styles.formWrapper}>
+          <Text style={styles.title}>Registrarme</Text>
+          <GoogleSignInButton onPress={signInWithGoogle} />
 
-        <OrDivider />
+          <OrDivider />
 
-        <CustomTextInput
-          label="Email"
-          placeholder="Ingresá el email"
-          value={emailAddress}
-          onChangeText={(emailAddress) => {
-            clearEmailError();
-            setEmailAddress(emailAddress);
-          }}
-          autoCapitalize="none"
-          error={emailError}
-        />
+          <CustomTextInput
+            label="Email"
+            placeholder="Ingresá el email"
+            value={emailAddress}
+            onChangeText={(emailAddress) => {
+              clearEmailError();
+              setEmailAddress(emailAddress);
+            }}
+            autoCapitalize="none"
+            error={emailError}
+          />
 
-        <CustomTextInput
-          label="Contraseña"
-          value={password}
-          placeholder="Ingresá la contraseña"
-          onChangeText={(text) => {
-            clearPasswordError();
-            setPassword(text);
-          }}
-          secureTextEntry={true}
-          error={passwordError}
-        />
+          <CustomTextInput
+            label="Contraseña"
+            value={password}
+            placeholder="Ingresá la contraseña"
+            onChangeText={(text) => {
+              clearPasswordError();
+              setPassword(text);
+            }}
+            secureTextEntry={true}
+            error={passwordError}
+          />
 
-        <Button title="Continuar" onPress={onSignUpPress} />
+          <Button title="Continuar" onPress={onSignUpPress} />
 
-        {error && <Text style={styles.errorText}>{error}</Text>}
+          {error && <Text style={styles.errorText}>{error}</Text>}
 
-        <TouchableOpacity style={styles.signInSection} onPress={() => navigation.navigate('SignIn')}>
-          <Text style={styles.signInText}>
-            Ya tenés una cuenta? <Text style={styles.signInLink}>Iniciar Sesión</Text>
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.signInSection} onPress={() => navigation.navigate('SignIn')}>
+            <Text style={styles.signInText}>
+              Ya tenés una cuenta? <Text style={styles.signInLink}>Iniciar Sesión</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
 
-        <TermsAndConditions />
-      </View>
+      <TermsAndConditions />
     </View>
   );
 };
@@ -114,14 +130,16 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 50,
+    paddingTop: 0,
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#fff',
   },
   elementsWrapper: {
     flex: 1,
-    width: '100%',
-    paddingTop: 60,
+  },
+  formWrapper: {
+    flex: 1, // Allows centering inside KeyboardAvoidingView
+    justifyContent: 'center', // Centers form vertically
   },
   title: {
     fontSize: 28,

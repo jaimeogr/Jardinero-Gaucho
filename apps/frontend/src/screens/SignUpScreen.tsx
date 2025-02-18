@@ -113,7 +113,7 @@ const SignUpScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 36,
+    padding: 50,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',

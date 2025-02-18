@@ -1,7 +1,16 @@
 // SignInScreen.tsx
 // import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import React, { useState } from 'react';
-import { Button, View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Button,
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 
 import CustomTextInput from '@/components/CustomTextInput';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
@@ -22,46 +31,54 @@ const SignInScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.elementsWrapper}>
-        <Text style={styles.title}>Iniciar sesión</Text>
-        <GoogleSignInButton onPress={signInWithGoogle} />
+      <KeyboardAvoidingView
+        style={styles.elementsWrapper}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+      >
+        <View style={styles.formWrapper}>
+          <Text style={styles.title}>Iniciar sesión</Text>
+          <GoogleSignInButton onPress={signInWithGoogle} />
 
-        <OrDivider />
+          <OrDivider />
 
-        <CustomTextInput
-          label="Email"
-          placeholder="Ingresá el email"
-          value={emailAddress}
-          autoCapitalize="none"
-          onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
-        />
+          <CustomTextInput
+            label="Email"
+            placeholder="Ingresá el email"
+            value={emailAddress}
+            autoCapitalize="none"
+            onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+          />
 
-        <CustomTextInput
-          label="Contraseña"
-          placeholder="Ingresá la contraseña"
-          value={password}
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-          contentBetweenInputAndError={
-            <TouchableOpacity
-              style={styles.forgotPasswordContainer}
-              onPress={() => console.error('Forgot password not implemented yet')} //TODO: Implement forgot password
-            >
-              <Text style={styles.forgotPasswordText}>Olvidé mi contraseña</Text>
-            </TouchableOpacity>
-          }
-        />
+          <CustomTextInput
+            label="Contraseña"
+            placeholder="Ingresá la contraseña"
+            value={password}
+            secureTextEntry={true}
+            onChangeText={(password) => setPassword(password)}
+            contentBetweenInputAndError={
+              <TouchableOpacity
+                style={styles.forgotPasswordContainer}
+                onPress={() => console.error('Forgot password not implemented yet')} //TODO: Implement forgot password
+              >
+                <Text style={styles.forgotPasswordText}>Olvidé mi contraseña</Text>
+              </TouchableOpacity>
+            }
+          />
 
-        <Button title="Iniciar sesión" onPress={() => signInWithEmailPassword(emailAddress, password)} />
+          <Button title="Iniciar sesión" onPress={() => signInWithEmailPassword(emailAddress, password)} />
 
-        {error && <Text style={styles.errorText}>{error}</Text>}
+          {error && <Text style={styles.errorText}>{error}</Text>}
 
-        <TouchableOpacity style={styles.signupSection} onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.signupText}>
-            No tenés cuenta todavía? <Text style={styles.signupLink}>Registrarme</Text>
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.signupSection} onPress={() => navigation.navigate('SignUp')}>
+            <Text style={styles.signupText}>
+              No tenés cuenta todavía? <Text style={styles.signupLink}>Registrarme</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
 
+      <View>
         <TermsAndConditions />
       </View>
     </View>
@@ -71,15 +88,18 @@ const SignInScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 36,
+    padding: 50,
+    paddingTop: 100,
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#fff',
   },
   elementsWrapper: {
-    paddingTop: 60,
     flex: 1,
-    width: '100%',
+    // justifyContent: 'center',
+  },
+  formWrapper: {
+    flex: 1, // Allows centering inside KeyboardAvoidingView
+    justifyContent: 'center', // Centers form vertically
   },
   title: {
     fontSize: 28,

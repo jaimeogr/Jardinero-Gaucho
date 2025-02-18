@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row', // Place items side by side
     alignItems: 'center', // Vertically center
-    marginVertical: 36, // Some vertical spacing
+    marginVertical: 24, // Some vertical spacing
   },
   line: {
     flex: 1, // Fill all available horizontal space

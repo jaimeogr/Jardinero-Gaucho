@@ -27,9 +27,8 @@ export default TermsAndConditions;
 
 const styles = StyleSheet.create({
   termsAndConditions: {
-    position: 'absolute',
-    bottom: 20,
-    width: '85%',
+    // bottom: 10,
+    width: '100%',
     alignSelf: 'center',
     paddingHorizontal: 10,
   },

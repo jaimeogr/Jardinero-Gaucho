@@ -224,11 +224,9 @@ const AuthService = () => {
     setError(null);
     email = email.trim();
     try {
-      console.log(process.env.EXPO_PUBLIC_SUPABASE_RESET_PASSWORD_REDIRECT_URL);
-      console.log(process.env.EXPO_PUBLIC_SUPABASE_RESET_PASSWORD_REDIRECT_URL);
       // Change the redirectTo URL to the route in your app that will handle password resets
       const { data, error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'teromatero://reset-password',
+        redirectTo: process.env.EXPO_PUBLIC_SUPABASE_RESET_PASSWORD_REDIRECT_URL,
       });
       if (resetError) {
         console.error('Error sending password reset email:', resetError);

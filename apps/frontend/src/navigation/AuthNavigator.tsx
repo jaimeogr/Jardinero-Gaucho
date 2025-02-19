@@ -4,6 +4,9 @@ import React, { useEffect } from 'react';
 
 import useHomeScreenController from '@/controllers/useHomeScreenController';
 import BottomTabNavigator from '@/navigation/BottonTabNavigator';
+import EmailSentScreen from '@/screens/EmailSentScreen';
+import ForgotMyPasswordScreen from '@/screens/ForgotMyPasswordScreen';
+import ResetPasswordScreen from '@/screens/ResetPasswordScreen ';
 import SignInScreen from '@/screens/SignInScreen';
 import SignUpScreen from '@/screens/SignUpScreen';
 import useCurrentAccountStore from '@/stores/useCurrentAccountStore';
@@ -33,6 +36,13 @@ const AuthNavigator = () => {
     <Stack.Navigator>
       <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
       <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="ForgotMyPassword"
+        component={ForgotMyPasswordScreen}
+        options={{ headerShown: true, title: '' }}
+      />
+      <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: true, title: '' }} />
+      <Stack.Screen name="EmailSent" component={EmailSentScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };

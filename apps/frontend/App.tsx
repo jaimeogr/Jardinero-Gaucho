@@ -4,11 +4,13 @@ import 'react-native-get-random-values';
 import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect } from 'react';
+import { Linking } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // TODO: Replace this imports with @ pattern imports
 import AuthNavigator from './src/navigation/AuthNavigator';
+import linking from './src/navigation/linking';
 import useCurrentAccountStore from './src/stores/useCurrentAccountStore';
 import authListener from './src/utils/authListener';
 
@@ -31,11 +33,25 @@ export default function App() {
     }
   }, [authLoaded]);
 
+  useEffect(() => {
+    // Listen for incoming links while the app is running or coming from background
+    const handleUrl = (event: { url: string }) => {
+      console.log('Received deep link:', event.url);
+      // this is where you handle the incoming links if necessary,
+      // but for now the even listener is just helping manage deferred and background states
+    };
+
+    const subscription = Linking.addEventListener('url', handleUrl);
+
+    // Cleanup event listener on unmount, mostly for development environments but it wont hurt
+    return () => subscription.remove();
+  }, []);
+
   return (
     <PaperProvider>
       <SafeAreaProvider>
         <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-          <NavigationContainer>
+          <NavigationContainer linking={linking}>
             <AuthNavigator />
           </NavigationContainer>
         </SafeAreaView>

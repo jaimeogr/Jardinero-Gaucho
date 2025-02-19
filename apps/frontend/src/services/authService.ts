@@ -219,6 +219,33 @@ const AuthService = () => {
     }
   };
 
+  const resetPassword = async (email: string) => {
+    setLoading(true);
+    setError(null);
+    email = email.trim();
+    try {
+      console.log(process.env.EXPO_PUBLIC_SUPABASE_RESET_PASSWORD_REDIRECT_URL);
+      console.log(process.env.EXPO_PUBLIC_SUPABASE_RESET_PASSWORD_REDIRECT_URL);
+      // Change the redirectTo URL to the route in your app that will handle password resets
+      const { data, error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'teromatero://reset-password',
+      });
+      if (resetError) {
+        console.error('Error sending password reset email:', resetError);
+        setError('Error al enviar el email para restablecer la contraseña: ' + resetError.message);
+        return;
+      }
+      console.log('Password reset email sent successfully:', data);
+      return;
+      // Optionally, you can notify the user here (e.g., using an alert or toast)
+    } catch (err) {
+      console.error('Error in resetPassword:', err);
+      setError('Ocurrió un error inesperado al intentar restablecer la contraseña.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signOut = async () => {
     // TODO activate splash / loading screen, which could mean importing setLoading into authListener.ts, which i dont love as an architecture so procrastinate for now.
     setError(null);
@@ -259,6 +286,7 @@ const AuthService = () => {
     signInWithGoogle,
     signInWithEmailPassword,
     signUpWithEmailPassword,
+    resetPassword,
     signOut,
     clearEmailError, // Only used on SignUp function
     clearPasswordError, // Only used on SignUp function

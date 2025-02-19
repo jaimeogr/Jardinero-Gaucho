@@ -42,6 +42,7 @@ const SignInScreen = ({ navigation }) => {
 
           <OrDivider />
 
+          {/*  TODO: hide email and password labels for this screen? research */}
           <CustomTextInput
             label="Email"
             placeholder="Ingresá el email"
@@ -59,7 +60,7 @@ const SignInScreen = ({ navigation }) => {
             contentBetweenInputAndError={
               <TouchableOpacity
                 style={styles.forgotPasswordContainer}
-                onPress={() => console.error('Forgot password not implemented yet')} //TODO: Implement forgot password
+                onPress={() => navigation.navigate('ForgotMyPassword')} //TODO: Implement forgot password
               >
                 <Text style={styles.forgotPasswordText}>Olvidé mi contraseña</Text>
               </TouchableOpacity>

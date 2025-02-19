@@ -21,15 +21,25 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.teromatero.jardinerogaucho"
+      "package": "com.teromatero.jardinerogaucho",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "teromatero",
+              "host": "password-reset",
+              "path": "/"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-secure-store",
-      "@react-native-google-signin/google-signin"
-    ],
+    "plugins": ["expo-secure-store", "@react-native-google-signin/google-signin"],
     "extra": {
       "eas": {
         "projectId": "889c467c-1a6c-473a-82d9-efcf54f231e0"

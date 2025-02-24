@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid'; //TODO: ID Generator might be not completel
 
 import BackendService from '@/backend/BackendService';
 import useLotService from '@/services/useLotService';
-import useUserService from '@/services/useUserService';
 import useWorkgroupService from '@/services/useWorkgroupService';
 import useHomeScreenStore from '@/stores/useHomeScreenStore';
 import useLotStore from '@/stores/useLotStore';
@@ -31,7 +30,6 @@ const useHomeScreenController = (): IHomeScreenController => {
     useLotStore.getState().initializeNeighbourhoodsAndZones(neighbourhoodData);
 
     // Initialize Users and Workgroups
-    useUserService.initializeUsers();
     useWorkgroupService.initializeWorkgroups();
     setActiveWorkgroup('1');
   };

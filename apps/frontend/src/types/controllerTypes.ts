@@ -33,16 +33,3 @@ export interface IHomeScreenController extends IAccordionController {
   markLotCompletedForSpecificDate(lotId: string, date?: Date): void;
   markSelectedLotsCompletedForSpecificDate(date?: Date): void;
 }
-
-export interface ITeamManagementController extends IAccordionController {
-  updateZoneAssignmentsAndRoleForUser(userId: string, accessToAllLots: boolean, role: UserRole): void;
-  selectAssignedZonesForUser(userId: string): void;
-  useUserInActiveWorkgroupWithRole(userId: string): UserInActiveWorkgroupWithRole | null;
-  useUsersInActiveWorkgroupWithRoles(): UserInActiveWorkgroupWithRole[];
-  inviteUserToActiveWorkgroup(email: string, role: UserRole, accessToAllLots: boolean): UserInterface | null;
-  getTemporaryUserData(): {
-    temporaryUserData: TemporaryUserData | null;
-    temporaryisNewUser: boolean;
-  };
-  setTemporaryUserData(userData: TemporaryUserData | null, isNewUser: boolean): void;
-}

@@ -32,6 +32,7 @@ const AuthNavigator = () => {
     return <BottomTabNavigator />;
   }
 
+  // TODO: fix resetPassword deeplink that should open the app on the right screen after the link is pressed on the email.
   return (
     <Stack.Navigator>
       <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />

@@ -25,11 +25,12 @@
       "intentFilters": [
         {
           "action": "VIEW",
+          "autoVerify": true,
           "data": [
             {
-              "scheme": "teromatero",
-              "host": "password-reset",
-              "path": "/"
+              "scheme": "https",
+              "host": "jaimeogr.github.io",
+              "pathPrefix": "/tero-matero-deep-link-verification"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]

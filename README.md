@@ -42,3 +42,12 @@ NODE_ENV=test npx expo start
 
 EAS Builds are located in:
 C:\Users\current-user\AppData\Local\Temp\eas-cli-nodejs\eas-build-run-cache
+
+Update using EAS, critical Environment variables:
+from 'https://docs.expo.dev/eas/environment-variables/'.
+
+"When the --environment flag is provided, eas update will use the environment variables on EAS servers for and won't use the .env files present in your project. Expo CLI will substitute prefixed variables in your code (for example,process.env.EXPO_PUBLIC_VARNAME) with the corresponding plain text and sensitive environment variable values set on EAS servers for the environment specified with the --environment flag.
+
+Any EXPO*PUBLIC* variables in your application code will be replaced inline with the corresponding values from your EAS environment whether that is your local machine or your CI/CD server.
+
+We recommend using the --environment flag to ensure the same environment variables are used both for your update and build jobs."

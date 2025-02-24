@@ -1,3 +1,4 @@
+// CustomTextInput.tsx
 import React from 'react';
 import { Text, TextInput, View, StyleSheet, TextInputProps } from 'react-native';
 
@@ -6,19 +7,23 @@ import { theme } from '@/styles/styles';
 interface InputTextProps extends TextInputProps {
   label: string; // Label for the input
   value: string; // Controlled value
-  onChangeText: (text: string) => void; // Handler for text change
-  isOptional?: boolean; // Whether the input is optional
-  multiline?: boolean; // Enable multiline input
   placeholder: string; // Placeholder text
+  onChangeText: (text: string) => void; // Handler for text change
+  isOptional?: boolean;
+  multiline?: boolean;
+  contentBetweenInputAndError?: React.ReactNode;
+  error?: string | null;
 }
 
 const CustomTextInput: React.FC<InputTextProps> = ({
   label,
   value,
-  onChangeText, // Updated to match TextInput's onChangeText
+  placeholder,
+  onChangeText,
   isOptional = false,
   multiline = false,
-  placeholder,
+  contentBetweenInputAndError = null,
+  error = null,
   ...rest
 }) => {
   return (
@@ -28,17 +33,23 @@ const CustomTextInput: React.FC<InputTextProps> = ({
         <Text style={[styles.label, isOptional && styles.labelIsOptional]}>{label}</Text>
         {isOptional && <Text style={styles.optionalInParentheses}>(opcional)</Text>}
       </View>
-
       {/* Input Field */}
       <TextInput
-        style={[styles.input, multiline && styles.inputMultiline, isOptional && styles.inputIsOptional]}
+        style={[
+          styles.input,
+          multiline && styles.inputMultiline,
+          isOptional && styles.inputIsOptional,
+          error ? styles.inputError : null,
+        ]}
         value={value}
-        onChangeText={onChangeText} // Use onChangeText instead of onChange
+        onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor={theme.colors.placeholder}
         multiline={multiline}
         {...rest} // Pass other TextInputProps like keyboardType, maxLength, etc.
       />
+      {contentBetweenInputAndError && <View>{contentBetweenInputAndError}</View>}
+      {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 };
@@ -72,12 +83,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     height: 45,
   },
-  inputIsOptional: {
-    borderColor: theme.colors.input.optionalFieldBorder,
-  },
   inputMultiline: {
     height: 80,
     textAlignVertical: 'top', // Ensures text starts at the top for multiline inputs
+  },
+  inputIsOptional: {
+    borderColor: theme.colors.input.optionalFieldBorder,
+  },
+  inputError: {
+    borderColor: 'red',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 5,
   },
 });
 

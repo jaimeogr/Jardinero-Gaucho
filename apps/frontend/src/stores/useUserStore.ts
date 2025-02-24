@@ -2,7 +2,7 @@
 
 import { create } from 'zustand';
 
-import { UserInterface, UserRole, TemporaryUserData } from '@/types/types';
+import { UserInterface, TemporaryUserData } from '@/types/types';
 
 interface UserStoreState {
   users: UserInterface[];
@@ -11,8 +11,6 @@ interface UserStoreState {
   addUser: (user: UserInterface) => void;
   updateUser: (id: string, updatedInfo: Partial<UserInterface>) => void;
   removeUser: (id: string) => void;
-  currentUser: UserInterface | null;
-  setCurrentUser: (user: UserInterface | null) => void;
 
   // Temporary navigation props
   TemporaryUserData: TemporaryUserData | null;
@@ -23,7 +21,6 @@ interface UserStoreState {
 
 const useUserStore = create<UserStoreState>((set, get) => ({
   users: [],
-  currentUser: null,
   TemporaryUserData: null,
   TemporaryisNewUser: false,
 
@@ -45,9 +42,6 @@ const useUserStore = create<UserStoreState>((set, get) => ({
     set((state) => ({
       users: state.users.filter((user) => user.userId !== id),
     }));
-  },
-  setCurrentUser: (user: UserInterface | null) => {
-    set({ currentUser: user });
   },
 
   // Set temporary navigation props

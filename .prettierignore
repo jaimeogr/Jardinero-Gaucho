@@ -10,4 +10,4 @@ package-lock.json
 yarn.lock
 
 # Ignore Expo config files
-App.json
+# App.json # i have commented this line manually, lets see if something breaks.

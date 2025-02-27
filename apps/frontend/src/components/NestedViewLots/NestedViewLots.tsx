@@ -40,9 +40,8 @@ const NestedViewLots: React.FC<NestedViewLotsProps> = ({
   blockZoneExpansion = false,
 }) => {
   const homeController = useHomeScreenController();
-  const teamController = useTeamManagementController();
 
-  const controller: IAccordionController = screen === 'homeScreen' ? homeController : teamController;
+  const controller: IAccordionController = homeController;
 
   const nestedLotsWithIndicatorsInterface: NestedLotsWithIndicatorsInterface = controller.useNestedLots();
 

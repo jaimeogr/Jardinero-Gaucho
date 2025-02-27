@@ -287,6 +287,25 @@ FOR EACH ROW
 EXECUTE PROCEDURE public.set_updated_at();
 
 
+
+-- Create the trigger function
+CREATE OR REPLACE FUNCTION handle_new_workgroup()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Insert a record into account_workgroups
+  INSERT INTO public.account_workgroups (account_id, workgroup_id, role, access_to_all_lots, has_accepted_presence)
+  VALUES (auth.uid(), NEW.id, 'PrimaryOwner', true, now());
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Create the trigger
+CREATE TRIGGER on_workgroup_created
+AFTER INSERT ON public.workgroups
+FOR EACH ROW
+EXECUTE FUNCTION handle_new_workgroup();
+
+
 /*
 *
 *
@@ -349,6 +368,12 @@ create policy "Avatar images are publicly accessible." on storage.objects
 
 create policy "Anyone can upload an avatar." on storage.objects
   for insert with check (bucket_id = 'avatars');
+
+  -- Create policy to allow authenticated users to insert workgroups
+CREATE POLICY "Allow authenticated users to create workgroups" 
+ON public.workgroups
+FOR INSERT
+WITH CHECK (auth.uid() IS NOT NULL);
 
 
 CREATE OR REPLACE FUNCTION public.has_priviliges(

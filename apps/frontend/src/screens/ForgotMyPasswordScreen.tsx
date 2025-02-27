@@ -16,7 +16,7 @@ const ForgotMyPasswordScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <KeyboardAvoidingView
+      <KeyboardAvoidingView //TODO: should i remove keybpardAvoidingView from this screen?
         style={styles.elementsWrapper}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}

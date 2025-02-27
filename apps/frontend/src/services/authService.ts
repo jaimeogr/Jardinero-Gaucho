@@ -10,7 +10,7 @@ import { useState } from 'react';
 import validator from 'validator';
 
 import { refreshCurrentAccount } from '@/services/accountService';
-import supabase from '@/utils/supabase';
+import supabase from '@/api/supabase/client';
 
 // Configure Google Sign-In
 GoogleSignin.configure({

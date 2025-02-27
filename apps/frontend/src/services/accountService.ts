@@ -1,6 +1,6 @@
 // services/accountService.ts
 import useCurrentAccountStore from '@/stores/useCurrentAccountStore';
-import supabase from '@/utils/supabase';
+import supabase from '@/api/supabase/client';
 
 export async function refreshCurrentAccount(userId: string) {
   const { data: account, error } = await supabase.from('accounts').select('*').eq('id', userId).single();

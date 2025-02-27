@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 
+import supabase from '@/api/supabase/client'; // Ensure your Supabase client is configured here
 import { theme } from '@/styles/styles';
-import supabase from '@/utils/supabase'; // Ensure your Supabase client is configured here
 
 const ResetPasswordScreen = ({ navigation, route }) => {
   // Optionally, you can get a token from the route params if needed

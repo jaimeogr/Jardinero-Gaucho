@@ -2,7 +2,7 @@
 import { refreshCurrentAccount } from '@/services/accountService';
 import useCurrentAccountStore from '@/stores/useCurrentAccountStore';
 import { UserInterface } from '@/types/types';
-import supabase from '@/utils/supabase';
+import supabase from '@/api/supabase/client';
 
 // This functions keeps the currentUser state in sync with the user's authentication state from the supabase client by using a listener.
 const authListener = () => {

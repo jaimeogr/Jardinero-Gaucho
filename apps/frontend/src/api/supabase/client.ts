@@ -1,9 +1,9 @@
 // supabase.ts
-import 'react-native-url-polyfill/auto';
+import 'react-native-url-polyfill/auto'; //supabase docs say to include this
 import { createClient } from '@supabase/supabase-js';
 
-import 'react-native-get-random-values';
-import LargeSecureStore from './largeSecureStore';
+import 'react-native-get-random-values'; //supabase docs say to include this
+import LargeSecureStore from '@/utils/largeSecureStore';
 
 // TODO: Even with auto-refresh enabled, plan for failure cases. For example, if token refresh fails due to a network error or an expired refresh token, your app should gracefully prompt the user to log in again.
 // Meaning, test the app when the access token and especially the refresh token have expired.

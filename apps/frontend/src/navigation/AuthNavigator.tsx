@@ -6,7 +6,7 @@ import useHomeScreenController from '@/controllers/useHomeScreenController';
 import BottomTabNavigator from '@/navigation/BottonTabNavigator';
 import EmailSentScreen from '@/screens/EmailSentScreen';
 import ForgotMyPasswordScreen from '@/screens/ForgotMyPasswordScreen';
-import ResetPasswordScreen from '@/screens/ResetPasswordScreen ';
+import ResetPasswordScreen from '@/screens/ResetPasswordScreen';
 import SignInScreen from '@/screens/SignInScreen';
 import SignUpScreen from '@/screens/SignUpScreen';
 import useCurrentAccountStore from '@/stores/useCurrentAccountStore';

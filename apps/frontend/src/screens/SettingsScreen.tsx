@@ -5,7 +5,7 @@ import { Button } from 'react-native-paper';
 
 import AuthService from '@/services/authService';
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation }) => {
   const { signOut } = AuthService();
 
   const handleSignOut = async () => {
@@ -20,6 +20,9 @@ const SettingsScreen = () => {
     <View style={styles.container}>
       <Button mode="contained" onPress={handleSignOut}>
         Sign Out
+      </Button>
+      <Button style={{ marginTop: 40 }} mode="contained" onPress={() => navigation.navigate('WorkgroupSelection')}>
+        Mis grupos de trabajo
       </Button>
     </View>
   );

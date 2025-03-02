@@ -25,6 +25,10 @@ if (__DEV__) {
 }
 
 export default function App() {
+  // authLoaded will be true even after checking the auth state, so we can hide the splash screen
+  // when the auth state is loaded.
+  // So after the asyncStorage detects no user, the authLoaded will be true and the splash screen will be hidden.
+  // Be careful.
   const authLoaded = useCurrentAccountStore((state) => state.authLoaded);
 
   useEffect(() => {

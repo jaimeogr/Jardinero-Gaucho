@@ -16,13 +16,14 @@ const Stack = createNativeStackNavigator();
 
 const AuthNavigator = () => {
   const { initializeServices } = useHomeScreenController();
-
-  useEffect(() => {
-    initializeServices();
-  }, []);
-
   const currentUser: UserInterface | null = useCurrentAccountStore((state) => state.currentUser);
   const authLoaded = useCurrentAccountStore((state) => state.authLoaded);
+
+  useEffect(() => {
+    if (currentUser) {
+      initializeServices();
+    }
+  }, [currentUser]);
 
   if (!authLoaded) {
     return null; // will return nothing until the auth state is loaded in App.tsx

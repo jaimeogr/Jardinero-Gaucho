@@ -1,18 +1,21 @@
 // authListener.ts
+import supabase from '@/api/supabase/client';
 import { refreshCurrentAccount } from '@/services/accountService';
 import useCurrentAccountStore from '@/stores/useCurrentAccountStore';
 import { UserInterface } from '@/types/types';
-import supabase from '@/api/supabase/client';
 
 // This functions keeps the currentUser state in sync with the user's authentication state from the supabase client by using a listener.
 const authListener = () => {
-  supabase.auth.onAuthStateChange((event, session) => {
+  supabase.auth.onAuthStateChange(async (event, session) => {
     if (session?.user) {
-      (async () => {
-        console.log('onAuthStateChange');
+      console.log('onAuthStateChange - current user exists.');
+      try {
         await refreshCurrentAccount(session.user.id);
+      } catch (error) {
+        console.error('Error initializing user data:', error);
+      } finally {
         useCurrentAccountStore.getState().setAuthLoaded(true);
-      })();
+      }
     } else {
       useCurrentAccountStore.getState().setCurrentUser(null);
       useCurrentAccountStore.getState().setAuthLoaded(true);

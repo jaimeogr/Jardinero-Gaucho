@@ -12,7 +12,7 @@
     "clean-android": "npx expo start --android -c",
     "c2": "npm run clean-android",
     "abuild": "npx expo run:android",
-    "c3": "npm run abuild",
+    "c3": "npm run xx && npm run abuild",
     "c3d": "npx expo run:android --device",
     "buildlocal": "eas build --local --profile development --platform android",
     "c4": "npm run buildlocal",
@@ -24,7 +24,7 @@
     "sound": "powershell -Command \"eas build --profile development --platform android; if ($?) { 1..3 | ForEach-Object { [console]::Beep(400, 50) } } else { 1..3 | ForEach-Object { [console]::Beep(3000, 50) } }\"",
     "remove-unused-deps": "npx depcheck",
     "ios": "npx expo run:ios",
-    "xx": "adb uninstall com.teromatero.jardinerogaucho"
+    "xx": "adb uninstall com.teromatero.jardinerogaucho || echo uninstall failed, ignoring error"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
@@ -37,6 +37,7 @@
     "@react-navigation/stack": "^6.4.1",
     "@supabase/supabase-js": "^2.48.1",
     "aes-js": "^3.1.2",
+    "camelcase-keys": "^9.1.3",
     "expo": "~51.0.38",
     "expo-auth-session": "~5.5.2",
     "expo-dev-client": "~4.0.29",

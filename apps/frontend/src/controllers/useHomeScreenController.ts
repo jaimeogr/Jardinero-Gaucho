@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'; //TODO: ID Generator might be not completel
 import BackendService from '@/backend/BackendService';
 import useLotService from '@/services/useLotService';
 import useWorkgroupService from '@/services/useWorkgroupService';
+import useCurrentAccountStore from '@/stores/useCurrentAccountStore';
 import useHomeScreenStore from '@/stores/useHomeScreenStore';
 import useLotStore from '@/stores/useLotStore';
 import useWorkgroupStore from '@/stores/useWorkgroupStore';
@@ -21,17 +22,25 @@ const useHomeScreenController = (): IHomeScreenController => {
   const selectedLots: Set<string> = useHomeScreenStore((state) => state.selectedLots);
   const expandedZones: Set<string> = useHomeScreenStore((state) => state.expandedZones);
   const expandedNeighbourhoods: Set<string> = useHomeScreenStore((state) => state.expandedNeighbourhoods);
+  const currentUser = useCurrentAccountStore((state) => state.currentUser);
 
-  const initializeServices = () => {
+  const initializeServices = async () => {
+    console.log('Initializing services for HomeScreenController');
     // Initialize Lots, Zones and Neighbourhoods
     const lotsData = BackendService.getMyLots();
     const neighbourhoodData = BackendService.getNeighbourhoodZoneData();
     useLotStore.getState().initializeLots(lotsData);
     useLotStore.getState().initializeNeighbourhoodsAndZones(neighbourhoodData);
 
+    console.log('JSON.stringify(currentUser, null, 2)');
+
+    console.log(JSON.stringify(currentUser, null, 2));
     // Initialize Users and Workgroups
-    useWorkgroupService.initializeWorkgroups();
-    setActiveWorkgroup('1');
+    if (currentUser?.userId) {
+      console.log('Maybe will initialize workgroups for user:', currentUser?.userId);
+      await useWorkgroupService.initializeWorkgroups(currentUser?.userId);
+      await useWorkgroupService.setActiveWorkgroup();
+    }
   };
 
   const markLotCompletedForSpecificDate = (lotId: string, date?: Date) => {
@@ -75,7 +84,7 @@ const useHomeScreenController = (): IHomeScreenController => {
   };
 
   const createNeighbourhood = (neighbourhoodLabel: string): NeighbourhoodData => {
-    const neighbourhood = useLotService.addNeighbourhood(activeWorkgroupId, neighbourhoodLabel);
+    const neighbourhood = useLotService.addNeighborhood(activeWorkgroupId, neighbourhoodLabel);
 
     useLotStore.getState().addNeighbourhood(neighbourhood);
 

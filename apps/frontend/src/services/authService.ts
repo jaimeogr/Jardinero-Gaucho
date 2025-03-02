@@ -1,4 +1,4 @@
-// authService.ts
+// services/authService.ts
 import {
   GoogleSignin,
   statusCodes,
@@ -9,8 +9,8 @@ import Mailcheck from 'mailcheck';
 import { useState } from 'react';
 import validator from 'validator';
 
-import { refreshCurrentAccount } from '@/services/accountService';
 import supabase from '@/api/supabase/client';
+import { refreshCurrentAccount } from '@/services/accountService';
 
 // Configure Google Sign-In
 GoogleSignin.configure({
@@ -34,8 +34,6 @@ const AuthService = () => {
       await GoogleSignin.hasPlayServices();
       const googleResponse = await GoogleSignin.signIn();
       if (isSuccessResponse(googleResponse)) {
-        console.log(JSON.stringify(googleResponse.data, null, 2));
-
         // Sign in with Supabase using the Google ID token
         const { data: supaData, error: supaError } = await supabase.auth.signInWithIdToken({
           provider: 'google',
@@ -45,7 +43,6 @@ const AuthService = () => {
           console.error('Supabase sign-in error:', error);
           return;
         }
-        console.log(JSON.stringify(supaData, null, 2));
 
         // Update the user's first and last name in the "accounts" table if they are missing
         if (supaData && supaData.user) {

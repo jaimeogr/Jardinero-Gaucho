@@ -2,6 +2,7 @@
 
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
+import { createNeighborhood, createZone } from '@/api/supabase/endpoints';
 import {
   LotWithNeedMowingInterface,
   ZoneWithIndicatorsInterface,
@@ -206,20 +207,22 @@ const computeNestedLots = (
   return result;
 };
 
-const addNeighbourhood = (workgroupId: string | null, neighbourhoodLabel: string): NeighbourhoodData => {
+const addNeighborhood = async (workgroupId: string | null, neighbourhoodLabel: string): NeighbourhoodData => {
   if (!workgroupId) {
     throw new Error('Missing workgroupId in addNeighbourhood');
   }
 
-  const newNeighbourhood: NeighbourhoodData = {
-    workgroupId: workgroupId,
-    neighbourhoodId: uuidv4(),
-    neighbourhoodLabel: neighbourhoodLabel,
-    isSelected: false, // Initialize isSelected
-    isExpanded: false, // Initialize isExpanded
-    zones: [], // Initialize zones as an empty array
-  };
-  return newNeighbourhood;
+  try {
+    let newNeighborhood: Partial<NeighbourhoodData> = await createNeighborhood(
+      '1791d27a-0cad-4703-b49a-6ec5d02dc9cc',
+      neighbourhoodLabel,
+    );
+    newNeighborhood = { ...newNeighborhood, isSelected: false, isExpanded: false, zones: [] };
+    console.log('New neighborhood created:', newNeighborhood);
+    return newNeighborhood;
+  } catch (error) {
+    console.log('Failed to create neighborhood:', error.message);
+  }
 };
 
 const addZoneToNeighbourhood = (neighbourhoodId: string, zoneLabel: string): ZoneData => {
@@ -240,5 +243,5 @@ export default {
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
   addZoneToNeighbourhood,
-  addNeighbourhood,
+  addNeighborhood,
 };

@@ -14,7 +14,7 @@ const WorkgroupCreationScreen = ({ navigation }) => {
     setWorkgroupName('Jardineria ' + currentUser?.firstName);
   }, [currentUser]);
 
-  const handleCreateWorkgroup = async (workgroupName) => {
+  const handleCreateWorkgroup = async () => {
     try {
       await createWorkgroup(workgroupName);
       navigation.navigate('HomeMain');
@@ -31,7 +31,7 @@ const WorkgroupCreationScreen = ({ navigation }) => {
         value={workgroupName}
         onChangeText={(workgroupName) => setWorkgroupName(workgroupName)}
       />
-      <Button title="Siguiente" onPress={() => handleCreateWorkgroup(workgroupName)}></Button>
+      <Button title="Siguiente" onPress={() => handleCreateWorkgroup()}></Button>
     </View>
   );
 };

@@ -463,6 +463,26 @@ CREATE POLICY "Allowed lot view" ON public.lots
   );
 
 
+-- Policies for neighborhoods
+CREATE POLICY "Allow privileged users to delete neighborhoods"
+ON public.neighborhoods
+FOR DELETE
+USING (public.has_priviliges (auth.uid(), workgroup_id));
+
+CREATE POLICY "Allow privileged users to update neighborhoods"
+ON public.neighborhoods
+FOR UPDATE
+USING (public.has_priviliges (auth.uid(), workgroup_id));
+
+CREATE POLICY "Allow viewing neighborhoods"
+ON public.neighborhoods
+FOR SELECT
+USING (public.has_priviliges (auth.uid(), workgroup_id));
+
+CREATE POLICY "Allow privileged users to create neighborhoods"
+ON public.neighborhoods
+FOR INSERT
+WITH CHECK (public.has_priviliges (auth.uid(), workgroup_id));
 
 /*
 *

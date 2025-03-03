@@ -222,15 +222,26 @@ const addNeighborhood = async (workgroupId: string | null, neighbourhoodLabel: s
   }
 };
 
-const addZoneToNeighbourhood = (neighbourhoodId: string, zoneLabel: string): ZoneData => {
-  const zone: ZoneData = {
-    zoneId: uuidv4(),
-    zoneLabel: zoneLabel,
-    isSelected: false, // Initialize isSelected
-    isExpanded: false, // Initialize isExpanded
-  };
+const addZoneToNeighbourhood = async (
+  workgroupId: string | null,
+  neighbourhoodId: string,
+  zoneLabel: string,
+): Promise<ZoneData> => {
+  if (!workgroupId) {
+    throw new Error('Missing workgroupId in addZoneToNeighbourhood');
+  }
+  if (!neighbourhoodId) {
+    throw new Error('Missing neighbourhoodId in addZoneToNeighbourhood');
+  }
 
-  return zone;
+  try {
+    let newZone: Partial<ZoneData> = await createZone(workgroupId, neighbourhoodId, zoneLabel);
+    newZone = { ...newZone, isSelected: false, isExpanded: false };
+    return newZone as ZoneData;
+  } catch (error) {
+    console.log('Failed to create zone:', error.message);
+    throw error;
+  }
 };
 
 export default {

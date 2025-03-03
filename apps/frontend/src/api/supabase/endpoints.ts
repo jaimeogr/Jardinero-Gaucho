@@ -94,16 +94,16 @@ export async function createNeighborhood(workgroup_id: string, label: string) {
 
 /**
  * Creates a new zone in the specified neighborhood and workgroup.
- * @param neighborhood_id - The ID of the neighborhood to which the zone belongs.
  * @param workgroup_id - The ID of the workgroup to which the zone belongs.
+ * @param neighborhood_id - The ID of the neighborhood to which the zone belongs.
  * @param label - The label (name) of the new zone.
  * @returns The newly created zone record.
  * @throws An error if the insert fails (e.g., due to permissions or invalid data).
  */
-export async function createZone(neighborhood_id: string, workgroup_id: string, label: string) {
+export async function createZone(workgroup_id: string, neighborhood_id: string, label: string) {
   const { data, error } = await supabase
     .from('zones')
-    .insert([{ neighborhood_id, workgroup_id, label }])
+    .insert([{ workgroup_id, neighborhood_id, label }])
     .select()
     .single();
 
@@ -112,7 +112,9 @@ export async function createZone(neighborhood_id: string, workgroup_id: string, 
     throw error;
   }
 
-  const camelData = camelcaseKeys(data, { deep: true });
+  const transformedData = { ...data, zoneId: data.id, zoneLabel: data.label };
+
+  const camelData = camelcaseKeys(transformedData, { deep: true });
   console.log('createZone:\n', JSON.stringify(camelData, null, 2));
 
   return data;

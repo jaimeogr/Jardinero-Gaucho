@@ -119,21 +119,22 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   // Add new zone
-  const handleAddZone = () => {
+  const handleAddZone = async () => {
     if (newZoneLabel.trim() === '') {
-      Alert.alert(
-        'Problema con el texto ingresado',
-        'La zona no puede estar vacia, al menos poner un numero. No seas Vago',
-      );
+      Alert.alert('Problema con el texto ingresado', 'La zona no puede estar vacía.');
       return;
     }
-
-    const newZone = createZone(lotData.neighbourhoodId, newZoneLabel.trim());
-    handleInputChange('zoneId', newZone.zoneId);
-    handleInputChange('zoneLabel', newZone.zoneLabel);
-    // Close modal
-    setShowZoneModal(false);
-    setNewZoneLabel('');
+    try {
+      const newZone = await createZone(lotData.neighbourhoodId, newZoneLabel.trim());
+      handleInputChange('zoneId', newZone.zoneId);
+      handleInputChange('zoneLabel', newZone.zoneLabel);
+      // Close modal
+      setShowZoneModal(false);
+      setNewZoneLabel('');
+    } catch (error) {
+      console.error('Error adding zone:', error);
+      Alert.alert('Por favor, intentá de nuevo.', 'No se pudo agregar la zona.');
+    }
   };
 
   // Clear selected date

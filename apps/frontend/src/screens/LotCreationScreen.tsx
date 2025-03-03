@@ -96,24 +96,26 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   // Add new neighbourhood
-  const handleAddNeighbourhood = () => {
+  const handleAddNeighbourhood = async () => {
     if (newNeighbourhoodLabel.trim() === '') {
-      Alert.alert(
-        'Problema con el texto ingresado',
-        'El Barrio no puede estar vacio, al menos poner un numero. No seas Vago',
-      );
+      Alert.alert('Problema con el texto ingresado', 'El Barrio no puede estar vacío.');
       return;
     }
 
-    const newNeighbourhood = createNeighbourhood(newNeighbourhoodLabel.trim());
-    handleInputChange('neighbourhoodId', newNeighbourhood.neighbourhoodId);
-    handleInputChange('neighbourhoodLabel', newNeighbourhood.neighbourhoodLabel);
-    // Close modal
-    setShowNeighbourhoodModal(false);
-    setNewNeighbourhoodLabel('');
-    // Reset zone selection
-    handleInputChange('zoneId', '');
-    handleInputChange('zoneLabel', '');
+    try {
+      const newNeighbourhood = await createNeighbourhood(newNeighbourhoodLabel.trim());
+      handleInputChange('neighbourhoodId', newNeighbourhood.neighbourhoodId);
+      handleInputChange('neighbourhoodLabel', newNeighbourhood.neighbourhoodLabel);
+      // Close modal
+      setShowNeighbourhoodModal(false);
+      setNewNeighbourhoodLabel('');
+      // Reset zone selection
+      handleInputChange('zoneId', '');
+      handleInputChange('zoneLabel', '');
+    } catch (error) {
+      console.error('Error adding neighborhood:', error);
+      Alert.alert('Por favor, intentá de nuevo.', 'No se pudo agregar el barrio');
+    }
   };
 
   // Add new zone

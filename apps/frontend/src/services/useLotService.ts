@@ -207,21 +207,21 @@ const computeNestedLots = (
   return result;
 };
 
-const addNeighborhood = async (workgroupId: string | null, neighbourhoodLabel: string): NeighbourhoodData => {
+const addNeighborhood = async (workgroupId: string | null, neighbourhoodLabel: string): Promise<NeighbourhoodData> => {
   if (!workgroupId) {
     throw new Error('Missing workgroupId in addNeighbourhood');
   }
 
   try {
-    let newNeighborhood: Partial<NeighbourhoodData> = await createNeighborhood(
-      '1791d27a-0cad-4703-b49a-6ec5d02dc9cc',
-      neighbourhoodLabel,
-    );
+    console.log('Creating new neighborhood for WG:', workgroupId);
+    let newNeighborhood: Partial<NeighbourhoodData> = await createNeighborhood(workgroupId, neighbourhoodLabel);
+    console.log('New neighborhood created:\n', JSON.stringify(newNeighborhood, null, 2));
     newNeighborhood = { ...newNeighborhood, isSelected: false, isExpanded: false, zones: [] };
-    console.log('New neighborhood created:', newNeighborhood);
-    return newNeighborhood;
+    console.log('New neighborhood created:\n', JSON.stringify(newNeighborhood, null, 2));
+    return newNeighborhood as NeighbourhoodData;
   } catch (error) {
     console.log('Failed to create neighborhood:', error.message);
+    throw error;
   }
 };
 

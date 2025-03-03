@@ -83,8 +83,8 @@ const useHomeScreenController = (): IHomeScreenController => {
     return zone;
   };
 
-  const createNeighbourhood = (neighbourhoodLabel: string): NeighbourhoodData => {
-    const neighbourhood = useLotService.addNeighborhood(activeWorkgroupId, neighbourhoodLabel);
+  const createNeighbourhood = async (neighbourhoodLabel: string): Promise<NeighbourhoodData> => {
+    const neighbourhood = await useLotService.addNeighborhood(activeWorkgroupId, neighbourhoodLabel);
 
     useLotStore.getState().addNeighbourhood(neighbourhood);
 

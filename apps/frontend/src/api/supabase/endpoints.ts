@@ -47,7 +47,6 @@ export async function getUserWorkgroupsWithRoles(accountId: string) {
     })) || [];
 
   const camelData = camelcaseKeys(flattenedData, { deep: true });
-
   console.log('getUserWorkgroupsWithRoles:\n', JSON.stringify(camelData, null, 2));
 
   return camelData;
@@ -61,12 +60,14 @@ export async function getUserWorkgroupsWithRoles(accountId: string) {
  */
 export async function createWorkgroup(name: string) {
   // Insert a new workgroup. The id, created_at, and updated_at fields will be auto-generated.
-  const { data, error } = await supabase.from('workgroups').insert([{ name }]).single();
+  const { data, error } = await supabase.from('workgroups').insert([{ name }]).select().single();
 
   if (error) {
     console.error('Error creating workgroup:', error);
     throw error;
   }
+  const camelData = camelcaseKeys(data, { deep: true });
+  console.log('createWorkgroup:\n', JSON.stringify(camelData, null, 2));
 
   return data;
 }
@@ -79,14 +80,19 @@ export async function createWorkgroup(name: string) {
  * @throws An error if the insert fails (e.g., due to permissions or invalid data).
  */
 export async function createNeighborhood(workgroup_id: string, label: string) {
-  const { data, error } = await supabase.from('neighborhoods').insert([{ workgroup_id, label }]).single();
+  const { data, error } = await supabase.from('neighborhoods').insert([{ workgroup_id, label }]).select().single();
 
   if (error) {
     console.error('Error creating neighborhood:', error);
     throw error;
   }
 
-  return data;
+  const transformedData = { ...data, neighbourhoodId: data.id, neighbourhoodLabel: data.label };
+
+  const camelData = camelcaseKeys(transformedData, { deep: true });
+  console.log('createNeighborhood:\n', JSON.stringify(camelData, null, 2));
+
+  return camelData;
 }
 
 /**
@@ -98,12 +104,19 @@ export async function createNeighborhood(workgroup_id: string, label: string) {
  * @throws An error if the insert fails (e.g., due to permissions or invalid data).
  */
 export async function createZone(neighborhood_id: string, workgroup_id: string, label: string) {
-  const { data, error } = await supabase.from('zones').insert([{ neighborhood_id, workgroup_id, label }]).single();
+  const { data, error } = await supabase
+    .from('zones')
+    .insert([{ neighborhood_id, workgroup_id, label }])
+    .select()
+    .single();
 
   if (error) {
     console.error('Error creating zone:', error);
     throw error;
   }
+
+  const camelData = camelcaseKeys(data, { deep: true });
+  console.log('createZone:\n', JSON.stringify(camelData, null, 2));
 
   return data;
 }

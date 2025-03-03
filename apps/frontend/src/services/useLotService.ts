@@ -213,11 +213,8 @@ const addNeighborhood = async (workgroupId: string | null, neighbourhoodLabel: s
   }
 
   try {
-    console.log('Creating new neighborhood for WG:', workgroupId);
     let newNeighborhood: Partial<NeighbourhoodData> = await createNeighborhood(workgroupId, neighbourhoodLabel);
-    console.log('New neighborhood created:\n', JSON.stringify(newNeighborhood, null, 2));
     newNeighborhood = { ...newNeighborhood, isSelected: false, isExpanded: false, zones: [] };
-    console.log('New neighborhood created:\n', JSON.stringify(newNeighborhood, null, 2));
     return newNeighborhood as NeighbourhoodData;
   } catch (error) {
     console.log('Failed to create neighborhood:', error.message);

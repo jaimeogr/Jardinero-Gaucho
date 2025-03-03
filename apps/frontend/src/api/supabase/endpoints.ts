@@ -88,10 +88,7 @@ export async function createNeighborhood(workgroup_id: string, label: string) {
   }
 
   const transformedData = { ...data, neighbourhoodId: data.id, neighbourhoodLabel: data.label };
-
   const camelData = camelcaseKeys(transformedData, { deep: true });
-  console.log('createNeighborhood:\n', JSON.stringify(camelData, null, 2));
-
   return camelData;
 }
 

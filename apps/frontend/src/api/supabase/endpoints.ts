@@ -119,3 +119,59 @@ export async function createZone(workgroup_id: string, neighborhood_id: string, 
 
   return camelData;
 }
+
+/**
+ * Creates a new lot in the specified workgroup and zone.
+ * @param {string} workgroup_id - The ID of the workgroup to which the lot belongs.
+ * @param {string} zone_id - The ID of the zone to which the lot belongs.
+ * @param {string} label - The label (name) of the new lot.
+ * @param {string} [last_mowing_date] - (Optional) The last mowing date in ISO format (e.g., "2023-10-15T12:00:00Z").
+ * @param {string} [extra_notes] - (Optional) Extra notes about the lot.
+ * @returns {Promise<Object>} The newly created lot record, transformed to camelCase.
+ * @throws {Error} If the insertion fails (e.g., due to invalid data or permissions).
+ */
+export async function createLot(
+  workgroup_id: string,
+  zone_id: string,
+  label: string,
+  last_mowing_date: Date | undefined,
+  extra_notes: string | undefined,
+) {
+  // Prepare the data object with required fields
+  type LotInsertData = {
+    workgroup_id: string;
+    zone_id: string;
+    label: string;
+    last_mowing_date?: Date | null;
+    extra_notes?: string | null;
+  };
+  const insertData: LotInsertData = {
+    workgroup_id,
+    zone_id,
+    label,
+    last_mowing_date,
+    extra_notes,
+  };
+
+  // Insert the data into the 'lots' table and select the inserted record
+  const { data, error } = await supabase.from('lots').insert([insertData]).select().single();
+
+  // Handle any insertion errors
+  if (error) {
+    console.error('Error creating lot:', error.message);
+    throw new Error(`Failed to create lot: ${error.message}`);
+  }
+
+  // Transform the returned data to match the application's expected format
+  const transformedData = {
+    ...data,
+    lotId: data.id,
+    lotLabel: data.label,
+  };
+
+  // Convert keys to camelCase for consistency
+  const camelData = camelcaseKeys(transformedData, { deep: true });
+
+  console.log('Created lot:\n', JSON.stringify(camelData, null, 2));
+  return camelData;
+}

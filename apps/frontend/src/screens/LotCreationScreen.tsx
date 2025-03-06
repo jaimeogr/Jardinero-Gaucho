@@ -11,7 +11,7 @@ import CustomSelectInput from '@/components/CustomSelectInput';
 import CustomTextInput from '@/components/CustomTextInput';
 import useHomeScreenController from '@/controllers/useHomeScreenController';
 import { theme } from '@/styles/styles';
-import { LotComputedForDisplay } from '@/types/types';
+import { LotInStore } from '@/types/types';
 
 type RootStackParamList = {
   LotCreation: undefined;
@@ -148,16 +148,15 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       Alert.alert('Falta información.', 'Es necesario que completes todos los campos.');
       return;
     }
-    const newLot: Partial<LotComputedForDisplay> = {
+    const partialLot: Partial<LotInStore> = {
       ...lotData,
       lotId: undefined,
-      lotIsSelected: false,
       workgroupId: undefined,
       lastMowingDate: lotData.lastMowingDate || undefined,
     };
     try {
-      const success = createLot(newLot);
-      if (success) {
+      const createdLot = await createLot(partialLot);
+      if (createdLot) {
         console.log('Created a new lot.');
         // if the user wants to keep creating lots
         if (keepCreating) {
@@ -170,6 +169,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       }
     } catch (error) {
       console.error('An error occurred while creating the lot:', error);
+      Alert.alert('Por favor, intentá de nuevo.', 'No se pudo cargar el lote.');
     }
   };
 

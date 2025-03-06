@@ -64,15 +64,12 @@ const useHomeScreenController = (): IHomeScreenController => {
     return true;
   };
 
-  const createLot = (lot: Partial<LotInStore>): boolean => {
-    try {
-      const newLot = useLotService.createLot(activeWorkgroupId, lot);
-      useLotStore.getState().addLot(newLot);
-      return true; // Indicate success
-    } catch (error) {
-      console.error('Error creating lot:', error);
-      return false; // Indicate failure
-    }
+  const createLot = async (partialLot: Partial<LotInStore>): Promise<LotInStore> => {
+    const newLot = await useLotService.addLot(activeWorkgroupId, partialLot);
+
+    useLotStore.getState().addLot(newLot);
+
+    return newLot;
   };
 
   const createZone = async (neighbourhoodId: string, zoneLabel: string): Promise<ZoneData> => {

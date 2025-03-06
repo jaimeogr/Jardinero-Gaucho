@@ -142,8 +142,8 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     handleInputChange('lastMowingDate', null);
   };
 
-  // Submit lot and navigate back
-  const handleSubmit = async (keepCreating: boolean) => {
+  // Submit lot. Maybe navigate back, maybe keep creating lots
+  const handleCreateLot = async (keepCreating: boolean) => {
     if (!lotData.lotLabel || !lotData.neighbourhoodLabel || !lotData.zoneLabel) {
       Alert.alert('Falta información.', 'Es necesario que completes todos los campos.');
       return;
@@ -342,12 +342,12 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.submitButton, { flex: 6 }]}
-            onPress={() => handleSubmit(false)}
+            onPress={() => handleCreateLot(false)}
           >
             <Text style={styles.submitButtonText}>Crear Lote</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={[styles.button, styles.nextLotButton]} onPress={() => handleSubmit(true)}>
+        <TouchableOpacity style={[styles.button, styles.nextLotButton]} onPress={() => handleCreateLot(true)}>
           <Text style={styles.nextLotButtonText}>Crear Lote y Siguiente</Text>
         </TouchableOpacity>
       </View>

@@ -117,5 +117,5 @@ export async function createZone(workgroup_id: string, neighborhood_id: string, 
   const camelData = camelcaseKeys(transformedData, { deep: true });
   console.log('createZone:\n', JSON.stringify(camelData, null, 2));
 
-  return data;
+  return camelData;
 }

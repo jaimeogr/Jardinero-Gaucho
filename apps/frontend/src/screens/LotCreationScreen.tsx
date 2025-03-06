@@ -243,10 +243,10 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
 
           {/* Lot Label Input */}
           <CustomTextInput
-            label="Casa"
+            label="Lote"
             value={lotData.lotLabel}
             onChangeText={(text) => handleInputChange('lotLabel', text)}
-            placeholder="Ingresá la casa"
+            placeholder="Ingresá el lote o dirección"
           />
 
           {/* Last Mowing Date - Date Picker */}

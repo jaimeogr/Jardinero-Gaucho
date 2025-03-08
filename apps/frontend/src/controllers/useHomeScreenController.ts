@@ -14,6 +14,7 @@ import { IHomeScreenController } from '@/types/controllerTypes';
 import { ZoneData, NestedLotsWithIndicatorsInterface, NeighbourhoodData, LotInStore } from '@/types/types';
 
 const useHomeScreenController = (): IHomeScreenController => {
+  const allTheUsersWorkgroups = useWorkgroupStore((state) => state.workgroups);
   const activeWorkgroupId = useWorkgroupStore((state) => state.activeWorkgroupId);
   const lots: LotInStore[] = useLotStore((state) => state.lots);
   const neighbourhoodsWithZones: NeighbourhoodData[] = useLotStore(
@@ -27,19 +28,25 @@ const useHomeScreenController = (): IHomeScreenController => {
   const initializeServices = async () => {
     console.log('Initializing services for HomeScreenController');
     // Initialize Lots, Zones and Neighbourhoods
-    const lotsData = BackendService.getMyLots();
-    const neighbourhoodData = BackendService.getNeighbourhoodZoneData();
-    useLotStore.getState().initializeLots(lotsData);
-    useLotStore.getState().initializeNeighbourhoodsAndZones(neighbourhoodData);
-
-    console.log('JSON.stringify(currentUser, null, 2)');
 
     console.log(JSON.stringify(currentUser, null, 2));
     // Initialize Users and Workgroups
     if (currentUser?.userId) {
-      console.log('Maybe will initialize workgroups for user:', currentUser?.userId);
       await useWorkgroupService.initializeWorkgroups(currentUser?.userId);
       await useWorkgroupService.setActiveWorkgroup();
+
+      const allTheUsersWorkgroupsIds = allTheUsersWorkgroups.map((wg) => wg.workgroupId);
+      const allLotsOfTheUser = await useLotService.initializeLots(allTheUsersWorkgroupsIds);
+      useLotStore.getState().initializeLots(allLotsOfTheUser);
+
+      console.log('Lots to initialize for all the workgroups:\n', JSON.stringify(allLotsOfTheUser, null, 2));
+
+      const neighbourhoodsAndZones = await useLotService.initializeNeighbourhoodsAndZones(allTheUsersWorkgroupsIds);
+      useLotStore.getState().initializeNeighbourhoodsAndZones(neighbourhoodsAndZones);
+      console.log(
+        'NeighborhoodZoneData to initialize for all the workgroups:\n',
+        JSON.stringify(neighbourhoodsAndZones, null, 2),
+      );
     }
   };
 

@@ -2,7 +2,7 @@
 
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
-import { createNeighborhood, createZone, createLot } from '@/api/supabase/endpoints';
+import { getNeighbourhoodZoneData, getLots, createNeighborhood, createZone, createLot } from '@/api/supabase/endpoints';
 import {
   LotWithNeedMowingInterface,
   ZoneWithIndicatorsInterface,
@@ -11,8 +11,39 @@ import {
   NeighbourhoodData,
   ZoneData,
   LotInStore,
+  NeighbourhoodZoneData,
 } from '@/types/types';
 import { lotNeedsMowing } from '@/utils/DateAnalyser';
+
+const initializeNeighbourhoodsAndZones = async (
+  allTheUsersWorkgroupsIds: string[] | null,
+): Promise<NeighbourhoodZoneData> => {
+  if (!allTheUsersWorkgroupsIds) {
+    throw new Error('Missing allTheUsersWorkgroupsIds in initializeNeighbourhoodsAndZones');
+  }
+
+  try {
+    const neighbourhoodsAndZones = await getNeighbourhoodZoneData(allTheUsersWorkgroupsIds);
+    return neighbourhoodsAndZones as NeighbourhoodZoneData;
+  } catch (error) {
+    console.log('Failed to initialize neighbourhoods and zones:', error.message);
+    throw error;
+  }
+};
+
+const initializeLots = async (allTheUsersWorkgroupsIds: string[] | null): Promise<LotInStore[]> => {
+  if (!allTheUsersWorkgroupsIds) {
+    throw new Error('Missing workgroupId in initializeLots');
+  }
+
+  try {
+    const lots = await getLots(allTheUsersWorkgroupsIds);
+    return lots as LotInStore[];
+  } catch (error) {
+    console.log('Failed to initialize lots:', error.message);
+    throw error;
+  }
+};
 
 const addLot = async (workgroupId: string | null, partialLot: Partial<LotInStore>): Promise<LotInStore> => {
   if (!workgroupId) {
@@ -250,6 +281,8 @@ const computeNestedLots = (
 
 export default {
   // Lots, zones, neighbourhoods
+  initializeLots,
+  initializeNeighbourhoodsAndZones,
   addLot,
   addNeighborhood,
   addZoneToNeighbourhood,

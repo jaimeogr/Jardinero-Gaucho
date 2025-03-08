@@ -46,6 +46,7 @@ const setActiveWorkgroup = async (workgroupId?: string): Promise<string | undefi
     await LocalStorageService.setLastActiveWorkgroup(newActiveWorkgroupId);
   }
 
+  console.log('Active workgroup set to:', newActiveWorkgroupId);
   return newActiveWorkgroupId;
 };
 

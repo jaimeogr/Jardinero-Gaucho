@@ -2,6 +2,7 @@
 import camelcaseKeys from 'camelcase-keys';
 
 import supabase from '@/api/supabase/client';
+import { NeighbourhoodZoneData, LotInStore } from '@/types/types';
 
 /**
  * Retrieves all workgroups associated with the authenticated user, including their role.
@@ -10,7 +11,6 @@ import supabase from '@/api/supabase/client';
  * @throws An error if the query fails (e.g., due to permissions or database issues).
  */
 export async function getUserWorkgroupsWithRoles(accountId: string) {
-  console.log('getUserWorkgroupsWithRoles:', accountId);
   const { data, error } = await supabase
     .from('account_workgroups')
     .select(
@@ -32,7 +32,6 @@ export async function getUserWorkgroupsWithRoles(accountId: string) {
     console.error('Error fetching workgroups with roles:', error);
     throw error;
   }
-  console.log('getUserWorkgroupsWithRoles:\n', JSON.stringify(data, null, 2));
 
   // Transform the data to a flatter structure
   const flattenedData =
@@ -47,9 +46,67 @@ export async function getUserWorkgroupsWithRoles(accountId: string) {
     })) || [];
 
   const camelData = camelcaseKeys(flattenedData, { deep: true });
-  console.log('getUserWorkgroupsWithRoles:\n', JSON.stringify(camelData, null, 2));
 
   return camelData;
+}
+
+export async function getNeighbourhoodZoneData(allTheUsersWorkgroupsIds: string[]): Promise<NeighbourhoodZoneData> {
+  const { data: neighbourhoodData, error } = await supabase
+    .from('neighborhoods')
+    .select('id, label, workgroup_id, zones(id, label)')
+    .in('workgroup_id', allTheUsersWorkgroupsIds);
+
+  if (error) {
+    console.error('Error fetching neighbourhoods and zones:', error);
+    throw error;
+  }
+
+  // Transform to NeighbourhoodData structure
+  const transformedNeighbourhoods = neighbourhoodData.map((n) => {
+    const zones =
+      n.zones.map((z) => ({
+        zoneId: z.id,
+        zoneLabel: z.label,
+        isSelected: false,
+        isExpanded: false,
+      })) || []; // Ensure zones is an empty array if no zones exist
+    return {
+      neighbourhoodId: n.id,
+      neighbourhoodLabel: n.label,
+      workgroupId: n.workgroup_id,
+      zones,
+      isSelected: false,
+      isExpanded: false,
+    };
+  });
+
+  return { neighbourhoods: transformedNeighbourhoods };
+}
+
+export async function getLots(allTheUsersWorkgroupsIds: string[]): Promise<LotInStore[]> {
+  const { data, error } = await supabase
+    .from('lots')
+    .select('id, workgroup_id, label, zone_id, last_mowing_date, extra_notes, zones(neighborhood_id)')
+    .in('workgroup_id', allTheUsersWorkgroupsIds);
+
+  if (error) {
+    console.error('Error fetching lots:', error);
+    throw error;
+  }
+
+  const lots: LotInStore[] = data.map((lot) => {
+    return {
+      lotId: lot.id,
+      workgroupId: lot.workgroup_id,
+      lotLabel: lot.label,
+      zoneId: lot.zone_id,
+      neighbourhoodId: lot.zones[0].neighborhood_id, // Each lot has one zone
+      lastMowingDate: lot.last_mowing_date ? new Date(lot.last_mowing_date) : undefined,
+      extraNotes: lot.extra_notes,
+    };
+  });
+
+  return lots;
 }
 
 /**

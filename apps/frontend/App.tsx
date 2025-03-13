@@ -9,10 +9,10 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // TODO: Replace this imports with @ pattern imports
-import AuthNavigator from './src/navigation/AuthNavigator';
-import linking from './src/navigation/linking';
-import useCurrentAccountStore from './src/stores/useCurrentAccountStore';
-import authListener from './src/utils/authListener';
+import AuthNavigator from '@/navigation/AuthNavigator';
+import linking from '@/navigation/linking';
+import useCurrentAccountStore from '@/stores/useCurrentAccountStore';
+import authListener from '@/utils/authListener';
 
 SplashScreen.preventAutoHideAsync();
 authListener();

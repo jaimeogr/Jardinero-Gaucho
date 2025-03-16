@@ -51,9 +51,11 @@ export async function devAutoLogin() {
     }
 
     if (data?.user) {
-      console.log('✅ Dev auto-login successful:', data.user);
-      // Refresh the account record from your "accounts" table
-      await refreshCurrentAccount(data.user.id);
+      console.log(
+        '✅ Dev auto-login successful, will now try to initialize global state for the current user:',
+        JSON.stringify(data.user, null, 2),
+      );
+      // The authListener now will refresh the current account, theres no need to do anything else in this function.
       return true;
     }
 

@@ -4,12 +4,12 @@
   "main": "index.ts",
   "scripts": {
     "1": "emulator -avd Medium_Phone_API_35",
-    "2": "npx expo start --android",
     "emulator": "emulator -avd Medium_Phone_API_35",
     "clean-emulator": "emulator -avd Medium_Phone_API_35 -no-snapshot-load",
     "c1": "npm run clean-emulator",
     "android": "npx expo run:android",
     "clean-android": "npx expo start --android -c",
+    "2": "npx expo start --android",
     "c2": "npm run clean-android",
     "abuild": "npx expo run:android",
     "c3": "npm run xx && npm run abuild",

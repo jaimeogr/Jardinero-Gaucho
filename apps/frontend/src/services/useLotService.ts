@@ -18,8 +18,8 @@ import { lotNeedsMowing } from '@/utils/DateAnalyser';
 const initializeNeighbourhoodsAndZones = async (
   allTheUsersWorkgroupsIds: string[] | null,
 ): Promise<NeighbourhoodZoneData> => {
-  if (!allTheUsersWorkgroupsIds) {
-    throw new Error('Missing allTheUsersWorkgroupsIds in initializeNeighbourhoodsAndZones');
+  if (!allTheUsersWorkgroupsIds || allTheUsersWorkgroupsIds.length === 0) {
+    throw new Error('Missing or empty allTheUsersWorkgroupsIds in initializeNeighbourhoodsAndZones');
   }
 
   try {

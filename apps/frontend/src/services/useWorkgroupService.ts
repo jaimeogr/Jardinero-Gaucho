@@ -3,12 +3,13 @@
 import { getUserWorkgroupsWithRoles, insertWorkgroup } from '@/api/supabase/endpoints';
 import LocalStorageService from '@/localStorage/LocalStorageService';
 import useWorkgroupStore from '@/stores/useWorkgroupStore';
-import { WorkgroupInterface, UserRole } from '@/types/types';
+import { UserRole } from '@/types/types';
 
-const initializeWorkgroups = async (userId: string) => {
+const initializeWorkgroups = async (userId: string): Promise<any> => {
   console.log('Initializing workgroups for user:', userId);
   const workgroups = await getUserWorkgroupsWithRoles(userId);
   useWorkgroupStore.getState().initializeWorkgroups(workgroups);
+  return workgroups;
 };
 
 const useAllWorkgroups = () => {

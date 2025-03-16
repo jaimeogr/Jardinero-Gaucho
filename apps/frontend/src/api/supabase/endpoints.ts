@@ -51,6 +51,13 @@ export async function getUserWorkgroupsWithRoles(accountId: string) {
 }
 
 export async function getNeighbourhoodZoneData(allTheUsersWorkgroupsIds: string[]): Promise<NeighbourhoodZoneData> {
+  if (!allTheUsersWorkgroupsIds || allTheUsersWorkgroupsIds.length === 0) {
+    throw new Error('No workgroup IDs provided for fetching neighbourhood and zone data');
+  }
+
+  console.log('--------------------------------------------------------------------------------');
+  console.log('All the users workgroups ids:', allTheUsersWorkgroupsIds);
+
   const { data: neighbourhoodData, error } = await supabase
     .from('neighborhoods')
     .select('id, label, workgroup_id, zones(id, label)')
@@ -60,6 +67,8 @@ export async function getNeighbourhoodZoneData(allTheUsersWorkgroupsIds: string[
     console.error('Error fetching neighbourhoods and zones:', error);
     throw error;
   }
+
+  console.log('data for Neighbourhoods and zones:\n', JSON.stringify(neighbourhoodData, null, 2));
 
   // Transform to NeighbourhoodData structure
   const transformedNeighbourhoods = neighbourhoodData.map((n) => {
@@ -79,6 +88,8 @@ export async function getNeighbourhoodZoneData(allTheUsersWorkgroupsIds: string[
       isExpanded: false,
     };
   });
+
+  console.log('Neighbourhoods and zones:\n', JSON.stringify(transformedNeighbourhoods, null, 2));
 
   return { neighbourhoods: transformedNeighbourhoods };
 }

@@ -1,6 +1,6 @@
 // useWorkgroupService.ts
 
-import { getUserWorkgroupsWithRoles } from '@/api/supabase/endpoints';
+import { getUserWorkgroupsWithRoles, insertWorkgroup } from '@/api/supabase/endpoints';
 import LocalStorageService from '@/localStorage/LocalStorageService';
 import useWorkgroupStore from '@/stores/useWorkgroupStore';
 import { WorkgroupInterface, UserRole } from '@/types/types';
@@ -50,8 +50,9 @@ const setActiveWorkgroup = async (workgroupId?: string): Promise<string | undefi
   return newActiveWorkgroupId;
 };
 
-const createWorkgroup = (workgroup: WorkgroupInterface) => {
-  useWorkgroupStore.getState().addWorkgroup(workgroup);
+const createWorkgroup = async (workgroupName: string) => {
+  const newWG = await insertWorkgroup(workgroupName);
+  return newWG;
 };
 
 const addUserToWorkgroup = (workgroupId: string, userId: string, role: UserRole) => {

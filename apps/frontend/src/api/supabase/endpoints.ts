@@ -2,7 +2,7 @@
 import camelcaseKeys from 'camelcase-keys';
 
 import supabase from '@/api/supabase/client';
-import { NeighbourhoodZoneData, LotInStore } from '@/types/types';
+import { NeighbourhoodZoneData, LotInStore, WorkgroupInterface } from '@/types/types';
 
 /**
  * Retrieves all workgroups associated with the authenticated user, including their role.
@@ -115,7 +115,7 @@ export async function getLots(allTheUsersWorkgroupsIds: string[]): Promise<LotIn
  * @returns The newly created workgroup record.
  * @throws An error if the insert fails.
  */
-export async function createWorkgroup(name: string) {
+export async function insertWorkgroup(name: string) {
   // Insert a new workgroup. The id, created_at, and updated_at fields will be auto-generated.
   const { data, error } = await supabase.from('workgroups').insert([{ name }]).select().single();
 
@@ -123,10 +123,10 @@ export async function createWorkgroup(name: string) {
     console.error('Error creating workgroup:', error);
     throw error;
   }
-  const camelData = camelcaseKeys(data, { deep: true });
-  console.log('createWorkgroup:\n', JSON.stringify(camelData, null, 2));
+  const transformedData = { ...data, workgroupId: data.id };
+  const camelData = camelcaseKeys(transformedData, { deep: true });
 
-  return data;
+  return camelData;
 }
 
 /**

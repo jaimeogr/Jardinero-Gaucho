@@ -2,13 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Button } from 'react-native';
 
-import { createWorkgroup } from '@/api/supabase/endpoints';
 import CustomTextInput from '@/components/CustomTextInput';
+import useAccountController from '@/controllers/useAccountController';
 import useCurrentAccountStore from '@/stores/useCurrentAccountStore';
 
 const WorkgroupCreationScreen = ({ navigation }) => {
   const [workgroupName, setWorkgroupName] = useState('');
   const currentUser = useCurrentAccountStore((state) => state.currentUser);
+
+  const { createNewWorkgroup } = useAccountController();
 
   useEffect(() => {
     setWorkgroupName('Jardineria ' + currentUser?.firstName);
@@ -16,7 +18,7 @@ const WorkgroupCreationScreen = ({ navigation }) => {
 
   const handleCreateWorkgroup = async () => {
     try {
-      await createWorkgroup(workgroupName);
+      await createNewWorkgroup(workgroupName);
       navigation.navigate('HomeMain');
     } catch (error) {
       console.error('Error creating workgroup:', error);

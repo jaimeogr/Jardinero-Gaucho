@@ -6,12 +6,16 @@ import { StyleSheet } from 'react-native';
 // Import your screen components
 import HomeScreen from '@/screens/HomeScreen';
 import LotCreationScreen from '@/screens/LotCreationScreen';
+import WorkgroupCreationScreen from '@/screens/WorkgroupCreationScreen';
+import WorkgroupSelectionScreen from '@/screens/WorkgroupSelectionScreen';
 
 const Stack = createNativeStackNavigator();
 
 const HomeStackNavigator = () => {
   return (
-    <Stack.Navigator style={styles.homeStackNavigator} initialRouteName="HomeMain">
+    <Stack.Navigator style={styles.homeStackNavigator} initialRouteName="WorkgroupSelection">
+      <Stack.Screen name="WorkgroupCreation" component={WorkgroupCreationScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="WorkgroupSelection" component={WorkgroupSelectionScreen} options={{ headerShown: false }} />
       <Stack.Screen name="HomeMain" component={HomeScreen} options={{ headerShown: false }} />
       <Stack.Screen name="LotCreation" component={LotCreationScreen} options={{ title: 'Crear nuevo lote' }} />
     </Stack.Navigator>

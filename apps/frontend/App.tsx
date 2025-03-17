@@ -9,10 +9,10 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 // TODO: Replace this imports with @ pattern imports
-import AuthNavigator from './src/navigation/AuthNavigator';
-import linking from './src/navigation/linking';
-import useCurrentAccountStore from './src/stores/useCurrentAccountStore';
-import authListener from './src/utils/authListener';
+import AuthNavigator from '@/navigation/AuthNavigator';
+import linking from '@/navigation/linking';
+import useCurrentAccountStore from '@/stores/useCurrentAccountStore';
+import authListener from '@/utils/authListener';
 
 SplashScreen.preventAutoHideAsync();
 authListener();
@@ -25,6 +25,10 @@ if (__DEV__) {
 }
 
 export default function App() {
+  // authLoaded will be true even after checking the auth state, so we can hide the splash screen
+  // when the auth state is loaded.
+  // So after the asyncStorage detects no user, the authLoaded will be true and the splash screen will be hidden.
+  // Be careful.
   const authLoaded = useCurrentAccountStore((state) => state.authLoaded);
 
   useEffect(() => {

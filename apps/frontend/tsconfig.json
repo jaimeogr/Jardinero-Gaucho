@@ -6,13 +6,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["src/*"]
     },
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "jsx": "react-native"
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "App.tsx", "index.ts", "declarations.d.ts", "global.d.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,13 +1,19 @@
 // useWorkgroupService.ts
 
-import BackendService from '@/backend/BackendService';
+import { getUserWorkgroupsWithRoles, insertWorkgroup } from '@/api/supabase/endpoints';
 import LocalStorageService from '@/localStorage/LocalStorageService';
 import useWorkgroupStore from '@/stores/useWorkgroupStore';
-import { WorkgroupInterface, UserRole } from '@/types/types';
+import { UserRole } from '@/types/types';
 
-const initializeWorkgroups = () => {
-  const workgroups = BackendService.getMyWorgroups();
+const initializeWorkgroups = async (userId: string): Promise<any> => {
+  const workgroups = await getUserWorkgroupsWithRoles(userId);
   useWorkgroupStore.getState().initializeWorkgroups(workgroups);
+  return workgroups;
+};
+
+const useAllWorkgroups = () => {
+  const workgroups = useWorkgroupStore((state) => state.workgroups);
+  return workgroups;
 };
 
 const getActiveWorkgroup = () => {
@@ -15,24 +21,38 @@ const getActiveWorkgroup = () => {
   return state.workgroups.find((wg) => wg.workgroupId === state.activeWorkgroupId);
 };
 
-const setActiveWorkgroup = (workgroupId?: string) => {
+const setActiveWorkgroup = async (workgroupId?: string): Promise<string | undefined> => {
   const state = useWorkgroupStore.getState();
-  let activeWorkgroupId = workgroupId;
+  let newActiveWorkgroupId = workgroupId;
 
-  if (!activeWorkgroupId) {
-    activeWorkgroupId = LocalStorageService.getLastUsedWorkgroup();
+  // If no workgroupId is provided, try to retrieve it from local storage.
+  if (!newActiveWorkgroupId) {
+    newActiveWorkgroupId = await LocalStorageService.getLastActiveWorkgroup();
+    if (newActiveWorkgroupId && !state.workgroups.some((wg) => wg.workgroupId === newActiveWorkgroupId)) {
+      // Clear the active workgroup if it is not found in the list of available workgroups.
+      // This will help avoid inconsistencies between local storage and the database.
+      newActiveWorkgroupId = undefined;
+    }
   }
-  if (!activeWorkgroupId && state.workgroups.length > 0) {
-    activeWorkgroupId = state.workgroups[0].workgroupId;
+
+  // Fallback to the available workgroup, if exactly only one exists.
+  if (!newActiveWorkgroupId && state.workgroups.length === 1) {
+    newActiveWorkgroupId = state.workgroups[0].workgroupId;
   }
 
-  state.setActiveWorkgroup(activeWorkgroupId);
+  if (newActiveWorkgroupId) {
+    // Update state and persist the active workgroup.
+    state.setActiveWorkgroup(newActiveWorkgroupId);
+    await LocalStorageService.setLastActiveWorkgroup(newActiveWorkgroupId);
+  }
 
-  return activeWorkgroupId;
+  console.log('Active workgroup set to:', newActiveWorkgroupId);
+  return newActiveWorkgroupId;
 };
 
-const createWorkgroup = (workgroup: WorkgroupInterface) => {
-  useWorkgroupStore.getState().addWorkgroup(workgroup);
+const createWorkgroup = async (workgroupName: string) => {
+  const newWG = await insertWorkgroup(workgroupName);
+  return newWG;
 };
 
 const addUserToWorkgroup = (workgroupId: string, userId: string, role: UserRole) => {
@@ -98,8 +118,15 @@ const useGetWorkgroupById = (workgroupId: string) => {
   return useWorkgroupStore((state) => state.workgroups.find((wg) => wg.workgroupId === workgroupId));
 };
 
+const deleteWorkgroupById = (workgroupId: string) => {
+  // TODO: Implement this function
+  // delete from database and localstorage too
+  console.error('oops, function is not implemented yet.');
+};
+
 export default {
   initializeWorkgroups,
+  useAllWorkgroups,
   createWorkgroup,
   addUserToWorkgroup,
   removeUserFromWorkgroup,
@@ -107,4 +134,5 @@ export default {
   useGetWorkgroupById,
   getActiveWorkgroup,
   setActiveWorkgroup,
+  deleteWorkgroupById,
 };

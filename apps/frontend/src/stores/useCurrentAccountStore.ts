@@ -10,7 +10,7 @@ interface CurrentAccountStoreState {
   setAuthLoaded: (loaded: boolean) => void;
 }
 
-const useCurrentAccountStore = create<CurrentAccountStoreState>((set) => ({
+const useCurrentAccountStore = create<CurrentAccountStoreState>((set, get) => ({
   currentUser: null,
   authLoaded: false,
 

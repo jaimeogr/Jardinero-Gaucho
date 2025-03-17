@@ -2,6 +2,7 @@
 
 import { v4 as uuidv4 } from 'uuid'; //ID Generator
 
+import { getNeighbourhoodZoneData, getLots, createNeighborhood, createZone, createLot } from '@/api/supabase/endpoints';
 import {
   LotWithNeedMowingInterface,
   ZoneWithIndicatorsInterface,
@@ -10,28 +11,100 @@ import {
   NeighbourhoodData,
   ZoneData,
   LotInStore,
+  NeighbourhoodZoneData,
 } from '@/types/types';
 import { lotNeedsMowing } from '@/utils/DateAnalyser';
 
-const createLot = (workgroupId: string | null, newLot: Partial<LotInStore>): LotInStore => {
+const initializeNeighbourhoodsAndZones = async (
+  allTheUsersWorkgroupsIds: string[] | null,
+): Promise<NeighbourhoodZoneData> => {
+  if (!allTheUsersWorkgroupsIds || allTheUsersWorkgroupsIds.length === 0) {
+    throw new Error('Missing or empty allTheUsersWorkgroupsIds in initializeNeighbourhoodsAndZones');
+  }
+
+  try {
+    const neighbourhoodsAndZones = await getNeighbourhoodZoneData(allTheUsersWorkgroupsIds);
+    return neighbourhoodsAndZones as NeighbourhoodZoneData;
+  } catch (error) {
+    console.log('Failed to initialize neighbourhoods and zones:', error.message);
+    throw error;
+  }
+};
+
+const initializeLots = async (allTheUsersWorkgroupsIds: string[] | null): Promise<LotInStore[]> => {
+  if (!allTheUsersWorkgroupsIds) {
+    throw new Error('Missing workgroupId in initializeLots');
+  }
+
+  try {
+    const lots = await getLots(allTheUsersWorkgroupsIds);
+    return lots as LotInStore[];
+  } catch (error) {
+    console.log('Failed to initialize lots:', error.message);
+    throw error;
+  }
+};
+
+const addLot = async (workgroupId: string | null, partialLot: Partial<LotInStore>): Promise<LotInStore> => {
   if (!workgroupId) {
     throw new Error('Missing workgroupId in createLot');
   }
 
-  if (!newLot.lotLabel || !newLot.zoneId || !newLot.neighbourhoodId) {
+  if (!partialLot.lotLabel || !partialLot.zoneId || !partialLot.neighbourhoodId) {
     throw new Error('Missing required fields in new lot');
   }
 
-  const lot: LotInStore = {
-    ...newLot,
-    lotId: uuidv4(),
-    workgroupId,
-    lotLabel: newLot.lotLabel || '', // provide defaults if necessary
-    lastMowingDate: newLot.lastMowingDate || new Date(),
-  };
+  try {
+    const newLot = await createLot(
+      workgroupId,
+      partialLot.zoneId,
+      partialLot.lotLabel,
+      partialLot.lastMowingDate,
+      partialLot.extraNotes,
+    );
+    // Return the new lot so the controller can handle updating the store
+    return newLot as LotInStore;
+  } catch (error) {
+    console.log('Failed to create lot:', error.message);
+    throw error;
+  }
+};
 
-  // Return the new lot so the controller can handle updating the store
-  return lot;
+const addNeighborhood = async (workgroupId: string | null, neighbourhoodLabel: string): Promise<NeighbourhoodData> => {
+  if (!workgroupId) {
+    throw new Error('Missing workgroupId in addNeighbourhood');
+  }
+
+  try {
+    let newNeighborhood: Partial<NeighbourhoodData> = await createNeighborhood(workgroupId, neighbourhoodLabel);
+    newNeighborhood = { ...newNeighborhood, isSelected: false, isExpanded: false, zones: [] };
+    return newNeighborhood as NeighbourhoodData;
+  } catch (error) {
+    console.log('Failed to create neighborhood:', error.message);
+    throw error;
+  }
+};
+
+const addZoneToNeighbourhood = async (
+  workgroupId: string | null,
+  neighbourhoodId: string,
+  zoneLabel: string,
+): Promise<ZoneData> => {
+  if (!workgroupId) {
+    throw new Error('Missing workgroupId in addZoneToNeighbourhood');
+  }
+  if (!neighbourhoodId) {
+    throw new Error('Missing neighbourhoodId in addZoneToNeighbourhood');
+  }
+
+  try {
+    let newZone: Partial<ZoneData> = await createZone(workgroupId, neighbourhoodId, zoneLabel);
+    newZone = { ...newZone, isSelected: false, isExpanded: false };
+    return newZone as ZoneData;
+  } catch (error) {
+    console.log('Failed to create zone:', error.message);
+    throw error;
+  }
 };
 
 const markLotCompletedForSpecificDate = (allLots: LotInStore[], lotId: string, date?: Date): LotInStore[] => {
@@ -206,39 +279,14 @@ const computeNestedLots = (
   return result;
 };
 
-const addNeighbourhood = (workgroupId: string | null, neighbourhoodLabel: string): NeighbourhoodData => {
-  if (!workgroupId) {
-    throw new Error('Missing workgroupId in addNeighbourhood');
-  }
-
-  const newNeighbourhood: NeighbourhoodData = {
-    workgroupId: workgroupId,
-    neighbourhoodId: uuidv4(),
-    neighbourhoodLabel: neighbourhoodLabel,
-    isSelected: false, // Initialize isSelected
-    isExpanded: false, // Initialize isExpanded
-    zones: [], // Initialize zones as an empty array
-  };
-  return newNeighbourhood;
-};
-
-const addZoneToNeighbourhood = (neighbourhoodId: string, zoneLabel: string): ZoneData => {
-  const zone: ZoneData = {
-    zoneId: uuidv4(),
-    zoneLabel: zoneLabel,
-    isSelected: false, // Initialize isSelected
-    isExpanded: false, // Initialize isExpanded
-  };
-
-  return zone;
-};
-
 export default {
   // Lots, zones, neighbourhoods
-  createLot,
+  initializeLots,
+  initializeNeighbourhoodsAndZones,
+  addLot,
+  addNeighborhood,
+  addZoneToNeighbourhood,
   computeNestedLots,
   markLotCompletedForSpecificDate,
   markSelectedLotsCompletedForSpecificDate,
-  addZoneToNeighbourhood,
-  addNeighbourhood,
 };

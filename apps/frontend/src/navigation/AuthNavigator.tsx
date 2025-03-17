@@ -6,7 +6,7 @@ import useHomeScreenController from '@/controllers/useHomeScreenController';
 import BottomTabNavigator from '@/navigation/BottonTabNavigator';
 import EmailSentScreen from '@/screens/EmailSentScreen';
 import ForgotMyPasswordScreen from '@/screens/ForgotMyPasswordScreen';
-import ResetPasswordScreen from '@/screens/ResetPasswordScreen ';
+import ResetPasswordScreen from '@/screens/ResetPasswordScreen';
 import SignInScreen from '@/screens/SignInScreen';
 import SignUpScreen from '@/screens/SignUpScreen';
 import useCurrentAccountStore from '@/stores/useCurrentAccountStore';
@@ -16,13 +16,14 @@ const Stack = createNativeStackNavigator();
 
 const AuthNavigator = () => {
   const { initializeServices } = useHomeScreenController();
-
-  useEffect(() => {
-    initializeServices();
-  }, []);
-
   const currentUser: UserInterface | null = useCurrentAccountStore((state) => state.currentUser);
   const authLoaded = useCurrentAccountStore((state) => state.authLoaded);
+
+  useEffect(() => {
+    if (currentUser) {
+      initializeServices();
+    }
+  }, [currentUser]);
 
   if (!authLoaded) {
     return null; // will return nothing until the auth state is loaded in App.tsx

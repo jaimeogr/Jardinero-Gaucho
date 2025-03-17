@@ -1,15 +1,6 @@
 // controllerTypes.ts
 
-import {
-  NestedLotsWithIndicatorsInterface,
-  NeighbourhoodData,
-  ZoneData,
-  LotInStore,
-  UserInActiveWorkgroupWithRole,
-  UserRole,
-  UserInterface,
-  TemporaryUserData,
-} from '@/types/types';
+import { NestedLotsWithIndicatorsInterface, NeighbourhoodData, ZoneData, LotInStore } from '@/types/types';
 
 export interface IAccordionController {
   useNestedLots(): NestedLotsWithIndicatorsInterface;
@@ -27,9 +18,9 @@ export interface IAccordionController {
 export interface IHomeScreenController extends IAccordionController {
   useNeighbourhoodsWithZones(): NeighbourhoodData[];
   initializeServices(): void;
-  createLot(lot: Partial<LotInStore>): boolean;
-  createZone(neighbourhoodId: string, zoneLabel: string): ZoneData;
-  createNeighbourhood(neighbourhoodLabel: string): NeighbourhoodData;
+  createLot(lot: Partial<LotInStore>): Promise<LotInStore>;
+  createZone(neighbourhoodId: string, zoneLabel: string): Promise<ZoneData>;
+  createNeighbourhood(neighbourhoodLabel: string): Promise<NeighbourhoodData>;
   markLotCompletedForSpecificDate(lotId: string, date?: Date): void;
   markSelectedLotsCompletedForSpecificDate(date?: Date): void;
 }

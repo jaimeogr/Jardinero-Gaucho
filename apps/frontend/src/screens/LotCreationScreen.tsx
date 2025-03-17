@@ -11,7 +11,7 @@ import CustomSelectInput from '@/components/CustomSelectInput';
 import CustomTextInput from '@/components/CustomTextInput';
 import useHomeScreenController from '@/controllers/useHomeScreenController';
 import { theme } from '@/styles/styles';
-import { LotComputedForDisplay } from '@/types/types';
+import { LotInStore } from '@/types/types';
 
 type RootStackParamList = {
   LotCreation: undefined;
@@ -96,42 +96,45 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   // Add new neighbourhood
-  const handleAddNeighbourhood = () => {
+  const handleAddNeighbourhood = async () => {
     if (newNeighbourhoodLabel.trim() === '') {
-      Alert.alert(
-        'Problema con el texto ingresado',
-        'El Barrio no puede estar vacio, al menos poner un numero. No seas Vago',
-      );
+      Alert.alert('Problema con el texto ingresado', 'El Barrio no puede estar vacío.');
       return;
     }
 
-    const newNeighbourhood = createNeighbourhood(newNeighbourhoodLabel.trim());
-    handleInputChange('neighbourhoodId', newNeighbourhood.neighbourhoodId);
-    handleInputChange('neighbourhoodLabel', newNeighbourhood.neighbourhoodLabel);
-    // Close modal
-    setShowNeighbourhoodModal(false);
-    setNewNeighbourhoodLabel('');
-    // Reset zone selection
-    handleInputChange('zoneId', '');
-    handleInputChange('zoneLabel', '');
+    try {
+      const newNeighbourhood = await createNeighbourhood(newNeighbourhoodLabel.trim());
+      handleInputChange('neighbourhoodId', newNeighbourhood.neighbourhoodId);
+      handleInputChange('neighbourhoodLabel', newNeighbourhood.neighbourhoodLabel);
+      // Close modal
+      setShowNeighbourhoodModal(false);
+      setNewNeighbourhoodLabel('');
+      // Reset zone selection
+      handleInputChange('zoneId', '');
+      handleInputChange('zoneLabel', '');
+    } catch (error) {
+      console.error('Error adding neighborhood:', error);
+      Alert.alert('Por favor, intentá de nuevo.', 'No se pudo agregar el barrio');
+    }
   };
 
   // Add new zone
-  const handleAddZone = () => {
+  const handleAddZone = async () => {
     if (newZoneLabel.trim() === '') {
-      Alert.alert(
-        'Problema con el texto ingresado',
-        'La zona no puede estar vacia, al menos poner un numero. No seas Vago',
-      );
+      Alert.alert('Problema con el texto ingresado', 'La zona no puede estar vacía.');
       return;
     }
-
-    const newZone = createZone(lotData.neighbourhoodId, newZoneLabel.trim());
-    handleInputChange('zoneId', newZone.zoneId);
-    handleInputChange('zoneLabel', newZone.zoneLabel);
-    // Close modal
-    setShowZoneModal(false);
-    setNewZoneLabel('');
+    try {
+      const newZone = await createZone(lotData.neighbourhoodId, newZoneLabel.trim());
+      handleInputChange('zoneId', newZone.zoneId);
+      handleInputChange('zoneLabel', newZone.zoneLabel);
+      // Close modal
+      setShowZoneModal(false);
+      setNewZoneLabel('');
+    } catch (error) {
+      console.error('Error adding zone:', error);
+      Alert.alert('Por favor, intentá de nuevo.', 'No se pudo agregar la zona.');
+    }
   };
 
   // Clear selected date
@@ -139,22 +142,21 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
     handleInputChange('lastMowingDate', null);
   };
 
-  // Submit lot and navigate back
-  const handleSubmit = async (keepCreating: boolean) => {
+  // Submit lot. Maybe navigate back, maybe keep creating lots
+  const handleCreateLot = async (keepCreating: boolean) => {
     if (!lotData.lotLabel || !lotData.neighbourhoodLabel || !lotData.zoneLabel) {
       Alert.alert('Falta información.', 'Es necesario que completes todos los campos.');
       return;
     }
-    const newLot: Partial<LotComputedForDisplay> = {
+    const partialLot: Partial<LotInStore> = {
       ...lotData,
       lotId: undefined,
-      lotIsSelected: false,
       workgroupId: undefined,
       lastMowingDate: lotData.lastMowingDate || undefined,
     };
     try {
-      const success = createLot(newLot);
-      if (success) {
+      const createdLot = await createLot(partialLot);
+      if (createdLot) {
         console.log('Created a new lot.');
         // if the user wants to keep creating lots
         if (keepCreating) {
@@ -167,6 +169,7 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
       }
     } catch (error) {
       console.error('An error occurred while creating the lot:', error);
+      Alert.alert('Por favor, intentá de nuevo.', 'No se pudo cargar el lote.');
     }
   };
 
@@ -240,10 +243,10 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
 
           {/* Lot Label Input */}
           <CustomTextInput
-            label="Casa"
+            label="Lote"
             value={lotData.lotLabel}
             onChangeText={(text) => handleInputChange('lotLabel', text)}
-            placeholder="Ingresá la casa"
+            placeholder="Ingresá el lote o dirección"
           />
 
           {/* Last Mowing Date - Date Picker */}
@@ -339,12 +342,12 @@ const LotCreationScreen: React.FC<Props> = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.submitButton, { flex: 6 }]}
-            onPress={() => handleSubmit(false)}
+            onPress={() => handleCreateLot(false)}
           >
             <Text style={styles.submitButtonText}>Crear Lote</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={[styles.button, styles.nextLotButton]} onPress={() => handleSubmit(true)}>
+        <TouchableOpacity style={[styles.button, styles.nextLotButton]} onPress={() => handleCreateLot(true)}>
           <Text style={styles.nextLotButtonText}>Crear Lote y Siguiente</Text>
         </TouchableOpacity>
       </View>

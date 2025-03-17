@@ -51,12 +51,12 @@ export async function getUserWorkgroupsWithRoles(accountId: string) {
 }
 
 export async function getNeighbourhoodZoneData(allTheUsersWorkgroupsIds: string[]): Promise<NeighbourhoodZoneData> {
-  if (!allTheUsersWorkgroupsIds || allTheUsersWorkgroupsIds.length === 0) {
+  if (!allTheUsersWorkgroupsIds) {
     throw new Error('No workgroup IDs provided for fetching neighbourhood and zone data');
   }
-
-  console.log('--------------------------------------------------------------------------------');
-  console.log('All the users workgroups ids:', allTheUsersWorkgroupsIds);
+  if (allTheUsersWorkgroupsIds.length === 0) {
+    return { neighbourhoods: [] };
+  }
 
   const { data: neighbourhoodData, error } = await supabase
     .from('neighborhoods')
@@ -67,8 +67,6 @@ export async function getNeighbourhoodZoneData(allTheUsersWorkgroupsIds: string[
     console.error('Error fetching neighbourhoods and zones:', error);
     throw error;
   }
-
-  console.log('data for Neighbourhoods and zones:\n', JSON.stringify(neighbourhoodData, null, 2));
 
   // Transform to NeighbourhoodData structure
   const transformedNeighbourhoods = neighbourhoodData.map((n) => {
@@ -111,7 +109,7 @@ export async function getLots(allTheUsersWorkgroupsIds: string[]): Promise<LotIn
       workgroupId: lot.workgroup_id,
       lotLabel: lot.label,
       zoneId: lot.zone_id,
-      neighbourhoodId: lot.zones[0].neighborhood_id, // Each lot has one zone
+      neighbourhoodId: lot.zones?.neighborhood_id, // Each lot has one zone
       lastMowingDate: lot.last_mowing_date ? new Date(lot.last_mowing_date) : undefined,
       extraNotes: lot.extra_notes,
     };

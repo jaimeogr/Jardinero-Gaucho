@@ -35,18 +35,12 @@ const useHomeScreenController = (): IHomeScreenController => {
       await useWorkgroupService.initializeWorkgroups(currentUser?.userId);
       await useWorkgroupService.setActiveWorkgroup();
 
-      const allTheUsersWorkgroupsIds = allTheUsersWorkgroups.map((wg) => wg.workgroupId);
+      const allTheUsersWorkgroupsIds = useWorkgroupStore.getState().workgroups.map((wg) => wg.workgroupId);
+
       const allLotsOfTheUser = await useLotService.initializeLots(allTheUsersWorkgroupsIds);
-      useLotStore.getState().initializeLots(allLotsOfTheUser);
-
-      console.log('Lots to initialize for all the workgroups:\n', JSON.stringify(allLotsOfTheUser, null, 2));
-
       const neighbourhoodsAndZones = await useLotService.initializeNeighbourhoodsAndZones(allTheUsersWorkgroupsIds);
+      useLotStore.getState().initializeLots(allLotsOfTheUser);
       useLotStore.getState().initializeNeighbourhoodsAndZones(neighbourhoodsAndZones);
-      console.log(
-        'NeighborhoodZoneData to initialize for all the workgroups:\n',
-        JSON.stringify(neighbourhoodsAndZones, null, 2),
-      );
     }
   };
 

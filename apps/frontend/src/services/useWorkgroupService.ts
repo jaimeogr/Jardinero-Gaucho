@@ -6,7 +6,6 @@ import useWorkgroupStore from '@/stores/useWorkgroupStore';
 import { UserRole } from '@/types/types';
 
 const initializeWorkgroups = async (userId: string): Promise<any> => {
-  console.log('Initializing workgroups for user:', userId);
   const workgroups = await getUserWorkgroupsWithRoles(userId);
   useWorkgroupStore.getState().initializeWorkgroups(workgroups);
   return workgroups;

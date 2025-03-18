@@ -2,7 +2,7 @@
 import camelcaseKeys from 'camelcase-keys';
 
 import supabase from '@/api/supabase/client';
-import { NeighbourhoodZoneData, LotInStore, WorkgroupInterface } from '@/types/types';
+import { NeighbourhoodZoneData, LotInStore } from '@/types/types';
 
 /**
  * Retrieves all workgroups associated with the authenticated user, including their role.
@@ -198,6 +198,7 @@ export async function createZone(workgroup_id: string, neighborhood_id: string, 
  */
 export async function createLot(
   workgroup_id: string,
+  neighborhood_id: string,
   zone_id: string,
   label: string,
   last_mowing_date: Date | undefined,
@@ -206,6 +207,7 @@ export async function createLot(
   // Prepare the data object with required fields
   type LotInsertData = {
     workgroup_id: string;
+    neighborhood_id: string;
     zone_id: string;
     label: string;
     last_mowing_date?: Date | null;
@@ -213,6 +215,7 @@ export async function createLot(
   };
   const insertData: LotInsertData = {
     workgroup_id,
+    neighborhood_id,
     zone_id,
     label,
     last_mowing_date,
@@ -233,6 +236,7 @@ export async function createLot(
     ...data,
     lotId: data.id,
     lotLabel: data.label,
+    neighbourhood_id: data.neighborhood_id,
   };
 
   // Convert keys to camelCase for consistency

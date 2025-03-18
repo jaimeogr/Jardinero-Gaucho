@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS public.lots (
     ON DELETE CASCADE,
   zone_id           uuid NOT NULL REFERENCES public.zones (id)
     ON DELETE CASCADE,
+  neighborhood_id UUID NOT NULL REFERENCES public.neighborhoods(id),
   label         text NOT NULL,
   last_mowing_date  timestamp with time zone,
   extra_notes       text,

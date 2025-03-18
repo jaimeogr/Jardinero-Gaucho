@@ -237,6 +237,7 @@ export async function createLot(
     lotId: data.id,
     lotLabel: data.label,
     neighbourhood_id: data.neighborhood_id,
+    lastMowingDate: data.last_mowing_date ? new Date(data.last_mowing_date) : undefined,
   };
 
   // Convert keys to camelCase for consistency

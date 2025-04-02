@@ -57,6 +57,7 @@ const addLot = async (workgroupId: string | null, partialLot: Partial<LotInStore
   try {
     const newLot = await createLot(
       workgroupId,
+      partialLot.neighbourhoodId,
       partialLot.zoneId,
       partialLot.lotLabel,
       partialLot.lastMowingDate,

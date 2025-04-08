@@ -81,7 +81,7 @@ const SignUpScreen = ({ navigation }) => {
       >
         <View style={styles.formWrapper}>
           <Text style={styles.title}>Registrarme</Text>
-          <GoogleSignInButton onPress={signInWithGoogle} />
+          <GoogleSignInButton buttonText="Registrarme con Google" onPress={signInWithGoogle} />
 
           <OrDivider />
 

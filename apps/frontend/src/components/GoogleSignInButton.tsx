@@ -5,9 +5,14 @@ import Svg, { Path } from 'react-native-svg';
 interface GoogleSignInButtonProps {
   onPress: () => void;
   disabled?: boolean;
+  buttonText?: string;
 }
 
-const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({ onPress, disabled = false }) => {
+const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
+  buttonText = 'Continuar con Google',
+  onPress,
+  disabled = false,
+}) => {
   return (
     <TouchableOpacity
       style={[styles.button, disabled && styles.buttonDisabled]}
@@ -37,7 +42,7 @@ const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({ onPress, disabl
         </Svg>
 
         {/* Button Text */}
-        <Text style={[styles.text, disabled && styles.textDisabled]}>Continuar con Google</Text>
+        <Text style={[styles.text, disabled && styles.textDisabled]}>{buttonText}</Text>
       </View>
     </TouchableOpacity>
   );

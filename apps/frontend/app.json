@@ -40,7 +40,16 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-secure-store", "@react-native-google-signin/google-signin"],
+    "plugins": [
+      "expo-secure-store",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "reservedClientId": "com.googleusercontent.apps.757268538389-emgav2c6o8a9gb2nra447pk2503pp9st",
+          "iosUrlScheme": "com.googleusercontent.apps.757268538389-emgav2c6o8a9gb2nra447pk2503pp9st"
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "889c467c-1a6c-473a-82d9-efcf54f231e0"

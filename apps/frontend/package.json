@@ -17,6 +17,7 @@
     "buildlocal": "eas build --local --profile development --platform android",
     "c4": "npm run buildlocal",
     "buildprod": "eas build --profile production --platform android",
+    "prebuild": "npx expo prebuild --platform android",
     "lint": "eslint . --fix",
     "lint-check": "eslint .",
     "client": "npx expo start --dev-client",

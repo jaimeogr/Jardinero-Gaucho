@@ -38,7 +38,7 @@ const SignInScreen = ({ navigation }) => {
       >
         <View style={styles.formWrapper}>
           <Text style={styles.title}>Iniciar sesión</Text>
-          <GoogleSignInButton onPress={signInWithGoogle} />
+          <GoogleSignInButton buttonText="Iniciar con Google" onPress={signInWithGoogle} />
 
           <OrDivider />
 
